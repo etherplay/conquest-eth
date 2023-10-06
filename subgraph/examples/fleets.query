@@ -1,0 +1,68 @@
+POST http://127.0.0.1:8000/subgraphs/name/conquest-eth/conquest-eth
+
+query($first: Int! $lastId: ID! $owner: String) {
+  planets(first: $first where: {id_gt: $lastId}) {
+    id
+    owner {
+      id
+    }
+    numSpaceships
+    lastUpdated
+    exitTime
+    active
+    reward
+  }
+  chain(id: "Chain") {
+    blockHash
+    blockNumber
+  }
+  space(id: "Space") {
+    minX
+    maxX
+    minY
+    maxY
+  }
+  fleetsArrivedFromYou: fleetArrivedEvents(where: {owner: $owner destinationOwner_not: $owner}) {
+    id
+    blockNumber
+    timestamp
+    transaction {id}
+    owner {id}
+    planet {id}
+    fleet {id}
+    destinationOwner {id}
+    fleetLoss
+    planetLoss
+    inFlightFleetLoss
+    inFlightPlanetLoss
+    won
+    newNumspaceships
+    from {id}
+    quantity
+  }
+  fleetsArrivedToYou: fleetArrivedEvents(where: {destinationOwner: $owner owner_not: $owner}) {
+    id
+    blockNumber
+    timestamp
+    transaction {id}
+    owner {id}
+    planet {id}
+    fleet {id}
+    destinationOwner {id}
+    fleetLoss
+    planetLoss
+    inFlightFleetLoss
+    inFlightPlanetLoss
+    won
+    newNumspaceships
+    from {id}
+    quantity
+  }
+}
+
+variables : {
+  "first": 1000,
+  "lastId": "0x0",
+  "owner": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+  "blockNumber": 18493
+}

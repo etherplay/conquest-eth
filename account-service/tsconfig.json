@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "noEmit": true,
+    "experimentalDecorators": true,
+    "lib": ["esnext", "webworker"],
+    "types": ["@cloudflare/workers-types"],
+    "resolveJsonModule": true,
+    "downlevelIteration": true,
+    "esModuleInterop": true
+  }
+}

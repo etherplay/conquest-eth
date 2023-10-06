@@ -1,0 +1,32 @@
+name = "agent-service-{{networkName}}"
+type = "javascript"
+account_id = ""
+workers_dev = {{devMode}}
+route = ""
+zone_id = ""
+compatibility_date = "2021-09-21"
+usage_model= "bundled"
+
+[vars]
+NETWORK_NAME = "{{networkName}}"
+ENVIRONMENT = "{{environment}}"
+ETHEREUM_NODE = "{{ETHEREUM_NODE}}"
+DATA_DOG_API_KEY = "{{DATA_DOG_API_KEY}}"
+FINALITY  = "{{FINALITY}}"
+
+[build]
+command = "npm run build:cjs"
+[build.upload]
+format = "modules"
+main = "./index.mjs"
+
+[durable_objects]
+bindings = [{name = "REVEAL_QUEUE", class_name = "RevealQueue"}]
+
+[triggers]
+crons = ["* * * * *", "*/1 * * * *", "*/2 * * * *"]
+
+# needed for first deployment
+# [[migrations]]
+# tag = "v1"
+# new_classes = ["RevealQueue"]

@@ -1,0 +1,22 @@
+{
+  "appName": "conquest.eth",
+  "appShortName": "conquest.eth",
+  "appDescription": "An unstoppable game of strategy and diplomacy running on Ethereum",
+  "appShortDescription": "An unstoppable game of strategy and diplomacy running on Ethereum",
+  "developerName": "Etherplay",
+  "developerURL": "https://etherplay.io",
+  "url": "https://alpha.conquest.eth.limo",
+  "ensName": "alpha.conquest.eth",
+  "background": "#100f11",
+  "theme_color": "#100f11",
+  "appleStatusBarStyle": "black-translucent",
+  "display": "fullscreen",
+  "icon": "icon.png",
+  "maskable_icons": [
+    {
+      "src": "maskable_icon_512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

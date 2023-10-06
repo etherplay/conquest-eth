@@ -1,0 +1,13 @@
+.env*
+!.env*.default
+!.env.web.*
+.newsh.json
+node_modules
+*.code-workspace
+!*.code-workspace.default
+.claimKeys.mnemonics
+.*claimKeys*
+.yalc
+yalc.lock
+exec.sh
+package/

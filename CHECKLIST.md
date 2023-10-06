@@ -1,0 +1,5 @@
+- [ ] update genesisHash
+- [ ] pnpm deploy <networkName>
+- [ ] call deleteAll on agent-service
+- [ ] generate claim keys
+- [ ] test

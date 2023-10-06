@@ -1,0 +1,7 @@
+packages:
+  - 'contracts'
+  - 'web'
+  - 'subgraph'
+  - 'common-lib'
+  - 'agent-service'
+  - 'account-service'

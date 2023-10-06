@@ -1,0 +1,4 @@
+{
+  "terminalApp": "xterm",
+  "terminalAppSetup": "-hold -e {{command}}"
+}

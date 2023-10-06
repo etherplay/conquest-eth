@@ -1,0 +1,122 @@
+specVersion: 0.0.3
+description: conquest.eth
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: OuterSpace
+    network: {{chainName}}
+    source:
+      address: '{{contracts.OuterSpace.address}}'
+      abi: OuterSpaceContract
+      startBlock: {{contracts.OuterSpace.receipt.blockNumber}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Space
+        - Planet
+        - Owner
+        - Fleet
+        - PlanetStakeEvent
+        - PlanetExitEvent
+        - FleetArrivedEvent
+        - FleetSentEvent
+        - StakeToWithdrawEvent
+        - TravelingUpkeepRefundEvent
+        - Chain
+      abis:
+        - name: OuterSpaceContract
+          file: ./abis/OuterSpace.json
+      eventHandlers:
+        - event: PlanetStake(indexed address,indexed uint256,uint32,int40,uint32,uint256,bool)
+          handler: handlePlanetStake
+        - event: FleetSent(indexed address,indexed address,indexed uint256,address,uint256,uint32,uint32,int40,uint32)
+          handler: handleFleetSent
+        - event: FleetArrived(indexed uint256,indexed address,indexed address,uint256,bool,bool,(uint32,int40,uint32,uint32,uint32,uint32,uint32,uint32,uint32,uint32,uint32))
+          handler: handleFleetArrived
+        - event: TravelingUpkeepRefund(indexed uint256,indexed uint256,uint32,int40,uint32)
+          handler: handleTravelingUpkeepRefund
+        - event: PlanetReset(indexed uint256)
+          handler: handlePlanetReset
+        - event: PlanetExit(indexed address,indexed uint256)
+          handler: handleExit
+        - event: StakeToWithdraw(indexed address,uint256,bool)
+          handler: handleStakeToWithdraw
+        - event: ExitComplete(indexed address,indexed uint256,uint256)
+          handler: handleExitComplete
+        - event: RewardSetup(indexed uint256,indexed address,uint256)
+          handler: handleRewardSetup
+        - event: RewardToWithdraw(indexed address,indexed uint256,indexed uint256)
+          handler: handleRewardToWithdraw
+        - event: Initialized(bytes32,uint256,uint256,uint256,uint32,uint32,uint256,uint256,uint256,uint256,uint32,uint32,uint256)
+          handler: handleInitialized
+        - event: PlanetTransfer(indexed address,indexed address,indexed uint256,uint32,int40,uint32)
+          handler: handlePlanetTransfer
+      file: ./src/outerspace.ts
+  - kind: ethereum/contract
+    name: PlayToken
+    network: {{chainName}}
+    source:
+      address: '{{contracts.PlayToken.address}}'
+      abi: PlayToken_Contract
+      startBlock: {{contracts.PlayToken.receipt.blockNumber}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Owner
+        - Chain
+      abis:
+        - name: PlayToken_Contract
+          file: ./abis/PlayToken.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handlePlayTokenTransfer
+      file: ./src/play_token.ts
+  - kind: ethereum/contract
+    name: FreePlayToken
+    network: {{chainName}}
+    source:
+      address: '{{contracts.FreePlayToken.address}}'
+      abi: FreePlayToken_Contract
+      startBlock: {{contracts.FreePlayToken.receipt.blockNumber}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Owner
+        - Chain
+      abis:
+        - name: FreePlayToken_Contract
+          file: ./abis/FreePlayToken.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleFreePlayTokenTransfer
+      file: ./src/free_play_token.ts
+  - kind: ethereum/contract
+    name: AllianceRegistry
+    network: {{chainName}}
+    source:
+      address: '{{contracts.AllianceRegistry.address}}'
+      abi: AllianceRegistry_Contract
+      startBlock: {{contracts.AllianceRegistry.receipt.blockNumber}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Owner
+        - Alliance
+      abis:
+        - name: AllianceRegistry_Contract
+          file: ./abis/AllianceRegistry.json
+        - name: IAlliance_Contract
+          file: ./abis/IAlliance.json
+      eventHandlers:
+        - event: AllianceLink(indexed address,indexed address,bool)
+          handler: handleAllianceLink
+      file: ./src/alliances.ts

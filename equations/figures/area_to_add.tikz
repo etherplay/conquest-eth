@@ -1,0 +1,22 @@
+\begin{tikzpicture}
+	\begin{pgfonlayer}{nodelayer}
+		\node [style=none] (0) at (0, 6) {};
+		\node [style=none] (1) at (0, 0) {};
+		\node [style=none] (2) at (8, 0) {};
+		\node [style=none] (3) at (8, 2) {};
+		\node [style=none] (19) at (4, -0.75) {D};
+		\node [style=none] (20) at (4.75, 4.25) {f(x) = R*x};
+		\node [style=none] (21) at (0, 2) {};
+		\node [style=none] (22) at (-1, 6) {};
+		\node [style=none] (23) at (-1, 0) {};
+		\node [style=none] (24) at (-1.5, 3) {x};
+	\end{pgfonlayer}
+	\begin{pgfonlayer}{edgelayer}
+		\draw [in=90, out=-90] (0.center) to (1.center);
+		\draw (1.center) to (2.center);
+		\draw (0.center) to (3.center);
+		\draw (3.center) to (2.center);
+		\draw (21.center) to (3.center);
+		\draw (22.center) to (23.center);
+	\end{pgfonlayer}
+\end{tikzpicture}
