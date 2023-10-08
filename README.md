@@ -46,7 +46,7 @@ To read more, check out [player handbook](https://knowledge.conquest.game) or ou
 
 ## 🎎 Who we are?
 
-We are [Etherplay](https://etherplay.io), a game studio creating Autonomous Worlds, or what we like to call ["Infinite Games"](https://ronan.eth.limo/infinite-games/) including [Ethernal](https://ethernal.world), [Conquest.eth](https://conquest.game) and [Stratagems](https://stratagems.world).
+We are [Etherplay](https://etherplay.io), a game studio creating Autonomous Worlds, or what we like to call ["Infinite Games"](https://ronan.eth.limo/infinite-games/) including [Ethernal](https://ethernal.land), [Conquest.eth](https://conquest.game) and [Stratagems](https://stratagems.world).
 
 The team is for now, just me, [Ronan Sandford](https://twitter.com/wighawag).
 
