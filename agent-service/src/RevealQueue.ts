@@ -886,14 +886,14 @@ export class RevealQueue extends DO {
       // TODO use // blockTIme
       const timeDiff = getTimestamp() - lastSync.timestamp;
       // TODO // 100,000 just to make it safe
-      if (toBlockNumber - lastSync.blockNumber > 100000 + Math.floor(timeDiff / 15)) {
+      if (toBlockNumber - lastSync.blockNumber > 100000000 + Math.floor(timeDiff / 15)) {
         this.error(
           `jumping of block number, from  ${lastSync.blockNumber} to ${toBlockNumber} in ${time2text(timeDiff)}`
         );
 
         const bRes = await this._getBlockNumber();
         this.info(`block from node ${this.env.ETHEREUM_NODE} is ${BigNumber.from(bRes.result).toNumber()}`);
-        return createResponse('jumping of block number'); // TODO ?
+        return createResponse(`jumping of block number, from  ${lastSync.blockNumber} to ${toBlockNumber} in ${time2text(timeDiff)}`); // TODO ?
       }
     }
 

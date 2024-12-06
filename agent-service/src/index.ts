@@ -214,6 +214,13 @@ async function handleRequest(request: Request, env: Env): Promise<Response> {
       headers: {...corsHeaders, 'content-type': 'application/json;charset=UTF-8'},
       status: 200,
     });
+  } else if (fnc === 'syncAccountBalances') {
+    if (method !== 'GET') {
+      return InvalidMethod();
+    }
+    console.log('syncAccountBalances...');
+    let resp = await obj.fetch(url.toString(), request);
+    return resp;
   }
   return UnknownRequestType();
 }
