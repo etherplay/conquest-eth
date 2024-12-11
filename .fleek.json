@@ -1,7 +1,0 @@
-{
-  "build": {
-    "image": "node:14",
-    "command": "npm install -g pnpm@^6.0.0 && pnpm i --store=node_modules/.pnpm && pnpm run web:build && cd web && pnpm sentry-cli releases --org etherplay new -p conquest-eth `git rev-parse --short HEAD` && pnpm sentry-cli releases --org etherplay -p conquest-eth files `git rev-parse --short HEAD` upload-sourcemaps release/build && pnpm sentry-cli releases --org etherplay -p conquest-eth set-commits --auto `git rev-parse --short HEAD` && pnpm sentry-cli releases --org etherplay -p conquest-eth finalize `git rev-parse --short HEAD`",
-    "publicDir": "web/build"
-  }
-}

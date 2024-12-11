@@ -25,36 +25,12 @@ function copyFromDefault(p) {
 function copyFromAllDefault() {
   const files = fs
     .readdirSync('.')
-    .filter((v) => v.endsWith('.default'))
-    .map((v) => v.slice(0, v.length - 8));
+    .filter(v => v.endsWith('.default'))
+    .map(v => v.slice(0, v.length - 8));
   files.map(copyFromDefault);
 }
 
 copyFromAllDefault();
-
-switch (process.platform) {
-  case 'win32':
-    writeIfNotExists(
-      '.newsh.json',
-      `
-{
-  "terminalApp": "cmd"
-}
-`
-    );
-    break;
-  case 'linux':
-    writeIfNotExists(
-      '.newsh.json',
-      `
-  {
-    "terminalApp": "xterm",
-    "terminalAppSetup": "-hold -e {{command}}"
-  }
-  `
-    );
-    break;
-}
 
 if (anyChanges) {
   console.log('setting up defaults...');

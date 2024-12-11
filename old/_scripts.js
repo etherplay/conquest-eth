@@ -281,12 +281,22 @@ async function performAction(rawArgs) {
   } else if (firstArg === 'subgraph:etherplay') {
     const {fixedArgs, extra} = parseArgs(args, 1, {});
     const network = fixedArgs[0];
+    console.log({network});
     const env = getEnv(network);
     if (network === 'localhost') {
       throw new Error(`can't be on localhost`);
     }
     await execute(`wait-on web/src/lib/contracts.json`);
     await execute(`${env}npm --prefix subgraph run etherplay:deploy ../contracts/deployments/${network}`);
+  } else if (firstArg === 'subgraph:alchemy') {
+    const {fixedArgs, extra} = parseArgs(args, 1, {});
+    const network = fixedArgs[0];
+    const env = getEnv(network);
+    if (network === 'localhost') {
+      throw new Error(`can't be on localhost`);
+    }
+    await execute(`wait-on web/src/lib/contracts.json`);
+    await execute(`${env}npm --prefix subgraph run alchemy:deploy ../contracts/deployments/${network}`);
   } else if (firstArg === 'agent-service:dev') {
     console.log(`waiting for web/src/lib/contracts.json...`);
     await execute(`wait-on web/src/lib/contracts.json`);

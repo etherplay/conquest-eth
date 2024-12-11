@@ -1,9 +1,12 @@
-node_modules/
-.env
-generated/
+# Graph CLI generated artifacts
 build/
-subgraph.yaml
-!templates/*
+generated/
+
+# Dependency directories
+node_modules/
+
+*.local
+/subgraph.yaml
 abis/
-.vscode/*
-!.vscode/settings.json.default
+
+!.env

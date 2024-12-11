@@ -1,0 +1,14 @@
+layout {
+	pane {
+		pane {}
+		pane split_direction="vertical" {
+			pane name="COMMON" command="bash"  {
+				args "-c" "pnpm run --filter ./common-lib dev; cd common-lib; ${SHELL-bash}"
+			}
+			pane name="WEB" command="bash"  {
+				args "-c" "pnpm run --filter ./web dev; cd web; ${SHELL-bash}"
+			}
+		}
+	}
+
+}

@@ -1,0 +1,22 @@
+layout {
+	pane {
+		pane {}
+		pane split_direction="vertical" {
+			// pane name="COMPILE" command="bash"  {
+			// 	args "-c" "pnpm contracts:compile:watch; cd contracts; ${SHELL-bash}"
+			// }
+			// pane name="DEPLOY" command="bash"  {
+			// 	args "-c" "pnpm contracts:deploy:watch ${MODE}; cd contracts; ${SHELL-bash}"
+			// }
+		}
+		pane split_direction="vertical" {
+			pane name="COMMON" command="bash"  {
+				args "-c" "pnpm run --filter ./common-lib dev; cd common-lib; ${SHELL-bash}"
+			}
+			pane name="WEB" command="bash"  {
+				args "-c" "pnpm run --filter ./web dev; cd web; ${SHELL-bash}"
+			}
+		}
+	}
+
+}

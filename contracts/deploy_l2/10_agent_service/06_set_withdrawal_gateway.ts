@@ -7,14 +7,15 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const paymentWithdrwalGateway = await hre.deployments.get('PaymentWithdrawalGateway');
 
   const currentOwner = await read('PaymentGateway', 'owner');
-  if (currentOwner.toLowerCase() !== paymentWithdrwalGateway.address.toLowerCase()) {
-    await execute(
-      'PaymentGateway',
-      {from: currentOwner, log: true},
-      'transferOwnership',
-      paymentWithdrwalGateway.address
-    );
-  }
+  // TODO ?
+  // if (currentOwner.toLowerCase() !== paymentWithdrwalGateway.address.toLowerCase()) {
+  //   await execute(
+  //     'PaymentGateway',
+  //     {from: currentOwner, log: true},
+  //     'transferOwnership',
+  //     paymentWithdrwalGateway.address
+  //   );
+  // }
 };
 export default func;
 func.tags = ['PaymentWithdrawalGateway', 'PaymentGateway'];

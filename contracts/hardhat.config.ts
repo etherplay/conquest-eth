@@ -12,13 +12,13 @@ import {node_url, accounts, addForkConfiguration} from './utils/network';
 const l1_deployments: string[] = [];
 const l1_deployments_dev: string[] = [];
 const l2_deployments: string[] = [
-  'deploy_l2/00_block_upgrades',
+  // 'deploy_l2/00_block_upgrades',
   'deploy_l2/01_play_tokens',
   'deploy_l2/02_alliance_registry',
   'deploy_l2/03_outerspace',
 ];
 const l2_deployments_dev: string[] = [
-  'deploy_l2/00_block_upgrades',
+  // 'deploy_l2/00_block_upgrades',
   'deploy_l2/04_setup',
   'deploy_l2/10_agent_service',
   'deploy_l2/20_basic_alliances',

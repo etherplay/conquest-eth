@@ -1,0 +1,61 @@
+layout {
+	pane {
+		pane {}
+		pane split_direction="vertical" {
+			pane name="CONTRACTS:WATCH" command="bash"  {
+				args "-c" "pnpm contracts:dev; cd contracts; ${SHELL-bash}"
+			}
+
+			pane name="NODE" command="bash"  {
+				args "-c" "pnpm local_node; ${SHELL-bash}"
+			}
+
+		}
+		pane split_direction="vertical" {
+			pane name="COMMON" command="bash"  {
+				args "-c" "pnpm common:dev; cd common-lib; ${SHELL-bash}"
+			}
+			pane name="WEB" command="bash"  {
+				args "-c" "pnpm web:dev; cd web; ${SHELL-bash}"
+			}
+		}
+		pane name="helper-services"  split_direction="vertical" {
+			pane name="AGENT_SERVICE"  command="bash"  {
+				args "-c" "pnpm agent-service:dev; cd agent-service; ${SHELL-bash}"
+			}
+			pane name="ACCOUNT_SERVICE"  command="bash"  {
+				args "-c" "pnpm account-service:dev; cd account-service; ${SHELL-bash}"
+			}
+		}
+		pane name="externals"  split_direction="vertical" {
+			pane name="EXTERNAL"  command="bash"  {
+				args "-c" "pnpm externals"
+			}
+			pane name="SUBGRAPH DEPLOY"  command="bash"  {
+				args "-c" "pnpm subgraph:deploy:watch; cd subgraph; ${SHELL-bash}"
+			}
+			pane name="SUBGRAPH SCHEMA"  command="bash"  {
+				args "-c" "pnpm subgraph:schema:watch; cd subgraph; ${SHELL-bash}"
+			}
+		}
+	}
+
+}
+
+			/*
+
+const {fixedArgs, extra, options} = parseArgs(args, 0, {reset: 'boolean'});
+    if (options.reset) {
+      await execute('rimraf agent-service/src/contracts.json');
+      await execute('rimraf contracts/deployments/localhost && rimraf web/src/lib/contracts.json');
+    }
+    console.log(`waiting on local node...`);
+    await execute(`wait-on tcp:127.0.0.1:8545`);
+
+    await performAction([`contracts:execute`, 'localhost', 'contracts/scripts/fundingFromCoinbase.ts']);
+    await wait(1); // slight delay to ensure ethereum node is actually ready
+    await execute(
+      `dotenv -e .env -e contracts/.env -- npm --prefix contracts run local:dev -- --export ../web/src/lib/contracts.json`
+    );
+			*/
+

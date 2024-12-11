@@ -1,4 +1,4 @@
-specVersion: 0.0.3
+specVersion: 0.0.4
 description: conquest.eth
 schema:
   file: ./schema.graphql
@@ -7,12 +7,12 @@ dataSources:
     name: OuterSpace
     network: {{chainName}}
     source:
-      address: '{{contracts.OuterSpace.address}}'
+      address: "{{contracts.OuterSpace.address}}"
       abi: OuterSpaceContract
       startBlock: {{contracts.OuterSpace.receipt.blockNumber}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - Space
@@ -59,12 +59,12 @@ dataSources:
     name: PlayToken
     network: {{chainName}}
     source:
-      address: '{{contracts.PlayToken.address}}'
+      address: "{{contracts.PlayToken.address}}"
       abi: PlayToken_Contract
       startBlock: {{contracts.PlayToken.receipt.blockNumber}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - Owner
@@ -80,12 +80,12 @@ dataSources:
     name: FreePlayToken
     network: {{chainName}}
     source:
-      address: '{{contracts.FreePlayToken.address}}'
+      address: "{{contracts.FreePlayToken.address}}"
       abi: FreePlayToken_Contract
       startBlock: {{contracts.FreePlayToken.receipt.blockNumber}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - Owner
@@ -101,12 +101,12 @@ dataSources:
     name: AllianceRegistry
     network: {{chainName}}
     source:
-      address: '{{contracts.AllianceRegistry.address}}'
+      address: "{{contracts.AllianceRegistry.address}}"
       abi: AllianceRegistry_Contract
       startBlock: {{contracts.AllianceRegistry.receipt.blockNumber}}
     mapping:
       kind: ethereum/events
-      apiVersion: 0.0.5
+      apiVersion: 0.0.6
       language: wasm/assemblyscript
       entities:
         - Owner

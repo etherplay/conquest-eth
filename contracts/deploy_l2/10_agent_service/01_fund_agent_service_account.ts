@@ -6,6 +6,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const {deployer, agentService} = await hre.getNamedAccounts();
   const {rawTx} = hre.deployments;
   if (agentService) {
+    console.log(`FUNDING AGENT SERVICE (${agentService}) ...`);
     const currentBalance = await hre.ethers.provider.getBalance(agentService);
     if (currentBalance.lt(parseEther('1'))) {
       await rawTx({
@@ -16,6 +17,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         value: parseEther('10'),
       });
     }
+  } else {
+    console.log(`NO AGENT SERVICE CONFIGURED`);
   }
 };
 export default func;
