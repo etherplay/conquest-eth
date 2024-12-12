@@ -44,6 +44,14 @@ if (chainId === '100') {
   nativeTokenDecimal = 18;
 }
 
+if (chainId === '7001' || chainId === '7001') {
+  finality = 8; // TODO
+  blockTime = 5;
+  nativeTokenSymbol = 'ZETA';
+  nativeTokenName = 'ZETA';
+  nativeTokenDecimal = 18;
+}
+
 let webWalletURL: string | undefined = import.meta.env.VITE_WEB_WALLET_ETH_NODE as string | undefined;
 if (webWalletURL && webWalletURL.startsWith('__')) {
   webWalletURL = undefined;

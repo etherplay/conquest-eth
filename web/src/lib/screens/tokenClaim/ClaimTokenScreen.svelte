@@ -2,7 +2,7 @@
   import tokenClaim from './tokenClaim';
   import {wallet, chain, switchChain} from '$lib/blockchain/wallet';
   import Button from '$lib/components/generic/PanelButton.svelte';
-  import {chainName} from '$lib/config';
+  import {chainName, nativeTokenSymbol} from '$lib/config';
   import {privateWallet} from '$lib/account/privateWallet';
   import Blockie from '$lib/components/account/Blockie.svelte';
 </script>
@@ -31,15 +31,15 @@
         {:else if $tokenClaim.state === 'Loading'}
           <p class="text-green-500">Congratulations! You have been given some tokens to claim.</p>
           <p class="text-green-500">
-            Each token is worth 1 XDAI, but can only be redeemed back to XDAI after having the token stay ingame more
-            than 6 days
+            Each token is worth 1 {nativeTokenSymbol}, but can only be redeemed back to {nativeTokenSymbol} after having
+            the token stay ingame more than 6 days
           </p>
           <p class="mt-5">Loading claim...</p>
         {:else if $tokenClaim.state === 'Available'}
           <p class="text-green-500">Congratulations! You have been given some tokens to claim.</p>
           <p class="text-green-500">
-            Each token is worth 1 XDAI, but can only be redeemed back to XDAI after having the token stay ingame more
-            than 6 days
+            Each token is worth 1 {nativeTokenSymbol}, but can only be redeemed back to {nativeTokenSymbol} after having
+            the token stay ingame more than 6 days
           </p>
           <Button class="mt-4" label="claim" on:click={() => tokenClaim.claim()}>Claim</Button>
         {:else if $tokenClaim.state === 'SettingUpClaim'}

@@ -10,6 +10,7 @@
   import {parseEther} from '@ethersproject/units';
   import {initialContractsInfos as contractsInfos} from '$lib/blockchain/contracts';
   import {Wallet} from '@ethersproject/wallet';
+  import {nativeTokenSymbol} from '$lib/config';
 
   let amount = 25;
   let nativeTokenAmount = 2;
@@ -76,7 +77,7 @@
           bind:value={amount}
         />
 
-        <label for="nativeTokenAmount">number of xdai: </label><input
+        <label for="nativeTokenAmount">number of {nativeTokenSymbol}: </label><input
           id="nativeTokenAmount"
           class="bg-gray-700"
           type="number"

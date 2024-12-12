@@ -14,6 +14,7 @@
   import {base} from '$app/paths';
   import mintFlow from '$lib/flows/mint';
   import EmbeddedMintFlow from './EmbeddedMintFlow.svelte';
+  import {nativeTokenSymbol} from '$lib/config';
 
   $: coords = $claimFlow.data?.coords;
   $: planetInfo = coords ? spaceInfo.getPlanetInfo(coords.x, coords.y) : undefined;
@@ -77,8 +78,8 @@
       {cost.toNumber() / 10000}
       <PlayCoin class="inline w-4" />.
       <p class="mt-4 text-yellow-600">
-        You can mint some by depositing XDAI And you can always burn them then to get back the XDAI. As long as you hold
-        them or withdraw from the game.
+        You can mint some by depositing {nativeTokenSymbol} And you can always burn them then to get back the {nativeTokenSymbol}.
+        As long as you hold them or withdraw from the game.
         <center class="m-5">
           <Button label="mint" on:click={() => mint(cost.toNumber() / 10000)}
             >Mint {cost.toNumber() / 10000} <PlayCoin class="inline w-4" /></Button
@@ -103,8 +104,8 @@
       {/if}
 
       <p class="mt-4 text-yellow-600">
-        You can mint some by depositing XDAI And you can always burn them then to get back the XDAI. As long as you hold
-        them or withdraw from the game.
+        You can mint some by depositing {nativeTokenSymbol} And you can always burn them then to get back the {nativeTokenSymbol}.
+        As long as you hold them or withdraw from the game.
         <center class="m-5">
           <Button label="mint" on:click={() => mint(cost.toNumber() / 10000)}
             >Mint {cost.toNumber() / 10000} <PlayCoin class="inline w-4" /></Button

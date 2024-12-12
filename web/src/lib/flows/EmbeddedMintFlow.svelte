@@ -7,6 +7,7 @@
   import mintFlow from '$lib/flows/mint';
   import {initialContractsInfos as contractsInfos} from '$lib/blockchain/contracts';
   import {formatEther} from '@ethersproject/units';
+  import {nativeTokenSymbol} from '$lib/config';
 
   let tokenAmountToMint = $mintFlow.data?.numTokenUnit;
   $: if ($mintFlow.data?.numTokenUnit && !tokenAmountToMint) {
@@ -61,7 +62,8 @@
         .mul('100000000000000')
         .mul('1000000000000000000')
         .div(contractsInfos.contracts.PlayToken.linkedData.numTokensPerNativeTokenAt18Decimals)
-    )} XDAI into {tokenAmountToMint}
+    )}
+    {nativeTokenSymbol} into {tokenAmountToMint}
     <PlayCoin class="inline w-4" />
 
     <p class="m-2">You can adjust the amount here</p>

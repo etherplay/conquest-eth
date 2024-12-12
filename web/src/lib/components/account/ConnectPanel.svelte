@@ -9,7 +9,7 @@
   import PlayCoin from '$lib/components/utils/PlayCoin.svelte';
   import {url} from '$lib/utils/url';
   import {account} from '$lib/account/account';
-  import {params, version} from '$lib/config';
+  import {nativeTokenSymbol, params, version} from '$lib/config';
 
   async function connect() {
     try {
@@ -144,7 +144,7 @@
         Cash Out
         <Help class="w-4 h-4">
           Here you'll be able to cash the
-          <PlayCoin class="w-4 h-4 inline" /> out into XDAI
+          <PlayCoin class="w-4 h-4 inline" /> out into {nativeTokenSymbol}
         </Help>
       </NavButton>
       <NavButton class="m-1" label="stats" href={url('stats/')}>

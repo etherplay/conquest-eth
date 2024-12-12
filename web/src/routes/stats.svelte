@@ -2,6 +2,7 @@
   import {base} from '$app/paths';
 
   import NavButton from '$lib/components/navigation/NavButton.svelte';
+  import {nativeTokenSymbol} from '$lib/config';
 
   import {stats} from '$lib/space/stats';
   import {formatEther} from '@ethersproject/units';
@@ -25,10 +26,10 @@
       <span class="text-yellow-600">Loading...</span>
     {:else}
       <label for="currentStake">Current In-Game Stake </label>
-      <p class="mb-4" id="currentStake">{formatEther($stats.data.currentStakeMinusExiting)} XDAI</p>
+      <p class="mb-4" id="currentStake">{formatEther($stats.data.currentStakeMinusExiting)} {nativeTokenSymbol}</p>
 
       <!-- <label for="totalStaked">Total Staked </label>
-      <p class="mb-4" id="totalStaked">{formatEther($stats.data.totalStaked)} XDAI</p> -->
+      <p class="mb-4" id="totalStaked">{formatEther($stats.data.totalStaked)} {nativeTokenSymbol}</p> -->
 
       <label for="numPlanetsStaked">Number of Planet Staked </label>
       <p class="mb-4" id="numPlanetsStaked">{$stats.data.numPlanetsStakedMinusExiting} planets</p>
