@@ -19,7 +19,7 @@ import {
   AlreadyExistsButDifferent,
 } from './errors';
 import {xyToLocation, createResponse, time2text, dequals} from './utils';
-import { parseEther } from 'ethers/lib/utils';
+import { parseEther, parseUnits } from 'ethers/lib/utils';
 
 // const oldFetch = globalThis.fetch;
 
@@ -162,17 +162,31 @@ type SyncData = {
 };
 
 const gwei = BigNumber.from('1000000000');
-// the default fee schedule for new user registration
-// const defaultMaxFeesSchedule: MaxFeesSchedule = [
-//   {maxFeePerGas: gwei.mul(15).div(10).toString(), delay: 0},
-//   {maxFeePerGas: gwei.mul(3).toString(), delay: 5*60},
-//   {maxFeePerGas: gwei.mul(6).toString(), delay: 20*60},
-// ];
-const defaultMaxFeesSchedule: MaxFeesSchedule = [
-  {maxFeePerGas: gwei.mul(58).toString(), delay: 0, maxPriorityFeePerGas: gwei.mul(15).div(10).toString()},
-  {maxFeePerGas: gwei.mul(59).toString(), delay: 5*60, maxPriorityFeePerGas: gwei.mul(3).toString()},
-  {maxFeePerGas: gwei.mul(60).toString(), delay: 20*60, maxPriorityFeePerGas: gwei.mul(4).toString()},
-];
+
+
+function getDefaultMaxFeesSchedule(env: Env): MaxFeesSchedule {
+  if (env.NETWORK_NAME === 'zetachain_testnet') {
+    return [
+      {maxFeePerGas: parseUnits("0.0008", 'gwei').toString(), delay: 0, maxPriorityFeePerGas: parseUnits('0.0008', 'gwei').toString()},
+      {maxFeePerGas: parseUnits("0.0016", 'gwei').toString(), delay: 5*60, maxPriorityFeePerGas: parseUnits('0.001', 'gwei').toString()},
+      {maxFeePerGas: parseUnits("0.01", 'gwei').toString(), delay: 20*60, maxPriorityFeePerGas: parseUnits('0.002', 'gwei').toString()},
+    ];
+  } else {
+    // the default fee schedule for new user registration
+    // const defaultMaxFeesSchedule: MaxFeesSchedule = [
+    //   {maxFeePerGas: gwei.mul(15).div(10).toString(), delay: 0},
+    //   {maxFeePerGas: gwei.mul(3).toString(), delay: 5*60},
+    //   {maxFeePerGas: gwei.mul(6).toString(), delay: 20*60},
+    // ];
+
+    return [
+      {maxFeePerGas: gwei.mul(58).toString(), delay: 0, maxPriorityFeePerGas: gwei.mul(15).div(10).toString()},
+      {maxFeePerGas: gwei.mul(59).toString(), delay: 5*60, maxPriorityFeePerGas: gwei.mul(3).toString()},
+      {maxFeePerGas: gwei.mul(60).toString(), delay: 20*60, maxPriorityFeePerGas: gwei.mul(4).toString()},
+    ];
+    
+  }
+}
 
 // maximum gas consumed for the reveal tx // TODO check its actual value, as we modify the contract
 // TODO specify it as part of the reveal submission (if the system was fully generic, then it make sense to add it)
@@ -270,6 +284,7 @@ export class RevealQueue extends DO {
   }
 
   async register(path: string[], registrationSubmission: RegistrationSubmission): Promise<Response> {
+    const defaultMaxFeesSchedule = getDefaultMaxFeesSchedule(this.env);
     const timestampMs = Math.floor(Date.now());
     const player = registrationSubmission.player.toLowerCase();
     const accountID = `account_${player}`;
@@ -309,6 +324,7 @@ export class RevealQueue extends DO {
   }
 
   async adoptDefaultFeeSubmission(path: string[]): Promise<Response> {
+    const defaultMaxFeesSchedule = getDefaultMaxFeesSchedule(this.env);
     if (path[1] !== this.env.API_KEY) {
       return createResponse({success: false});
     }
@@ -327,6 +343,7 @@ export class RevealQueue extends DO {
   }
 
   async adoptDefaultFeeSubmissionOnReveal(path: string[]): Promise<Response> {
+    const defaultMaxFeesSchedule = getDefaultMaxFeesSchedule(this.env);
     if (path[1] !== this.env.API_KEY) {
       return createResponse({success: false});
     }
@@ -344,6 +361,7 @@ export class RevealQueue extends DO {
   }
 
   async setMaxFeePerGasSchedule(path: string, feeScheduleSubmission: FeeScheduleSubmission): Promise<Response> {
+    const defaultMaxFeesSchedule = getDefaultMaxFeesSchedule(this.env);
     const {errorResponse} = checkFeeScheduleSubmission(feeScheduleSubmission);
     if (errorResponse) {
       return errorResponse;
@@ -405,6 +423,7 @@ export class RevealQueue extends DO {
   }
 
   async queueReveal(path: string[], revealSubmission: RevealSubmission): Promise<Response> {
+    const defaultMaxFeesSchedule = getDefaultMaxFeesSchedule(this.env);
     // if (path || !path) {
     //   return createErrorResponse({code: 4999, message: 'reject'});
     // }
@@ -846,6 +865,7 @@ export class RevealQueue extends DO {
   }
 
   async syncAccountBalances(path: string[]): Promise<Response> {
+    const defaultMaxFeesSchedule = getDefaultMaxFeesSchedule(this.env);
     const network = await this.provider.getNetwork();
     if (network.chainId.toString() !== chainId) {
       this.error(`Different chainId detected : ${network.chainId} vs expected ${chainId}`);
@@ -1222,6 +1242,7 @@ export class RevealQueue extends DO {
   }
 
   async _reduceSpending(reveal: RevealData) {
+    const defaultMaxFeesSchedule = getDefaultMaxFeesSchedule(this.env);
     const accountID = `account_${reveal.player}`;
     const maxFeeAllowed = getMaxFeeAllowed(reveal.maxFeesSchedule);
     const minimumCost = maxFeeAllowed.mul(revealMaxGasEstimate);
