@@ -27,7 +27,7 @@
     : parseEther('0.01');
   let topupValueInEth;
   onMount(() => {
-    topupValueInEth = 0.9;
+    topupValueInEth = 0.07;
   });
 </script>
 

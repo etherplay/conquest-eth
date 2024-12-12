@@ -26,6 +26,10 @@ bindings = [{name = "REVEAL_QUEUE", class_name = "RevealQueue"}]
 [triggers]
 crons = ["* * * * *", "*/1 * * * *", "*/2 * * * *"]
 
+[observability.logs]
+enabled = true
+
+
 # needed for first deployment
 # [[migrations]]
 # tag = "v1"
