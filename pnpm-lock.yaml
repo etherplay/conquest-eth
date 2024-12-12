@@ -12,8 +12,8 @@ importers:
   .:
     devDependencies:
       ldenv:
-        specifier: ^0.3.11
-        version: link:../../wighawag/ldenv
+        specifier: ^0.3.12
+        version: 0.3.12
       rimraf:
         specifier: ^3.0.2
         version: 3.0.2
@@ -364,7 +364,7 @@ importers:
         version: 4.7.8
       ldenv:
         specifier: ^0.3.11
-        version: link:../../../wighawag/ldenv
+        version: 0.3.11
       matchstick-as:
         specifier: 0.5.0
         version: 0.5.0
@@ -5459,6 +5459,10 @@ packages:
 
   ldenv@0.3.11:
     resolution: {integrity: sha512-bX4Q9RqWoN93lRnyCL/bnbL673ZisKDuUvbr/qDezpUviKDOj2ryIfpdlniO6mkk5I+ZHHEkI3mWAwNAS4fTHw==}
+    hasBin: true
+
+  ldenv@0.3.12:
+    resolution: {integrity: sha512-wtHLTD8LmDcPbZdzKqBskb1ea7/hs4uaNDIgVORTASX4qvso3mnUPz9jY9XAScIHbdOwsaD98l4cMZw7v1oxCQ==}
     hasBin: true
 
   level-codec@9.0.2:
@@ -15680,6 +15684,11 @@ snapshots:
       package-json: 6.5.0
 
   ldenv@0.3.11:
+    dependencies:
+      dotenv: 16.3.1
+      dotenv-expand: 10.0.0
+
+  ldenv@0.3.12:
     dependencies:
       dotenv: 16.3.1
       dotenv-expand: 10.0.0

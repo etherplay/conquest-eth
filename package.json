@@ -4,7 +4,7 @@
   "description": "conquest.eth",
   "private": true,
   "devDependencies": {
-    "ldenv": "^0.3.11",
+    "ldenv": "^0.3.12",
     "rimraf": "^3.0.2",
     "svelte": "^3.46.4",
     "wait-on": "^6.0.1",
@@ -26,7 +26,7 @@
     "contracts:export": "rm web/src/lib/contracts.json; ldenv -m localhost pnpm run --filter ./contracts export @@MODE ../web/src/lib/contracts.json @@",
     "---------------------- WEB ----------------------": "web client",
     "web:dev": "pnpm wait-on web/src/lib/contracts.json && pnpm run --filter ./web dev",
-    "web:build": "ldenv pnpm contracts:export @@MODE ~~ pnpm run --filter ./web build ~~ @@",
+    "web:build": "pnpm common:build && ldenv pnpm contracts:export @@MODE ~~ pnpm run --filter ./web build ~~ @@",
     "zellij:web": "zellij-launcher --layout dev/zellij-web.kdl a $npm_package_name || zellij --layout dev/zellij-web.kdl -s $npm_package_name",
     "----------------------- SUBGRAPH ----------------------": "subgraph",
     "subgraph:generate:codegen": "ldenv pnpm run --filter ./subgraph generate:codegen @@MODE @@",
