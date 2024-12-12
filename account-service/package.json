@@ -7,12 +7,12 @@
   "scripts": {
     "prepare": "node .setup.cjs",
     "build:cjs": "node build.cjs",
-    "build": "npm-run-all \"generate -- {1}\" \"build:cjs\" --",
+    "build": "npm-run-all \"generate {1}\" \"build:cjs\" --",
     "format": "prettier --write '**/*.{js,css,json,md}'",
     "generate": "node generate.cjs",
     "deploy:wrangler": "wrangler publish",
-    "deploy": "npm-run-all \"generate -- {1}\" \"deploy:wrangler\" --",
-    "dev": "npm-run-all \"generate -- {1}\" \"dev:flare\" --",
+    "deploy": "npm-run-all \"generate {1}\" \"deploy:wrangler\" --",
+    "dev": "npm-run-all \"generate {1}\" \"dev:flare\" --",
     "dev:flare": "miniflare --watch --debug --host 0.0.0.0 --port 8788",
     "manual-test": "esbuild test/manual.ts --outfile=dist/manual.mjs && node dist/manual.mjs"
   },

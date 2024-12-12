@@ -4,14 +4,15 @@
     "generate": "ldenv wait-on ../web/src/lib/contracts.json ~~ node generate.cjs ../contracts/deployments/@@MODE ~~ @@",
     "codegen": "graph codegen",
     "build": "graph build",
-    "deploy:local": "pnpm create:local; pnpm run deploy",
-    "deploy:build": "ldenv -m localhost pnpm generate @@MODE ~~ pnpm codegen ~~ pnpm deploy:local ~~ @@",
-    "deploy:watch": "ldenv -m localhost as-soon -w src -w templates -w ../contracts/deployments/@@MODE pnpm deploy:build @@MODE @@",
+    "deploy:local": "pnpm create:local; ldenv -m localhost graph deploy --version-label v0.0.1 --node @@GRAPH_DEPLOY_ENDPOINT --ipfs @@IPFS_URL @@SUBGRAPH_NAME @@",
+    "deploy:local:build": "ldenv -m localhost pnpm generate @@MODE ~~ pnpm codegen ~~ pnpm deploy:local ~~ @@",
+    "deploy:local:watch": "ldenv -m localhost as-soon -w src -w templates -w ../contracts/deployments/@@MODE pnpm deploy:local:build @@MODE @@",
     "schema:watch": "ldenv as-soon -w schema.graphql pnpm codegen",
-    "deploy:alchemy": "ldenv graph deploy --version-label v0.0.1 --deploy-key=@@ALCHEMY_GRAPH_TOKEN --ipfs https://ipfs.satsuma.xyz --node https://subgraphs.alchemy.com/api/subgraphs/deploy conquest-eth",
-    "create:local": "ldenv wait-on http://@@GRAPH_NODE_GRAPHQL ~~ graph create --node http://@@GRAPH_NODE_API @@SUBGRAPH_NAME ~~",
-    "remove:local": "ldenv wait-on http://@@GRAPH_NODE_GRAPHQL ~~ graph remove --node http://@@GRAPH_NODE_API @@SUBGRAPH_NAME ~~",
-    "deploy": "ldenv graph deploy --version-label v0.0.1 --node http://@@GRAPH_NODE_API --ipfs @@IPFS_URL @@SUBGRAPH_NAME",
+    "create:local": "ldenv wait-on http://@@GRAPH_NODE_GRAPHQL ~~ graph create --node @@GRAPH_DEPLOY_ENDPOINT @@SUBGRAPH_NAME ~~",
+    "remove:local": "ldenv wait-on http://@@GRAPH_NODE_GRAPHQL ~~ graph remove --node @@GRAPH_DEPLOY_ENDPOINT @@SUBGRAPH_NAME ~~",
+    "generate:codegen": "ldenv -m localhost pnpm generate @@MODE ~~ pnpm codegen ~~ @@",
+    "deploy:build": "ldenv -m localhost pnpm generate @@MODE ~~ pnpm codegen ~~ pnpm run deploy @@MODE ~~ @@",
+    "deploy": "ldenv graph deploy --version-label v0.0.1 --deploy-key=@@ALCHEMY_GRAPH_TOKEN --ipfs @@IPFS_URL --node @@GRAPH_DEPLOY_ENDPOINT @@SUBGRAPH_NAME @@",
     "test": "graph test"
   },
   "dependencies": {
@@ -25,5 +26,8 @@
     "ldenv": "^0.3.11",
     "matchstick-as": "0.5.0",
     "wait-on": "^8.0.1"
+  },
+  "volta": {
+    "node": "16.20.2"
   }
 }

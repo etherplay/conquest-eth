@@ -10,6 +10,7 @@ function setCharAt(str: string, index: i32, char: string): string {
   if (index > str.length - 1) return str;
   return str.substr(0, index) + char + str.substr(index + 1);
 }
+
 function normalize(strValue: string): string {
   if (strValue.length === 1 && strValue.charCodeAt(0) === 0) {
     return '';

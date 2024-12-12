@@ -24,6 +24,7 @@ const chainNames = {
   1337: "localhost",
   31337: "localhost",
   100: "gnosis",
+  7001: "zetachain-athens"
 };
 // TODO use chain.network
 

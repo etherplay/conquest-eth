@@ -19,7 +19,7 @@ layout {
 				args "-c" "pnpm externals"
 			}
 			pane name="SUBGRAPH DEPLOY"  command="bash"  {
-				args "-c" "pnpm subgraph:deploy:watch; cd subgraph; ${SHELL-bash}"
+				args "-c" "pnpm subgraph:deploy:local:watch; cd subgraph; ${SHELL-bash}"
 			}
 			pane name="SUBGRAPH SCHEMA"  command="bash"  {
 				args "-c" "pnpm subgraph:schema:watch; cd subgraph; ${SHELL-bash}"
