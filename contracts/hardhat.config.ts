@@ -130,6 +130,16 @@ const config: HardhatUserConfig = {
       accounts: accounts('gnosis_chain'),
       deploy: l1_deployments.concat(l1_deployments_dev, l2_deployments, l2_deployments_dev),
     },
+    zetachain_testnet: {
+      url: node_url('zetachain_testnet'),
+      accounts: accounts('zetachain_testnet'),
+      deploy: l1_deployments.concat(l1_deployments_dev, l2_deployments, l2_deployments_dev),
+    },
+    sepolia: {
+      url: node_url('sepolia'),
+      accounts: accounts('sepolia'),
+      deploy: l1_deployments.concat(l1_deployments_dev, l2_deployments, l2_deployments_dev),
+    },
     production: {
       url: node_url('mainnet'),
       accounts: accounts('mainnet'),
