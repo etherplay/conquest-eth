@@ -21,9 +21,11 @@
     "common:build": "pnpm run --filter ./common-lib build",
     "---------------------- CONTRACTS ----------------------": "contracts compilation and deployment",
     "local_node": "pnpm run --filter ./contracts dev:node",
-    "contracts:dev": "rm web/src/lib/contracts.json; wait-on tcp:127.0.0.1:8545 && pnpm run --filter ./contracts local:dev --export ../web/src/lib/contracts.json ",
+    "contracts:dev": "rm web/src/lib/contracts.json; wait-on tcp:127.0.0.1:8545 && pnpm run --filter ./contracts local:dev --export ../web/src/lib/contracts.json",
+    "contracts:export": "rm web/src/lib/contracts.json; ldenv -m localhost pnpm run --filter ./contracts export @@MODE ../web/src/lib/contracts.json @@",
     "---------------------- WEB ----------------------": "web client",
     "web:dev": "pnpm wait-on web/src/lib/contracts.json && pnpm run --filter ./web dev",
+    "zellij:web": "zellij-launcher --layout dev/zellij-web.kdl a $npm_package_name || zellij --layout dev/zellij-web.kdl -s $npm_package_name",
     "----------------------- SUBGRAPH ----------------------": "subgraph",
     "subgraph:deploy:watch": "pnpm run --filter ./subgraph deploy:watch",
     "subgraph:schema:watch": "pnpm run --filter ./subgraph schema:watch",
@@ -32,6 +34,7 @@
     "agent-service:dev": "pnpm wait-on web/src/lib/contracts.json && ldenv -m localhost pnpm run --filter ./agent-service dev ../contracts/deployments/@@MODE @@",
     "---------------------- RUN FULL LOCAL SETUP ----------------------": "compile and deploy smart contracts",
     "cleanup": "rm -Rf contracts/deployments/localhost",
+    "web": "ldenv pnpm contracts:export @@MODE ~~ pnpm zellij:web ~~ @@",
     "start": "pnpm cleanup; zellij-launcher --layout dev/zellij.kdl a $npm_package_name || zellij --layout dev/zellij.kdl -s $npm_package_name"
   },
   "volta": {

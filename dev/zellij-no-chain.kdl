@@ -5,10 +5,6 @@ layout {
 			pane name="CONTRACTS:WATCH" command="bash"  {
 				args "-c" "pnpm contracts:dev; cd contracts; ${SHELL-bash}"
 			}
-
-			pane name="NODE" command="bash"  {
-				args "-c" "pnpm local_node; ${SHELL-bash}"
-			}
 		}
 		pane split_direction="vertical" {
 			pane name="COMMON" command="bash"  {
@@ -19,14 +15,6 @@ layout {
 			}
 		}
 		pane name="helper-services"  split_direction="vertical" {
-			pane name="AGENT_SERVICE"  command="bash"  {
-				args "-c" "pnpm agent-service:dev; cd agent-service; ${SHELL-bash}"
-			}
-			pane name="ACCOUNT_SERVICE"  command="bash"  {
-				args "-c" "pnpm account-service:dev; cd account-service; ${SHELL-bash}"
-			}
-		}
-		pane name="externals"  split_direction="vertical" {
 			pane name="EXTERNAL"  command="bash"  {
 				args "-c" "pnpm externals"
 			}

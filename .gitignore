@@ -1,6 +1,5 @@
-.env*
-!.env*.default
-!.env.web.*
+*.local
+/old/.env*
 .newsh.json
 node_modules
 *.code-workspace

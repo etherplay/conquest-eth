@@ -1,0 +1,19 @@
+layout {
+	pane {
+		pane {}
+		pane split_direction="vertical" {
+			pane name="CONTRACTS:WATCH" command="bash"  {
+				args "-c" "pnpm contracts:dev; cd contracts; ${SHELL-bash}"
+			}
+		}
+		pane split_direction="vertical" {
+			pane name="COMMON" command="bash"  {
+				args "-c" "pnpm common:dev; cd common-lib; ${SHELL-bash}"
+			}
+			pane name="WEB" command="bash"  {
+				args "-c" "pnpm web:dev; cd web; ${SHELL-bash}"
+			}
+		}
+	}
+
+}

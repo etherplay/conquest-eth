@@ -72,10 +72,18 @@ If you prefer (or do not have access to docker/docker-compose) you can run them 
 pnpm install
 ```
 
-#### Development
+### Development
 
 The following command will start everything up. But you need to have [Zellij](https://zellij.dev/) installed
 
 ```bash
 pnpm start
+```
+
+### Play locally but connected to Conquest Defcon edition
+
+The following will launch the client on http://localhost:3000
+
+```bash
+pnpm web defcon
 ```
