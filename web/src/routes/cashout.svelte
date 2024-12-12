@@ -14,7 +14,7 @@
 
   $: {
     if (!amount && $myTokens.playTokenBalance) {
-      amount = $myTokens.playTokenBalance.div('100000000000000000').toNumber() / 10;
+      amount = $myTokens.playTokenBalance.div('100000000000000').toNumber() / 10000;
     }
   }
 
@@ -22,7 +22,7 @@
     if (wallet.address && wallet.contracts) {
       const tx = await wallet.contracts.PlayToken.burn(
         wallet.address,
-        BigNumber.from(amount * 10).mul('100000000000000000')
+        BigNumber.from(amount * 10000).mul('100000000000000')
       );
       // TODO :
       //  account.recordWithdrawal(tx.hash, tx.nonce);

@@ -38,7 +38,7 @@ class MintFlowStore extends BaseStoreWithData<MintFlow, Data> {
       numTokenUnit = flow.data.numTokenUnit;
     }
 
-    const amount = BigNumber.from(numTokenUnit * 10).mul('100000000000000000');
+    const amount = BigNumber.from(numTokenUnit * 10000).mul('100000000000000');
     const nativeTokenAmount = amount
       .mul('1000000000000000000')
       .div(contractsInfos.contracts.PlayToken.linkedData.numTokensPerNativeTokenAt18Decimals);

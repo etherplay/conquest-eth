@@ -57,8 +57,8 @@
     <p class="text-center" />
 
     Confirming will transform {formatEther(
-      BigNumber.from(tokenAmountToMint * 10)
-        .mul('100000000000000000')
+      BigNumber.from(tokenAmountToMint * 10000)
+        .mul('100000000000000')
         .mul('1000000000000000000')
         .div(contractsInfos.contracts.PlayToken.linkedData.numTokensPerNativeTokenAt18Decimals)
     )} XDAI into {tokenAmountToMint}

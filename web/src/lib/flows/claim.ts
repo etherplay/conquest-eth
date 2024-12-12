@@ -101,7 +101,7 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
       return;
     }
 
-    let tokenAmount = BigNumber.from(planetInfo.stats.stake).mul('100000000000000');
+    let tokenAmount = BigNumber.from(planetInfo.stats.stake * 10000).mul('10000000000');
     let paymentTokenContract = wallet?.contracts.PlayToken;
     if (get(myTokens).freePlayTokenBalance.gte(tokenAmount)) {
       paymentTokenContract = wallet?.contracts.FreePlayToken;

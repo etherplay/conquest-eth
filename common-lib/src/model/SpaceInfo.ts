@@ -311,6 +311,7 @@ export class SpaceInfo {
     for (let i = 2; i < this.stakeRange.length; i += 4) {
       stakeRangeArray.push(parseInt(this.stakeRange.slice(i, i + 4), 16));
     }
+    console.log({stakeRangeArray});
     const productionIndex = normal8(data, 12);
     // const offset = normal16(data, 4, '0x0000000100010002000200030003000400040005000500060006000700070008');
     // let stakeIndex = productionIndex + offset;
@@ -322,8 +323,8 @@ export class SpaceInfo {
     //   stakeIndex -= 4;
     // }
     const stakeIndex = productionIndex;
-    const stake = Math.floor((stakeRangeArray[stakeIndex] * this.stakeMultiplier10000th) / 1000) * 1000; // round to 1 decimal
-
+    const stake = Math.floor(stakeRangeArray[stakeIndex] * this.stakeMultiplier10000th);
+    console.log({stake});
     const production = normal16(data, 12, '0x0708083409600a8c0bb80ce40e100e100e100e101068151819c81e7823282ee0');
     const attackRoll = normal8(data, 20);
     const attack = 4000 + attackRoll * 400;
