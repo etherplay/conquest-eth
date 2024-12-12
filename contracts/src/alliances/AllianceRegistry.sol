@@ -320,7 +320,7 @@ contract AllianceRegistry is Proxied {
     }
 
     function _leaveAlliance(address player, IAlliance alliance) internal {
-        Alliances storage alliances = _alliances[msg.sender];
+        Alliances storage alliances = _alliances[player];
 
         IAlliance lastSlotAlliance;
         uint96 lastSlotJoinTime;
