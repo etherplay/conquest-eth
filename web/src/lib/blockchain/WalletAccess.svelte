@@ -109,7 +109,14 @@
     </p>
   </Modal>
 {:else if $flow.inProgress}
-  <Modal {title} cancelable={!$wallet.connecting} on:close={() => privateWallet.cancel()} closeButton={false}>
+  <Modal
+    {title}
+    cancelable={!$wallet.connecting}
+    on:close={() => {
+      privateWallet.cancel(true);
+    }}
+    closeButton={false}
+  >
     {#if $wallet.state === 'Idle'}
       {#if $wallet.loadingModule}
         Loading module:

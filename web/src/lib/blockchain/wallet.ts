@@ -127,6 +127,7 @@ wallet.subscribe(async ($wallet) => {
 if (typeof window !== 'undefined') {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (window as any).walletStores = walletStores;
+  (window as any).get = get;
 }
 
 chainTempo.startOrUpdateProvider(wallet.provider);
