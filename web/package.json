@@ -31,7 +31,7 @@
     "named-logs": "^0.1.0",
     "pretty-ms": "https://github.com/wighawag/pretty-ms#320ba46c464052ebbe605e48ad05df9e9801e956",
     "sveltejs-tippy": "^3.0.0",
-    "web3w": "^0.3.2-beta.23",
+    "web3w": "^0.3.2-beta.25",
     "web3w-portis-loader": "^0.3.3",
     "web3w-walletconnect-loader": "^0.3.2",
     "wonka": "^4.0.15"

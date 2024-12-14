@@ -447,8 +447,8 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0
       web3w:
-        specifier: ^0.3.2-beta.23
-        version: 0.3.2-beta.23(@ethersproject/abi@5.5.0)(@ethersproject/bignumber@5.5.0)(@ethersproject/contracts@5.5.0)(@ethersproject/providers@5.5.2(bufferutil@4.0.8)(utf-8-validate@5.0.8))
+        specifier: ^0.3.2-beta.25
+        version: 0.3.2-beta.25(@ethersproject/abi@5.5.0)(@ethersproject/bignumber@5.5.0)(@ethersproject/contracts@5.5.0)(@ethersproject/providers@5.5.2(bufferutil@4.0.8)(utf-8-validate@5.0.8))
       web3w-portis-loader:
         specifier: ^0.3.3
         version: 0.3.3
@@ -8597,8 +8597,8 @@ packages:
   web3w-walletconnect-loader@0.3.2:
     resolution: {integrity: sha512-6IgyNsnC92ermTq3cGmU0hLMM0LuGObyN3sZfR/Zp01haaMGi6GRrtx9BtHkBcHfO4lXbtx6iO3Chc71prtHrA==}
 
-  web3w@0.3.2-beta.23:
-    resolution: {integrity: sha512-CpguUyxDtz1FWYyCXnkT859QN8RUPSN+3Lq3h9MBBxYg1fduM+GRZhulaKnwfYJTw4KJQ4zQo1JHxiigdxIETA==}
+  web3w@0.3.2-beta.25:
+    resolution: {integrity: sha512-nHZf0ym2BuPiuZo+zI96gNiH5VPX2JrFcrREiC7I+amfwsDvAYa0Tx53rsel2Iz9WExG43jvWraIHjueWhGUBw==}
     peerDependencies:
       '@ethersproject/abi': ^5.0.0
       '@ethersproject/bignumber': ^5.0.0
@@ -19281,7 +19281,7 @@ snapshots:
     dependencies:
       named-logs: 0.1.0
 
-  web3w@0.3.2-beta.23(@ethersproject/abi@5.5.0)(@ethersproject/bignumber@5.5.0)(@ethersproject/contracts@5.5.0)(@ethersproject/providers@5.5.2(bufferutil@4.0.8)(utf-8-validate@5.0.8)):
+  web3w@0.3.2-beta.25(@ethersproject/abi@5.5.0)(@ethersproject/bignumber@5.5.0)(@ethersproject/contracts@5.5.0)(@ethersproject/providers@5.5.2(bufferutil@4.0.8)(utf-8-validate@5.0.8)):
     dependencies:
       '@ethersproject/abi': 5.5.0
       '@ethersproject/bignumber': 5.5.0

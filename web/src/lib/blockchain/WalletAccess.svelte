@@ -114,6 +114,9 @@
     cancelable={!$wallet.connecting}
     on:close={() => {
       privateWallet.cancel(true);
+      if (!$wallet.address) {
+        wallet.disconnect({logout: true, keepFlow: false});
+      }
     }}
     closeButton={false}
   >
@@ -129,13 +132,29 @@
         </div>
         <div class="flex flex-wrap justify-center pb-3">
           {#each options as option}
-            <img
-              class="cursor-pointer p-2 m-2 border-2 h-12 w-12 object-contain border-cyan-300"
-              alt={`Login with ${option.name}`}
-              src={`${base}/${option.img}`}
-              on:click={() => wallet.connect(option.id)}
-            />
+            {#if !(option.id === 'builtin' && $builtin.walletsAnnounced.length > 0)}
+              <img
+                class="cursor-pointer p-2 m-2 border-2 h-12 w-12 object-contain border-cyan-300"
+                alt={`Login with ${option.name}`}
+                src={`${base}/${option.img}`}
+                on:click={() => wallet.connect(option.id)}
+              />
+            {/if}
           {/each}
+
+          {#if $builtin.walletsAnnounced}
+            {#each $builtin.walletsAnnounced as builtinChoice}
+              <img
+                class="cursor-pointer p-2 m-2 border-2 h-12 w-12 object-contain border-cyan-300"
+                alt={`Login with ${builtinChoice.info?.name}`}
+                src={builtinChoice.info?.icon}
+                on:click={() => {
+                  console.log(builtinChoice);
+                  wallet.connect(`builtin:${builtinChoice.info.name}`);
+                }}
+              />
+            {/each}
+          {/if}
         </div>
         {#if builtinNeedInstalation}
           <div class="text-center">OR</div>
@@ -164,7 +183,7 @@
       {/if}
     {:else if $chain.state === 'Idle'}
       {#if $chain.connecting}
-        Connecting...
+        Connecting to chain...
       {:else if $chain.error}
         <div class="text-center">
           <p>{$chain.error?.message || '' + $chain.error}</p>
@@ -247,6 +266,6 @@
   </Modal>
 {:else if $privateWallet.step === 'CONNECTING'}
   <Modal>
-    <p>Connecting....</p>
+    <p>Connecting to wallet....</p>
   </Modal>
 {/if}
