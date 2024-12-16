@@ -58,7 +58,7 @@ Ronan is a game designer with love for permissionless-ness. He is also an active
 >
 > And [Zellij](https://zellij.dev/) for easily launching the game locally
 >
-> For nodejs we use version 14. If you use volta for version management, it will automatically pick the correct version
+> For nodejs we use version 16. If you use volta for version management, it will automatically pick the correct version
 
 ### docker and docker-compose
 
