@@ -149,6 +149,8 @@ console.log({SYNC_DB_NAME});
 
 const AGENT_SERVICE_URL = params['agent-service'] || (import.meta.env.VITE_AGENT_SERVICE_URL as string); //  'http://invalid.io'; // to emulate connection loss :)
 
+const BASIC_ALLIANCES_URL: string | undefined = import.meta.env.VITE_BASIC_ALLIANCES_URL as string;
+
 let _dropTransactions = false;
 function dropTransactions(yes: boolean): void {
   _dropTransactions = yes;
@@ -227,6 +229,7 @@ function report(message: any) {
 }
 
 export {
+  BASIC_ALLIANCES_URL,
   roundTo1Decimal,
   defaultTopupValueInEth,
   finality,

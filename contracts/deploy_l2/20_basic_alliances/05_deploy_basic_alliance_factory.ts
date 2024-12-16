@@ -10,8 +10,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const allianceRegistry = await hre.deployments.get('AllianceRegistry');
 
   const frontendBaseURI = `https://basic-alliances${
-    networkName === 'mainnet' ? '' : '-' + networkName
-  }.conquest.etherplay.io/alliances/#`;
+    networkName === 'mainnet' ? '' : '-' + networkName.replace('_', '-')
+  }.conquest.game/alliances/#`;
 
   await deploy('BasicAllianceFactory', {
     contract: 'BasicAlliance',

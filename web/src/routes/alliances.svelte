@@ -16,6 +16,7 @@
   import {flow, wallet} from '$lib/blockchain/wallet';
   import {hexZeroPad} from '@ethersproject/bytes';
   import Help from '$lib/components/utils/Help.svelte';
+  import {BASIC_ALLIANCES_URL} from '$lib/config';
 
   async function create() {
     await flow.execute(async (contracts) => {
@@ -48,14 +49,16 @@
     can for example require a slashable deposit, taken away in case of betrayal.
   </p>
 
-  <div class="mt-4">
-    <p>
-      For now we have created a basic alliance that is managed by one admin user. Check it out <a
-        class="underline"
-        href="https://basic-alliances-defcon.conquest.etherplay.io/">here</a
-      >
-    </p>
-  </div>
+  {#if BASIC_ALLIANCES_URL}
+    <div class="mt-4">
+      <p>
+        For now we have created a basic alliance that is managed by one admin user. Check it out <a
+          class="underline"
+          href={BASIC_ALLIANCES_URL}>here</a
+        >
+      </p>
+    </div>
+  {/if}
 </div>
 
 <h2 class="m-4 text-green-600 text-xl">Current Alliances:</h2>

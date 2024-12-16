@@ -4,18 +4,11 @@ pragma solidity 0.8.9;
 import "../types/ImportingOuterSpaceTypes.sol";
 import "../events/ImportingOuterSpaceEvents.sol";
 
-interface IOuterSpaceFleets is ImportingOuterSpaceTypes, ImportingOuterSpaceEvents {
-    function resolveFleet(uint256 fleetId, FleetResolution calldata resolution) external;
-
-    function send(
-        uint256 from,
-        uint32 quantity,
-        bytes32 toHash
-    ) external;
-
-    function sendFor(FleetLaunch calldata launch) external;
-
-    function getFleet(uint256 fleetId, uint256 from)
+interface IOuterSpaceFleetsRead is ImportingOuterSpaceTypes, ImportingOuterSpaceEvents {
+    function getFleet(
+        uint256 fleetId,
+        uint256 from
+    )
         external
         view
         returns (
