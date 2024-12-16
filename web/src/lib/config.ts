@@ -24,6 +24,9 @@ let blockTime = 15;
 let nativeTokenSymbol = 'ETH';
 let nativeTokenName = 'ETH';
 let nativeTokenDecimal = 18;
+let defaultTopupValueInEth = 0.07;
+let roundTo1Decimal = (contractsInfos.contracts.OuterSpace.linkedData as any).roundTo1Decimal;
+
 if (chainId !== '1') {
   finality = 5; // TODO
   blockTime = 10;
@@ -42,6 +45,7 @@ if (chainId === '100') {
   nativeTokenSymbol = 'XDAI';
   nativeTokenName = 'XDAI';
   nativeTokenDecimal = 18;
+  defaultTopupValueInEth = 0.9;
 }
 
 if (chainId === '7001' || chainId === '7001') {
@@ -223,6 +227,8 @@ function report(message: any) {
 }
 
 export {
+  roundTo1Decimal,
+  defaultTopupValueInEth,
   finality,
   fallbackProviderOrUrl,
   webWalletURL,

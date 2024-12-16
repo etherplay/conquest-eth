@@ -2,6 +2,7 @@ import {wallet} from '$lib/blockchain/wallet';
 import {BaseStoreWithData} from '$lib/utils/stores/base';
 import {BigNumber} from '@ethersproject/bignumber';
 import {initialContractsInfos as contractsInfos} from '$lib/blockchain/contracts';
+import {spaceInfo} from '$lib/space/spaceInfo';
 
 type Data = {
   txHash?: string;
@@ -38,7 +39,9 @@ class MintFlowStore extends BaseStoreWithData<MintFlow, Data> {
       numTokenUnit = flow.data.numTokenUnit;
     }
 
-    const amount = BigNumber.from(numTokenUnit * 10000).mul('100000000000000');
+    const amount = spaceInfo.roundTo1Decimal
+      ? BigNumber.from(numTokenUnit * 10).mul('100000000000000000')
+      : BigNumber.from(numTokenUnit * 10000).mul('100000000000000');
     const nativeTokenAmount = amount
       .mul('1000000000000000000')
       .div(contractsInfos.contracts.PlayToken.linkedData.numTokensPerNativeTokenAt18Decimals);

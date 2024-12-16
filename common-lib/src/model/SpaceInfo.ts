@@ -74,6 +74,7 @@ export class SpaceInfo {
   public readonly giftTaxPer10000: number;
   public readonly stakeRange: string;
   public readonly stakeMultiplier10000th: number;
+  public readonly roundTo1Decimal: boolean;
 
   // public readonly planetsOnFocus: PlanetInfo[] = [];
   // private lastFocus: {x0: number; y0: number; x1: number; y1: number} = {x0: 0, y0: 0, x1: 0, y1: 0};
@@ -92,6 +93,7 @@ export class SpaceInfo {
     giftTaxPer10000: number;
     stakeRange: string;
     stakeMultiplier10000th: number;
+    roundTo1Decimal?: boolean;
   }) {
     this.resolveWindow = config.resolveWindow;
     this.timePerDistance = Math.floor(config.timePerDistance / 4); // Same as in OuterSpace.sol: the coordinates space is 4 times bigger
@@ -105,6 +107,7 @@ export class SpaceInfo {
     this.giftTaxPer10000 = config.giftTaxPer10000;
     this.stakeRange = config.stakeRange;
     this.stakeMultiplier10000th = config.stakeMultiplier10000th;
+    this.roundTo1Decimal = config.roundTo1Decimal || false;
     // this.store = writable(this.planetsOnFocus);
   }
 
@@ -323,7 +326,9 @@ export class SpaceInfo {
     //   stakeIndex -= 4;
     // }
     const stakeIndex = productionIndex;
-    const stake = Math.floor(stakeRangeArray[stakeIndex] * this.stakeMultiplier10000th);
+    const stake = this.roundTo1Decimal
+      ? Math.floor((stakeRangeArray[stakeIndex] * this.stakeMultiplier10000th) / 1000) * 1000
+      : Math.floor(stakeRangeArray[stakeIndex] * this.stakeMultiplier10000th);
     // console.log({stake});
     const production = normal16(data, 12, '0x0708083409600a8c0bb80ce40e100e100e100e101068151819c81e7823282ee0');
     const attackRoll = normal8(data, 20);

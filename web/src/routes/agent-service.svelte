@@ -9,7 +9,7 @@
   import {privateWallet} from '$lib/account/privateWallet';
 
   import {agentService} from '$lib/account/agentService';
-  import {nativeTokenSymbol} from '$lib/config';
+  import {defaultTopupValueInEth, nativeTokenSymbol} from '$lib/config';
   import agentService_register from '$lib/flows/agentService_register';
   import agentService_topup from '$lib/flows/agentService_topup';
   import {BigNumber} from '@ethersproject/bignumber';
@@ -27,7 +27,7 @@
     : parseEther('0.01');
   let topupValueInEth;
   onMount(() => {
-    topupValueInEth = 0.07;
+    topupValueInEth = defaultTopupValueInEth;
   });
 </script>
 

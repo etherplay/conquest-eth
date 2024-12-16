@@ -18,8 +18,8 @@
 
   async function sendFreeTokens() {
     if (wallet.address && wallet.contracts) {
-      const claimKeyETHAmount = BigNumber.from(nativeTokenAmount * 10000).mul('100000000000000');
-      const tokenAmount = BigNumber.from(amount * 10000).mul('100000000000000');
+      const claimKeyETHAmount = BigNumber.from(nativeTokenAmount * 10).mul('100000000000000000');
+      const tokenAmount = BigNumber.from(amount * 10).mul('100000000000000000');
 
       let addressToUse = address;
 

@@ -7,7 +7,7 @@
   import mintFlow from '$lib/flows/mint';
   import {initialContractsInfos as contractsInfos} from '$lib/blockchain/contracts';
   import {formatEther} from '@ethersproject/units';
-  import {nativeTokenSymbol} from '$lib/config';
+  import {nativeTokenSymbol, roundTo1Decimal} from '$lib/config';
 
   let tokenAmountToMint = $mintFlow.data?.numTokenUnit;
   $: if ($mintFlow.data?.numTokenUnit && !tokenAmountToMint) {
@@ -58,8 +58,10 @@
     <p class="text-center" />
 
     Confirming will transform {formatEther(
-      BigNumber.from(tokenAmountToMint * 10000)
-        .mul('100000000000000')
+      (roundTo1Decimal
+        ? BigNumber.from(tokenAmountToMint * 10).mul('100000000000000000')
+        : BigNumber.from(tokenAmountToMint * 10000).mul('100000000000000')
+      )
         .mul('1000000000000000000')
         .div(contractsInfos.contracts.PlayToken.linkedData.numTokensPerNativeTokenAt18Decimals)
     )}
