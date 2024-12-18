@@ -16,7 +16,7 @@
       "path": "agent-service"
     },
     {
-      "path": "account-service"
+      "path": "helper-services"
     },
     {
       "path": "."

@@ -4,4 +4,4 @@ packages:
   - 'subgraph'
   - 'common-lib'
   - 'agent-service'
-  - 'account-service'
+  - 'helper-services/*'

@@ -1,0 +1,4 @@
+.env
+!.default
+/node_modules
+contracts.json

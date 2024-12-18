@@ -22,8 +22,14 @@ layout {
 			pane name="AGENT_SERVICE"  command="bash"  {
 				args "-c" "pnpm agent-service:dev; cd agent-service; ${SHELL-bash}"
 			}
-			pane name="ACCOUNT_SERVICE"  command="bash"  {
-				args "-c" "pnpm account-service:dev; cd account-service; ${SHELL-bash}"
+			pane name="FUZD"  command="bash"  {
+				args "-c" "pnpm fuzd:dev; cd helper-services/fuzd; ${SHELL-bash}"
+			}
+			pane name="SYNC"  command="bash"  {
+				args "-c" "pnpm sync:dev; cd helper-services/secp256k1-db; ${SHELL-bash}"
+			}
+			pane name="MISSIV"  command="bash"  {
+				args "-c" "pnpm missiv:dev; cd helper-services/missiv; ${SHELL-bash}"
 			}
 		}
 		pane name="externals"  split_direction="vertical" {

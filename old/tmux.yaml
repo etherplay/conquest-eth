@@ -9,7 +9,6 @@ windows:
       - pnpm run common:dev
       - pnpm run web:dev localhost -- --skipContracts --waitContracts
       - pnpm run agent-service:dev
-      - pnpm run account-service:dev
       - pnpm run contracts:node
       - pnpm run contracts:local:dev -- --reset
       - pnpm run subgraph:dev

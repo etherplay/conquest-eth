@@ -319,21 +319,6 @@ async function performAction(rawArgs) {
     const env = getEnv(network);
     // await performAction(['agent-service:build', network]);
     await execute(`${env}npm --prefix agent-service run deploy ../contracts/deployments/${network}`);
-  } else if (firstArg === 'account-service:dev') {
-    const {fixedArgs, extra} = parseArgs(args, 1, {});
-    const network = fixedArgs[0] || (await getNetworkName()) || 'localhost';
-    const env = getEnv(network);
-    await execute(`${env}npm --prefix account-service run dev ${network}`);
-  } else if (firstArg === 'account-service:build') {
-    const {fixedArgs, extra} = parseArgs(args, 1, {});
-    const network = fixedArgs[0] || (await getNetworkName()) || 'localhost';
-    const env = getEnv(network);
-    await execute(`${env}npm --prefix account-service run build ${network}`);
-  } else if (firstArg === 'account-service:deploy') {
-    const {fixedArgs, extra} = parseArgs(args, 1, {});
-    const network = fixedArgs[0] || (await getNetworkName()) || 'localhost';
-    const env = getEnv(network);
-    await execute(`${env}npm --prefix account-service run deploy ${network}`);
   } else if (firstArg === 'web:dev') {
     const {fixedArgs, options, extra} = parseArgs(args, 1, {
       skipContracts: 'boolean',
@@ -398,7 +383,6 @@ async function performAction(rawArgs) {
     await performAction(['contracts:deploy', network]);
     await performAction(['subgraph:deploy', network]);
     await performAction(['agent-service:deploy', network]);
-    await performAction(['account-service:deploy', network]);
     await performAction(['web:deploy', network]);
   } else if (firstArg === 'deploy:noweb') {
     const {fixedArgs, extra} = parseArgs(args, 1, {});
@@ -410,7 +394,6 @@ async function performAction(rawArgs) {
     await performAction(['contracts:deploy', network]);
     await performAction(['subgraph:deploy', network]);
     await performAction(['agent-service:deploy', network]);
-    await performAction(['account-service:deploy', network]);
   } else if (firstArg === 'stop') {
     await execute(`docker compose down -v --remove-orphans`);
   } else if (firstArg === 'externals') {
@@ -424,7 +407,6 @@ async function performAction(rawArgs) {
     execute(`newsh "npm run common:dev"`);
     execute(`newsh "npm run web:dev localhost -- --skipContracts --waitContracts ${extra.join(' ')}"`);
     execute(`newsh "npm run agent-service:dev"`);
-    execute(`newsh "npm run account-service:dev"`);
     execute(`newsh "npm run contracts:node"`);
     execute(`newsh "npm run contracts:local:dev -- --reset"`);
     execute(`newsh "npm run subgraph:dev"`);
@@ -437,7 +419,6 @@ async function performAction(rawArgs) {
     execute(`newsh "npm run common:dev"`);
     execute(`newsh "npm run web:dev localhost -- --skipContracts --waitContracts ${extra.join(' ')}"`);
     execute(`newsh "npm run agent-service:dev"`);
-    execute(`newsh "npm run account-service:dev"`);
     execute(`newsh "npm run contracts:node"`);
     execute(`newsh "npm run contracts:local:dev -- --reset"`);
     execute(`newsh "npm run subgraph:dev"`);
@@ -450,7 +431,6 @@ async function performAction(rawArgs) {
     execute(`newsh "npm run common:dev"`);
     execute(`newsh "npm run web:dev localhost -- --skipContracts --waitContracts ${extra.join(' ')}"`);
     execute(`newsh "npm run agent-service:dev"`);
-    execute(`newsh "npm run account-service:dev"`);
     execute(`newsh "npm run subgraph:dev"`);
     await performAction(['common:build']);
     await performAction(['contracts:seed', 'localhost', '--waitContracts']);
@@ -461,7 +441,6 @@ async function performAction(rawArgs) {
     execute(`newsh "npm run common:dev"`);
     execute(`newsh "npm run web:dev localhost -- --skipContracts --waitContracts ${extra.join(' ')}"`);
     execute(`newsh "npm run agent-service:dev"`);
-    execute(`newsh "npm run account-service:dev"`);
     execute(`newsh "npm run subgraph:dev"`);
     await performAction(['common:build']);
     await performAction(['contracts:seed', 'localhost', '--waitContracts']);
@@ -472,7 +451,6 @@ async function performAction(rawArgs) {
     execute(`newsh "npm run common:dev"`);
     execute(`newsh "npm run web:dev localhost -- --skipContracts --waitContracts ${extra.join(' ')}"`);
     execute(`newsh "npm run agent-service:dev"`);
-    execute(`newsh "npm run account-service:dev"`);
     execute(`newsh "npm run contracts:local:dev -- --reset"`);
     execute(`newsh "npm run subgraph:dev"`);
     await performAction(['common:build']);
