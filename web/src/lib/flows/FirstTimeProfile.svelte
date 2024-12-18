@@ -1,12 +1,12 @@
 <script lang="ts">
   import Modal from '$lib/components/generic/Modal.svelte';
   import PanelButton from '$lib/components/generic/PanelButton.svelte';
-  import myprofile from './myprofile';
+  import {setMissivProfile} from '$lib/missiv';
 
   let description = '';
 
-  function setProfile() {
-    myprofile.setProfile({description});
+  async function setProfile() {
+    setMissivProfile({domainDescription: description}, false);
   }
 </script>
 

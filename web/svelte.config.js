@@ -60,6 +60,7 @@ const config = {
     vite: {
       mode: process.env.MODE,
       build: {
+        target: ['es2020'],
         sourcemap: true,
       },
       define: {

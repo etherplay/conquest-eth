@@ -145,6 +145,8 @@ const SYNC_DB_NAME =
     ? ':' + contractsInfos.contracts.OuterSpace.linkedData.chainGenesisHash
     : '');
 
+const MISSIV_URI = import.meta.env.VITE_MISSIV_URI as string;
+
 console.log({SYNC_DB_NAME});
 
 const AGENT_SERVICE_URL = params['agent-service'] || (import.meta.env.VITE_AGENT_SERVICE_URL as string); //  'http://invalid.io'; // to emulate connection loss :)
@@ -228,7 +230,16 @@ function report(message: any) {
   }
 }
 
+// domain is per game (actually per signing key, so could be per project owner)
+const missivDomain = 'conquest.eth';
+// namespace is used for differentiating messages across different environment
+// use same signing key
+const missivNamespace = contractsInfos.name;
+
 export {
+  MISSIV_URI,
+  missivDomain,
+  missivNamespace,
   BASIC_ALLIANCES_URL,
   roundTo1Decimal,
   defaultTopupValueInEth,

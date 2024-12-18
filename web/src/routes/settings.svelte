@@ -1,24 +1,28 @@
 <script lang="ts">
   import NavButton from '$lib/components/navigation/NavButton.svelte';
   import {base} from '$app/paths';
-  import myprofile from '$lib/flows/myprofile';
   import WalletAccess from '$lib/blockchain/WalletAccess.svelte';
   import Button from '$lib/components/generic/PanelButton.svelte';
   import {privateWallet} from '$lib/account/privateWallet';
+  import {conversations, setMissivProfile} from '$lib/missiv';
 
   function setProfile() {
-    myprofile.setProfile({description});
+    if ($conversations.registered.state !== 'ready') {
+      throw new Error(`not ready to setProfile: ${$conversations.registered.state}`);
+    }
+    setMissivProfile({domainDescription: description}, !!$conversations.registered.user);
   }
 
-  $: descriptionFromProfile = $myprofile.account?.description;
+  $: descriptionFromProfile =
+    $conversations.registered.state === 'ready' && $conversations.registered.user?.domainDescription;
 
   let ownerSet: string | undefined = undefined;
   let description = '';
   $: changed = description !== '' && descriptionFromProfile !== description;
 
   $: {
-    if ($myprofile.step === 'READY' && (!ownerSet || ownerSet !== $myprofile.owner)) {
-      ownerSet = $myprofile.owner;
+    if ($conversations.registered.state === 'ready' && (!ownerSet || ownerSet !== $conversations.registered.user)) {
+      ownerSet = $conversations.registered.user;
       description = descriptionFromProfile || '';
     }
   }

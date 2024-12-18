@@ -13,6 +13,7 @@
     "@ethersproject/bytes": "^5.5.0",
     "@ethersproject/contracts": "^5.5.0",
     "@ethersproject/providers": "^5.5.1",
+    "@ethersproject/signing-key": "^5.5.0",
     "@ethersproject/solidity": "^5.5.0",
     "@ethersproject/units": "^5.5.0",
     "@ethersproject/wallet": "^5.5.0",
@@ -86,8 +87,5 @@
     "sentry": "pnpm sentry-cli releases --org etherplay new -p conquest-eth `git rev-parse --short HEAD` && pnpm sentry-cli releases --org etherplay -p conquest-eth files `git rev-parse --short HEAD` upload-sourcemaps release/build && pnpm sentry-cli releases --org etherplay -p conquest-eth set-commits --ignore-missing --ignore-empty --auto `git rev-parse --short HEAD` && pnpm sentry-cli releases --org etherplay -p conquest-eth finalize `git rev-parse --short HEAD`",
     "deploy": "dotenv -- ipfs-deploy -p pinata -s conquest-eth build",
     "build:deploy": "run-s build deploy"
-  },
-  "volta": {
-    "node": "14.17.5"
   }
 }

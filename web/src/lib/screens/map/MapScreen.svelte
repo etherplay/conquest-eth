@@ -32,7 +32,6 @@
   import MessageFlow from '$lib/flows/MessageFlow.svelte';
   import showPlanetDepartures from '$lib/flows/showPlanetDepartures';
   import ShowPlanetDeparturesFlow from '$lib/flows/ShowPlanetDeparturesFlow.svelte';
-  import myprofile from '$lib/flows/myprofile';
   import FirstTimeProfile from '$lib/flows/FirstTimeProfile.svelte';
   import {privateWallet} from '$lib/account/privateWallet';
   import {fleetList} from '$lib/space/fleets';
@@ -43,6 +42,7 @@
   import PlanetEventList from './PlanetEventList.svelte';
   import {xyToLocation} from 'conquest-eth-common';
   import {overlays} from '$lib/map/overlays';
+  import {conversations} from '$lib/missiv';
 
   // import {timeToText} from '$lib/utils';
   // import {spaceInfo} from '$lib/space/spaceInfo';
@@ -149,7 +149,7 @@
   <ShowPlanetDeparturesFlow />
 {/if}
 
-{#if $privateWallet && $privateWallet.step === 'READY' && $myprofile && $myprofile.step === 'READY' && !$myprofile.account}
+{#if $privateWallet && $privateWallet.step === 'READY' && $conversations.registered.state == 'ready' && !$conversations.registered.user}
   <FirstTimeProfile />
 {/if}
 
