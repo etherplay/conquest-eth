@@ -29,6 +29,7 @@
     "graphql": "^16.2.0",
     "idb": "^7.0.0",
     "lz-string": "^1.4.4",
+    "missiv-client": "0.0.14",
     "named-logs": "^0.1.0",
     "pretty-ms": "https://github.com/wighawag/pretty-ms#320ba46c464052ebbe605e48ad05df9e9801e956",
     "sveltejs-tippy": "^3.0.0",
