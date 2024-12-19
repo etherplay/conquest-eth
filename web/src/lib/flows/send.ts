@@ -603,9 +603,12 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
 
     if (useAgentService) {
       try {
-        const {queueID} = await agentService.submitReveal(
-          fleetId,
-          secretHash,
+        const agentData = {
+          fleetID: fleetId,
+          txHash: tx.hash,
+          nonce,
+          fleetOwner,
+          secret: secretHash,
           from,
           to,
           distance,
@@ -613,11 +616,12 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
           gift,
           specific,
           potentialAlliances,
-          latestBlock.timestamp,
+          startTime: latestBlock.timestamp,
           minDuration,
           fleetSender,
-          operator
-        );
+          operator,
+        };
+        const {queueID} = await agentService.submitReveal(agentData, {force: true});
         account.recordQueueID(tx.hash, queueID);
       } catch (e) {
         this.setPartial({error: {message: formatError(e), type: 'AGENT_SERVICE_SUBMISSION_ERROR'}});
@@ -654,21 +658,25 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
 
       if (lastFleet.useAgentService) {
         try {
-          const {queueID} = await agentService.submitReveal(
-            lastFleet.fleet.id,
-            lastFleet.extra.secretHash,
-            lastFleet.fleet.from,
-            lastFleet.fleet.to,
-            lastFleet.extra.distance,
-            lastFleet.fleet.arrivalTimeWanted,
-            lastFleet.fleet.gift,
-            lastFleet.fleet.specific,
-            lastFleet.fleet.potentialAlliances,
-            lastFleet.timestamp,
-            lastFleet.extra.minDuration,
-            lastFleet.fleet.fleetSender,
-            lastFleet.fleet.operator
-          );
+          const agentData = {
+            fleetID: lastFleet.fleet.id,
+            txHash: tx.hash,
+            nonce: lastFleet.nonce,
+            fleetOwner: lastFleet.fleet.owner,
+            secret: lastFleet.extra.secretHash,
+            from: lastFleet.fleet.from,
+            to: lastFleet.fleet.to,
+            distance: lastFleet.extra.distance,
+            arrivalTimeWanted: lastFleet.fleet.arrivalTimeWanted,
+            gift: lastFleet.fleet.gift,
+            specific: lastFleet.fleet.specific,
+            potentialAlliances: lastFleet.fleet.potentialAlliances,
+            startTime: lastFleet.timestamp,
+            minDuration: lastFleet.extra.minDuration,
+            fleetSender: lastFleet.fleet.fleetSender,
+            operator: lastFleet.fleet.operator,
+          };
+          const {queueID} = await agentService.submitReveal(agentData);
           account.recordQueueID(txHash, queueID);
         } catch (e) {
           this.setPartial({error: {message: formatError(e), type: 'AGENT_SERVICE_SUBMISSION_ERROR'}});

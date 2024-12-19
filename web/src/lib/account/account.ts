@@ -155,7 +155,7 @@ class Account implements Readable<AccountState> {
 
   async recordAgentServiceDefault(activated: boolean): Promise<void> {
     this.check();
-    this.state.data.agentServiceDefault = this.state.data.agentServiceDefault || {activated: false, timestamp: 0};
+    this.state.data.agentServiceDefault = this.state.data.agentServiceDefault || {activated: true, timestamp: 0};
     this.state.data.agentServiceDefault.activated = activated;
     this.state.data.agentServiceDefault.timestamp = now();
     await this.accountDB.save(this.state.data);
@@ -163,7 +163,7 @@ class Account implements Readable<AccountState> {
   }
 
   isAgentServiceActivatedByDefault(): boolean {
-    return this.state.data?.agentServiceDefault?.activated;
+    return !this.state.data?.agentServiceDefault || this.state.data?.agentServiceDefault?.activated;
   }
 
   async recordCapture(planetCoords: PlanetCoords, txHash: string, timestamp: number, nonce: number): Promise<void> {

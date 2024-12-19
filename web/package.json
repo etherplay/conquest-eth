@@ -6,6 +6,9 @@
   "engines": {
     "node": ">= 14.0.0"
   },
+  "volta": {
+    "node": "16.20.2"
+  },
   "dependencies": {
     "@ethersproject/abi": "^5.5.0",
     "@ethersproject/abstract-provider": "^5.5.1",
@@ -26,13 +29,16 @@
     "aes-js": "https://github.com/wighawag/aes-js#ddcec7d95eb5608c4fe023f9f035b7e469b50809",
     "byte-base64": "^1.1.0",
     "flatpickr": "^4.6.9",
+    "fuzd-client": "^0.7.4",
     "graphql": "^16.2.0",
     "idb": "^7.0.0",
     "lz-string": "^1.4.4",
     "missiv-client": "0.0.14",
     "named-logs": "^0.1.0",
     "pretty-ms": "https://github.com/wighawag/pretty-ms#320ba46c464052ebbe605e48ad05df9e9801e956",
+    "remote-account": "^0.1.0",
     "sveltejs-tippy": "^3.0.0",
+    "viem": "^2.13.7",
     "web3w": "^0.3.2-beta.25",
     "web3w-portis-loader": "^0.3.3",
     "web3w-walletconnect-loader": "^0.3.2",

@@ -10,17 +10,18 @@
 
   import {agentService} from '$lib/account/agentService';
   import {defaultTopupValueInEth, nativeTokenSymbol} from '$lib/config';
-  import agentService_register from '$lib/flows/agentService_register';
+  // import agentService_register from '$lib/flows/agentService_register';
   import agentService_topup from '$lib/flows/agentService_topup';
   import {BigNumber} from '@ethersproject/bignumber';
   import {formatEther, parseEther} from '@ethersproject/units';
   import {account} from '$lib/account/account';
   import {fleetList} from '$lib/space/fleets';
   import {onMount} from 'svelte';
-  import agentService_withdraw from '$lib/flows/agentService_withdraw';
+  // import agentService_withdraw from '$lib/flows/agentService_withdraw';
 
-  $: registered = $agentService.account && $agentService.account.delegate;
-  $: enoughBalance = registered && $agentService.account.balance.gte($agentService.account.minimumBalance);
+  const registered = true;
+  $: enoughBalance =
+    registered && $agentService.account && $agentService.account.balance.gte($agentService.account.minimumBalance);
 
   $: minimumBalance = $agentService.account
     ? BigNumber.from($agentService.account?.minimumBalance)
@@ -84,63 +85,50 @@
         {:else}
           <!-- <p>Agent Service Payment Address: {contractsInfos.contracts.PaymentGateway.address}</p> -->
 
-          {#if !registered}
-            <!-- {JSON.stringify($agentService.account)} -->
-            You need to register
-            <Button
-              class="w-max-content m-4"
-              label="register"
-              on:click={() => agentService_register.register($privateWallet.signer.address)}>Register</Button
-            >
-          {:else}
-            {#if enoughBalance}
-              {#if !$account.data?.agentServiceDefault?.activated}
-                <p>Agent is not active by default, it will require manual submission</p>
-                <Button
-                  class="w-max-content m-4"
-                  label="activate"
-                  on:click={() => account.recordAgentServiceDefault(true)}>Activate?</Button
-                >
-              {:else}
-                <p>Agent service is active by default</p>
-                <Button
-                  class="w-max-content m-4"
-                  label="activate"
-                  on:click={() => account.recordAgentServiceDefault(false)}>Deactivate?</Button
-                >
-              {/if}
-            {:else}
-              <p>
-                You do not have enough balance. You need at least {formatEther(minimumBalance)} ${nativeTokenSymbol}
-              </p>
-
-              <p>please top-up</p>
-            {/if}
-
-            <p>
-              Your Balance:
-              {formatEther($agentService.account.balance)}
-              ${nativeTokenSymbol}
-              <!-- (arround
-                {$agent.balance.div($agent?.cost || 0)}
-                fleet) -->
-
+          {#if enoughBalance}
+            {#if $account.data?.agentServiceDefault && !$account.data?.agentServiceDefault?.activated}
+              <p>Agent is not active by default, it will require manual submission</p>
               <Button
-                class="w-max-content mt-4 mx-4"
-                label="Top Up"
-                on:click={() => agentService_topup.topup(parseEther('' + topupValueInEth))}
+                class="w-max-content m-4"
+                label="activate"
+                on:click={() => account.recordAgentServiceDefault(true)}>Activate?</Button
               >
-                Top Up ({topupValueInEth})
-                <!-- Top Up (for 10 fleets) -->
-              </Button>
+            {:else}
+              <p>Agent service is active by default</p>
+              <Button
+                class="w-max-content m-4"
+                label="activate"
+                on:click={() => account.recordAgentServiceDefault(false)}>Deactivate?</Button
+              >
+            {/if}
+          {:else}
+            <!-- <p>
+              You do not have enough balance. You need at least {formatEther(minimumBalance)} ${nativeTokenSymbol}
             </p>
-            <p class="text-xs">You can adjust the amount here</p>
-            <p>
-              <input class="bg-gray-800 text-xs" step="0.1" type="number" bind:value={topupValueInEth} />
-            </p>
+
+            <p>please top-up</p> -->
           {/if}
 
-          <p class="mb-4">
+          <!-- <p>
+            Your Balance:
+            {$agentService.account ? formatEther($agentService.account.balance) : '...'}
+            ${nativeTokenSymbol}
+
+            <Button
+              class="w-max-content mt-4 mx-4"
+              label="Top Up"
+              on:click={() => agentService_topup.topup(parseEther('' + topupValueInEth))}
+            >
+              Top Up ({topupValueInEth})
+            </Button>
+          </p>
+          <p class="text-xs">You can adjust the amount here</p>
+          <p>
+            <input class="bg-gray-800 text-xs" step="0.1" type="number" bind:value={topupValueInEth} />
+          </p> -->
+
+          <!--TODO -->
+          <!-- <p class="mb-4">
             {#if $agentService.account?.balance.gt(0)}
               <Button
                 class="w-max-content mt-4 mx-4"
@@ -152,7 +140,7 @@
                 Withdraw All
               </Button>
             {/if}
-          </p>
+          </p> -->
 
           <!-- {#if $agentService.lowETH}
                 <p class="text-red-500">The agent need to be topped up to perform the fleet resolution</p>

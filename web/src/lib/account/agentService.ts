@@ -1,16 +1,17 @@
 import {AutoStartBaseStore} from '$lib/utils/stores/base';
 import {wallet} from '$lib/blockchain/wallet';
-import {AGENT_SERVICE_URL, mediumFrequencyFetch} from '$lib/config';
-import type {WalletStore} from 'web3w';
+import {chainId, mediumFrequencyFetch} from '$lib/config';
 import {BigNumber} from '@ethersproject/bignumber';
-import {privateWallet} from './privateWallet';
+import {privateWallet, type PrivateWalletState} from './privateWallet';
+import {createFuzdClient} from '$lib/utils/fuzd';
+import {getResolutionTransactionData} from '$lib/flows/resolve';
+import {spaceInfo} from '$lib/space/spaceInfo';
 
 type Position = {x: number; y: number};
 
 type AgentServiceAccountData = {
   balance: BigNumber;
-  delegate?: string;
-  nonceMsTimestamp: number;
+  remoteAccount: `0x${string}`;
   requireTopUp: boolean;
   minimumBalance: BigNumber;
 };
@@ -21,75 +22,112 @@ type AgentServiceState = {
   account?: AgentServiceAccountData;
 };
 
+export type AgentData = {
+  fleetID: string;
+  txHash: string;
+  nonce?: number;
+  fleetOwner: string;
+  secret: string;
+  from: Position;
+  to: Position;
+  distance: number;
+  arrivalTimeWanted: number;
+  gift: boolean;
+  specific: string;
+  potentialAlliances: string[] | undefined;
+  startTime: number;
+  minDuration: number;
+  fleetSender?: string;
+  operator?: string;
+};
+
 class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
   _timeout: NodeJS.Timeout;
   _stopped: boolean;
-  _lastWallet?: string;
-  _unsubscribeFromWallet?: () => void;
+  _lastPrivateKey?: `0x${string}`;
+  _unsubscribeFromPrivateWallet?: () => void;
 
-  async submitReveal(
-    fleetID: string,
-    secret: string,
-    from: Position,
-    to: Position,
-    distance: number,
-    arrivalTimeWanted: number,
-    gift: boolean,
-    specific: string,
-    potentialAlliances: string[] | undefined,
-    startTime: number,
-    minDuration: number,
-    fleetSender?: string,
-    operator?: string
-  ): Promise<{queueID: string}> {
-    const walletAddress = wallet.address;
-    const accountResponse = await fetch(`${AGENT_SERVICE_URL}/account/${walletAddress}`);
-    const {account} = (await accountResponse.json()) as {
-      account?: {
-        balance: string;
-        delegate?: string;
-        nonceMsTimestamp: number;
-        requireTopUp: boolean;
-        minimumBalance: string;
+  async createSubmission(data: AgentData, options?: {force?: boolean}) {
+    const maxFeePerGas = await wallet.provider.getGasPrice();
+
+    console.log(data);
+
+    const fromPlanetInfo = spaceInfo.getPlanetInfo(data.from.x, data.from.y);
+    const toPlanetInfo = spaceInfo.getPlanetInfo(data.to.x, data.to.y);
+    const {txData, resolutionData} = await getResolutionTransactionData(
+      {
+        from: fromPlanetInfo,
+        to: toPlanetInfo,
+        gift: data.gift,
+        specific: data.specific,
+        arrivalTimeWanted: data.arrivalTimeWanted,
+        launchTime: data.startTime,
+        owner: data.fleetOwner as `0x${string}`,
+        fleetSender: data.fleetSender,
+        operator: data.operator,
+        sending: {
+          id: data.txHash,
+          action: {nonce: data.nonce},
+        },
+      },
+      options
+    );
+
+    const submission: {
+      chainId: string;
+      slot: string;
+      maxFeePerGasAuthorized: bigint;
+      transaction: {
+        data: `0x${string}`;
+        to: `0x${string}`;
+        gas: bigint;
       };
+      time: number;
+      expiry: number;
+      paymentReserve?: bigint;
+    } = {
+      chainId,
+      slot: data.fleetID,
+      expiry: resolutionData.expectedArrivalTime + 24 * 60 * 60, // TODO
+      maxFeePerGasAuthorized: maxFeePerGas.mul(2).toBigInt(),
+      time: resolutionData.expectedArrivalTime,
+      transaction: {
+        data: (txData.data || `0x`) as `0x${string}`,
+        gas: txData.gasLimit?.toBigInt() || 0n, // TODO:fuzd make it optional
+        to: txData.to as `0x${string}`,
+      },
     };
-    if (!account) {
-      throw new Error(`no account registered for ${walletAddress}`);
-    }
-    const revealSubmission = {
-      player: walletAddress.toLowerCase(),
-      fleetID,
-      secret,
-      from,
-      to,
-      distance,
-      arrivalTimeWanted,
-      gift,
-      specific,
-      potentialAlliances,
-      startTime,
-      minDuration,
-      nonceMsTimestamp: account.nonceMsTimestamp + 1,
-      fleetSender,
-      operator,
+
+    return submission;
+  }
+
+  async calculateCost(data: AgentData) {
+    const submission = await this.createSubmission(data, {force: true});
+    return submission.maxFeePerGasAuthorized * submission.transaction.gas;
+  }
+
+  async submitReveal(data: AgentData, options?: {force?: boolean}): Promise<{queueID: string}> {
+    const privateWalletState = privateWallet.getState();
+    const fuzdClient = createFuzdClient(privateWalletState.missivPrivateKey);
+    const remoteAccount = await fuzdClient.assignRemoteAccount(chainId);
+    const balance = await wallet.provider.getBalance(remoteAccount.address);
+    const account: AgentServiceAccountData = {
+      balance,
+      remoteAccount: remoteAccount.address,
+      requireTopUp: false,
+      minimumBalance: balance,
     };
-    const queueMessageString = `queue:${revealSubmission.player}:${fleetID}:${secret}:${from.x}:${from.y}:${to.x}:${
-      to.y
-    }:${distance}:${gift}:${specific}:${
-      potentialAlliances ? potentialAlliances.join(',') : ''
-    }:${startTime}:${minDuration}:${arrivalTimeWanted}:${revealSubmission.nonceMsTimestamp}`;
-    const queueSignature = await privateWallet.signer.signMessage(queueMessageString);
-    const data = {...revealSubmission, signature: queueSignature, delegate: privateWallet.signer.address.toLowerCase()};
-    // console.log(data);
-    const response = await fetch(`${AGENT_SERVICE_URL}/queueReveal`, {
-      method: 'POST',
-      body: JSON.stringify(data),
+    const submission = await this.createSubmission(data, options);
+
+    const result = await fuzdClient.scheduleExecution(submission, {
+      // fakeEncrypt: time.hasTimeContract,
     });
-    const jsonResult = await response.json();
-    if (jsonResult.error) {
-      throw jsonResult.error;
+
+    if (result.success) {
+      return {queueID: `${result.info.chainId}:${result.info.account}:${result.info.slot}`};
+    } else {
+      throw new Error(result.error);
     }
-    return jsonResult;
   }
 
   constructor() {
@@ -107,7 +145,7 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
 
   _onStart() {
     this._stopped = false;
-    this._unsubscribeFromWallet = wallet.subscribe(this._onWallet.bind(this));
+    this._unsubscribeFromPrivateWallet = privateWallet.subscribe(this._onPrivateWallet.bind(this));
     this.setPartial({state: 'Loading'});
     this._check();
     return this._stop.bind(this);
@@ -121,17 +159,17 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
   }
 
   _stop() {
-    if (this._unsubscribeFromWallet) {
-      this._unsubscribeFromWallet();
-      this._unsubscribeFromWallet = undefined;
+    if (this._unsubscribeFromPrivateWallet) {
+      this._unsubscribeFromPrivateWallet();
+      this._unsubscribeFromPrivateWallet = undefined;
     }
     this._clearTimeoutIfAny();
     this._stopped = true;
   }
 
-  _onWallet($wallet: WalletStore) {
-    if (this._lastWallet != $wallet.address) {
-      this._lastWallet = $wallet.address;
+  _onPrivateWallet($wallet: PrivateWalletState) {
+    if (this._lastPrivateKey != $wallet.missivPrivateKey) {
+      this._lastPrivateKey = $wallet.missivPrivateKey;
       this._clearTimeoutIfAny();
       this._check();
     }
@@ -139,24 +177,23 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
 
   async _check() {
     try {
-      if (this._lastWallet) {
-        const response = await fetch(`${AGENT_SERVICE_URL}/account/${this._lastWallet}`);
-        const {account} = (await response.json()) as {
-          account?: {
-            balance: string;
-            delegate?: string;
-            nonceMsTimestamp: number;
-            requireTopUp: boolean;
-            minimumBalance: string;
-          };
+      if (this._lastPrivateKey) {
+        const fuzdClient = createFuzdClient(this._lastPrivateKey);
+        const remoteAccount = await fuzdClient.assignRemoteAccount(chainId);
+        const balance = await wallet.provider.getBalance(remoteAccount.address);
+        const account: AgentServiceAccountData = {
+          balance,
+          remoteAccount: remoteAccount.address,
+          requireTopUp: false,
+          minimumBalance: balance,
         };
+
         this.setPartial({
           state: 'Ready',
           account: account
             ? {
                 balance: BigNumber.from(account.balance),
-                delegate: account.delegate,
-                nonceMsTimestamp: account.nonceMsTimestamp,
+                remoteAccount: account.remoteAccount,
                 requireTopUp: account.requireTopUp,
                 minimumBalance: BigNumber.from(account.minimumBalance),
               }

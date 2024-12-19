@@ -2,7 +2,7 @@
     "name": "missiv-service",
     "devDependencies": {
         "ldenv": "^0.3.10",
-        "missiv-server-bun": "^0.1.3",
+        "missiv-server-bun": "^0.1.4",
         "set-defaults": "^0.0.2"
     },
     "scripts": {

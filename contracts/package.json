@@ -15,6 +15,9 @@
   "engines": {
     "node": ">= 14.0.0"
   },
+  "volta": {
+    "node": "16.20.2"
+  },
   "devDependencies": {
     "@ethersproject/abi": "^5.5.0",
     "@ethersproject/abstract-provider": "^5.5.1",

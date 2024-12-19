@@ -33,21 +33,25 @@
       fleet.fleetSender,
       fleet.operator
     );
-    const {queueID} = await agentService.submitReveal(
-      fleetId,
-      secretHash,
-      from.location,
-      to.location,
+    const agentData = {
+      fleetID: fleetId,
+      txHash: fleet.sending.id,
+      nonce: fleet.sending.action.nonce,
+      fleetOwner: fleet.owner,
+      secret: secretHash,
+      from: from.location,
+      to: to.location,
       distance,
-      fleet.arrivalTimeWanted,
-      fleet.gift,
-      fleet.specific,
-      fleet.potentialAlliances,
-      fleet.launchTime,
+      arrivalTimeWanted: fleet.arrivalTimeWanted,
+      gift: fleet.gift,
+      specific: fleet.specific,
+      potentialAlliances: fleet.potentialAlliances,
+      startTime: fleet.launchTime,
       minDuration,
-      fleet.fleetSender,
-      fleet.operator
-    );
+      fleetSender: fleet.fleetSender,
+      operator: fleet.operator,
+    };
+    const {queueID} = await agentService.submitReveal(agentData, {force: true});
     account.recordQueueID(fleet.sending.id, queueID);
   }
 

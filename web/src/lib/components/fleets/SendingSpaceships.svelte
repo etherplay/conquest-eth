@@ -137,7 +137,7 @@
   $: if (
     !useAgentServiceInitialised &&
     account.isAgentServiceActivatedByDefault() &&
-    !(!agentServiceAccount || agentServiceAccount.requireTopUp || !agentServiceAccount.delegate)
+    !(!agentServiceAccount || agentServiceAccount.requireTopUp || !agentServiceAccount.remoteAccount)
   ) {
     useAgentService = true;
     useAgentServiceInitialised = true;
@@ -564,17 +564,17 @@
             type="checkbox"
             class="form-checkbox"
             bind:checked={useAgentService}
-            disabled={!agentServiceAccount || agentServiceAccount.requireTopUp || !agentServiceAccount.delegate}
+            disabled={!agentServiceAccount || agentServiceAccount.requireTopUp || !agentServiceAccount.remoteAccount}
           />
 
           <span
             class={`ml-2${
-              !agentServiceAccount || agentServiceAccount.requireTopUp || !agentServiceAccount.delegate
+              !agentServiceAccount || agentServiceAccount.requireTopUp || !agentServiceAccount.remoteAccount
                 ? ' opacity-25'
                 : ''
             }`}>submit to agent-service</span
           >
-          {#if !agentServiceAccount || agentServiceAccount.requireTopUp || !agentServiceAccount.delegate}
+          {#if !agentServiceAccount || agentServiceAccount.requireTopUp || !agentServiceAccount.remoteAccount}
             <span class="ml-2 text-xs"
               >( Enable <a class="underline" href={url('agent-service/')}>Agent-Service</a>
               <Help class="w-4"

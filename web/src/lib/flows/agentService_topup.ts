@@ -3,6 +3,7 @@ import {wallet} from '$lib/blockchain/wallet';
 import type {BigNumber} from '@ethersproject/bignumber';
 import type {TransactionResponse} from '@ethersproject/abstract-provider';
 import {agentService} from '$lib/account/agentService';
+import {get} from 'svelte/store';
 
 export type AgentServiceTopUpFlow = {
   type: 'TOPUP_AGENT_SERVICE';
@@ -22,8 +23,9 @@ class AgentServiceTopUpFlowStore extends BaseStoreWithData<AgentServiceTopUpFlow
     let tx: TransactionResponse;
     try {
       this.setPartial({step: 'TRANSACTION'});
+      const agentServiceState = get(agentService);
       tx = await wallet.provider.getSigner().sendTransaction({
-        to: wallet.contracts?.PaymentGateway.address,
+        to: agentServiceState.account.remoteAccount,
         value: amount.toHexString(),
       });
     } catch (e) {

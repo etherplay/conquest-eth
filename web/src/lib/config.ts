@@ -147,6 +147,8 @@ const SYNC_DB_NAME =
 
 const MISSIV_URI = import.meta.env.VITE_MISSIV_URI as string;
 
+const FUZD_URI = import.meta.env.VITE_FUZD_URI as string;
+
 console.log({SYNC_DB_NAME});
 
 const AGENT_SERVICE_URL = params['agent-service'] || (import.meta.env.VITE_AGENT_SERVICE_URL as string); //  'http://invalid.io'; // to emulate connection loss :)
@@ -237,6 +239,7 @@ const missivDomain = 'conquest.eth';
 const missivNamespace = contractsInfos.name;
 
 export {
+  FUZD_URI,
   MISSIV_URI,
   missivDomain,
   missivNamespace,
