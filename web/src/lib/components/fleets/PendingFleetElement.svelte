@@ -51,7 +51,8 @@
       fleetSender: fleet.fleetSender,
       operator: fleet.operator,
     };
-    const {queueID} = await agentService.submitReveal(agentData, {force: true});
+    const submission = await agentService.createSubmission(agentData, {force: true});
+    const {queueID} = await agentService.submitReveal(submission);
     account.recordQueueID(fleet.sending.id, queueID);
   }
 

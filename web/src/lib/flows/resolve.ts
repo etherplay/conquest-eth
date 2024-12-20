@@ -24,6 +24,18 @@ export type PartialFleet = {
   };
 };
 
+export type MinimumFleet = {
+  from: PlanetInfo;
+  to: PlanetInfo;
+  gift: boolean;
+  specific: string;
+  launchTime: number;
+  arrivalTimeWanted: number;
+  owner: string;
+  fleetSender?: string;
+  operator?: string;
+};
+
 export async function getFleetData(fleet: PartialFleet) {
   let nonce = fleet.sending.action.nonce;
   if (!nonce) {
@@ -73,10 +85,12 @@ export async function getFleetData(fleet: PartialFleet) {
   return {fleetData, nonce};
 }
 
-export async function getResolutionData(fleet: PartialFleet, options?: {force?: boolean}) {
-  const {fleetData, nonce} = await getFleetData(fleet);
-  const secretHash = fleetData.secretHash;
-  // console.log('resolve', {secretHash});
+export async function getResolutionData(
+  fleet: MinimumFleet,
+  fleetData: {id: string; secret: string},
+  options?: {force?: boolean}
+) {
+  const secretHash = fleetData.secret;
   const distanceSquared =
     Math.pow(fleet.to.location.globalX - fleet.from.location.globalX, 2) +
     Math.pow(fleet.to.location.globalY - fleet.from.location.globalY, 2);
@@ -89,7 +103,7 @@ export async function getResolutionData(fleet: PartialFleet, options?: {force?: 
   if (options?.force) {
     gasEstimation = BigNumber.from(1000000);
   } else {
-    gasEstimation = await wallet.contracts?.OuterSpace.estimateGas.resolveFleet(fleetData.fleetId, {
+    gasEstimation = await wallet.contracts?.OuterSpace.estimateGas.resolveFleet(fleetData.id, {
       from: xyToLocation(fleet.from.location.x, fleet.from.location.y),
       to: xyToLocation(fleet.to.location.x, fleet.to.location.y),
       distance,
@@ -116,18 +130,21 @@ export async function getResolutionData(fleet: PartialFleet, options?: {force?: 
     fleetDuration,
     expectedArrivalTime,
     gasLimit,
-    fleetData,
     secretHash,
     distance,
   };
 }
 
-export async function getResolutionTransactionData(fleet: PartialFleet, options?: {force?: boolean}) {
-  const resolutionData = await getResolutionData(fleet, options);
-  const {fleetData, secretHash, distance, gasLimit} = resolutionData;
+export async function getResolutionTransactionData(
+  fleet: MinimumFleet,
+  fleetData: {id: string; secret: string},
+  options?: {force?: boolean}
+) {
+  const resolutionData = await getResolutionData(fleet, fleetData, options);
+  const {secretHash, distance, gasLimit} = resolutionData;
   const gasPrice = undefined;
   const txData = await wallet.contracts?.OuterSpace.populateTransaction.resolveFleet(
-    fleetData.fleetId,
+    fleetData.id,
     {
       from: xyToLocation(fleet.from.location.x, fleet.from.location.y),
       to: xyToLocation(fleet.to.location.x, fleet.to.location.y),
@@ -189,14 +206,15 @@ class ResolveFlowStore extends BaseStore<ResolveFlow> {
       correctTime(latestBlock.timestamp);
     }
 
+    const {fleetData} = await getFleetData(fleet);
     let resolutionData;
     try {
-      resolutionData = await getResolutionData(fleet, {force});
+      resolutionData = await getResolutionData(fleet, {id: fleetData.fleetId, secret: fleetData.secretHash}, {force});
     } catch (e) {
       this.setPartial({error: e, step: this.$store.pastStep || 'IDLE'});
     }
 
-    const {fleetData, secretHash, distance, gasLimit} = resolutionData;
+    const {secretHash, distance, gasLimit} = resolutionData;
 
     // let currentGasPrice;
     // try {

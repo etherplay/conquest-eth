@@ -22,9 +22,22 @@ type AgentServiceState = {
   account?: AgentServiceAccountData;
 };
 
+export type Submission = {
+  chainId: string;
+  slot: string;
+  maxFeePerGasAuthorized: bigint;
+  transaction: {
+    data: `0x${string}`;
+    to: `0x${string}`;
+    gas: bigint;
+  };
+  time: number;
+  expiry: number;
+  paymentReserve?: bigint;
+};
+
 export type AgentData = {
   fleetID: string;
-  txHash: string;
   nonce?: number;
   fleetOwner: string;
   secret: string;
@@ -47,10 +60,9 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
   _lastPrivateKey?: `0x${string}`;
   _unsubscribeFromPrivateWallet?: () => void;
 
-  async createSubmission(data: AgentData, options?: {force?: boolean}) {
+  async createSubmission(data: AgentData, options?: {force?: boolean}): Promise<Submission> {
     const maxFeePerGas = await wallet.provider.getGasPrice();
-
-    console.log(data);
+    const maxFeePerGasAuthorized = maxFeePerGas.mul(2).toBigInt();
 
     const fromPlanetInfo = spaceInfo.getPlanetInfo(data.from.x, data.from.y);
     const toPlanetInfo = spaceInfo.getPlanetInfo(data.to.x, data.to.y);
@@ -65,37 +77,27 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
         owner: data.fleetOwner as `0x${string}`,
         fleetSender: data.fleetSender,
         operator: data.operator,
-        sending: {
-          id: data.txHash,
-          action: {nonce: data.nonce},
-        },
+      },
+      {
+        id: data.fleetID,
+        secret: data.secret,
       },
       options
     );
 
-    const submission: {
-      chainId: string;
-      slot: string;
-      maxFeePerGasAuthorized: bigint;
-      transaction: {
-        data: `0x${string}`;
-        to: `0x${string}`;
-        gas: bigint;
-      };
-      time: number;
-      expiry: number;
-      paymentReserve?: bigint;
-    } = {
+    const gas = txData.gasLimit?.toBigInt() || 0n;
+    const submission: Submission = {
       chainId,
       slot: data.fleetID,
       expiry: resolutionData.expectedArrivalTime + 24 * 60 * 60, // TODO
-      maxFeePerGasAuthorized: maxFeePerGas.mul(2).toBigInt(),
+      maxFeePerGasAuthorized,
       time: resolutionData.expectedArrivalTime,
       transaction: {
         data: (txData.data || `0x`) as `0x${string}`,
-        gas: txData.gasLimit?.toBigInt() || 0n, // TODO:fuzd make it optional
+        gas, // TODO:fuzd make it optional
         to: txData.to as `0x${string}`,
       },
+      paymentReserve: maxFeePerGasAuthorized * gas,
     };
 
     return submission;
@@ -103,10 +105,15 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
 
   async calculateCost(data: AgentData) {
     const submission = await this.createSubmission(data, {force: true});
-    return submission.maxFeePerGasAuthorized * submission.transaction.gas;
+    const cost = submission.maxFeePerGasAuthorized * submission.transaction.gas;
+    return {
+      cost,
+      remoteAccount: this.$store.account.remoteAccount,
+      submission,
+    };
   }
 
-  async submitReveal(data: AgentData, options?: {force?: boolean}): Promise<{queueID: string}> {
+  async submitReveal(submission: Submission): Promise<{queueID: string}> {
     const privateWalletState = privateWallet.getState();
     const fuzdClient = createFuzdClient(privateWalletState.missivPrivateKey);
     const remoteAccount = await fuzdClient.assignRemoteAccount(chainId);
@@ -117,7 +124,6 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
       requireTopUp: false,
       minimumBalance: balance,
     };
-    const submission = await this.createSubmission(data, options);
 
     const result = await fuzdClient.scheduleExecution(submission, {
       // fakeEncrypt: time.hasTimeContract,

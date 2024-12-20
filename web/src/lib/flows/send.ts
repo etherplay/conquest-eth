@@ -509,6 +509,27 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
         },
       },
     });
+
+    const agentData = {
+      fleetID: fleetId,
+      nonce,
+      fleetOwner,
+      secret: secretHash,
+      from,
+      to,
+      distance,
+      arrivalTimeWanted,
+      gift,
+      specific,
+      potentialAlliances,
+      startTime: latestBlock.timestamp,
+      minDuration,
+      fleetSender,
+      operator,
+    };
+
+    const {cost: resolutionCost, remoteAccount, submission} = await agentService.calculateCost(agentData);
+
     let tx: {hash: string; nonce?: number};
     try {
       if (abi) {
@@ -528,7 +549,7 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
         //   quantity: fleetAmount,
         //   toHash,
         // });
-        tx = await wallet.contracts?.OuterSpace.sendFor(
+        tx = await wallet.contracts?.OuterSpace.sendForWithPayee(
           {
             fleetSender,
             fleetOwner,
@@ -536,7 +557,9 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
             quantity: fleetAmount,
             toHash,
           },
+          remoteAccount,
           {
+            value: resolutionCost,
             nonce,
             gasPrice,
             gasLimit,
@@ -603,25 +626,7 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
 
     if (useAgentService) {
       try {
-        const agentData = {
-          fleetID: fleetId,
-          txHash: tx.hash,
-          nonce,
-          fleetOwner,
-          secret: secretHash,
-          from,
-          to,
-          distance,
-          arrivalTimeWanted,
-          gift,
-          specific,
-          potentialAlliances,
-          startTime: latestBlock.timestamp,
-          minDuration,
-          fleetSender,
-          operator,
-        };
-        const {queueID} = await agentService.submitReveal(agentData, {force: true});
+        const {queueID} = await agentService.submitReveal(submission);
         account.recordQueueID(tx.hash, queueID);
       } catch (e) {
         this.setPartial({error: {message: formatError(e), type: 'AGENT_SERVICE_SUBMISSION_ERROR'}});
@@ -676,7 +681,8 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
             fleetSender: lastFleet.fleet.fleetSender,
             operator: lastFleet.fleet.operator,
           };
-          const {queueID} = await agentService.submitReveal(agentData);
+          const submission = await agentService.createSubmission(agentData);
+          const {queueID} = await agentService.submitReveal(submission);
           account.recordQueueID(txHash, queueID);
         } catch (e) {
           this.setPartial({error: {message: formatError(e), type: 'AGENT_SERVICE_SUBMISSION_ERROR'}});
