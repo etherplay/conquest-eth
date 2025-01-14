@@ -9,12 +9,11 @@ contract OuterSpaceFleetsCommitFacet is OuterSpaceFacetBase, IOuterSpaceFleetsCo
     constructor(Config memory config) OuterSpaceFacetBase(config) {}
 
     function sendWithPayee(uint256 from, uint32 quantity, bytes32 toHash, address payable payee) external payable {
-        if (payee != address(0)) {
-            require(msg.value > 0, "NO_VALUE_FOR_PAYEE");
+        if (msg.value > 0) {
+            require(payee != address(0), "NO_PAYEE");
             payee.transfer(msg.value);
-        } else {
-            require(msg.value == 0, "VALUE_BUT_NO_PAYEE");
         }
+
         send(from, quantity, toHash);
     }
 
@@ -29,23 +28,20 @@ contract OuterSpaceFleetsCommitFacet is OuterSpaceFacetBase, IOuterSpaceFleetsCo
     }
 
     function sendForWithPayee(FleetLaunch calldata launch, address payable payee) external payable {
-        if (payee != address(0)) {
-            require(msg.value > 0, "NO_VALUE_FOR_PAYEE");
+        if (msg.value > 0) {
+            require(payee != address(0), "NO_PAYEE");
             payee.transfer(msg.value);
-        } else {
-            require(msg.value == 0, "VALUE_BUT_NO_PAYEE");
         }
 
         sendFor(launch);
     }
 
     function sendForMultipleWithPayee(FleetLaunch[] calldata launches, address payable payee) external payable {
-        if (payee != address(0)) {
-            require(msg.value > 0, "NO_VALUE_FOR_PAYEE");
+        if (msg.value > 0) {
+            require(payee != address(0), "NO_PAYEE");
             payee.transfer(msg.value);
-        } else {
-            require(msg.value == 0, "VALUE_BUT_NO_PAYEE");
         }
+
         for (uint256 i = 0; i < launches.length; i++) {
             sendFor(launches[i]);
         }

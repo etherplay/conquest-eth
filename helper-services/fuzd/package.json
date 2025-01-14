@@ -1,7 +1,7 @@
 {
     "name": "fuzd-service",
     "devDependencies": {
-        "fuzd-nodejs": "^0.7.8",
+        "fuzd-nodejs": "^0.8.1",
         "ldenv": "^0.3.10",
         "node-cron": "^3.0.3",
         "set-defaults": "^0.0.2",

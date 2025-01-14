@@ -19,9 +19,6 @@ layout {
 			}
 		}
 		pane name="helper-services"  split_direction="vertical" {
-			pane name="AGENT_SERVICE"  command="bash"  {
-				args "-c" "pnpm agent-service:dev; cd agent-service; ${SHELL-bash}"
-			}
 			pane name="FUZD"  command="bash"  {
 				args "-c" "pnpm fuzd:dev; cd helper-services/fuzd; ${SHELL-bash}"
 			}

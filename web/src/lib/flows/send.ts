@@ -528,7 +528,7 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
       operator,
     };
 
-    const {cost: resolutionCost, remoteAccount, submission} = await agentService.calculateCost(agentData);
+    const {cost: resolutionCost, remoteAccount, submission} = await agentService.prepareSubmission(agentData);
 
     let tx: {hash: string; nonce?: number};
     try {
@@ -629,6 +629,7 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
         const {queueID} = await agentService.submitReveal(submission);
         account.recordQueueID(tx.hash, queueID);
       } catch (e) {
+        console.error(e);
         this.setPartial({error: {message: formatError(e), type: 'AGENT_SERVICE_SUBMISSION_ERROR'}});
       }
     }
@@ -685,6 +686,7 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
           const {queueID} = await agentService.submitReveal(submission);
           account.recordQueueID(txHash, queueID);
         } catch (e) {
+          console.error(e);
           this.setPartial({error: {message: formatError(e), type: 'AGENT_SERVICE_SUBMISSION_ERROR'}});
         }
       }

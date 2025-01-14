@@ -6,6 +6,7 @@ import {privateWallet, type PrivateWalletState} from './privateWallet';
 import {createFuzdClient} from '$lib/utils/fuzd';
 import {getResolutionTransactionData} from '$lib/flows/resolve';
 import {spaceInfo} from '$lib/space/spaceInfo';
+import type {FuzdClient} from 'fuzd-client';
 
 type Position = {x: number; y: number};
 
@@ -33,7 +34,7 @@ export type Submission = {
   };
   time: number;
   expiry: number;
-  paymentReserve?: bigint;
+  paymentReserve?: {amount: bigint; broadcaster: `0x${string}`};
 };
 
 export type AgentData = {
@@ -59,8 +60,10 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
   _stopped: boolean;
   _lastPrivateKey?: `0x${string}`;
   _unsubscribeFromPrivateWallet?: () => void;
+  fuzdClient: FuzdClient;
 
   async createSubmission(data: AgentData, options?: {force?: boolean}): Promise<Submission> {
+    const remoteAccount = this.$store.account.remoteAccount;
     const maxFeePerGas = await wallet.provider.getGasPrice();
     const maxFeePerGasAuthorized = maxFeePerGas.mul(2).toBigInt();
 
@@ -97,35 +100,33 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
         gas, // TODO:fuzd make it optional
         to: txData.to as `0x${string}`,
       },
-      paymentReserve: maxFeePerGasAuthorized * gas,
+      paymentReserve: {amount: maxFeePerGasAuthorized * gas, broadcaster: remoteAccount},
     };
 
     return submission;
   }
 
-  async calculateCost(data: AgentData) {
+  async prepareSubmission(data: AgentData) {
+    const remoteAccount = this.$store.account.remoteAccount;
     const submission = await this.createSubmission(data, {force: true});
-    const cost = submission.maxFeePerGasAuthorized * submission.transaction.gas;
+    const balanceRequired: bigint = await this.fuzdClient.computeBalanceRequired({
+      slot: submission.slot,
+      chainId: submission.chainId,
+      maxFeePerGasAuthorized: submission.maxFeePerGasAuthorized,
+      gas: submission.transaction.gas,
+    });
+
+    const balance = (await wallet.provider.getBalance(remoteAccount)).toBigInt();
+
     return {
-      cost,
-      remoteAccount: this.$store.account.remoteAccount,
+      cost: balanceRequired > balance ? balanceRequired - balance : 0n,
+      remoteAccount,
       submission,
     };
   }
 
   async submitReveal(submission: Submission): Promise<{queueID: string}> {
-    const privateWalletState = privateWallet.getState();
-    const fuzdClient = createFuzdClient(privateWalletState.missivPrivateKey);
-    const remoteAccount = await fuzdClient.assignRemoteAccount(chainId);
-    const balance = await wallet.provider.getBalance(remoteAccount.address);
-    const account: AgentServiceAccountData = {
-      balance,
-      remoteAccount: remoteAccount.address,
-      requireTopUp: false,
-      minimumBalance: balance,
-    };
-
-    const result = await fuzdClient.scheduleExecution(submission, {
+    const result = await this.fuzdClient.scheduleExecution(submission, {
       // fakeEncrypt: time.hasTimeContract,
     });
 
@@ -184,8 +185,8 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
   async _check() {
     try {
       if (this._lastPrivateKey) {
-        const fuzdClient = createFuzdClient(this._lastPrivateKey);
-        const remoteAccount = await fuzdClient.assignRemoteAccount(chainId);
+        this.fuzdClient = createFuzdClient(this._lastPrivateKey);
+        const remoteAccount = await this.fuzdClient.assignRemoteAccount(chainId);
         const balance = await wallet.provider.getBalance(remoteAccount.address);
         const account: AgentServiceAccountData = {
           balance,

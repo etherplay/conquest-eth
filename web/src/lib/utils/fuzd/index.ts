@@ -23,11 +23,11 @@ export function createFuzdClient(privateKey: `0x${string}`): FuzdClient {
   });
 }
 
-export function getRemoteAccount(privateKey: `0x${string}`): Promise<RemoteAccountInfo> {
-  const client = createClient({
-    privateKey,
-    schedulerEndPoint: FUZD_URI,
-  });
+// export function getRemoteAccount(privateKey: `0x${string}`): Promise<RemoteAccountInfo> {
+//   const client = createClient({
+//     privateKey,
+//     schedulerEndPoint: FUZD_URI,
+//   });
 
-  return client.assignRemoteAccount(chainId);
-}
+//   return client.assignRemoteAccount(chainId);
+// }
