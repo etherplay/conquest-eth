@@ -80,6 +80,10 @@
       frameType = 'Pokt_sun.png';
     } else if ($planetState?.rewardGiver === '0x2222222222222222222222222222222222222222') {
       frameType = 'Gnosis_sun.png';
+    } else if ($planetState?.rewardGiver === '0x3333333333333333333333333333333333333333') {
+      frameType = 'Soccerverse_sun.png';
+    } else if ($planetState?.rewardGiver === '0x4444444444444444444444444444444444444444') {
+      frameType = 'Blockscout_sun.png';
     }
 
     frameInfo = (planetsFrame.frames as any)[frameType] as {frame: Frame};
