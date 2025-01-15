@@ -2,11 +2,9 @@
 <data version="1.0">
     <struct type="Settings">
         <key>fileFormatVersion</key>
-        <int>4</int>
+        <int>6</int>
         <key>texturePackerVersion</key>
-        <string>4.4.0</string>
-        <key>fileName</key>
-        <string>/home/wighawag/dev/wighawag/etherplay/conquest-eth/rawAssets/planets.tps</string>
+        <string>7.5.0</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -39,24 +37,18 @@
         <filename></filename>
         <key>flipPVR</key>
         <false/>
-        <key>pvrCompressionQuality</key>
-        <enum type="SettingsBase::PvrCompressionQuality">PVR_QUALITY_NORMAL</enum>
-        <key>atfCompressData</key>
-        <false/>
-        <key>mipMapMinSize</key>
-        <uint>32768</uint>
-        <key>etc1CompressionQuality</key>
-        <enum type="SettingsBase::Etc1CompressionQuality">ETC1_QUALITY_LOW_PERCEPTUAL</enum>
-        <key>etc2CompressionQuality</key>
-        <enum type="SettingsBase::Etc2CompressionQuality">ETC2_QUALITY_LOW_PERCEPTUAL</enum>
+        <key>pvrQualityLevel</key>
+        <uint>3</uint>
+        <key>astcQualityLevel</key>
+        <uint>2</uint>
+        <key>basisUniversalQualityLevel</key>
+        <uint>2</uint>
+        <key>etc1QualityLevel</key>
+        <uint>40</uint>
+        <key>etc2QualityLevel</key>
+        <uint>40</uint>
         <key>dxtCompressionMode</key>
         <enum type="SettingsBase::DxtCompressionMode">DXT_PERCEPTUAL</enum>
-        <key>jxrColorFormat</key>
-        <enum type="SettingsBase::JpegXrColorMode">JXR_YUV444</enum>
-        <key>jxrTrimFlexBits</key>
-        <uint>0</uint>
-        <key>jxrCompressionLevel</key>
-        <uint>0</uint>
         <key>ditherType</key>
         <enum type="SettingsBase::DitherType">NearestNeighbour</enum>
         <key>backgroundColor</key>
@@ -80,8 +72,6 @@
         <key>webpQualityLevel</key>
         <uint>101</uint>
         <key>textureSubPath</key>
-        <string></string>
-        <key>atfFormats</key>
         <string></string>
         <key>textureFormat</key>
         <enum type="SettingsBase::TextureFormat">png</enum>
@@ -129,22 +119,6 @@
                 <uint>1</uint>
             </struct>
         </struct>
-        <key>andEngine</key>
-        <struct type="AndEngine">
-            <key>minFilter</key>
-            <enum type="AndEngine::MinFilter">Linear</enum>
-            <key>packageName</key>
-            <string>Texture</string>
-            <key>wrap</key>
-            <struct type="AndEngineWrap">
-                <key>s</key>
-                <enum type="AndEngineWrap::Wrap">Clamp</enum>
-                <key>t</key>
-                <enum type="AndEngineWrap::Wrap">Clamp</enum>
-            </struct>
-            <key>magFilter</key>
-            <enum type="AndEngine::MagFilter">MagLinear</enum>
-        </struct>
         <key>dataFileNames</key>
         <map type="GFileNameMap">
             <key>data</key>
@@ -153,8 +127,8 @@
                 <filename>../web/src/assets/planets.json</filename>
             </struct>
         </map>
-        <key>multiPack</key>
-        <false/>
+        <key>multiPackMode</key>
+        <enum type="SettingsBase::MultiPackMode">MultiPackOff</enum>
         <key>forceIdenticalLayout</key>
         <false/>
         <key>outputFormat</key>
@@ -223,6 +197,8 @@
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
@@ -232,12 +208,15 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">Blockscout_sun.png</key>
             <key type="filename">Gnosis_sun.png</key>
-            <key type="filename">Pokt_sun.png</key>
+            <key type="filename">Soccerverse_sun.png</key>
             <key type="filename">Xaya_sun.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
@@ -251,6 +230,8 @@
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
@@ -264,6 +245,8 @@
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
@@ -277,6 +260,8 @@
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
@@ -290,6 +275,8 @@
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
@@ -300,37 +287,44 @@
                 <false/>
             </struct>
         </map>
-        <key>fileList</key>
-        <array>
-            <filename>Baren.png</filename>
-            <filename>Barren_2.png</filename>
-            <filename>Desert.png</filename>
-            <filename>Desert_1.png</filename>
-            <filename>Desert_2.png</filename>
-            <filename>Forest.png</filename>
-            <filename>Gas_1.png</filename>
-            <filename>Ice.png</filename>
-            <filename>Ice_1.png</filename>
-            <filename>Ice_2.png</filename>
-            <filename>Jungle32.png</filename>
-            <filename>Jungle64.png</filename>
-            <filename>Lava.png</filename>
-            <filename>Lava_1.png</filename>
-            <filename>Lava_2.png</filename>
-            <filename>Moon.png</filename>
-            <filename>Ocean.png</filename>
-            <filename>Ocean_1.png</filename>
-            <filename>Tech_1.png</filename>
-            <filename>Tech_2.png</filename>
-            <filename>Terran.png</filename>
-            <filename>Terran_1.png</filename>
-            <filename>Terran_2.png</filename>
-            <filename>Tundra.png</filename>
-            <filename>Jungle48.png</filename>
-            <filename>Xaya_sun.png</filename>
-            <filename>Pokt_sun.png</filename>
-            <filename>Gnosis_sun.png</filename>
-        </array>
+        <key>fileLists</key>
+        <map type="SpriteSheetMap">
+            <key>default</key>
+            <struct type="SpriteSheet">
+                <key>files</key>
+                <array>
+                    <filename>Baren.png</filename>
+                    <filename>Barren_2.png</filename>
+                    <filename>Desert.png</filename>
+                    <filename>Desert_1.png</filename>
+                    <filename>Desert_2.png</filename>
+                    <filename>Forest.png</filename>
+                    <filename>Gas_1.png</filename>
+                    <filename>Ice.png</filename>
+                    <filename>Ice_1.png</filename>
+                    <filename>Ice_2.png</filename>
+                    <filename>Jungle32.png</filename>
+                    <filename>Jungle64.png</filename>
+                    <filename>Lava.png</filename>
+                    <filename>Lava_1.png</filename>
+                    <filename>Lava_2.png</filename>
+                    <filename>Moon.png</filename>
+                    <filename>Ocean.png</filename>
+                    <filename>Ocean_1.png</filename>
+                    <filename>Tech_1.png</filename>
+                    <filename>Tech_2.png</filename>
+                    <filename>Terran.png</filename>
+                    <filename>Terran_1.png</filename>
+                    <filename>Terran_2.png</filename>
+                    <filename>Tundra.png</filename>
+                    <filename>Jungle48.png</filename>
+                    <filename>Xaya_sun.png</filename>
+                    <filename>Gnosis_sun.png</filename>
+                    <filename>Soccerverse_sun.png</filename>
+                    <filename>Blockscout_sun.png</filename>
+                </array>
+            </struct>
+        </map>
         <key>ignoreFileList</key>
         <array/>
         <key>replaceList</key>

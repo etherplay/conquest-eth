@@ -43,4 +43,9 @@ contract OuterSpaceAdminFacet is UsingDiamondOwner, OuterSpaceFacetBase {
             admin := sload(0x4b982ee4b5dc6e03929295769d2c20389d9eaa50e17bb7ede2652d727b11f4eb)
         }
     }
+
+    function addRewardViaAdmin(uint256 location, address giverAddress) external {
+        require(msg.sender == _generatorAdmin(), "NOT_AUTHORIZED");
+        _addReward(location, giverAddress);
+    }
 }

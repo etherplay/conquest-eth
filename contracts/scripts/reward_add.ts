@@ -20,6 +20,10 @@ if (sponsor === 'xaya') {
   giverAddress = '0x1111111111111111111111111111111111111111';
 } else if (sponsor === 'da') {
   giverAddress = '0x2222222222222222222222222222222222222222';
+} else if (sponsor === 'soccerverse') {
+  giverAddress = '0x3333333333333333333333333333333333333333';
+} else if (sponsor === 'blockscout') {
+  giverAddress = '0x4444444444444444444444444444444444444444';
 }
 
 if (!giverAddress) {
@@ -46,7 +50,7 @@ async function func(hre: HardhatRuntimeEnvironment): Promise<void> {
     return;
   }
 
-  await execute('OuterSpace', {from: deployer, log: true, autoMine: true}, 'addReward', location, giverAddress);
+  await execute('OuterSpace', {from: deployer, log: true, autoMine: true}, 'addRewardViaAdmin', location, giverAddress);
 }
 if (require.main === module) {
   func(hre);
