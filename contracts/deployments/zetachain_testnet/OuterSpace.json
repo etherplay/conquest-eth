@@ -675,6 +675,24 @@
       "type": "function"
     },
     {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "location",
+          "type": "uint256"
+        },
+        {
+          "internalType": "address",
+          "name": "giverAddress",
+          "type": "address"
+        }
+      ],
+      "name": "addRewardViaAdmin",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [],
       "name": "generator",
       "outputs": [
@@ -1657,6 +1675,29 @@
         },
         {
           "internalType": "uint256",
+          "name": "amountToMint",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "tokenAmount",
+          "type": "uint256"
+        }
+      ],
+      "name": "acquireViaNativeTokenAndStakingToken",
+      "outputs": [],
+      "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "location",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
           "name": "amount",
           "type": "uint256"
         }
@@ -2285,7 +2326,7 @@
       }
     ]
   ],
-  "numDeployments": 3,
+  "numDeployments": 4,
   "linkedData": {
     "genesisHash": "0xcce77b122615b6093c0df0c7392bec6f537eb7a0595c337a573ee6d96d1107c8",
     "resolveWindow": 43200,
@@ -2316,8 +2357,9 @@
       ]
     },
     {
-      "facetAddress": "0xfA6F613EC4A9ad09513A3e04f00a30FC2E765C66",
+      "facetAddress": "0x776d87CF9ec56a8661B9eB7513da0d89308C70F8",
       "functionSelectors": [
+        "0xe6360cf6",
         "0x7afa1eed",
         "0x0b483960",
         "0x4a7c7e4b",
@@ -2325,13 +2367,13 @@
       ]
     },
     {
-      "facetAddress": "0x704A72b017Ae1d52838fdd68fFB715F15FC156c1",
+      "facetAddress": "0xC0a465af0799cF79d242c2c608F0868Fc8e4EB25",
       "functionSelectors": [
         "0xee543393"
       ]
     },
     {
-      "facetAddress": "0xBD37baB45c7E826354FF36e5b51C5D20E2b09270",
+      "facetAddress": "0x4E5817D4B1c4Da89508F1B066fB53362Fb943db9",
       "functionSelectors": [
         "0x112e6851",
         "0xcf3ecf07",
@@ -2341,13 +2383,13 @@
       ]
     },
     {
-      "facetAddress": "0x4ff4Cf9B4f703FeC330915E5de999120ee9544d8",
+      "facetAddress": "0xe439f34f79Cec02F3c7AFdDF3E237065827d57a8",
       "functionSelectors": [
         "0xf69438c3"
       ]
     },
     {
-      "facetAddress": "0x96161c4d13F734ad6C19C0e1a0e6dc9142634754",
+      "facetAddress": "0x185e46CA615869B8a37ec0C848B9cdaEB778606D",
       "functionSelectors": [
         "0xe8a3d485",
         "0x34efcb8e",
@@ -2367,7 +2409,7 @@
       ]
     },
     {
-      "facetAddress": "0xc5Dd3F6b6Bbd8FEcE215DcFD188504A55Db4ad1a",
+      "facetAddress": "0x09dA33a4dc673c545E0f85B8888aCdEAfC731d45",
       "functionSelectors": [
         "0xe8525444",
         "0xc5aaa0ae",
@@ -2376,9 +2418,10 @@
       ]
     },
     {
-      "facetAddress": "0x4F3c3316D720D8332b2f09C90EbF0b9D1122a732",
+      "facetAddress": "0xFc1CF981f952f82f9589eB277217307c56D17DF8",
       "functionSelectors": [
         "0x2f646f95",
+        "0xf7e111e7",
         "0x7ba423fb",
         "0xc9560838",
         "0xafc82370",
@@ -2389,7 +2432,7 @@
       ]
     },
     {
-      "facetAddress": "0x387449A76De2300371700d4940B4F7A04eB710C7",
+      "facetAddress": "0xA9479cE5E3694F06eBFBE26226e22887973E4cA8",
       "functionSelectors": [
         "0x74de4ec4",
         "0x08943503",
