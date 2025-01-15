@@ -1,0 +1,1 @@
+- [ ] Reward Giver ? delete / admin / keep ?
