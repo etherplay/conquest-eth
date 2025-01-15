@@ -1,0 +1,362 @@
+[
+  {
+    "address": "0x007109f0819756f95992a8fddc8809ec4ad0a287",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x0086231dac0d29299fee9bafeb9274018a100dc1",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x0206171cdd913fc2df3d1b084291f424ef680d94",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x02a3223e905706ffde00bd65ab13ebd458f0db10",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x0436e2e4ea467f9958403dc56635404ee1bb1e94",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x07b19e4094278feddb9174c1cf6a7fb3e4d226bd",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x0d8b207695f92c45d27be4d49bb7921e4059b113",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x0dc1e91eef4a1c8a03e13fadf213ee17e4499ab1",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x11e9a30320d7a41ccf4e8765fe19354e376c35bb",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x12bc2dfbd6339746b553bb13e473ea561bd39152",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x134e5d58859c1fe004406d2c766f059b1341d2f8",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x1683e0aaf0b7bd14fa04e38e82d6d511995a795c",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x1694492e230049a0ba9dfda008640f8e88973e7c",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x187c34b7674d2acd7b2f2340245c42a17adb957e",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x18c24478ae3289779059c6e30a1978ee8241088c",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x1e61cf58e9f9b273a3e13ddec1a4b4c34bae5a8b",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x254f81da85b9aa45a7df156d2f93c269a197aa11",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x274af61a316678a84aabacc4a6cf6881e9413b3b",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x292a535328dda6a45ce4815ac76701de86466409",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x2ec54902c597bfee3cd736ef850c833b17877420",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x3064f0f0a08d723e814f14386ba0c62dc7bd7ad3",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x3080d37b0e8b14a37250427b00257f12b191c455",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x31a45d67474d01da67f6a42ad72fe097cdd26326",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x31db0f7cc3c2ea472c3e0fa6619fa9f54969f0ea",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x33be25e259ebbd9130a90c27ed0c05061e0bce74",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x356000cec4fc967f8fc372381d983426760a0391",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x38daea6f17e4308b0da9647db9ca6d84a3a7e195",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x3a769a347da646c3e9015e1a262e4daca49ec495",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x4047f55ac6c9da5938e6b662926d04c0dbcc5343",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x41a7ce9d735815f333d9969de8225a6477afca17",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x4987e9d5f10b6760e16ec81e96fb2b2b03a7dd42",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x5028481d95df5f6a58a604a6b99ea16fccf47bb7",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x5246da8c182a2b9c1b7ede9abba02ab423678f7f",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x55a47d9a0385d3187af61e2e3eaf4934b253fc11",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x60d38778adbbeeac88f741b833cbb9877228eea0",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x636f3000173da0ecefd7aff904e902af23953ac1",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x6a0a945996494e024324f3eb2235f25da4cb140e",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x752ae801cda83797ac73aebfb61ab5a5551e5739",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x7a2c5cc45aafe03c2c16593eb04e802e9ce529c1",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x7a7029bc89182f61a15de8ee7ecbf14368b76916",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x7dd04d3700a57e9c567f65fd8a670a0f8f135330",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x84eca34e4a1732113883407e3666b014dcca0a16",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x85150378f872a5ef6fa700d83fe0496c0981bf98",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x8888888884d2e4e981023da51b43066461f46dca",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x9258af909de4211bf5448ff5bc7c26fefde2af27",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x92edc7a4d9e755469fde61815dd229eef7882433",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x939d522f7ecc1ef05e06133e355cc04cf30339e2",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x9457cd03a1dd59d933431bd9da433b45893c6693",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x964727f7bc5ca298f9c9b68958b063f861417392",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x96595d81831d1b92002bb0b60bb8cc9596f3488a",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x990bdb882fb8e1c71af590913decea05d1d0e223",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0x9d375719442c8d57ca9658ede45336787648381f",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xa38c86137b5e77be56101de97df98adfaf8c98d8",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xa805cb6907130c0c7f3534ee2ebc62d806ffb820",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xa93182ac1617383caad621d34c63311e85a74eb6",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xaa0004ab712f6716ccd895b39a1923ecc3093a8d",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xaa1e77b982cbce1d109e9309aa120292b44eef0c",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xaee6b1c7ed43275b32588708300dba13dd4856a5",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xb006c644258e01b437eff06e16e56e938a239712",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xb02ee249bb7b04a4635c6ec5457b76a4dfc92d3e",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xb19bc46c52a1352a071fe2389503b6fe1abd50ff",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xb24156b92244c1541f916511e879e60710e30b84",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xb2b80ef853cabb9f63f9087ac5f10e2e82e8b067",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xb31adbd3c87d1038ce747bb16f20b9687c6ccb62",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xb42131ed28cd188173a21e4ecaa2c9dda8377766",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xb9be40bdec31ec3935830acc8bcaad1a431f8bb0",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xba025a8558beaf92bb420f56fd7739defce44cad",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xc1444642a8117803e4c4451ccb94d01738fd839e",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xc483287d7e6d2d5427444b7b5690794d5c886c27",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xc824fab4bf3eea2f765020591de03d7d04074c61",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xcda07ef8af07b5b8b203bf66f7bdd2b1562c169b",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xcf1a82c49364d4523e23e24a1c342466613b1e03",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xcfedd5b3aae8a2c0eb6cd94d547d971092c95029",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xd0f46a5d48596409264d4efc1f3b229878fff743",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xd23e5a77ac2adbddaa1569389581732f2ea09e61",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xdd39c8deaeacdcdde35bd48a469349b9346fe7fa",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xdd7d41f23f9620dd195badc9654220df27c38900",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xde8c29a869ab007c5c14dccede1be06dba1b7f23",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xdfcddcc65f7a739d79e02071ea750500395fdd30",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xe0cd518a1c9e76a380fda3a8b5c027c076d6d472",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xe2a00cc90358f148c8fd3e052cf86a4be22a4eac",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xe3fa0cc9fd3c3c81ceb97d2389345ec03bc3752b",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xe6d80dfa5f93292b5cf6059ba75dca99f742971e",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xf162f8e62e4d8543a70af017557d18a859848452",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xf18a5409bf398ce503b8b4e6796b9cc77e281704",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xf72c5dbf7a1e0becd9699ba4de535df47e0713ef",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xf8b109af18cfa614bef1c2899e522d77b3c64c14",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xfa04032c159ae60d53d34d3811406fb53e5a3215",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xfeff33456de40aa9ffc85b796cb731b91ea6eb04",
+    "tokenUnitGivenSoFar": 400
+  },
+  {
+    "address": "0xffc52c6dbcd6b3e81c12285492b8c8a72c87b693",
+    "tokenUnitGivenSoFar": 400
+  }
+]

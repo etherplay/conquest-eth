@@ -1,0 +1,386 @@
+{
+  "address": "0x107ADF6C168C8AEF02A052037E898139b8c66B7a",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "contract IAlliance",
+          "name": "alliance",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "player",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "joining",
+          "type": "bool"
+        }
+      ],
+      "name": "AllianceLink",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "components": [
+            {
+              "internalType": "address",
+              "name": "addr",
+              "type": "address"
+            },
+            {
+              "internalType": "uint32",
+              "name": "nonce",
+              "type": "uint32"
+            },
+            {
+              "internalType": "bytes",
+              "name": "signature",
+              "type": "bytes"
+            }
+          ],
+          "internalType": "struct AllianceRegistry.PlayerSubmission[]",
+          "name": "playerSubmissions",
+          "type": "tuple[]"
+        }
+      ],
+      "name": "addMultiplePlayersToAlliance",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "player",
+          "type": "address"
+        },
+        {
+          "internalType": "uint32",
+          "name": "nonce",
+          "type": "uint32"
+        },
+        {
+          "internalType": "bytes",
+          "name": "signature",
+          "type": "bytes"
+        }
+      ],
+      "name": "addPlayerToAlliance",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "player",
+          "type": "address"
+        }
+      ],
+      "name": "ejectPlayerFromAlliance",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "player",
+          "type": "address"
+        },
+        {
+          "internalType": "contract IAlliance",
+          "name": "alliance",
+          "type": "address"
+        }
+      ],
+      "name": "getAllianceData",
+      "outputs": [
+        {
+          "internalType": "uint96",
+          "name": "joinTime",
+          "type": "uint96"
+        },
+        {
+          "internalType": "uint256",
+          "name": "nonce",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "player",
+          "type": "address"
+        },
+        {
+          "internalType": "uint8",
+          "name": "slot",
+          "type": "uint8"
+        }
+      ],
+      "name": "getAllianceDataAtSlot",
+      "outputs": [
+        {
+          "internalType": "contract IAlliance",
+          "name": "alliance",
+          "type": "address"
+        },
+        {
+          "internalType": "uint96",
+          "name": "joinTime",
+          "type": "uint96"
+        },
+        {
+          "internalType": "uint256",
+          "name": "nonce",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "player1",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
+          "name": "player2",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "havePlayersAnAllianceInCommon",
+      "outputs": [
+        {
+          "internalType": "contract IAlliance",
+          "name": "alliance",
+          "type": "address"
+        },
+        {
+          "internalType": "uint96",
+          "name": "joinTime",
+          "type": "uint96"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IAlliance",
+          "name": "alliance",
+          "type": "address"
+        },
+        {
+          "internalType": "bytes",
+          "name": "data",
+          "type": "bytes"
+        }
+      ],
+      "name": "joinAlliance",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "joined",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "contract IAlliance",
+          "name": "alliance",
+          "type": "address"
+        }
+      ],
+      "name": "leaveAlliance",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xc7c5d0cbe772a62ea30b77a38ecede1d127c7ee8f9f3e0c8e57c18f2cca6253e",
+  "receipt": {
+    "to": null,
+    "from": "0x61c461EcC993aaDEB7e4b47E96d1B8cC37314B20",
+    "contractAddress": "0x107ADF6C168C8AEF02A052037E898139b8c66B7a",
+    "transactionIndex": 6,
+    "gasUsed": "1789751",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0x0a2f6657556fec2c964b03be43202bd6fbac5d210b1a017d1298b1d1c9959950",
+    "transactionHash": "0xc7c5d0cbe772a62ea30b77a38ecede1d127c7ee8f9f3e0c8e57c18f2cca6253e",
+    "logs": [],
+    "blockNumber": 6032359,
+    "cumulativeGasUsed": "3725307",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "solcInputHash": "486e565b42ec3b27daa127e4d9205b03",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.9+commit.e5eed63a\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"contract IAlliance\",\"name\":\"alliance\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"player\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"bool\",\"name\":\"joining\",\"type\":\"bool\"}],\"name\":\"AllianceLink\",\"type\":\"event\"},{\"inputs\":[{\"components\":[{\"internalType\":\"address\",\"name\":\"addr\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"nonce\",\"type\":\"uint32\"},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\"}],\"internalType\":\"struct AllianceRegistry.PlayerSubmission[]\",\"name\":\"playerSubmissions\",\"type\":\"tuple[]\"}],\"name\":\"addMultiplePlayersToAlliance\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"player\",\"type\":\"address\"},{\"internalType\":\"uint32\",\"name\":\"nonce\",\"type\":\"uint32\"},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\"}],\"name\":\"addPlayerToAlliance\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"player\",\"type\":\"address\"}],\"name\":\"ejectPlayerFromAlliance\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"player\",\"type\":\"address\"},{\"internalType\":\"contract IAlliance\",\"name\":\"alliance\",\"type\":\"address\"}],\"name\":\"getAllianceData\",\"outputs\":[{\"internalType\":\"uint96\",\"name\":\"joinTime\",\"type\":\"uint96\"},{\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"player\",\"type\":\"address\"},{\"internalType\":\"uint8\",\"name\":\"slot\",\"type\":\"uint8\"}],\"name\":\"getAllianceDataAtSlot\",\"outputs\":[{\"internalType\":\"contract IAlliance\",\"name\":\"alliance\",\"type\":\"address\"},{\"internalType\":\"uint96\",\"name\":\"joinTime\",\"type\":\"uint96\"},{\"internalType\":\"uint256\",\"name\":\"nonce\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"player1\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"player2\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"timestamp\",\"type\":\"uint256\"}],\"name\":\"havePlayersAnAllianceInCommon\",\"outputs\":[{\"internalType\":\"contract IAlliance\",\"name\":\"alliance\",\"type\":\"address\"},{\"internalType\":\"uint96\",\"name\":\"joinTime\",\"type\":\"uint96\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contract IAlliance\",\"name\":\"alliance\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"joinAlliance\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"joined\",\"type\":\"bool\"}],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"contract IAlliance\",\"name\":\"alliance\",\"type\":\"address\"}],\"name\":\"leaveAlliance\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"src/AllianceRegistry.sol\":\"AllianceRegistry\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":2000},\"remappings\":[]},\"sources\":{\"@openzeppelin/contracts/utils/cryptography/ECDSA.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\n\\npragma solidity ^0.8.0;\\n\\n/**\\n * @dev Elliptic Curve Digital Signature Algorithm (ECDSA) operations.\\n *\\n * These functions can be used to verify that a message was signed by the holder\\n * of the private keys of a given address.\\n */\\nlibrary ECDSA {\\n    enum RecoverError {\\n        NoError,\\n        InvalidSignature,\\n        InvalidSignatureLength,\\n        InvalidSignatureS,\\n        InvalidSignatureV\\n    }\\n\\n    function _throwError(RecoverError error) private pure {\\n        if (error == RecoverError.NoError) {\\n            return; // no error: do nothing\\n        } else if (error == RecoverError.InvalidSignature) {\\n            revert(\\\"ECDSA: invalid signature\\\");\\n        } else if (error == RecoverError.InvalidSignatureLength) {\\n            revert(\\\"ECDSA: invalid signature length\\\");\\n        } else if (error == RecoverError.InvalidSignatureS) {\\n            revert(\\\"ECDSA: invalid signature 's' value\\\");\\n        } else if (error == RecoverError.InvalidSignatureV) {\\n            revert(\\\"ECDSA: invalid signature 'v' value\\\");\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the address that signed a hashed message (`hash`) with\\n     * `signature` or error string. This address can then be used for verification purposes.\\n     *\\n     * The `ecrecover` EVM opcode allows for malleable (non-unique) signatures:\\n     * this function rejects them by requiring the `s` value to be in the lower\\n     * half order, and the `v` value to be either 27 or 28.\\n     *\\n     * IMPORTANT: `hash` _must_ be the result of a hash operation for the\\n     * verification to be secure: it is possible to craft signatures that\\n     * recover to arbitrary addresses for non-hashed data. A safe way to ensure\\n     * this is by receiving a hash of the original message (which may otherwise\\n     * be too long), and then calling {toEthSignedMessageHash} on it.\\n     *\\n     * Documentation for signature generation:\\n     * - with https://web3js.readthedocs.io/en/v1.3.4/web3-eth-accounts.html#sign[Web3.js]\\n     * - with https://docs.ethers.io/v5/api/signer/#Signer-signMessage[ethers]\\n     *\\n     * _Available since v4.3._\\n     */\\n    function tryRecover(bytes32 hash, bytes memory signature) internal pure returns (address, RecoverError) {\\n        // Check the signature length\\n        // - case 65: r,s,v signature (standard)\\n        // - case 64: r,vs signature (cf https://eips.ethereum.org/EIPS/eip-2098) _Available since v4.1._\\n        if (signature.length == 65) {\\n            bytes32 r;\\n            bytes32 s;\\n            uint8 v;\\n            // ecrecover takes the signature parameters, and the only way to get them\\n            // currently is to use assembly.\\n            assembly {\\n                r := mload(add(signature, 0x20))\\n                s := mload(add(signature, 0x40))\\n                v := byte(0, mload(add(signature, 0x60)))\\n            }\\n            return tryRecover(hash, v, r, s);\\n        } else if (signature.length == 64) {\\n            bytes32 r;\\n            bytes32 vs;\\n            // ecrecover takes the signature parameters, and the only way to get them\\n            // currently is to use assembly.\\n            assembly {\\n                r := mload(add(signature, 0x20))\\n                vs := mload(add(signature, 0x40))\\n            }\\n            return tryRecover(hash, r, vs);\\n        } else {\\n            return (address(0), RecoverError.InvalidSignatureLength);\\n        }\\n    }\\n\\n    /**\\n     * @dev Returns the address that signed a hashed message (`hash`) with\\n     * `signature`. This address can then be used for verification purposes.\\n     *\\n     * The `ecrecover` EVM opcode allows for malleable (non-unique) signatures:\\n     * this function rejects them by requiring the `s` value to be in the lower\\n     * half order, and the `v` value to be either 27 or 28.\\n     *\\n     * IMPORTANT: `hash` _must_ be the result of a hash operation for the\\n     * verification to be secure: it is possible to craft signatures that\\n     * recover to arbitrary addresses for non-hashed data. A safe way to ensure\\n     * this is by receiving a hash of the original message (which may otherwise\\n     * be too long), and then calling {toEthSignedMessageHash} on it.\\n     */\\n    function recover(bytes32 hash, bytes memory signature) internal pure returns (address) {\\n        (address recovered, RecoverError error) = tryRecover(hash, signature);\\n        _throwError(error);\\n        return recovered;\\n    }\\n\\n    /**\\n     * @dev Overload of {ECDSA-tryRecover} that receives the `r` and `vs` short-signature fields separately.\\n     *\\n     * See https://eips.ethereum.org/EIPS/eip-2098[EIP-2098 short signatures]\\n     *\\n     * _Available since v4.3._\\n     */\\n    function tryRecover(\\n        bytes32 hash,\\n        bytes32 r,\\n        bytes32 vs\\n    ) internal pure returns (address, RecoverError) {\\n        bytes32 s;\\n        uint8 v;\\n        assembly {\\n            s := and(vs, 0x7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff)\\n            v := add(shr(255, vs), 27)\\n        }\\n        return tryRecover(hash, v, r, s);\\n    }\\n\\n    /**\\n     * @dev Overload of {ECDSA-recover} that receives the `r and `vs` short-signature fields separately.\\n     *\\n     * _Available since v4.2._\\n     */\\n    function recover(\\n        bytes32 hash,\\n        bytes32 r,\\n        bytes32 vs\\n    ) internal pure returns (address) {\\n        (address recovered, RecoverError error) = tryRecover(hash, r, vs);\\n        _throwError(error);\\n        return recovered;\\n    }\\n\\n    /**\\n     * @dev Overload of {ECDSA-tryRecover} that receives the `v`,\\n     * `r` and `s` signature fields separately.\\n     *\\n     * _Available since v4.3._\\n     */\\n    function tryRecover(\\n        bytes32 hash,\\n        uint8 v,\\n        bytes32 r,\\n        bytes32 s\\n    ) internal pure returns (address, RecoverError) {\\n        // EIP-2 still allows signature malleability for ecrecover(). Remove this possibility and make the signature\\n        // unique. Appendix F in the Ethereum Yellow paper (https://ethereum.github.io/yellowpaper/paper.pdf), defines\\n        // the valid range for s in (301): 0 < s < secp256k1n \\u00f7 2 + 1, and for v in (302): v \\u2208 {27, 28}. Most\\n        // signatures from current libraries generate a unique signature with an s-value in the lower half order.\\n        //\\n        // If your library generates malleable signatures, such as s-values in the upper range, calculate a new s-value\\n        // with 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141 - s1 and flip v from 27 to 28 or\\n        // vice versa. If your library also generates signatures with 0/1 for v instead 27/28, add 27 to v to accept\\n        // these malleable signatures as well.\\n        if (uint256(s) > 0x7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5D576E7357A4501DDFE92F46681B20A0) {\\n            return (address(0), RecoverError.InvalidSignatureS);\\n        }\\n        if (v != 27 && v != 28) {\\n            return (address(0), RecoverError.InvalidSignatureV);\\n        }\\n\\n        // If the signature is valid (and not malleable), return the signer address\\n        address signer = ecrecover(hash, v, r, s);\\n        if (signer == address(0)) {\\n            return (address(0), RecoverError.InvalidSignature);\\n        }\\n\\n        return (signer, RecoverError.NoError);\\n    }\\n\\n    /**\\n     * @dev Overload of {ECDSA-recover} that receives the `v`,\\n     * `r` and `s` signature fields separately.\\n     */\\n    function recover(\\n        bytes32 hash,\\n        uint8 v,\\n        bytes32 r,\\n        bytes32 s\\n    ) internal pure returns (address) {\\n        (address recovered, RecoverError error) = tryRecover(hash, v, r, s);\\n        _throwError(error);\\n        return recovered;\\n    }\\n\\n    /**\\n     * @dev Returns an Ethereum Signed Message, created from a `hash`. This\\n     * produces hash corresponding to the one signed with the\\n     * https://eth.wiki/json-rpc/API#eth_sign[`eth_sign`]\\n     * JSON-RPC method as part of EIP-191.\\n     *\\n     * See {recover}.\\n     */\\n    function toEthSignedMessageHash(bytes32 hash) internal pure returns (bytes32) {\\n        // 32 is the length in bytes of hash,\\n        // enforced by the type signature above\\n        return keccak256(abi.encodePacked(\\\"\\\\x19Ethereum Signed Message:\\\\n32\\\", hash));\\n    }\\n\\n    /**\\n     * @dev Returns an Ethereum Signed Typed Data, created from a\\n     * `domainSeparator` and a `structHash`. This produces hash corresponding\\n     * to the one signed with the\\n     * https://eips.ethereum.org/EIPS/eip-712[`eth_signTypedData`]\\n     * JSON-RPC method as part of EIP-712.\\n     *\\n     * See {recover}.\\n     */\\n    function toTypedDataHash(bytes32 domainSeparator, bytes32 structHash) internal pure returns (bytes32) {\\n        return keccak256(abi.encodePacked(\\\"\\\\x19\\\\x01\\\", domainSeparator, structHash));\\n    }\\n}\\n\",\"keccak256\":\"0xbc991a1cf357ce19480831a40792c814238a3b5458134703682abd8aa39719fb\",\"license\":\"MIT\"},\"hardhat-deploy/solc_0.8/proxy/Proxied.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\nabstract contract Proxied {\\n    /// @notice to be used by initialisation / postUpgrade function so that only the proxy's admin can execute them\\n    /// It also allows these functions to be called inside a contructor\\n    /// even if the contract is meant to be used without proxy\\n    modifier proxied() {\\n        address proxyAdminAddress = _proxyAdmin();\\n        // With hardhat-deploy proxies\\n        // the proxyAdminAddress is zero only for the implementation contract\\n        // if the implementation contract want to be used as a standalone/immutable contract\\n        // it simply has to execute the `proxied` function\\n        // This ensure the proxyAdminAddress is never zero post deployment\\n        // And allow you to keep the same code for both proxied contract and immutable contract\\n        if (proxyAdminAddress == address(0)) {\\n            // ensure can not be called twice when used outside of proxy : no admin\\n            // solhint-disable-next-line security/no-inline-assembly\\n            assembly {\\n                sstore(\\n                    0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103,\\n                    0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF\\n                )\\n            }\\n        } else {\\n            require(msg.sender == proxyAdminAddress);\\n        }\\n        _;\\n    }\\n\\n    modifier onlyProxyAdmin() {\\n        require(msg.sender == _proxyAdmin(), \\\"NOT_AUTHORIZED\\\");\\n        _;\\n    }\\n\\n    function _proxyAdmin() internal view returns (address ownerAddress) {\\n        // solhint-disable-next-line security/no-inline-assembly\\n        assembly {\\n            ownerAddress := sload(0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103)\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0xaaceeafeeaf0d200ca3942d8bf14c1c4f787a77f79cc87c08bb668e65acdee29\",\"license\":\"MIT\"},\"src/AllianceRegistry.sol\":{\"content\":\"// SPDX-License-Identifier: AGPL-1.0\\n\\npragma solidity 0.8.9;\\n\\nimport \\\"hardhat-deploy/solc_0.8/proxy/Proxied.sol\\\";\\nimport \\\"./Interfaces/IAlliance.sol\\\";\\nimport \\\"@openzeppelin/contracts/utils/cryptography/ECDSA.sol\\\";\\n\\n// import \\\"hardhat/console.sol\\\";\\n\\ncontract AllianceRegistry is Proxied {\\n     using ECDSA for bytes32;\\n\\n\\n    uint8 internal constant MAX_NUM_ALLIANCES = 4;\\n\\n    mapping(address => mapping(IAlliance => uint256)) internal _allianceNonces;\\n    struct AllianceRow {\\n        IAlliance alliance;\\n        uint96 joinTime;\\n    }\\n    struct Alliances {\\n        AllianceRow alliance0;\\n        AllianceRow alliance1;\\n        AllianceRow alliance2;\\n        AllianceRow alliance3;\\n    }\\n    mapping(address => Alliances) internal _alliances;\\n\\n\\n    event AllianceLink(IAlliance indexed alliance, address indexed player, bool joining);\\n\\n\\n    function getAllianceDataAtSlot(address player, uint8 slot) external view returns (IAlliance alliance, uint96 joinTime, uint256 nonce) {\\n\\n        Alliances storage alliances = _alliances[player];\\n        if (slot == 0) {\\n            alliance = alliances.alliance0.alliance;\\n            joinTime = alliances.alliance0.joinTime;\\n        } else if (slot == 1) {\\n            alliance = alliances.alliance1.alliance;\\n            joinTime = alliances.alliance1.joinTime;\\n        } else if (slot == 2) {\\n            alliance = alliances.alliance2.alliance;\\n            joinTime = alliances.alliance2.joinTime;\\n        } else if (slot == 3) {\\n            alliance = alliances.alliance3.alliance;\\n            joinTime = alliances.alliance3.joinTime;\\n        }\\n\\n        nonce = _allianceNonces[player][alliance];\\n    }\\n\\n    function getAllianceData(address player, IAlliance alliance) external view returns (uint96 joinTime, uint256 nonce) {\\n        nonce = _allianceNonces[player][alliance];\\n\\n        Alliances storage alliances = _alliances[player];\\n        if (alliances.alliance0.alliance == alliance) {\\n            joinTime = alliances.alliance0.joinTime;\\n        } else if (alliances.alliance1.alliance == alliance) {\\n            joinTime = alliances.alliance1.joinTime;\\n        } else if (alliances.alliance2.alliance == alliance) {\\n            joinTime = alliances.alliance2.joinTime;\\n        } else if (alliances.alliance3.alliance == alliance) {\\n            joinTime = alliances.alliance3.joinTime;\\n        }\\n    }\\n\\n    function havePlayersAnAllianceInCommon(address player1, address player2, uint256 timestamp) external view returns (IAlliance alliance, uint96 joinTime) {\\n        Alliances storage p1Alliances = _alliances[player1];\\n        Alliances storage p2Alliances = _alliances[player2];\\n\\n        AllianceRow[4] memory player1Alliances;\\n        AllianceRow[4] memory player2Alliances;\\n        uint256 num1 = 0;\\n        uint256 num2 = 0;\\n\\n        for (uint256 i = 0; i < 4; i++) {\\n            if (i == num1) {\\n                AllianceRow memory allianceRow;\\n                if (i == 0) {\\n                    allianceRow = p1Alliances.alliance0;\\n                } else if(i==1) {\\n                    allianceRow = p1Alliances.alliance1;\\n                } else if(i==2) {\\n                    allianceRow = p1Alliances.alliance2;\\n                } else if(i==3) {\\n                    allianceRow = p1Alliances.alliance3;\\n                }\\n                if (address(allianceRow.alliance) == address(0)) {\\n                    // console.log(\\\"p1 exhausted\\\");\\n                    return (alliance, joinTime); // the alliance leave ensure that there is no gap // TODO\\n                }\\n                player1Alliances[num1 ++] = allianceRow;\\n            }\\n            for (uint256 j = 0; j < 4; j++) {\\n                if (j == num2) {\\n                    AllianceRow memory allianceRow;\\n                    if (j == 0) {\\n                        allianceRow = p2Alliances.alliance0;\\n                    } else if(j==1) {\\n                        allianceRow = p2Alliances.alliance1;\\n                    } else if(j==2) {\\n                        allianceRow = p2Alliances.alliance2;\\n                    } else if(j==3) {\\n                        allianceRow = p2Alliances.alliance3;\\n                    }\\n                    if (address(allianceRow.alliance) == address(0)) {\\n                        // console.log(\\\"p2 exhausted\\\");\\n                        // return (alliance, joinTime); // the alliance leave ensure that there is no gap // TODO\\n                        break;\\n                    }\\n                    player2Alliances[num2 ++] = allianceRow;\\n                }\\n\\n                if (player1Alliances[i].alliance == player2Alliances[j].alliance) {\\n                    if (player1Alliances[i].joinTime >= player2Alliances[j].joinTime) {\\n                        if (player1Alliances[i].joinTime < timestamp) {\\n                            return (player1Alliances[i].alliance, player1Alliances[i].joinTime);\\n                        } else {\\n                            // TODO check greater ?\\n                            alliance = player1Alliances[i].alliance;\\n                            joinTime = player1Alliances[i].joinTime;\\n                        }\\n                    } else {\\n                        if (player2Alliances[j].joinTime < timestamp) {\\n                            return (player2Alliances[j].alliance, player2Alliances[j].joinTime);\\n                        } else {\\n                            // TODO check greater ?\\n                            alliance = player2Alliances[j].alliance;\\n                            joinTime = player2Alliances[j].joinTime;\\n                        }\\n                    }\\n                }\\n            }\\n        }\\n        // console.log(address(alliance));\\n        // console.log(joinTime);\\n    }\\n\\n    // -----------------------------------------------------------------------------------------------------\\n    // FROM PLAYER\\n    // -----------------------------------------------------------------------------------------------------\\n\\n    function joinAlliance(IAlliance alliance, bytes calldata data) external returns (bool joined) {\\n        Alliances storage alliances = _alliances[msg.sender];\\n        uint256 slot = 0;\\n        if (address(alliances.alliance0.alliance) != address(0)) {\\n            slot ++;\\n        }\\n        if (address(alliances.alliance1.alliance) != address(0)) {\\n            slot ++;\\n        }\\n        if (address(alliances.alliance2.alliance) != address(0)) {\\n            slot ++;\\n        }\\n        require(address(alliances.alliance3.alliance) == address(0), \\\"MAX_NUM_ALLIANCES_REACHED\\\");\\n\\n        joined = alliance.requestToJoin(msg.sender, data);\\n        if (joined) {\\n            if (slot == 0) {\\n                alliances.alliance0.alliance = alliance;\\n                alliances.alliance0.joinTime = uint96(block.timestamp);\\n            } else if (slot == 1) {\\n                alliances.alliance1.alliance = alliance;\\n                alliances.alliance1.joinTime = uint96(block.timestamp);\\n            } else if (slot == 2) {\\n                alliances.alliance2.alliance = alliance;\\n                alliances.alliance2.joinTime = uint96(block.timestamp);\\n            } else if (slot == 3) {\\n                alliances.alliance3.alliance = alliance;\\n                alliances.alliance3.joinTime = uint96(block.timestamp);\\n            }\\n\\n            emit AllianceLink(alliance, msg.sender, true);\\n        }\\n    }\\n\\n    function leaveAlliance(IAlliance alliance) external {\\n        _leaveAlliance(msg.sender, alliance);\\n        try alliance.playerHasLeft(msg.sender) {} catch {}\\n        // TODO ensure callback not failed due to low gas (1/64 rule)\\n    }\\n\\n\\n    // -----------------------------------------------------------------------------------------------------\\n    // FROM ALLIANCE\\n    // -----------------------------------------------------------------------------------------------------\\n\\n    function addPlayerToAlliance(address player, uint32 nonce, bytes calldata signature) external {\\n        _addPlayerToAlliance(player, nonce, signature);\\n    }\\n\\n    struct PlayerSubmission {\\n        address addr;\\n        uint32 nonce;\\n        bytes signature;\\n    }\\n\\n\\n    function addMultiplePlayersToAlliance(PlayerSubmission[] calldata playerSubmissions) external {\\n       for(uint256 i = 0 ; i < playerSubmissions.length; i++) {\\n           _addPlayerToAlliance(playerSubmissions[i].addr, playerSubmissions[i].nonce, playerSubmissions[i].signature);\\n       }\\n    }\\n\\n    function ejectPlayerFromAlliance(address player) external {\\n        _leaveAlliance(player, IAlliance(msg.sender));\\n    }\\n\\n\\n    // -----------------------------------------------------------------------------------------------------\\n    // INTERNAL\\n    // -----------------------------------------------------------------------------------------------------\\n\\n    function _addPlayerToAlliance(address player, uint32 nonce, bytes calldata signature) internal {\\n        IAlliance alliance = IAlliance(msg.sender);\\n\\n        Alliances storage alliances = _alliances[player];\\n        uint256 slot = 0;\\n        if (address(alliances.alliance0.alliance) != address(0)) {\\n            require(alliances.alliance0.alliance != alliance, \\\"ALREADY_JOINED\\\");\\n            slot ++;\\n        }\\n        if (address(alliances.alliance1.alliance) != address(0)) {\\n            require(alliances.alliance1.alliance != alliance, \\\"ALREADY_JOINED\\\");\\n            slot ++;\\n        }\\n        if (address(alliances.alliance2.alliance) != address(0)) {\\n            require(alliances.alliance2.alliance != alliance, \\\"ALREADY_JOINED\\\");\\n            slot ++;\\n        }\\n        require(alliances.alliance3.alliance != alliance, \\\"ALREADY_JOINED\\\");\\n        require(address(alliances.alliance3.alliance) == address(0), \\\"MAX_NUM_ALLIANCES_REACHED\\\");\\n\\n\\n        uint256 currentNonce = _allianceNonces[player][alliance];\\n        require(currentNonce == nonce, \\\"INVALID_NONCE\\\");\\n\\n        bytes memory message;\\n        if (nonce == 0) {\\n            message = abi.encodePacked(\\\"\\\\x19Ethereum Signed Message:\\\\n56\\\", \\\"Join Alliance 0x0000000000000000000000000000000000000000\\\");\\n            _writeUintAsHex(message, 28 + 55, uint160(msg.sender));\\n        } else {\\n            message = abi.encodePacked(\\\"\\\\x19Ethereum Signed Message:\\\\n76\\\", \\\"Join Alliance 0x0000000000000000000000000000000000000000 (nonce:          0)\\\");\\n            _writeUintAsHex(message, 28 + 55, uint160(msg.sender));\\n            _writeUintAsDecimal(message, 28 + 74, nonce);\\n        }\\n\\n\\n        // console.log(string(message));\\n\\n        bytes32 digest = keccak256(message);\\n\\n        address signer = digest.recover(signature);\\n        require(player == signer, \\\"INVALID_SIGNATURE\\\");\\n\\n        if (slot == 0) {\\n            alliances.alliance0.alliance = alliance;\\n            alliances.alliance0.joinTime = uint96(block.timestamp);\\n        } else if (slot == 1) {\\n            alliances.alliance1.alliance = alliance;\\n            alliances.alliance1.joinTime = uint96(block.timestamp);\\n        } else if (slot == 2) {\\n            alliances.alliance2.alliance = alliance;\\n            alliances.alliance2.joinTime = uint96(block.timestamp);\\n        } else if (slot == 3) {\\n            alliances.alliance3.alliance = alliance;\\n            alliances.alliance3.joinTime = uint96(block.timestamp);\\n        }\\n        _allianceNonces[player][alliance] = nonce + 1;\\n\\n        emit AllianceLink(alliance, player, true);\\n    }\\n\\n    bytes internal constant hexAlphabet = \\\"0123456789abcdef\\\";\\n    bytes internal constant decimalAlphabet = \\\"0123456789\\\";\\n    function _writeUintAsHex(\\n        bytes memory data,\\n        uint256 endPos,\\n        uint256 num\\n    ) internal pure {\\n        while (num != 0) {\\n            data[endPos--] = bytes1(hexAlphabet[num % 16]);\\n            num /= 16;\\n        }\\n    }\\n    function _writeUintAsDecimal(\\n        bytes memory data,\\n        uint256 endPos,\\n        uint256 num\\n    ) internal pure {\\n        while (num != 0) {\\n            data[endPos--] = bytes1(decimalAlphabet[num % 10]);\\n            num /= 10;\\n        }\\n    }\\n\\n    function _leaveAlliance(address player, IAlliance alliance) internal {\\n\\n        Alliances storage alliances = _alliances[msg.sender];\\n\\n        IAlliance lastSlotAlliance;\\n        uint96 lastSlotJoinTime;\\n\\n\\n        require(address(alliances.alliance0.alliance) != address(0), \\\"NOT_PART_OF_ANY_ALLIANCE\\\");\\n\\n        if (address(alliances.alliance1.alliance) == address(0)) {\\n            lastSlotAlliance = alliances.alliance0.alliance;\\n            lastSlotJoinTime = alliances.alliance0.joinTime;\\n            alliances.alliance0.alliance = IAlliance(address(0));\\n            alliances.alliance0.joinTime = 0;\\n        } else {\\n            if (address(alliances.alliance2.alliance) == address(0)) {\\n                lastSlotAlliance = alliances.alliance1.alliance;\\n                lastSlotJoinTime = alliances.alliance1.joinTime;\\n                alliances.alliance1.alliance = IAlliance(address(0));\\n                alliances.alliance1.joinTime = 0;\\n            } else {\\n                if (address(alliances.alliance3.alliance) == address(0)) {\\n                    lastSlotAlliance = alliances.alliance2.alliance;\\n                    lastSlotJoinTime = alliances.alliance2.joinTime;\\n                    alliances.alliance2.alliance = IAlliance(address(0));\\n                    alliances.alliance2.joinTime = 0;\\n                } else {\\n                    lastSlotAlliance = alliances.alliance3.alliance;\\n                    lastSlotJoinTime = alliances.alliance3.joinTime;\\n                    alliances.alliance3.alliance = IAlliance(address(0));\\n                    alliances.alliance3.joinTime = 0;\\n                }\\n            }\\n        }\\n\\n\\n        if (alliance != lastSlotAlliance) {\\n            if (alliances.alliance0.alliance == alliance) {\\n                alliances.alliance0.alliance = lastSlotAlliance;\\n                alliances.alliance0.joinTime = lastSlotJoinTime;\\n            } else if (alliances.alliance1.alliance == alliance) {\\n                alliances.alliance1.alliance =lastSlotAlliance;\\n                alliances.alliance1.joinTime = lastSlotJoinTime;\\n            } else if (alliances.alliance2.alliance == alliance) {\\n                alliances.alliance2.alliance =lastSlotAlliance;\\n                alliances.alliance2.joinTime = lastSlotJoinTime;\\n            } else {\\n                revert(\\\"NOT_PART_OF_THE_ALLIANCE\\\");\\n            }\\n        }\\n\\n\\n        emit AllianceLink(alliance, player, false);\\n    }\\n\\n\\n\\n    function _msgSender() internal view returns (address) {\\n        return msg.sender; // TODO metatx\\n    }\\n}\\n\",\"keccak256\":\"0x8270121ba959d0424cef4d25e8fc95566c0cf1cba661196094fad24d19d096cc\",\"license\":\"AGPL-1.0\"},\"src/Interfaces/IAlliance.sol\":{\"content\":\"// SPDX-License-Identifier: AGPL-1.0\\n\\npragma solidity 0.8.9;\\n\\ninterface IAlliance {\\n    function requestToJoin(address player, bytes calldata data) external returns (bool);\\n\\n    function playerHasLeft(address player) external;\\n}\\n\\n\",\"keccak256\":\"0xac01ced7552f64f7fe9c4e5e5a4517a4a57473e72c76ecb784df9bc288445703\",\"license\":\"AGPL-1.0\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50611f7c806100206000396000f3fe608060405234801561001057600080fd5b50600436106100885760003560e01c80636da066301161005b5780636da066301461013c5780637a784cb41461014f5780638efb75c314610162578063df2c0f491461017557600080fd5b8063137672021461008d57806317e796ea146100d25780634ed2986d146100e75780635f3f7a9a14610119575b600080fd5b6100a061009b366004611af3565b6101af565b604080516001600160a01b0390941684526001600160601b039092166020840152908201526060015b60405180910390f35b6100e56100e0366004611b32565b6102c0565b005b6100fa6100f5366004611b56565b6102cd565b604080516001600160601b0390931683526020830191909152016100c9565b61012c610127366004611bc6565b6103c4565b60405190151581526020016100c9565b6100e561014a366004611c34565b610630565b6100e561015d366004611b32565b610642565b6100e5610170366004611c97565b6106be565b610188610183366004611d0c565b610781565b604080516001600160a01b0390931683526001600160601b039091166020830152016100c9565b6001600160a01b03821660009081526001602052604081208190819060ff85166101f85780546001600160a01b0381169450600160a01b90046001600160601b03169250610290565b8460ff166001141561022c5760018101546001600160a01b0381169450600160a01b90046001600160601b03169250610290565b8460ff16600214156102605760028101546001600160a01b0381169450600160a01b90046001600160601b03169250610290565b8460ff16600314156102905760038101546001600160a01b0381169450600160a01b90046001600160601b031692505b50506001600160a01b03938416600090815260208181526040808320968516835295905293909320549093909150565b6102ca8133610c68565b50565b6001600160a01b038083166000818152602081815260408083208686168085529083528184205494845260019092528220805492949092161415610324578054600160a01b90046001600160601b031692506103bc565b60018101546001600160a01b0385811691161415610358576001810154600160a01b90046001600160601b031692506103bc565b60028101546001600160a01b038581169116141561038c576002810154600160a01b90046001600160601b031692506103bc565b60038101546001600160a01b03858116911614156103bc576003810154600160a01b90046001600160601b031692505b509250929050565b336000908152600160205260408120805482906001600160a01b0316156103f357806103ef81611d63565b9150505b60018201546001600160a01b031615610414578061041081611d63565b9150505b60028201546001600160a01b031615610435578061043181611d63565b9150505b60038201546001600160a01b0316156104955760405162461bcd60e51b815260206004820152601960248201527f4d41585f4e554d5f414c4c49414e4345535f524541434845440000000000000060448201526064015b60405180910390fd5b6040517f1d99b5540000000000000000000000000000000000000000000000000000000081526001600160a01b03871690631d99b554906104de90339089908990600401611d7e565b602060405180830381600087803b1580156104f857600080fd5b505af115801561050c573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906105309190611dbd565b92508215610627578061055f576001600160601b034216600160a01b026001600160a01b0387161782556105e5565b806001141561058d576001600160601b034216600160a01b026001600160a01b0387161760018301556105e5565b80600214156105bb576001600160601b034216600160a01b026001600160a01b0387161760028301556105e5565b80600314156105e5576001600160601b034216600160a01b026001600160a01b0387161760038301555b6040516001815233906001600160a01b038816907f5e60402083b3427099886174996f295e5e29d12bbe871aef1041e9a4324cdb099060200160405180910390a35b50509392505050565b61063c84848484610f1d565b50505050565b61064c3382610c68565b6040517f9192e3020000000000000000000000000000000000000000000000000000000081523360048201526001600160a01b03821690639192e30290602401600060405180830381600087803b1580156106a657600080fd5b505af19250505080156106b7575060015b6102ca5750565b60005b8181101561077c5761076a8383838181106106de576106de611ddf565b90506020028101906106f09190611df5565b6106fe906020810190611b32565b84848481811061071057610710611ddf565b90506020028101906107229190611df5565b610733906040810190602001611e33565b85858581811061074557610745611ddf565b90506020028101906107579190611df5565b610765906040810190611e4e565b610f1d565b8061077481611d63565b9150506106c1565b505050565b6001600160a01b0380841660009081526001602052604080822092851682528120909182916107ae611aa5565b6107b6611aa5565b60008060005b6004811015610c5857828114156109135760408051808201909152600080825260208201528161081957506040805180820190915287546001600160a01b0381168252600160a01b90046001600160601b031660208201526108d2565b816001141561085857506040805180820190915260018801546001600160a01b0381168252600160a01b90046001600160601b031660208201526108d2565b816002141561089757506040805180820190915260028801546001600160a01b0381168252600160a01b90046001600160601b031660208201526108d2565b81600314156108d257506040805180820190915260038801546001600160a01b0381168252600160a01b90046001600160601b031660208201525b80516001600160a01b03166108ee575050505050505050610c60565b8086856108fa81611d63565b96506004811061090c5761090c611ddf565b6020020152505b60005b6004811015610c455782811415610a665760408051808201909152600080825260208201528161097357506040805180820190915287546001600160a01b0381168252600160a01b90046001600160601b03166020820152610a2c565b81600114156109b257506040805180820190915260018801546001600160a01b0381168252600160a01b90046001600160601b03166020820152610a2c565b81600214156109f157506040805180820190915260028801546001600160a01b0381168252600160a01b90046001600160601b03166020820152610a2c565b8160031415610a2c57506040805180820190915260038801546001600160a01b0381168252600160a01b90046001600160601b031660208201525b80516001600160a01b0316610a415750610c45565b808685610a4d81611d63565b965060048110610a5f57610a5f611ddf565b6020020152505b848160048110610a7857610a78611ddf565b6020020151516001600160a01b0316868360048110610a9957610a99611ddf565b6020020151516001600160a01b03161415610c3357848160048110610ac057610ac0611ddf565b6020020151602001516001600160601b0316868360048110610ae457610ae4611ddf565b6020020151602001516001600160601b031610610ba6578a868360048110610b0e57610b0e611ddf565b6020020151602001516001600160601b03161015610b6a57858260048110610b3857610b38611ddf565b602002015151868360048110610b5057610b50611ddf565b602002015160200151995099505050505050505050610c60565b858260048110610b7c57610b7c611ddf565b6020020151519950858260048110610b9657610b96611ddf565b6020020151602001519850610c33565b8a858260048110610bb957610bb9611ddf565b6020020151602001516001600160601b03161015610bfb57848160048110610be357610be3611ddf565b602002015151858260048110610b5057610b50611ddf565b848160048110610c0d57610c0d611ddf565b6020020151519950848160048110610c2757610c27611ddf565b60200201516020015198505b80610c3d81611d63565b915050610916565b5080610c5081611d63565b9150506107bc565b505050505050505b935093915050565b336000908152600160205260408120805490919081906001600160a01b0316610cd35760405162461bcd60e51b815260206004820152601860248201527f4e4f545f504152545f4f465f414e595f414c4c49414e43450000000000000000604482015260640161048c565b60018301546001600160a01b0316610d0d5750508054600082556001600160a01b03811690600160a01b90046001600160601b0316610db4565b60028301546001600160a01b0316610d4c57505060018101805460009091556001600160a01b03811690600160a01b90046001600160601b0316610db4565b60038301546001600160a01b0316610d8b57505060028101805460009091556001600160a01b03811690600160a01b90046001600160601b0316610db4565b505060038101805460009091556001600160a01b03811690600160a01b90046001600160601b03165b816001600160a01b0316846001600160a01b031614610ec65782546001600160a01b0385811691161415610e04576001600160601b038116600160a01b026001600160a01b038316178355610ec6565b60018301546001600160a01b0385811691161415610e41576001600160601b038116600160a01b026001600160a01b038316176001840155610ec6565b60028301546001600160a01b0385811691161415610e7e576001600160601b038116600160a01b026001600160a01b038316176002840155610ec6565b60405162461bcd60e51b815260206004820152601860248201527f4e4f545f504152545f4f465f5448455f414c4c49414e43450000000000000000604482015260640161048c565b846001600160a01b0316846001600160a01b03167f5e60402083b3427099886174996f295e5e29d12bbe871aef1041e9a4324cdb096000604051610f0e911515815260200190565b60405180910390a35050505050565b6001600160a01b038085166000908152600160205260408120805433939192911615610fae5781546001600160a01b0384811691161415610fa05760405162461bcd60e51b815260206004820152600e60248201527f414c52454144595f4a4f494e4544000000000000000000000000000000000000604482015260640161048c565b80610faa81611d63565b9150505b60018201546001600160a01b03161561102f5760018201546001600160a01b03848116911614156110215760405162461bcd60e51b815260206004820152600e60248201527f414c52454144595f4a4f494e4544000000000000000000000000000000000000604482015260640161048c565b8061102b81611d63565b9150505b60028201546001600160a01b0316156110b05760028201546001600160a01b03848116911614156110a25760405162461bcd60e51b815260206004820152600e60248201527f414c52454144595f4a4f494e4544000000000000000000000000000000000000604482015260640161048c565b806110ac81611d63565b9150505b60038201546001600160a01b03848116911614156111105760405162461bcd60e51b815260206004820152600e60248201527f414c52454144595f4a4f494e4544000000000000000000000000000000000000604482015260640161048c565b60038201546001600160a01b03161561116b5760405162461bcd60e51b815260206004820152601960248201527f4d41585f4e554d5f414c4c49414e4345535f5245414348454400000000000000604482015260640161048c565b6001600160a01b038088166000908152602081815260408083209387168352929052205463ffffffff871681146111e45760405162461bcd60e51b815260206004820152600d60248201527f494e56414c49445f4e4f4e434500000000000000000000000000000000000000604482015260640161048c565b606063ffffffff881661128c576040517f19457468657265756d205369676e6564204d6573736167653a0a35360000000060208201527f4a6f696e20416c6c69616e636520307830303030303030303030303030303030603c8201527f3030303030303030303030303030303030303030303030300000000000000000605c82015260740160408051601f19818403018152919052905061128781605333611537565b61135a565b6040517f19457468657265756d205369676e6564204d6573736167653a0a37360000000060208201527f4a6f696e20416c6c69616e636520307830303030303030303030303030303030603c8201527f30303030303030303030303030303030303030303030303020286e6f6e63653a605c8201527f2020202020202020202030290000000000000000000000000000000000000000607c82015260880160408051601f19818403018152919052905061134881605333611537565b61135a8160668a63ffffffff16611611565b60008180519060200120905060006113aa89898080601f01602080910402602001604051908101604052809392919081815260200183838082843760009201919091525086939250506116eb9050565b9050806001600160a01b03168b6001600160a01b03161461140d5760405162461bcd60e51b815260206004820152601160248201527f494e56414c49445f5349474e4154555245000000000000000000000000000000604482015260640161048c565b84611434576001600160601b034216600160a01b026001600160a01b0388161786556114ba565b8460011415611462576001600160601b034216600160a01b026001600160a01b0388161760018701556114ba565b8460021415611490576001600160601b034216600160a01b026001600160a01b0388161760028701556114ba565b84600314156114ba576001600160601b034216600160a01b026001600160a01b0388161760038701555b6114c58a6001611eb3565b6001600160a01b038c8116600081815260208181526040808320948d168084529482529182902063ffffffff95909516909455516001815290927f5e60402083b3427099886174996f295e5e29d12bbe871aef1041e9a4324cdb09910160405180910390a35050505050505050505050565b801561077c576040805180820190915260108082527f3031323334353637383961626364656600000000000000000000000000000000602083015261157c9083611ef1565b8151811061158c5761158c611ddf565b01602001517fff000000000000000000000000000000000000000000000000000000000000001683836115be81611f05565b9450815181106115d0576115d0611ddf565b60200101907effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916908160001a90535061160a601082611f1c565b9050611537565b801561077c5760408051808201909152600a8082527f303132333435363738390000000000000000000000000000000000000000000060208301526116569083611ef1565b8151811061166657611666611ddf565b01602001517fff0000000000000000000000000000000000000000000000000000000000000016838361169881611f05565b9450815181106116aa576116aa611ddf565b60200101907effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916908160001a9053506116e4600a82611f1c565b9050611611565b60008060006116fa858561170f565b915091506117078161177f565b509392505050565b6000808251604114156117465760208301516040840151606085015160001a61173a87828585611970565b94509450505050611778565b8251604014156117705760208301516040840151611765868383611a5d565b935093505050611778565b506000905060025b9250929050565b600081600481111561179357611793611f30565b141561179c5750565b60018160048111156117b0576117b0611f30565b14156117fe5760405162461bcd60e51b815260206004820152601860248201527f45434453413a20696e76616c6964207369676e61747572650000000000000000604482015260640161048c565b600281600481111561181257611812611f30565b14156118605760405162461bcd60e51b815260206004820152601f60248201527f45434453413a20696e76616c6964207369676e6174757265206c656e67746800604482015260640161048c565b600381600481111561187457611874611f30565b14156118e85760405162461bcd60e51b815260206004820152602260248201527f45434453413a20696e76616c6964207369676e6174757265202773272076616c60448201527f7565000000000000000000000000000000000000000000000000000000000000606482015260840161048c565b60048160048111156118fc576118fc611f30565b14156102ca5760405162461bcd60e51b815260206004820152602260248201527f45434453413a20696e76616c6964207369676e6174757265202776272076616c60448201527f7565000000000000000000000000000000000000000000000000000000000000606482015260840161048c565b6000807f7fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a08311156119a75750600090506003611a54565b8460ff16601b141580156119bf57508460ff16601c14155b156119d05750600090506004611a54565b6040805160008082526020820180845289905260ff881692820192909252606081018690526080810185905260019060a0016020604051602081039080840390855afa158015611a24573d6000803e3d6000fd5b5050604051601f1901519150506001600160a01b038116611a4d57600060019250925050611a54565b9150600090505b94509492505050565b6000807f7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff831660ff84901c601b01611a9787828885611970565b935093505050935093915050565b60405180608001604052806004905b6040805180820190915260008082526020820152815260200190600190039081611ab45790505090565b6001600160a01b03811681146102ca57600080fd5b60008060408385031215611b0657600080fd5b8235611b1181611ade565b9150602083013560ff81168114611b2757600080fd5b809150509250929050565b600060208284031215611b4457600080fd5b8135611b4f81611ade565b9392505050565b60008060408385031215611b6957600080fd5b8235611b7481611ade565b91506020830135611b2781611ade565b60008083601f840112611b9657600080fd5b50813567ffffffffffffffff811115611bae57600080fd5b60208301915083602082850101111561177857600080fd5b600080600060408486031215611bdb57600080fd5b8335611be681611ade565b9250602084013567ffffffffffffffff811115611c0257600080fd5b611c0e86828701611b84565b9497909650939450505050565b803563ffffffff81168114611c2f57600080fd5b919050565b60008060008060608587031215611c4a57600080fd5b8435611c5581611ade565b9350611c6360208601611c1b565b9250604085013567ffffffffffffffff811115611c7f57600080fd5b611c8b87828801611b84565b95989497509550505050565b60008060208385031215611caa57600080fd5b823567ffffffffffffffff80821115611cc257600080fd5b818501915085601f830112611cd657600080fd5b813581811115611ce557600080fd5b8660208260051b8501011115611cfa57600080fd5b60209290920196919550909350505050565b600080600060608486031215611d2157600080fd5b8335611d2c81611ade565b92506020840135611d3c81611ade565b929592945050506040919091013590565b634e487b7160e01b600052601160045260246000fd5b6000600019821415611d7757611d77611d4d565b5060010190565b6001600160a01b038416815260406020820152816040820152818360608301376000818301606090810191909152601f909201601f1916010192915050565b600060208284031215611dcf57600080fd5b81518015158114611b4f57600080fd5b634e487b7160e01b600052603260045260246000fd5b600082357fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffa1833603018112611e2957600080fd5b9190910192915050565b600060208284031215611e4557600080fd5b611b4f82611c1b565b60008083357fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe1843603018112611e8357600080fd5b83018035915067ffffffffffffffff821115611e9e57600080fd5b60200191503681900382131561177857600080fd5b600063ffffffff808316818516808303821115611ed257611ed2611d4d565b01949350505050565b634e487b7160e01b600052601260045260246000fd5b600082611f0057611f00611edb565b500690565b600081611f1457611f14611d4d565b506000190190565b600082611f2b57611f2b611edb565b500490565b634e487b7160e01b600052602160045260246000fdfea26469706673582212207443682baf7237bbd0b135df01657f1af863484e07ebd8c9e3285651f5b8f7ee64736f6c63430008090033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100885760003560e01c80636da066301161005b5780636da066301461013c5780637a784cb41461014f5780638efb75c314610162578063df2c0f491461017557600080fd5b8063137672021461008d57806317e796ea146100d25780634ed2986d146100e75780635f3f7a9a14610119575b600080fd5b6100a061009b366004611af3565b6101af565b604080516001600160a01b0390941684526001600160601b039092166020840152908201526060015b60405180910390f35b6100e56100e0366004611b32565b6102c0565b005b6100fa6100f5366004611b56565b6102cd565b604080516001600160601b0390931683526020830191909152016100c9565b61012c610127366004611bc6565b6103c4565b60405190151581526020016100c9565b6100e561014a366004611c34565b610630565b6100e561015d366004611b32565b610642565b6100e5610170366004611c97565b6106be565b610188610183366004611d0c565b610781565b604080516001600160a01b0390931683526001600160601b039091166020830152016100c9565b6001600160a01b03821660009081526001602052604081208190819060ff85166101f85780546001600160a01b0381169450600160a01b90046001600160601b03169250610290565b8460ff166001141561022c5760018101546001600160a01b0381169450600160a01b90046001600160601b03169250610290565b8460ff16600214156102605760028101546001600160a01b0381169450600160a01b90046001600160601b03169250610290565b8460ff16600314156102905760038101546001600160a01b0381169450600160a01b90046001600160601b031692505b50506001600160a01b03938416600090815260208181526040808320968516835295905293909320549093909150565b6102ca8133610c68565b50565b6001600160a01b038083166000818152602081815260408083208686168085529083528184205494845260019092528220805492949092161415610324578054600160a01b90046001600160601b031692506103bc565b60018101546001600160a01b0385811691161415610358576001810154600160a01b90046001600160601b031692506103bc565b60028101546001600160a01b038581169116141561038c576002810154600160a01b90046001600160601b031692506103bc565b60038101546001600160a01b03858116911614156103bc576003810154600160a01b90046001600160601b031692505b509250929050565b336000908152600160205260408120805482906001600160a01b0316156103f357806103ef81611d63565b9150505b60018201546001600160a01b031615610414578061041081611d63565b9150505b60028201546001600160a01b031615610435578061043181611d63565b9150505b60038201546001600160a01b0316156104955760405162461bcd60e51b815260206004820152601960248201527f4d41585f4e554d5f414c4c49414e4345535f524541434845440000000000000060448201526064015b60405180910390fd5b6040517f1d99b5540000000000000000000000000000000000000000000000000000000081526001600160a01b03871690631d99b554906104de90339089908990600401611d7e565b602060405180830381600087803b1580156104f857600080fd5b505af115801561050c573d6000803e3d6000fd5b505050506040513d601f19601f820116820180604052508101906105309190611dbd565b92508215610627578061055f576001600160601b034216600160a01b026001600160a01b0387161782556105e5565b806001141561058d576001600160601b034216600160a01b026001600160a01b0387161760018301556105e5565b80600214156105bb576001600160601b034216600160a01b026001600160a01b0387161760028301556105e5565b80600314156105e5576001600160601b034216600160a01b026001600160a01b0387161760038301555b6040516001815233906001600160a01b038816907f5e60402083b3427099886174996f295e5e29d12bbe871aef1041e9a4324cdb099060200160405180910390a35b50509392505050565b61063c84848484610f1d565b50505050565b61064c3382610c68565b6040517f9192e3020000000000000000000000000000000000000000000000000000000081523360048201526001600160a01b03821690639192e30290602401600060405180830381600087803b1580156106a657600080fd5b505af19250505080156106b7575060015b6102ca5750565b60005b8181101561077c5761076a8383838181106106de576106de611ddf565b90506020028101906106f09190611df5565b6106fe906020810190611b32565b84848481811061071057610710611ddf565b90506020028101906107229190611df5565b610733906040810190602001611e33565b85858581811061074557610745611ddf565b90506020028101906107579190611df5565b610765906040810190611e4e565b610f1d565b8061077481611d63565b9150506106c1565b505050565b6001600160a01b0380841660009081526001602052604080822092851682528120909182916107ae611aa5565b6107b6611aa5565b60008060005b6004811015610c5857828114156109135760408051808201909152600080825260208201528161081957506040805180820190915287546001600160a01b0381168252600160a01b90046001600160601b031660208201526108d2565b816001141561085857506040805180820190915260018801546001600160a01b0381168252600160a01b90046001600160601b031660208201526108d2565b816002141561089757506040805180820190915260028801546001600160a01b0381168252600160a01b90046001600160601b031660208201526108d2565b81600314156108d257506040805180820190915260038801546001600160a01b0381168252600160a01b90046001600160601b031660208201525b80516001600160a01b03166108ee575050505050505050610c60565b8086856108fa81611d63565b96506004811061090c5761090c611ddf565b6020020152505b60005b6004811015610c455782811415610a665760408051808201909152600080825260208201528161097357506040805180820190915287546001600160a01b0381168252600160a01b90046001600160601b03166020820152610a2c565b81600114156109b257506040805180820190915260018801546001600160a01b0381168252600160a01b90046001600160601b03166020820152610a2c565b81600214156109f157506040805180820190915260028801546001600160a01b0381168252600160a01b90046001600160601b03166020820152610a2c565b8160031415610a2c57506040805180820190915260038801546001600160a01b0381168252600160a01b90046001600160601b031660208201525b80516001600160a01b0316610a415750610c45565b808685610a4d81611d63565b965060048110610a5f57610a5f611ddf565b6020020152505b848160048110610a7857610a78611ddf565b6020020151516001600160a01b0316868360048110610a9957610a99611ddf565b6020020151516001600160a01b03161415610c3357848160048110610ac057610ac0611ddf565b6020020151602001516001600160601b0316868360048110610ae457610ae4611ddf565b6020020151602001516001600160601b031610610ba6578a868360048110610b0e57610b0e611ddf565b6020020151602001516001600160601b03161015610b6a57858260048110610b3857610b38611ddf565b602002015151868360048110610b5057610b50611ddf565b602002015160200151995099505050505050505050610c60565b858260048110610b7c57610b7c611ddf565b6020020151519950858260048110610b9657610b96611ddf565b6020020151602001519850610c33565b8a858260048110610bb957610bb9611ddf565b6020020151602001516001600160601b03161015610bfb57848160048110610be357610be3611ddf565b602002015151858260048110610b5057610b50611ddf565b848160048110610c0d57610c0d611ddf565b6020020151519950848160048110610c2757610c27611ddf565b60200201516020015198505b80610c3d81611d63565b915050610916565b5080610c5081611d63565b9150506107bc565b505050505050505b935093915050565b336000908152600160205260408120805490919081906001600160a01b0316610cd35760405162461bcd60e51b815260206004820152601860248201527f4e4f545f504152545f4f465f414e595f414c4c49414e43450000000000000000604482015260640161048c565b60018301546001600160a01b0316610d0d5750508054600082556001600160a01b03811690600160a01b90046001600160601b0316610db4565b60028301546001600160a01b0316610d4c57505060018101805460009091556001600160a01b03811690600160a01b90046001600160601b0316610db4565b60038301546001600160a01b0316610d8b57505060028101805460009091556001600160a01b03811690600160a01b90046001600160601b0316610db4565b505060038101805460009091556001600160a01b03811690600160a01b90046001600160601b03165b816001600160a01b0316846001600160a01b031614610ec65782546001600160a01b0385811691161415610e04576001600160601b038116600160a01b026001600160a01b038316178355610ec6565b60018301546001600160a01b0385811691161415610e41576001600160601b038116600160a01b026001600160a01b038316176001840155610ec6565b60028301546001600160a01b0385811691161415610e7e576001600160601b038116600160a01b026001600160a01b038316176002840155610ec6565b60405162461bcd60e51b815260206004820152601860248201527f4e4f545f504152545f4f465f5448455f414c4c49414e43450000000000000000604482015260640161048c565b846001600160a01b0316846001600160a01b03167f5e60402083b3427099886174996f295e5e29d12bbe871aef1041e9a4324cdb096000604051610f0e911515815260200190565b60405180910390a35050505050565b6001600160a01b038085166000908152600160205260408120805433939192911615610fae5781546001600160a01b0384811691161415610fa05760405162461bcd60e51b815260206004820152600e60248201527f414c52454144595f4a4f494e4544000000000000000000000000000000000000604482015260640161048c565b80610faa81611d63565b9150505b60018201546001600160a01b03161561102f5760018201546001600160a01b03848116911614156110215760405162461bcd60e51b815260206004820152600e60248201527f414c52454144595f4a4f494e4544000000000000000000000000000000000000604482015260640161048c565b8061102b81611d63565b9150505b60028201546001600160a01b0316156110b05760028201546001600160a01b03848116911614156110a25760405162461bcd60e51b815260206004820152600e60248201527f414c52454144595f4a4f494e4544000000000000000000000000000000000000604482015260640161048c565b806110ac81611d63565b9150505b60038201546001600160a01b03848116911614156111105760405162461bcd60e51b815260206004820152600e60248201527f414c52454144595f4a4f494e4544000000000000000000000000000000000000604482015260640161048c565b60038201546001600160a01b03161561116b5760405162461bcd60e51b815260206004820152601960248201527f4d41585f4e554d5f414c4c49414e4345535f5245414348454400000000000000604482015260640161048c565b6001600160a01b038088166000908152602081815260408083209387168352929052205463ffffffff871681146111e45760405162461bcd60e51b815260206004820152600d60248201527f494e56414c49445f4e4f4e434500000000000000000000000000000000000000604482015260640161048c565b606063ffffffff881661128c576040517f19457468657265756d205369676e6564204d6573736167653a0a35360000000060208201527f4a6f696e20416c6c69616e636520307830303030303030303030303030303030603c8201527f3030303030303030303030303030303030303030303030300000000000000000605c82015260740160408051601f19818403018152919052905061128781605333611537565b61135a565b6040517f19457468657265756d205369676e6564204d6573736167653a0a37360000000060208201527f4a6f696e20416c6c69616e636520307830303030303030303030303030303030603c8201527f30303030303030303030303030303030303030303030303020286e6f6e63653a605c8201527f2020202020202020202030290000000000000000000000000000000000000000607c82015260880160408051601f19818403018152919052905061134881605333611537565b61135a8160668a63ffffffff16611611565b60008180519060200120905060006113aa89898080601f01602080910402602001604051908101604052809392919081815260200183838082843760009201919091525086939250506116eb9050565b9050806001600160a01b03168b6001600160a01b03161461140d5760405162461bcd60e51b815260206004820152601160248201527f494e56414c49445f5349474e4154555245000000000000000000000000000000604482015260640161048c565b84611434576001600160601b034216600160a01b026001600160a01b0388161786556114ba565b8460011415611462576001600160601b034216600160a01b026001600160a01b0388161760018701556114ba565b8460021415611490576001600160601b034216600160a01b026001600160a01b0388161760028701556114ba565b84600314156114ba576001600160601b034216600160a01b026001600160a01b0388161760038701555b6114c58a6001611eb3565b6001600160a01b038c8116600081815260208181526040808320948d168084529482529182902063ffffffff95909516909455516001815290927f5e60402083b3427099886174996f295e5e29d12bbe871aef1041e9a4324cdb09910160405180910390a35050505050505050505050565b801561077c576040805180820190915260108082527f3031323334353637383961626364656600000000000000000000000000000000602083015261157c9083611ef1565b8151811061158c5761158c611ddf565b01602001517fff000000000000000000000000000000000000000000000000000000000000001683836115be81611f05565b9450815181106115d0576115d0611ddf565b60200101907effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916908160001a90535061160a601082611f1c565b9050611537565b801561077c5760408051808201909152600a8082527f303132333435363738390000000000000000000000000000000000000000000060208301526116569083611ef1565b8151811061166657611666611ddf565b01602001517fff0000000000000000000000000000000000000000000000000000000000000016838361169881611f05565b9450815181106116aa576116aa611ddf565b60200101907effffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff1916908160001a9053506116e4600a82611f1c565b9050611611565b60008060006116fa858561170f565b915091506117078161177f565b509392505050565b6000808251604114156117465760208301516040840151606085015160001a61173a87828585611970565b94509450505050611778565b8251604014156117705760208301516040840151611765868383611a5d565b935093505050611778565b506000905060025b9250929050565b600081600481111561179357611793611f30565b141561179c5750565b60018160048111156117b0576117b0611f30565b14156117fe5760405162461bcd60e51b815260206004820152601860248201527f45434453413a20696e76616c6964207369676e61747572650000000000000000604482015260640161048c565b600281600481111561181257611812611f30565b14156118605760405162461bcd60e51b815260206004820152601f60248201527f45434453413a20696e76616c6964207369676e6174757265206c656e67746800604482015260640161048c565b600381600481111561187457611874611f30565b14156118e85760405162461bcd60e51b815260206004820152602260248201527f45434453413a20696e76616c6964207369676e6174757265202773272076616c60448201527f7565000000000000000000000000000000000000000000000000000000000000606482015260840161048c565b60048160048111156118fc576118fc611f30565b14156102ca5760405162461bcd60e51b815260206004820152602260248201527f45434453413a20696e76616c6964207369676e6174757265202776272076616c60448201527f7565000000000000000000000000000000000000000000000000000000000000606482015260840161048c565b6000807f7fffffffffffffffffffffffffffffff5d576e7357a4501ddfe92f46681b20a08311156119a75750600090506003611a54565b8460ff16601b141580156119bf57508460ff16601c14155b156119d05750600090506004611a54565b6040805160008082526020820180845289905260ff881692820192909252606081018690526080810185905260019060a0016020604051602081039080840390855afa158015611a24573d6000803e3d6000fd5b5050604051601f1901519150506001600160a01b038116611a4d57600060019250925050611a54565b9150600090505b94509492505050565b6000807f7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff831660ff84901c601b01611a9787828885611970565b935093505050935093915050565b60405180608001604052806004905b6040805180820190915260008082526020820152815260200190600190039081611ab45790505090565b6001600160a01b03811681146102ca57600080fd5b60008060408385031215611b0657600080fd5b8235611b1181611ade565b9150602083013560ff81168114611b2757600080fd5b809150509250929050565b600060208284031215611b4457600080fd5b8135611b4f81611ade565b9392505050565b60008060408385031215611b6957600080fd5b8235611b7481611ade565b91506020830135611b2781611ade565b60008083601f840112611b9657600080fd5b50813567ffffffffffffffff811115611bae57600080fd5b60208301915083602082850101111561177857600080fd5b600080600060408486031215611bdb57600080fd5b8335611be681611ade565b9250602084013567ffffffffffffffff811115611c0257600080fd5b611c0e86828701611b84565b9497909650939450505050565b803563ffffffff81168114611c2f57600080fd5b919050565b60008060008060608587031215611c4a57600080fd5b8435611c5581611ade565b9350611c6360208601611c1b565b9250604085013567ffffffffffffffff811115611c7f57600080fd5b611c8b87828801611b84565b95989497509550505050565b60008060208385031215611caa57600080fd5b823567ffffffffffffffff80821115611cc257600080fd5b818501915085601f830112611cd657600080fd5b813581811115611ce557600080fd5b8660208260051b8501011115611cfa57600080fd5b60209290920196919550909350505050565b600080600060608486031215611d2157600080fd5b8335611d2c81611ade565b92506020840135611d3c81611ade565b929592945050506040919091013590565b634e487b7160e01b600052601160045260246000fd5b6000600019821415611d7757611d77611d4d565b5060010190565b6001600160a01b038416815260406020820152816040820152818360608301376000818301606090810191909152601f909201601f1916010192915050565b600060208284031215611dcf57600080fd5b81518015158114611b4f57600080fd5b634e487b7160e01b600052603260045260246000fd5b600082357fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffa1833603018112611e2957600080fd5b9190910192915050565b600060208284031215611e4557600080fd5b611b4f82611c1b565b60008083357fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe1843603018112611e8357600080fd5b83018035915067ffffffffffffffff821115611e9e57600080fd5b60200191503681900382131561177857600080fd5b600063ffffffff808316818516808303821115611ed257611ed2611d4d565b01949350505050565b634e487b7160e01b600052601260045260246000fd5b600082611f0057611f00611edb565b500690565b600081611f1457611f14611d4d565b506000190190565b600082611f2b57611f2b611edb565b500490565b634e487b7160e01b600052602160045260246000fdfea26469706673582212207443682baf7237bbd0b135df01657f1af863484e07ebd8c9e3285651f5b8f7ee64736f6c63430008090033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 9237,
+        "contract": "src/AllianceRegistry.sol:AllianceRegistry",
+        "label": "_allianceNonces",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_mapping(t_address,t_mapping(t_contract(IAlliance)15112,t_uint256))"
+      },
+      {
+        "astId": 9261,
+        "contract": "src/AllianceRegistry.sol:AllianceRegistry",
+        "label": "_alliances",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_mapping(t_address,t_struct(Alliances)9256_storage)"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_contract(IAlliance)15112": {
+        "encoding": "inplace",
+        "label": "contract IAlliance",
+        "numberOfBytes": "20"
+      },
+      "t_mapping(t_address,t_mapping(t_contract(IAlliance)15112,t_uint256))": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => mapping(contract IAlliance => uint256))",
+        "numberOfBytes": "32",
+        "value": "t_mapping(t_contract(IAlliance)15112,t_uint256)"
+      },
+      "t_mapping(t_address,t_struct(Alliances)9256_storage)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => struct AllianceRegistry.Alliances)",
+        "numberOfBytes": "32",
+        "value": "t_struct(Alliances)9256_storage"
+      },
+      "t_mapping(t_contract(IAlliance)15112,t_uint256)": {
+        "encoding": "mapping",
+        "key": "t_contract(IAlliance)15112",
+        "label": "mapping(contract IAlliance => uint256)",
+        "numberOfBytes": "32",
+        "value": "t_uint256"
+      },
+      "t_struct(AllianceRow)9243_storage": {
+        "encoding": "inplace",
+        "label": "struct AllianceRegistry.AllianceRow",
+        "members": [
+          {
+            "astId": 9240,
+            "contract": "src/AllianceRegistry.sol:AllianceRegistry",
+            "label": "alliance",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_contract(IAlliance)15112"
+          },
+          {
+            "astId": 9242,
+            "contract": "src/AllianceRegistry.sol:AllianceRegistry",
+            "label": "joinTime",
+            "offset": 20,
+            "slot": "0",
+            "type": "t_uint96"
+          }
+        ],
+        "numberOfBytes": "32"
+      },
+      "t_struct(Alliances)9256_storage": {
+        "encoding": "inplace",
+        "label": "struct AllianceRegistry.Alliances",
+        "members": [
+          {
+            "astId": 9246,
+            "contract": "src/AllianceRegistry.sol:AllianceRegistry",
+            "label": "alliance0",
+            "offset": 0,
+            "slot": "0",
+            "type": "t_struct(AllianceRow)9243_storage"
+          },
+          {
+            "astId": 9249,
+            "contract": "src/AllianceRegistry.sol:AllianceRegistry",
+            "label": "alliance1",
+            "offset": 0,
+            "slot": "1",
+            "type": "t_struct(AllianceRow)9243_storage"
+          },
+          {
+            "astId": 9252,
+            "contract": "src/AllianceRegistry.sol:AllianceRegistry",
+            "label": "alliance2",
+            "offset": 0,
+            "slot": "2",
+            "type": "t_struct(AllianceRow)9243_storage"
+          },
+          {
+            "astId": 9255,
+            "contract": "src/AllianceRegistry.sol:AllianceRegistry",
+            "label": "alliance3",
+            "offset": 0,
+            "slot": "3",
+            "type": "t_struct(AllianceRow)9243_storage"
+          }
+        ],
+        "numberOfBytes": "128"
+      },
+      "t_uint256": {
+        "encoding": "inplace",
+        "label": "uint256",
+        "numberOfBytes": "32"
+      },
+      "t_uint96": {
+        "encoding": "inplace",
+        "label": "uint96",
+        "numberOfBytes": "12"
+      }
+    }
+  }
+}

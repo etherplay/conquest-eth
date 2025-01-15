@@ -1,0 +1,74 @@
+[
+  {
+    "address": "0xa93182ac1617383caad621d34c63311e85a74eb6",
+    "numTokens": 1100
+  },
+  {
+    "address": "0x187c34b7674d2acd7b2f2340245c42a17adb957e",
+    "numTokens": 550
+  },
+  {
+    "address": "0xe2a00cc90358f148c8fd3e052cf86a4be22a4eac",
+    "numTokens": 300
+  },
+  {
+    "address": "0xe3fa0cc9fd3c3c81ceb97d2389345ec03bc3752b",
+    "numTokens": 125
+  },
+  {
+    "address": "0x96595d81831d1b92002bb0b60bb8cc9596f3488a",
+    "numTokens": 70
+  },
+  {
+    "address": "0x1e61cf58e9f9b273a3e13ddec1a4b4c34bae5a8b",
+    "numTokens": 65
+  },
+  {
+    "address": "0xb19bc46c52a1352a071fe2389503b6fe1abd50ff",
+    "numTokens": 60
+  },
+  {
+    "address": "0xcfedd5b3aae8a2c0eb6cd94d547d971092c95029",
+    "numTokens": 55
+  },
+  {
+    "address": "0xf162f8e62e4d8543a70af017557d18a859848452",
+    "numTokens": 50
+  },
+  {
+    "address": "0xf72c5dbf7a1e0becd9699ba4de535df47e0713ef",
+    "numTokens": 45
+  },
+  {
+    "address": "0x38daea6f17e4308b0da9647db9ca6d84a3a7e195",
+    "numTokens": 40
+  },
+  {
+    "address": "0x7a7029bc89182f61a15de8ee7ecbf14368b76916",
+    "numTokens": 35
+  },
+  {
+    "address": "0xf8b109af18cfa614bef1c2899e522d77b3c64c14",
+    "numTokens": 30
+  },
+  {
+    "address": "0x0206171cdd913fc2df3d1b084291f424ef680d94",
+    "numTokens": 25
+  },
+  {
+    "address": "0x4987e9d5f10b6760e16ec81e96fb2b2b03a7dd42",
+    "numTokens": 20
+  },
+  {
+    "address": "0x7a2c5cc45aafe03c2c16593eb04e802e9ce529c1",
+    "numTokens": 15
+  },
+  {
+    "address": "0xdd7d41f23f9620dd195badc9654220df27c38900",
+    "numTokens": 10
+  },
+  {
+    "address": "0xffc52c6dbcd6b3e81c12285492b8c8a72c87b693",
+    "numTokens": 5
+  }
+]

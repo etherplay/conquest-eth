@@ -1,0 +1,1289 @@
+[
+  {
+    "__typename": "Owner",
+    "id": "0x0563589d74b8973c6e683dd831075d5bd391f210",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x30a7923522d5f7e5a09f2e79a623d66377b4cfc2"
+    },
+    "playTokenGiven": "800000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x091c9d05efc035103bca58c8b1436cba7031c96e",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xd83663be167d0b4bed5e498b46a9b279e21e94c2"
+    },
+    "playTokenGiven": "800000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x094e4b82a5722271546cca99c8c351bd840669ae",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xebf5639efb939d195a0f83b3e04346a16aaa675f"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x09b69644e0e687132e6bce0902a2cb79c3395564",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x8f19be72c4f36b738e423afdd52b55f09c27c7b2"
+    },
+    "playTokenGiven": "200000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x0accb10d1edefab8c430b1ff90d117aa73914a50",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xdbe72cfaed476d7546333a1e7f91160328fe1689"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x100f1044ee6b49491c277ce9fa3580dad0d29a87",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x0d8a99f77e08e68c5a35732f31f9815e6f4e7885"
+    },
+    "playTokenGiven": "300000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x12bc2dfbd6339746b553bb13e473ea561bd39152",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xfbf6bec4d2873c5db011402c7b4877afcebdb025"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x140efa6fbe5408b6dc62b22e6799881f477fa4ad",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x7d84b66f0f4ee69b12c60de95c4e4f684b6c28d7"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x179d170f03c2fbe10597ac082f58e39e485a9924",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x83823d3c950f25bf4ae4548e20267a44c7435d53"
+    },
+    "playTokenGiven": "200000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x1b7c9f3f81b8944ff42200d567b8172c879fc15d",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x664d0f13800aa6364227fe86356b38e193bddba3"
+    },
+    "playTokenGiven": "200000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x1ca049ccd785d1400944070c665b3c3132684373",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x7916eac18b31d3d521600d25143bbf3afa7babc5"
+    },
+    "playTokenGiven": "800000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x1db5fb7005412b6e593a9b28afec4c7430b1e812",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x1ae1c7f78d299fe5933226500079474f8687a2aa"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x1e55c85801a2c4f0bec57c84742a8ef3d72de57b",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x8b276de85979538379b81a16f9f080727bf524f7"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x201e7ebafbed52e974414c08a8d81b607572c9c4",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xbcb7a8a1f8ca5b990108771c05f33267f45329df"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x216f91ce3c1cb358e583441d6179c6c19c834a2e",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x71ff47ffff9100544353bcae7757a866a4869dc4"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x220de48091afa321299940feb04e6ba31f292f46",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xcbc9ae6a90d73cfd4ca5868807fa5f28a3c85fd0"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x22f6edb55790b0fe841c5ba9aa30792ebcb55863",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x2e433b53e3b099bdb48e6ebef1fdeeed428cc40a"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x27545eb2be12eaf146caab5f2436fc933afa57a5",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x5a30f08da64f5967fb5b4d03a53797167d51156d"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x27845335bd9dab3c3f79b4110ad2763933dd420c",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xe75f78cc37bccfc4e566672c381451e4e0e467dd"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x2a65ae527c6ff4665e048b0e0883c486a7ba4dbc",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x849f9190dbe708112ccf32d1c4ebce8383c9a8d4"
+    },
+    "playTokenGiven": "800000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x2adcbe31a816897fadad6d61c9a9fcfb9254b823",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xa3ff443e15264d775b161412e766af4bf0d1fedd"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x2ccbddf610dace745f5952bd7262b1853f1c5573",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x0ebb54e91a88f1af4f564dce474ce7188d4e4b8d"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x2d7420690fd7d5faae7b1c1b15b5bb408eefd833",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x8cd6c2a545c81bf06d18d140673700971f0acff2"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x2de14db256db2597fe3c8eed46ef5b20ba390823",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x03de5bc8200ae1a31ba73f9211e1b7aedf37154c"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x2fac516b1522637177aeea29e65c20dac1d5ff2b",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x56ca7ba8ee4f2373d1d80500ef4682cad41fef7d"
+    },
+    "playTokenGiven": "400000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x301471e2027cdfdabaea57abf0e2f18577235305",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x97dcf17c4f820ce9e3383af9f29a44f868c8c024"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x31ad4033ed83c4f50556213be7e285ce9f99d582",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x90b66260152e84f236384b78c7b4b4249d3b262b"
+    },
+    "playTokenGiven": "400000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x354d8f62c031ad1dc4d8bf74c5d2d9a26445fc2e",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xc19e3c8973644736631a1fd943d3ff42596198ee"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x367e9c3ac0e28c1536d5503de72bfea24fa4ed8a",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x5cfa098483a146e5755e3d7855257f736648ca15"
+    },
+    "playTokenGiven": "400000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x374fc67abcc9e14b9e27bcb99094bd9fe6903f21",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x724e85938c294e7faf89f1795ee65026a91da4f7"
+    },
+    "playTokenGiven": "400000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x37decdc386e7d6bfc3f8f04bbad518cabf952fc1",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xd060805050dd0b7f42744fd4c3988c01c8ab29b1"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x38abadbad8df2abf0aa8115c2fdd62e70f5a03b7",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x2a0aab1b903a26be7ec23138e08a3509457505bf"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x38b6f537832cf117a7ac525889f85d41dc3382b0",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x48c7b1ba8e1b80dcb3a83453ad244a0c30797d22"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x3a769a347da646c3e9015e1a262e4daca49ec495",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x1aafe4f25024839048def20333bdc5cb287c1725"
+    },
+    "playTokenGiven": "200000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x3b6319fd9be47d27b02a8d9d356c4a44732f5166",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x1b163067d005cf634d3d9522972a70f9ce3d398f"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x3d79307e994f0378d305278520dfb17eaa1ad923",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x2c971e3bff4c87d9eb27689c27788abf73ad8a24"
+    },
+    "playTokenGiven": "200000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x3e2883e81e0e6e206b7d688f705f1215f7975b1c",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x3c050b244f94f2f7732110524327bb83541f8253"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x3e2b3841225a2ad951bb84110fb399eb334e084c",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xdd0702ffe1141cb55759a32b40ddd288bf040027"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x4093eed436bd6a5320316af7de30059a58f70c4c",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x77266fc0004a9da3cda7804a9793ea1de72634d1"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x41a7ce9d735815f333d9969de8225a6477afca17",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xf80d6fb418e2a4db7cb37cbd1c6fe36efea161b9"
+    },
+    "playTokenGiven": "800000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x43e019279c7fc8baa68a199384d9602c5168994b",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xac443a7f65ae26a1235168653b0a00440e2f8083"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x4954cd52f749750987a5e59f80e36df091c90e07",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x02b115fcb42cad0ef683cac7e2825d9c5fb410b0"
+    },
+    "playTokenGiven": "800000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x499eb561220eb358ccbc5a72d4cdd4f5b76a2d2a",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x46046940fb4d590120559c2509fe258238dd769f"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x4a058fa136a1c645eda49ab761dcb5552a562e26",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x71e8cfee1c60af8d5c20a1839e9f109babd91e47"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x4c9ef721b807f9c689c9adbbbed26022fa9ba3f2",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x0758145c4f8099b6700d833946403075168e12dd"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x4ce81114c20b959eff5395ca7be453e7c3df7828",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x51b6a95864d69abed879899d72c48eb0022fa4df"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x4f4c3a3ab3423866849b986b60eb53df2e8602e4",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xf6582856de3ed89ba68e494e57de70952c5e80c1"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x5028481d95df5f6a58a604a6b99ea16fccf47bb7",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x18720dbc4729fe382bb465f21dc37d394b978d54"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x526522bd4b958ae0192114b8c90c21da71af7461",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xe2f08c9e62022c1e9a10e6c765a9f708dbae2893"
+    },
+    "playTokenGiven": "400000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x544d39277e8787a020de4d43e37447ba0c917957",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xf1ccb67bd8d8f6abb1d1d7db35bd841dadb52803"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x546457bbddf5e09929399768ab5a9d588cb0334d",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xc447c10b03100c430fcdad0bb6c26f88f4db2ce0"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x54ce27fec96c4533f42175bb2a32ead35dc22de3",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x23534473399c365a38f64c562a1669052c7357fe"
+    },
+    "playTokenGiven": "300000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x55dbcba09d2e230f413b4bf7aea1b0feb3fcfaef",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x330eae85e85d5247ad8b705fa8fb69c6cc308ac9"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x576aadaadf9d79058e1aa22d7cc0478b65715bb9",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xef082e8a1a0bab9a5401bd8ad7321d5cf407dda4"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x584061ee78e7b1816b4c98cc97589d7511aff127",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xb1959749e6cec14b23f77cb38eabb3d7ead75843"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x595fa2786fd982cdcef99de966416f3bfb21b22d",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xd7a78fae1b2efbf3adcd2e610e204f490eb28a23"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x59822bfbdbb179ef2be0ca35c44d9cf58af964bd",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xf2c7572f16ee52047370324612cb2485d9aaee87"
+    },
+    "playTokenGiven": "800000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x5a016b206d0314c7ec641c3a6fd89dac7fea010e",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x41d4d8de03414440d34d80b142bfaf15551e376f"
+    },
+    "playTokenGiven": "800000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x5b6c4002877a6fca65e146982a56da410b90b05e",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x519cb7ef093e5b2884e6c381a4712cd56c3dee5b"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x5cf7d200b2d82b151d59446d9380682ae6d1ef91",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x6b8e5637e729890de70c342979fb096305852088"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x5f694a189db12c5a6daadae85fc1cd17cefefb9a",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xe058f94d1e07f1d72c8f6d10c7831a0b7a31501d"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x606c223e5a073fb42d041cc1644027781de304e7",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xba0ff36d439f80d89df0acc8fca736b5eb8bd9c3"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x60b1f0766399e7b2596472e521722aad8c02ffcb",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xba20f40307be44456dc2236a35134622f5719823"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x60d38778adbbeeac88f741b833cbb9877228eea0",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x0b543f11dc8a63406d151085a961e746f3960140"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x62e27386ad3b0dac1835b0d40f515ad590146e68",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x9d45c061505c2b5db9581ba36dbd637ddb6c582d"
+    },
+    "playTokenGiven": "300000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x65e25a54582fc775cf9737158b0c2bcfd902c8b4",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x772c525def264821085c378baab8962e3db19259"
+    },
+    "playTokenGiven": "200000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x66e38b9aaca068cd2aec64fc662278ed20226c64",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xe3b28241f1b188f2d34b8d6bcf97fb90ea95e942"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x6bc1b63c28976fa8f09d9f3ab65c2282b12ac6d8",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xe747869137065f3de64584d341a7c813663a0702"
+    },
+    "playTokenGiven": "200000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x728cf2aff601a6d23ecc470224b953f8baaf631f",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x99c9e25d68d754b37e4814142ad8b38ae2d02760"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x77c54f2a22fbff8a616287c74a60d3ef0423b129",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x4c346f40a18c300d5c9251ad7094f3c32dde6266"
+    },
+    "playTokenGiven": "300000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x792ea79bf9acaa724db85ee8a859a158ac9cbd39",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x3728b95d5beac42ed286b783252b3292d232a4a3"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x7a2c5cc45aafe03c2c16593eb04e802e9ce529c1",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xdc0aeb556dc61259ee2ab5a34fbf1015b3a9a6ff"
+    },
+    "playTokenGiven": "400000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x7dc7fcbbbccb014ec7b280b16c8a194aa6380e5d",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x2ce46cc9a28162b6fde19be21468573fb548fc4a"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x7f025665f7e73513d7d6d8683a6f5c4ca72688c1",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x2e6e1488fc9d98dc6c051b4d7f5463d55138e17d"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x8231ef3e5f4e201fa564f754b2059c8c5a83e7db",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x7c4069fe014ba909ef5e06cc911b62a081f392c0"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x82ec57dcf603ef2f72604a9b8183a7d083c43e67",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x858cef55d0415de595d63ad71f118399040db011"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x85d141c336d30101539f972d217f5db92e42f7c7",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x758bd05a707c5ceff2c3fcf52be7eb3d868545ba"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x8a9616176d26f859a5326dd3d6dd262f2aa4b0d7",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x2a9ae7d45f91938833946f0c029a5e3537a708e3"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x8b5b9497e096ee6ffd6041d1db37a2ac2b41ab0d",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x4c5285b4ef981ba61e7de5fea84bff262d251ad2"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x8d683d44bf45a8485b1a96832508ffa31018cf9a",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x0aee40b3502a348ddfa1d61fa23ecac8f6a22cdb"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x92edc7a4d9e755469fde61815dd229eef7882433",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xc34cc4009b2766a2e92b0d051d4236d5f424e3a5"
+    },
+    "playTokenGiven": "300000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x92fde24b25e7d0dd83abea05bf925e47044d649e",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xdc867de89ea27a04e3c92f9a2bee51d15be2684f"
+    },
+    "playTokenGiven": "400000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x952c23f8f067a5e7e165ff0e42491f51d87dbc95",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xb47363cca0e6dbc2a1943e5d260558e9ec50c3d6"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x95fc6298900c4b692473fc8c9a93e1c3f2dedd87",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x94f6fcff7693f2a88d02cb6706152a522362bef6"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x96469f1e59a6fd471361ed2074b2ab89e1c9a31f",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xf2e42414fb0d432928c5e47a101fbcf7c38662a6"
+    },
+    "playTokenGiven": "400000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x98f07439f597da9cbdb3952e1d7ec4b18a587aae",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xe070ca58647bad5de7c6040962321040bd2dd5dd"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x990e99d9fef9bb83e5854f3ce7e6846dcd9e5fd5",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x485abdc4d212e3a28a57ad639f45dd1738ab18b3"
+    },
+    "playTokenGiven": "400000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x991f3775c81d6f8331b9a812eda34ea48a7ea76d",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xf86f867082537a11b1f68719d8e1e52ec310ead0"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x99499bdcef971416272e5ea790e48253937dc139",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xcde44e7f15155cb62e075ec7a9c903d94f6adbf4"
+    },
+    "playTokenGiven": "200000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x9b50f6cfee5b9902fd46f7ef7b13e2ceced88284",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x6f42d2e5ef825a65b53c8db1c74f74d4852edd1f"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x9d375719442c8d57ca9658ede45336787648381f",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x047757179461852dfbb0fa703f1bfff788673119"
+    },
+    "playTokenGiven": "400000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x9dab5a6393eef78eb36cd84bb9bbb055189429a5",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x86da52f13eea34892aba12e82d55f4676a9ae17b"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0x9ffd90112f307f9d108b1126211ae430b38da678",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x1c50b784004224c302a6b1beff7021953beeec0c"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xa1e3baea86f4953781a80fa7cd682922e7695e2f",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xc8ee14b8cb679e7c15626ae21869b8780e5ae756"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xa3cff779f20b3503ca54ca50cf050233ee349353",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x4452f19ca49e6f56fa6f5cff01846237f8cab566"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xa7f1b57adf829fd6c3d8220f5bdfb03965b2961f",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xf42e360e462fb3bf2aaba89475555ae8e4421e79"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xa974890156a3649a23a6c0f2ebd77d6f7a7333d4",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x3f235917b7d3def921a431efa6357e21e4ed3718"
+    },
+    "playTokenGiven": "300000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xaa1e77b982cbce1d109e9309aa120292b44eef0c",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xb2b168d05389f7152e369ad56aefd840a2dbb7ce"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xacf27c8e7349e657dccd2b9f0c7f9c0d06a6992b",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x3c083b402fb153cf44d9dd2298ec0ed6bc8e7a17"
+    },
+    "playTokenGiven": "300000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xb006c644258e01b437eff06e16e56e938a239712",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xfb19240643609c37e4bbeb85403b0c24a9d65220"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xb24156b92244c1541f916511e879e60710e30b84",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xd0393e68f307fe8b27840bc47bce506b2cbc86d2"
+    },
+    "playTokenGiven": "400000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xb31f8b445eead72e519832a3984441494e91f80a",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x121817b97faaf80851bf375acb598a8559a5b7e2"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xb4aca4d18c3f3ad9bfddd0a0dc8f669d51798dea",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x30769cc53287cdaa84945b80acfc77db1acf497f"
+    },
+    "playTokenGiven": "200000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xb5c683d508445d5e10b9833cfacbd09bb3e1ab92",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x8875ea5fa774ee9d0c8edca715121df1504c4edb"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xb67cc6fc054a87690d405e07fbeb770a205044b1",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x1c69b4ec079447a50c3d44e3fa0d680a3f207ff2"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xb77729e9c00a508351bd81f01657eb2dbac247ea",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x15f17606fc60dd74202698ffb3a1eefeb19bd769"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xba4900d590edf8fab6b4f446f7ba3c072a944cfd",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x55e737ca9348a1109434f22bbcbc36c014eea3a8"
+    },
+    "playTokenGiven": "200000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xbac969430a2da39c1a76fb3b21c021e92306f8c5",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x180f23cb9b66d3dbf73434f50cfa7d028e7ac0d1"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xbbbb16f443f17d3781e8df7dee708efafce15d17",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x6ab59de58733b6da693a95ca4ca8bcc9ac52f1ee"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xbd81bbcfd4f700199dc9fd6ed93b1f7be3232703",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x5f5b89e19d6d6a58136cd54970123d52a3eb7996"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xbdc1b525110ec289a86f274d28a444457e1135cd",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x4505c015bf831fd45f5401cd036f6280f67e9be1"
+    },
+    "playTokenGiven": "200000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xc5b82f6d9b83fa2f80cc1fe7de278e35b8ccfd8e",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x72b3d6d2c0b53ed04f41a543b4946f4f899bd701"
+    },
+    "playTokenGiven": "200000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xc779d5b720de5881a5492d83ff9a8d6b9c167154",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xc22dd0a73965253aded261c323dd4c86010d54c1"
+    },
+    "playTokenGiven": "400000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xcc52e4e272fdaa4863ade0aac23d8741ee4e2a07",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x7c0dd711ef7fe9076a7701dc9621ff622ba8c2c0"
+    },
+    "playTokenGiven": "400000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xcee0c7440e26942fd694f663f36071e52ce64fe4",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x94f40a8d73a4e676dbe25c2952dfb07570929f8c"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xd01a2311ca001241502394d25bc08b0ad8cd2229",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xae79318ef4cd8bdfcaa55846975759a5cb48df55"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xd5f652068f02a91d0ee5cbc8c226af61cb76efbc",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x0910dc74b17783a457dde799acf7b28c6cf3c813"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xd605cbe7902b37dff502f074e3e534d7527c9833",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x6570fc173055c21e810ac5bc822c836c5bea3c19"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xd8dbfd62956727d2caf18fad58d69975326c8534",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xea542396b800cf741f73d012537f7ac95c9ef6cd"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xda41f045c2da9da4903d0f5ebc31ff2e67037403",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xb21d26b96823233ef099dd98f625d5284abb59a2"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xdb2860bd4bdededebe8dfd1ab84e76ec026ea112",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xd9ce18e1fafcd205efb4536a526d83c68e41e9b7"
+    },
+    "playTokenGiven": "200000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xdc446d8c79710cdfc8b1121bc249d867f8d1d3be",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xcb8e3147348b995f0db1a64e7a3790e68f2e1c96"
+    },
+    "playTokenGiven": "200000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xde0add29fc57287315273a11e6ba1bdccd836da8",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x394277b3044b8a22d29808025804fd59d38f7239"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xdece737ba8e9d72432adac9c0e09c9cfde20fd98",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x627dab2d36b9cac91e854642d9d85b7afed313f1"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xdf4966a56403a38365edcfb6d521c04d5d200b2a",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x0bbdd84b541ad4386740e07062b09dc700b4b6e7"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xe0c8f9e24e16f63e725ecdfd07dfc45772fc1934",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x002cb59eb89f0ab80d431b13f6bebc02c046f8e9"
+    },
+    "playTokenGiven": "400000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xe2884330b46cc47848afcbcc4135d2127f176f77",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xbc3465b48dd59ad5b4d0d27bf70fef3efeee8237"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xe38e7c7e9768a9a1b3eb23f8d420448f5df60c5f",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x7d7e2435aa8bb99999c72344306618cbcdea9e72"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xed19320ef2dae778209ea924ae7f2091735b104b",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x969616a40c508fcbdccea5093ca8348b6188a7e7"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xedc51f86250286f0a5e2c8fadfaed068b9e39282",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xe7b5fd647c13983d786171154f7a6df1f1912a4d"
+    },
+    "playTokenGiven": "300000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xee2536be571efb5c97472a1b9007b969225b32ed",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x8d1b12585f0eaf0f140e6ee2636f898806d96483"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xeebc6016539e0bc60d35f527fefa414794854499",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xa591d96b59901e351b95b09cb7016bd4b8dea5f6"
+    },
+    "playTokenGiven": "400000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xf1659d0d37f4a3af2149d6262eb4182d14c2aea4",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x9879aaad11745a207704ae76567c0c001f614919"
+    },
+    "playTokenGiven": "400000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xf22bcd5e8d5c2fb09af288c84898f7d9aa40b2e0",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x1c9a72816ce83e97b789ea09e64534b688053866"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xf398abf8d0a74810c1da9c49290bc2555ef56f29",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x5b5f9a5437353d90a6143d34773af6f14f3d0b17"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xf8b109af18cfa614bef1c2899e522d77b3c64c14",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xdbf60c7a7616803adb1dbb7ea867fb371000a3a4"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xfb67e720c8d08060ad8893fa231be9640078350f",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x1aebd409a1b1f8b4ee3476fd2865d154e111678b"
+    },
+    "playTokenGiven": "400000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xfbbb48fba2cdff30e52fa0f76e7b1b2358a3e779",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xa282a1a7b5894a605ad113d1f445fbd50569c4f2"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xfe229129eb90d1128adab663860aec7e4a5768ff",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0x4abcb7f50512a2e034f7fd66dd1571621a96303f"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xfe3865dd730eabfe973b2d9035c4eefed3076a36",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xecdbce825d96ac90dbcafe583c6ec0fc58d7aea0"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xfeff33456de40aa9ffc85b796cb731b91ea6eb04",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xb333f81dcaee41063cb1e6e8e91643ecf665f308"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xff153bfb59dc0d2732b1590ed1f0ce14451f360c",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xa63b705516e9cd7a3dd6dea34847034f075c962a"
+    },
+    "playTokenGiven": "600000000000000000000"
+  },
+  {
+    "__typename": "Owner",
+    "id": "0xffb1318ccdc812a27c7e2d0725518ff591a81b5f",
+    "introducer": {
+      "__typename": "Owner",
+      "id": "0xb2914f41b6a5de6801adcd6406f12acd93566d39"
+    },
+    "playTokenGiven": "600000000000000000000"
+  }
+]

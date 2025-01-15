@@ -1,0 +1,178 @@
+{
+  "wchi": {
+    "0xe2a00cc90358f148c8fd3e052cf86a4be22a4eac": {
+      "given": [
+        {
+          "tx": "0x7fe7cc22e5bc2e20e430866c38a507216ed20e27079eee59235adf99d314d6f3",
+          "planets": [
+            "-123,6"
+          ]
+        }
+      ]
+    },
+    "0x7a7029bc89182f61a15de8ee7ecbf14368b76916": {
+      "given": [
+        {
+          "tx": "0x25ed17f91f9ad961f56a0826e8f635bac81f5410ac0305b2ba9ed2c1abc2e23b",
+          "planets": [
+            "7,35"
+          ]
+        }
+      ]
+    },
+    "0xffc52c6dbcd6b3e81c12285492b8c8a72c87b693": {
+      "given": [
+        {
+          "tx": "0xb8e348fd9e1e69c2e2fce4f25ba9dd7659db1ae669c16b1c10fe0bdb07005222",
+          "planets": [
+            "42,32"
+          ]
+        }
+      ]
+    },
+    "0x4047f55ac6c9da5938e6b662926d04c0dbcc5343": {
+      "given": [
+        {
+          "tx": "0x426967606b031fc05d0df9245123ed25ad5d0f1cde47dbd8f0224b4d9f4cfdf2",
+          "planets": [
+            "-33,69"
+          ]
+        }
+      ]
+    },
+    "0x007109f0819756f95992a8fddc8809ec4ad0a287": {
+      "given": [
+        {
+          "tx": "0xf105ca9daf980ec4fccc1664fcf9c00565d41697a923429361d15958826c6929",
+          "planets": [
+            "-49,-67"
+          ]
+        }
+      ]
+    },
+    "0x60d38778adbbeeac88f741b833cbb9877228eea0": {
+      "given": [
+        {
+          "tx": "0x7c7816a1eef31bbc4a87c8385584b228452bf14b006ec8cbd78b30d9cb42114e",
+          "planets": [
+            "-93,77"
+          ]
+        }
+      ]
+    },
+    "0xf162f8e62e4d8543a70af017557d18a859848452": {
+      "given": [
+        {
+          "tx": "0x9e0393771f2ff8fa80f62dbf9c98cd2a3531181323c5e37a23ec4d45588a05d3",
+          "planets": [
+            "-86,53"
+          ]
+        }
+      ]
+    },
+    "0x96595d81831d1b92002bb0b60bb8cc9596f3488a": {
+      "given": [
+        {
+          "tx": "0x81a884ea99b339fe1ed73b18c72e2609e300702946ecf4cbc3c1f642ba50a3a7",
+          "planets": [
+            "-19,46"
+          ]
+        }
+      ]
+    }
+  },
+  "xdai": {
+    "0xe0cd518a1c9e76a380fda3a8b5c027c076d6d472": {
+      "given": [
+        {
+          "tx": "0x912434a3f803e47c112306cee26f8f254a82bfcbfd7a0bf2299fcc01c3b2e30c",
+          "planets": [
+            "-120,-11"
+          ]
+        },
+        {
+          "tx": "0x17f8da3e73d1218e547514a6ca555debda2c365f9f1c0ec40389064221fe8497",
+          "planets": [
+            "-98,44",
+            "-137,58",
+            "-127,116",
+            "-140,128"
+          ]
+        },
+        {
+          "tx": "0x3225c551daccd893adf6c45cbdf8bf7ae35d8582e6eb6527719f3c18c3688a06",
+          "planets": [
+            "-111,-77"
+          ]
+        }
+      ]
+    },
+    "0x964727f7bc5ca298f9c9b68958b063f861417392": {
+      "given": [
+        {
+          "tx": "0x10b4bc440ad025d8927af15564867fe00618df876f4dddd5c1a5ae6394d0e9d4",
+          "planets": [
+            "-46,51"
+          ]
+        }
+      ]
+    },
+    "0xcfedd5b3aae8a2c0eb6cd94d547d971092c95029": {
+      "given": [
+        {
+          "tx": "0xbaeee79476a918f22a5fe6c33132381cda481edd93ab5cfaa42837b950c48619",
+          "planets": [
+            "-2,67",
+            "-9,80"
+          ]
+        },
+        {
+          "tx": "0xb923d61bcfb81363e9fec2d09b12597598c26921399e970eff469c00c47e13a4",
+          "planets": [
+            "-21,74"
+          ]
+        }
+      ]
+    },
+    "0x7a7029bc89182f61a15de8ee7ecbf14368b76916": {
+      "given": [
+        {
+          "tx": "0xd61f7eebd65f18b49a5e1b4fe6f4b9149b22f0bae1001cc83b0415b8130ed446",
+          "planets": [
+            "54,58"
+          ]
+        }
+      ]
+    },
+    "0xf8b109af18cfa614bef1c2899e522d77b3c64c14": {
+      "given": [
+        {
+          "tx": "0xbebfb224a716e74bfb788d45b9748181f20d60c9c951df5574d75b5584b52b7d",
+          "planets": [
+            "-49,-43"
+          ]
+        }
+      ]
+    },
+    "0xa93182ac1617383caad621d34c63311e85a74eb6": {
+      "given": [
+        {
+          "tx": "0x3edd319c16ef409b1fdf44f63235ff2d1111a76b372376a5ed75b2a86accd790",
+          "planets": [
+            "-66,117"
+          ]
+        }
+      ]
+    },
+    "0x38daea6f17e4308b0da9647db9ca6d84a3a7e195": {
+      "given": [
+        {
+          "tx": "0x96ebe9d893e595373d5c20a31726dafdaf1eb17d2455dbfef62d7fd38380818d",
+          "planets": [
+            "-6,-27"
+          ]
+        }
+      ]
+    }
+  }
+}

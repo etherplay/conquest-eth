@@ -2,15 +2,21 @@ import {locationToXY, xyToLocation} from 'conquest-eth-common';
 import 'dotenv/config';
 import {deployments} from 'hardhat';
 import {TheGraph} from './utils/thegraph';
-const theGraph = new TheGraph(`https://api.thegraph.com/subgraphs/name/${process.env.SUBGRAPH_NAME}`);
+// const theGraph = new TheGraph(`https://api.thegraph.com/subgraphs/name/${process.env.SUBGRAPH_NAME}`);
+// const blockNumber = 21538868;
+const theGraph = new TheGraph(`http://127.0.0.1:8000/subgraphs/name/conquest-eth/conquest-eth`);
+const blockNumber = 41141; // the end of session
 
 const args = process.argv.slice(2);
 
 const all = args[0] === 'all';
 
-const gnosisPlanets = ['-49,-43', '-9,80', '-120,-11', '-2,67', '-46,51', '-21,74', '-6,-27'];
-const poktPlanets = ['-127,116', '-98,44', '-140,128', '-137,58', '-66,117', '54,58', '-111,-77'];
-const xayaPlanets = ['-86,53', '42,32', '7,35', '-123,6', '-49,-67', '-19,46', '-93,77', '-33,69'];
+// const gnosisPlanets = ['-49,-43', '-9,80', '-120,-11', '-2,67', '-46,51', '-21,74', '-6,-27'];
+// const poktPlanets = ['-127,116', '-98,44', '-140,128', '-137,58', '-66,117', '54,58', '-111,-77'];
+// const xayaPlanets = ['-86,53', '42,32', '7,35', '-123,6', '-49,-67', '-19,46', '-93,77', '-33,69'];
+const gnosisPlanets: string[] = [];
+const poktPlanets: string[] = [];
+const xayaPlanets: string[] = ['-17,1'];
 let planetsStrings = gnosisPlanets.concat(poktPlanets);
 if (all) {
   planetsStrings = planetsStrings.concat(xayaPlanets);
@@ -47,11 +53,14 @@ query($planets: [ID!]! $blockNumber: Int!) {
 `;
 
 async function main() {
-  const rewardsAlreadyGiven: {[token: string]: {[address: string]: {given: {tx: string; planets: string[]}[]}}} =
-    JSON.parse(await deployments.readDotFile('.planets_rewards.json'));
+  let rewardsAlreadyGiven: {[token: string]: {[address: string]: {given: {tx: string; planets: string[]}[]}}} = {};
+
+  try {
+    rewardsAlreadyGiven = JSON.parse(await deployments.readDotFile('.planets_rewards.json'));
+  } catch {}
 
   const result = await theGraph.query(queryString, {
-    variables: {planets: planets, blockNumber: 21538868}, // TODO blockNumber
+    variables: {planets: planets, blockNumber}, // TODO blockNumber
   });
   const data = result[0] as {
     planetExitEvents: {
@@ -65,6 +74,8 @@ async function main() {
     // exitCompleteEvents: {owner: {id: string}; planet: {id: string}}[];
     planets: {owner: {id: string}; id: string}[];
   };
+
+  console.log(data);
   // const exited = data.exitCompleteEvents;
   const held = data.planets;
   const now = Date.now() / 1000;
@@ -155,7 +166,7 @@ async function main() {
     // held,
   });
 
-  console.log(winners);
+  console.log(`winners`, winners);
 
   for (const loc of planets) {
     if (!planetsCounted[loc]) {

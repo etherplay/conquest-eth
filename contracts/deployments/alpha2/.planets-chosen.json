@@ -1,0 +1,32 @@
+[
+  {
+    "x": 82,
+    "y": 91,
+    "location": "0x0000000000000000000000000000005b00000000000000000000000000000052"
+  },
+  {
+    "x": -118,
+    "y": 105,
+    "location": "0x00000000000000000000000000000069ffffffffffffffffffffffffffffff8a"
+  },
+  {
+    "x": -52,
+    "y": -142,
+    "location": "0xffffffffffffffffffffffffffffff72ffffffffffffffffffffffffffffffcc"
+  },
+  {
+    "x": 139,
+    "y": -170,
+    "location": "0xffffffffffffffffffffffffffffff560000000000000000000000000000008b"
+  },
+  {
+    "x": -35,
+    "y": -168,
+    "location": "0xffffffffffffffffffffffffffffff58ffffffffffffffffffffffffffffffdd"
+  },
+  {
+    "x": -82,
+    "y": -93,
+    "location": "0xffffffffffffffffffffffffffffffa3ffffffffffffffffffffffffffffffae"
+  }
+]
