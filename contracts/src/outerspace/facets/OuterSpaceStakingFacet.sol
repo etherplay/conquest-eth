@@ -10,11 +10,7 @@ contract OuterSpaceStakingFacet is OuterSpaceFacetBase {
     // STAKING / PRODUCTION CAPTURE
     // ---------------------------------------------------------------------------------------------------------------
 
-    function onTokenTransfer(
-        address,
-        uint256 amount,
-        bytes calldata data
-    ) public returns (bool) {
+    function onTokenTransfer(address, uint256 amount, bytes calldata data) public returns (bool) {
         bool freegift;
         if (msg.sender == address(_freeStakingToken)) {
             freegift = true;
@@ -39,12 +35,7 @@ contract OuterSpaceStakingFacet is OuterSpaceFacetBase {
         return true;
     }
 
-    function onTokenPaidFor(
-        address,
-        address forAddress,
-        uint256 amount,
-        bytes calldata data
-    ) external returns (bool) {
+    function onTokenPaidFor(address, address forAddress, uint256 amount, bytes calldata data) external returns (bool) {
         bool freegift;
         if (msg.sender == address(_freeStakingToken)) {
             freegift = true;
@@ -66,6 +57,17 @@ contract OuterSpaceStakingFacet is OuterSpaceFacetBase {
         address sender = _msgSender();
         _acquire(sender, amount, location, true);
         _freeStakingToken.transferFrom(sender, address(this), amount);
+    }
+
+    function acquireViaNativeTokenAndStakingToken(
+        uint256 location,
+        uint256 amountToMint,
+        uint256 tokenAmount
+    ) public payable {
+        address sender = msg.sender;
+        _acquire(sender, amountToMint + tokenAmount, location, false);
+        _stakingToken.mint{value: msg.value}(address(this), amountToMint);
+        _stakingToken.transferFrom(sender, address(this), tokenAmount);
     }
 
     // ---------------------------------------------------------------------------------------------------------------

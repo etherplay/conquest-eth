@@ -9,11 +9,22 @@ import {privateWallet} from '$lib/account/privateWallet';
 import {xyToLocation} from 'conquest-eth-common';
 import {myTokens} from '$lib/space/token';
 import {get} from 'svelte/store';
+import {initialContractsInfos} from '$lib/blockchain/contracts';
 
 type Data = {txHash?: string; coords: {x: number; y: number}};
 export type ClaimFlow = {
   type: 'CLAIM';
-  step: 'IDLE' | 'CONNECTING' | 'CHOOSE_STAKE' | 'CREATING_TX' | 'WAITING_TX' | 'PROFILE_INFO' | 'SUCCESS';
+  step:
+    | 'IDLE'
+    | 'CONNECTING'
+    | 'CHOOSE_STAKE'
+    | 'CREATING_TX'
+    | 'WAITING_TX'
+    | 'PROFILE_INFO'
+    | 'SUCCESS'
+    | 'REQUIRE_ALLOWANCE'
+    | 'SETTING_ALLOWANCE'
+    | 'CHECKING_ALLOWANCE';
   cancelingConfirmation?: boolean;
   data?: Data;
   error?: {message?: string}; // TODO other places: add message as optional field
@@ -54,7 +65,28 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
     this.setPartial({step: 'CHOOSE_STAKE', cancelingConfirmation: false});
   }
 
-  async confirm(): Promise<void> {
+  async allowConquestToTransferToken(): Promise<void> {
+    this.setPartial({step: 'SETTING_ALLOWANCE'});
+    let tx;
+    try {
+      tx = await wallet!.contracts.PlayToken.approve(
+        wallet!.contracts.OuterSpace.address,
+        BigNumber.from('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF')
+      );
+    } catch (err) {
+      this.setPartial({step: 'CHOOSE_STAKE', error: err});
+      throw err;
+    }
+
+    this.setPartial({step: 'CHECKING_ALLOWANCE'});
+    try {
+      await tx.wait();
+    } finally {
+      this.setPartial({step: 'CHOOSE_STAKE'});
+    }
+  }
+
+  async confirm(requireMint?: {amountToMint: BigNumber; tokenAvailable: BigNumber}): Promise<void> {
     // await privateWallet.execute(async () => {
     await privateWallet.login();
     const flow = this.setPartial({step: 'CREATING_TX'});
@@ -101,6 +133,20 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
       return;
     }
 
+    if (requireMint && requireMint.tokenAvailable.gt(0)) {
+      const allowance = await wallet!.contracts.PlayToken.allowance(
+        wallet.address,
+        wallet!.contracts.OuterSpace.address
+      );
+      if (allowance.lt(requireMint.tokenAvailable)) {
+        this.setPartial({
+          step: 'REQUIRE_ALLOWANCE',
+        });
+        return;
+      }
+    }
+
+    const locationId = xyToLocation(flow.data.coords.x, flow.data.coords.y);
     let tokenAmount = spaceInfo.roundTo1Decimal
       ? BigNumber.from(planetInfo.stats.stake).mul('100000000000000')
       : BigNumber.from(planetInfo.stats.stake * 10000).mul('10000000000');
@@ -108,10 +154,7 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
     if (get(myTokens).freePlayTokenBalance.gte(tokenAmount)) {
       paymentTokenContract = wallet?.contracts.FreePlayToken;
     }
-    let callData = defaultAbiCoder.encode(
-      ['address', 'uint256'],
-      [wallet.address, xyToLocation(flow.data.coords.x, flow.data.coords.y)]
-    );
+    let callData = defaultAbiCoder.encode(['address', 'uint256'], [wallet.address, locationId]);
 
     // TODO add multiple claim
     // tokenAmount = tokenAmount.add(BigNumber.from("1900000000000000000"));
@@ -121,54 +164,118 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
     //     );
     //
 
-    let gasEstimation: BigNumber;
-    try {
-      gasEstimation = await paymentTokenContract.estimateGas.transferAndCall(
-        wallet.contracts?.OuterSpace.address,
-        tokenAmount,
-        callData
-      );
-    } catch (e) {
-      this.setPartial({
-        step: 'CHOOSE_STAKE',
-        error: e,
-      });
-      return;
-    }
-    // TODO gasEstimation for Acquire Planet
-    const gasLimit = gasEstimation.add(100000);
-
-    this.setPartial({step: 'WAITING_TX'});
     let tx: {hash: string; nonce?: number};
-    try {
-      tx = await paymentTokenContract.transferAndCall(wallet.contracts?.OuterSpace.address, tokenAmount, callData, {
-        gasLimit,
-      });
-    } catch (e) {
-      if (e.transactionHash) {
-        tx = {hash: e.transactionHash};
-        try {
-          const tResponse = await wallet.provider.getTransaction(e.transactionHash);
-          tx = tResponse;
-        } catch (e) {
-          console.log(`could not fetch tx, to get the nonce`);
+
+    if (!requireMint) {
+      let gasEstimation: BigNumber;
+      try {
+        gasEstimation = await paymentTokenContract.estimateGas.transferAndCall(
+          wallet.contracts?.OuterSpace.address,
+          tokenAmount,
+          callData
+        );
+      } catch (e) {
+        this.setPartial({
+          step: 'CHOOSE_STAKE',
+          error: e,
+        });
+        return;
+      }
+      // TODO gasEstimation for Acquire Planet
+      const gasLimit = gasEstimation.add(100000);
+
+      this.setPartial({step: 'WAITING_TX'});
+      try {
+        tx = await paymentTokenContract.transferAndCall(wallet.contracts?.OuterSpace.address, tokenAmount, callData, {
+          gasLimit,
+        });
+      } catch (e) {
+        if (e.transactionHash) {
+          tx = {hash: e.transactionHash};
+          try {
+            const tResponse = await wallet.provider.getTransaction(e.transactionHash);
+            tx = tResponse;
+          } catch (e) {
+            console.log(`could not fetch tx, to get the nonce`);
+          }
+        }
+        if (!tx || !tx.hash) {
+          if (this.$store.step === 'WAITING_TX') {
+            if (e.message && e.message.indexOf('User denied') >= 0) {
+              this.setPartial({
+                step: 'IDLE',
+                error: undefined,
+              });
+            } else {
+              console.error(`Error on transferAndCall:`, e);
+              this.setPartial({error: e, step: 'CHOOSE_STAKE'});
+            }
+          } else {
+            throw e;
+          }
+          return;
         }
       }
-      if (!tx || !tx.hash) {
-        if (this.$store.step === 'WAITING_TX') {
-          if (e.message && e.message.indexOf('User denied') >= 0) {
-            this.setPartial({
-              step: 'IDLE',
-              error: undefined,
-            });
-          } else {
-            console.error(`Error on transferAndCall:`, e);
-            this.setPartial({error: e, step: 'CHOOSE_STAKE'});
-          }
-        } else {
-          throw e;
-        }
+    } else {
+      const outerspaceContract = wallet?.contracts.OuterSpace;
+      const nativeTokenAmount = requireMint.amountToMint
+        .mul('1000000000000000000')
+        .div(initialContractsInfos.contracts.PlayToken.linkedData.numTokensPerNativeTokenAt18Decimals);
+      let gasEstimation: BigNumber;
+      try {
+        gasEstimation = await outerspaceContract.estimateGas.acquireViaNativeTokenAndStakingToken(
+          locationId,
+          requireMint.amountToMint,
+          requireMint.tokenAvailable,
+          {value: nativeTokenAmount}
+        );
+      } catch (e) {
+        this.setPartial({
+          step: 'CHOOSE_STAKE',
+          error: e,
+        });
         return;
+      }
+      const gasLimit = gasEstimation.add(100000);
+
+      this.setPartial({step: 'WAITING_TX'});
+
+      try {
+        tx = await outerspaceContract.acquireViaNativeTokenAndStakingToken(
+          locationId,
+          requireMint.amountToMint,
+          requireMint.tokenAvailable,
+          {
+            gasLimit,
+            value: nativeTokenAmount,
+          }
+        );
+      } catch (e) {
+        if (e.transactionHash) {
+          tx = {hash: e.transactionHash};
+          try {
+            const tResponse = await wallet.provider.getTransaction(e.transactionHash);
+            tx = tResponse;
+          } catch (e) {
+            console.log(`could not fetch tx, to get the nonce`);
+          }
+        }
+        if (!tx || !tx.hash) {
+          if (this.$store.step === 'WAITING_TX') {
+            if (e.message && e.message.indexOf('User denied') >= 0) {
+              this.setPartial({
+                step: 'IDLE',
+                error: undefined,
+              });
+            } else {
+              console.error(`Error on transferAndCall:`, e);
+              this.setPartial({error: e, step: 'CHOOSE_STAKE'});
+            }
+          } else {
+            throw e;
+          }
+          return;
+        }
       }
     }
 

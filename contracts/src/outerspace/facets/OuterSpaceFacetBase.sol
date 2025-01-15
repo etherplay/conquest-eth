@@ -14,6 +14,10 @@ import "../../alliances/AllianceRegistry.sol";
 
 import "../../conquest_token/IFreePlayToken.sol";
 
+interface StakingToken is IERC20 {
+    function mint(address to, uint256 amount) external payable;
+}
+
 contract OuterSpaceFacetBase is
     ImportingOuterSpaceTypes,
     ImportingOuterSpaceConstants,
@@ -22,7 +26,7 @@ contract OuterSpaceFacetBase is
 {
     using Extraction for bytes32;
 
-    IERC20 internal immutable _stakingToken;
+    StakingToken internal immutable _stakingToken;
     IFreePlayToken internal immutable _freeStakingToken;
     AllianceRegistry internal immutable _allianceRegistry;
 
@@ -46,7 +50,7 @@ contract OuterSpaceFacetBase is
     uint256 internal immutable _stakeMultiplier10000th;
 
     struct Config {
-        IERC20 stakingToken;
+        StakingToken stakingToken;
         IFreePlayToken freeStakingToken;
         AllianceRegistry allianceRegistry;
         bytes32 genesis;

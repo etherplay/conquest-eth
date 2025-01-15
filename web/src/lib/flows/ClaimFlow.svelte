@@ -15,6 +15,7 @@
   import mintFlow from '$lib/flows/mint';
   import EmbeddedMintFlow from './EmbeddedMintFlow.svelte';
   import {nativeTokenSymbol} from '$lib/config';
+  import {initialContractsInfos} from '$lib/blockchain/contracts';
 
   $: coords = $claimFlow.data?.coords;
   $: planetInfo = coords ? spaceInfo.getPlanetInfo(coords.x, coords.y) : undefined;
@@ -25,6 +26,15 @@
 
   $: result =
     planetInfo && $planetState ? spaceInfo.simulateCapture($wallet.address, planetInfo, $planetState) : undefined;
+
+  function nativeTokenAmountFor(tokenAmountIn10000: BigNumber) {
+    return (
+      BigNumber.from(tokenAmountIn10000)
+        .mul('1000000000000000000000')
+        .div(initialContractsInfos.contracts.PlayToken.linkedData.numTokensPerNativeTokenAt18Decimals)
+        .toNumber() / 10000000
+    );
+  }
 
   async function mint(numTokenUnit: number) {
     mintFlow.mint(numTokenUnit);
@@ -68,12 +78,22 @@
   </Modal>
 {:else if $claimFlow.step === 'CONNECTING'}
   <!---->
+{:else if $claimFlow.step === 'REQUIRE_ALLOWANCE'}
+  <Modal on:close={() => claimFlow.cancel()}
+    >You ll need to allow Conquest to transfer your token
+
+    <Button class="mt-5" label="Allow" on:click={() => claimFlow.allowConquestToTransferToken()}>Allow</Button>
+  </Modal>
+{:else if $claimFlow.step === 'SETTING_ALLOWANCE'}
+  <Modal on:close={() => claimFlow.cancel()}>Please confirm...</Modal>
+{:else if $claimFlow.step === 'CHECKING_ALLOWANCE'}
+  <Modal on:close={() => claimFlow.cancel()}>Please wait...</Modal>
 {:else if $claimFlow.step === 'CHOOSE_STAKE' && $wallet.state == 'Ready'}
   <Modal on:close={() => claimFlow.cancel()}>
     {#if !$myTokens.playTokenBalance}
       Please wait...
     {:else if $myTokens.playTokenBalance.eq(0) && $myTokens.freePlayTokenBalance.eq(0)}
-      You do not have any
+      <!-- You do not have any
       <PlayCoin class="inline w-4" />. You need
       {cost.toNumber() / 10000}
       <PlayCoin class="inline w-4" />.
@@ -85,9 +105,38 @@
             >Mint {cost.toNumber() / 10000} <PlayCoin class="inline w-4" /></Button
           >
         </center>
-      </p>
+      </p> -->
+      <div class="text-center">
+        <h2>
+          Stake (${nativeTokenAmountFor(cost)}) to activate Planet
+          <span class="text-green-500">"{stats.name}"</span>.
+        </h2>
+        <p class="text-gray-300 mt-2 text-sm">
+          You'll be able to get the <span class="text-yellow-500"
+            >{stake}
+            <PlayCoin class="inline w-4" />
+          </span>
+          stake <span class="text-sm">(convertible to ${nativeTokenAmountFor(cost)})</span> back if you manage to exit
+          the planet safely (this takes
+          {timeToText(spaceInfo.exitDuration, {verbose: true})}).
+        </p>
+        <p class="text-blue-400 mt-2 text-sm">
+          Once the tx will be mined, the planet will start with
+          {result && result.numSpaceshipsLeft}
+          spaceships and will produce
+          {stats.production / 60}
+          spaceships per minutes.
+        </p>
+        <Button
+          class="mt-5"
+          label="Stake"
+          on:click={() =>
+            claimFlow.confirm({amountToMint: cost.mul('100000000000000'), tokenAvailable: BigNumber.from(0)})}
+          >Confirm</Button
+        >
+      </div>
     {:else if $myTokens.freePlayTokenBalance.lt(cost.mul('100000000000000')) && $myTokens.playTokenBalance.lt(cost.mul('100000000000000'))}
-      Not enough
+      <!-- Not enough
       <PlayCoin class="inline w-4" />. You need
       <span class="text-yellow-400">{cost.toNumber() / 10000}</span>
       <PlayCoin class="inline w-4" />
@@ -111,7 +160,44 @@
             >Mint {cost.toNumber() / 10000} <PlayCoin class="inline w-4" /></Button
           >
         </center>
-      </p>
+      </p> -->
+      <div class="text-center">
+        <h2>
+          Stake
+          <span class="text-yellow-500"
+            >{$myTokens.playTokenBalance.div('100000000000000').toNumber() / 10000}
+            <PlayCoin class="inline w-4" /></span
+          >
+          + ${nativeTokenAmountFor(cost.mul('100000000000000').sub($myTokens.playTokenBalance).div('100000000000000'))}
+          to activate Planet
+          <span class="text-green-500">"{stats.name}"</span>.
+        </h2>
+        <p class="text-gray-300 mt-2 text-sm">
+          You'll be able to get the <span class="text-yellow-500"
+            >{stake}
+            <PlayCoin class="inline w-4" />
+          </span>
+          stake <span class="text-sm">(convertible to ${nativeTokenAmountFor(cost)})</span> back if you manage to exit
+          the planet safely (this takes
+          {timeToText(spaceInfo.exitDuration, {verbose: true})}).
+        </p>
+        <p class="text-blue-400 mt-2 text-sm">
+          Once the tx will be mined, the planet will start with
+          {result && result.numSpaceshipsLeft}
+          spaceships and will produce
+          {stats.production / 60}
+          spaceships per minutes.
+        </p>
+        <Button
+          class="mt-5"
+          label="Stake"
+          on:click={() =>
+            claimFlow.confirm({
+              amountToMint: cost.mul('100000000000000').sub($myTokens.playTokenBalance),
+              tokenAvailable: $myTokens.playTokenBalance,
+            })}>Confirm</Button
+        >
+      </div>
     {:else}
       <div class="text-center">
         <h2>
