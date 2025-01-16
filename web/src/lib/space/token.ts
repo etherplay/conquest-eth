@@ -79,6 +79,12 @@ export class MyTokenStore implements Readable<MyToken> {
       );
       playTokenBalance = playTokenBalance.sub(playTokenDelta);
       freePlayTokenBalance = freePlayTokenBalance.sub(freePlayTokenDelta);
+      if (playTokenBalance.lt(0)) {
+        playTokenBalance = BigNumber.from(0);
+      }
+      if (freePlayTokenBalance.lt(0)) {
+        freePlayTokenBalance = BigNumber.from(0);
+      }
 
       this.data = {playTokenBalance, freePlayTokenBalance};
     }
