@@ -116,42 +116,25 @@ contract OuterSpacePlanetsFacet is OuterSpaceFacetBase, IOuterSpacePlanets {
         );
     }
 
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 location
-    ) external {
+    function safeTransferFrom(address from, address to, uint256 location) external {
         _transfer(from, to, location);
         if (to.code.length > 0) {
             require(_checkOnERC721Received(msg.sender, from, to, location, ""), "TRANSFER_REJECTED");
         }
     }
 
-    function safeTransferFrom(
-        address from,
-        address to,
-        uint256 location,
-        bytes calldata data
-    ) external {
+    function safeTransferFrom(address from, address to, uint256 location, bytes calldata data) external {
         _transfer(from, to, location);
         if (to.code.length > 0) {
             require(_checkOnERC721Received(msg.sender, from, to, location, data), "TRANSFER_REJECTED");
         }
     }
 
-    function transferFrom(
-        address from,
-        address to,
-        uint256 location
-    ) external {
+    function transferFrom(address from, address to, uint256 location) external {
         _transfer(from, to, location);
     }
 
-    function _transfer(
-        address from,
-        address to,
-        uint256 location
-    ) internal {
+    function _transfer(address from, address to, uint256 location) internal whenNotPaused {
         require(from != address(0), "NOT_ZERO_ADDRESS");
         require(to != address(0), "NOT_ZERO_ADDRESS");
 
@@ -212,11 +195,9 @@ contract OuterSpacePlanetsFacet is OuterSpaceFacetBase, IOuterSpacePlanets {
         }
     }
 
-    function ownerAndOwnershipStartTimeOf(uint256 location)
-        external
-        view
-        returns (address owner, uint40 ownershipStartTime)
-    {
+    function ownerAndOwnershipStartTimeOf(
+        uint256 location
+    ) external view returns (address owner, uint40 ownershipStartTime) {
         owner = _planets[location].owner;
         ownershipStartTime = _planets[location].ownershipStartTime;
     }

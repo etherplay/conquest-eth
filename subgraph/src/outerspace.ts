@@ -14,7 +14,7 @@ import {
   RewardToWithdraw,
   PlanetReset,
   Initialized,
-  PlanetTransfer,
+  PlanetTransfer
 } from '../generated/OuterSpace/OuterSpaceContract';
 import {
   Planet,
@@ -29,7 +29,7 @@ import {
   RewardToWithdrawEvent,
   Reward,
   PlanetStakeEvent,
-  PlanetTransferEvent,
+  PlanetTransferEvent
 } from '../generated/schema';
 import {log} from '@graphprotocol/graph-ts';
 
@@ -120,16 +120,36 @@ function getOrCreatePlanet(id: string): Planet {
   // log.error('(x,y): ({},{})', [xString, yString]);
   let centerZoneX = absX.plus(BigInt.fromI32(32)).div(BigInt.fromI32(64));
   let centerZoneXString = signX.equals(BigInt.fromI32(1))
-    ? centerZoneX.toHex().slice(2).padStart(32, '0')
-    : flipHex('0x' + centerZoneX.minus(BigInt.fromI32(1)).toHexString().slice(2).padStart(32, '0')).slice(2);
+    ? centerZoneX
+        .toHex()
+        .slice(2)
+        .padStart(32, '0')
+    : flipHex(
+        '0x' +
+          centerZoneX
+            .minus(BigInt.fromI32(1))
+            .toHexString()
+            .slice(2)
+            .padStart(32, '0')
+      ).slice(2);
 
   let y = c2(yString);
   let absY = y.abs();
   let signY = y.lt(BigInt.fromI32(-32)) ? BigInt.fromI32(-1) : BigInt.fromI32(1);
   let centerZoneY = absY.plus(BigInt.fromI32(32)).div(BigInt.fromI32(64));
   let centerZoneYString = signY.equals(BigInt.fromI32(1))
-    ? centerZoneY.toHex().slice(2).padStart(32, '0')
-    : flipHex('0x' + centerZoneY.minus(BigInt.fromI32(1)).toHex().slice(2).padStart(32, '0')).slice(2);
+    ? centerZoneY
+        .toHex()
+        .slice(2)
+        .padStart(32, '0')
+    : flipHex(
+        '0x' +
+          centerZoneY
+            .minus(BigInt.fromI32(1))
+            .toHex()
+            .slice(2)
+            .padStart(32, '0')
+      ).slice(2);
   entity.zone = '0x' + centerZoneYString + centerZoneXString;
 
   // TODO remove :
@@ -529,6 +549,7 @@ export function handleExitComplete(event: ExitComplete): void {
   planetEntity.active = false;
   planetEntity.stakeDeposited = ZERO;
   planetEntity.owner = '';
+  planetEntity.exitTime = ZERO;
 
   let planetExitEventId = planetEntity.currentExit;
   if (planetExitEventId) {

@@ -21,6 +21,17 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const PlayToken = await hre.deployments.get('PlayToken');
   const FreePlayToken = await hre.deployments.get('FreePlayToken');
 
+  let deploymentTimestamp = Math.floor(Date.now() / 1000);
+  const outerspaceDeployment = await hre.deployments.getOrNull('OuterSpace');
+  if (outerspaceDeployment) {
+    const previousValue = outerspaceDeployment.linkedData.deploymentTimestamp;
+    if (!previousValue) {
+      console.error(`was deployed without deploymentTimestamp`);
+    } else {
+      deploymentTimestamp = previousValue;
+    }
+  }
+
   const allianceRegistry = await hre.deployments.get('AllianceRegistry');
 
   let chainGenesisHash = '';
@@ -43,15 +54,20 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const giftTaxPer10000 = 2000;
   const stakeRange = '0x00060008000A000C000E00100012001400140016001800200028003000380048';
   let stakeMultiplier10000th = 10;
+  let bootstrapSessionEndTime = 0;
+  let infinityStartTime = 0;
 
   // use a command to increase time in 1337
   if (localTesting) {
     timePerDistance /= 180;
-    exitDuration /= 180;
+    exitDuration /= 180; // 24 min
     productionSpeedUp = 180;
     frontrunningDelay /= 180;
     resolveWindow /= 30; // 180;
     stakeMultiplier10000th = 1666;
+
+    bootstrapSessionEndTime = deploymentTimestamp + 5 * 60; //exitDuration * 2; // in 48 min (2 * 24)
+    infinityStartTime = bootstrapSessionEndTime + exitDuration / 6; // (4min) /// + 10 * 60 + 5 * 60; // 5 min pause
   }
 
   if (networkName === 'quick') {
@@ -124,6 +140,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     giftTaxPer10000,
     stakeRange,
     stakeMultiplier10000th,
+    bootstrapSessionEndTime,
+    infinityStartTime,
   });
 
   await diamond.deploy('OuterSpace', {
@@ -145,6 +163,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       giftTaxPer10000,
       stakeRange,
       stakeMultiplier10000th,
+      bootstrapSessionEndTime,
+      infinityStartTime,
+      deploymentTimestamp,
     },
     facets: [
       'OuterSpaceInitializationFacet',
@@ -177,6 +198,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         giftTaxPer10000,
         stakeRange,
         stakeMultiplier10000th,
+        bootstrapSessionEndTime,
+        infinityStartTime,
       },
     ],
     execute: {

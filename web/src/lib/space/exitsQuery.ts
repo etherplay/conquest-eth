@@ -20,6 +20,7 @@ export type PlanetExitEvent = {
 
 export type ExitsQueryResult = {
   planetExitEvents: PlanetExitEvent[];
+  planetExitedAtSessionEnds: PlanetExitEvent[];
   owner: {
     playTokenBalance: string;
     freePlayTokenBalance: string;
@@ -44,8 +45,13 @@ export class ExitQueryStore implements QueryStore<ExitsState> {
   constructor(endpoint: EndPoint) {
     this.queryStore = new HookedQueryStore( // TODO full list
       endpoint,
-      `query($first: Int! $lastId: ID! $time: BigInt! $owner: String) {
+      `query($first: Int! $lastId: ID! $time: BigInt! $owner: String,  $infinityStartTime: BigInt!) {
   planetExitEvents(first: $first where: {interupted: false success: false id_gt: $lastId exitTime_lt: $time owner: $owner}) {
+    exitTime
+    planet {id}
+    stake
+  }
+    planetExitedAtSessionEnds: planetExitEvents(first: $first where: {interupted: false success: false id_gt: $lastId exitTime_lt: $infinityStartTime owner: $owner}) {
     exitTime
     planet {id}
     stake
@@ -66,12 +72,32 @@ export class ExitQueryStore implements QueryStore<ExitsState> {
   }
 
   getTime(): number {
-    return now() - contractsInfos.contracts.OuterSpace.linkedData.exitDuration;
+    const timestamp = now();
+    // const bootstrapSessionEndTime = contractsInfos.contracts.OuterSpace.linkedData.bootstrapSessionEndTime;
+    // if (bootstrapSessionEndTime > 0) {
+    //   const infinityStartTime = contractsInfos.contracts.OuterSpace.linkedData.infinityStartTime;
+    //   if (timestamp >= bootstrapSessionEndTime && timestamp < infinityStartTime) {
+    //     return timestamp;
+    //   }
+    // }
+
+    return timestamp - contractsInfos.contracts.OuterSpace.linkedData.exitDuration;
+  }
+
+  getInfinityStartTime(): number {
+    const timestamp = now();
+    const bootstrapSessionEndTime = contractsInfos.contracts.OuterSpace.linkedData.bootstrapSessionEndTime;
+    if (bootstrapSessionEndTime > 0 && timestamp > bootstrapSessionEndTime) {
+      return contractsInfos.contracts.OuterSpace.linkedData.infinityStartTime;
+    } else {
+      return 0;
+    }
   }
 
   protected start(): () => void {
     this._timeout;
     this.queryStore.runtimeVariables.time = '' + this.getTime();
+    this.queryStore.runtimeVariables.infinityStartTime = '' + this.getInfinityStartTime();
     // console.log(this.queryStore.runtimeVariables);
     this.queryStore.runtimeVariables.owner = '0x0000000000000000000000000000000000000000';
     this._timeout = setInterval(this.onTime.bind(this), 1000);
@@ -85,6 +111,7 @@ export class ExitQueryStore implements QueryStore<ExitsState> {
 
   onTime(): void {
     this.queryStore.runtimeVariables.time = '' + this.getTime();
+    this.queryStore.runtimeVariables.infinityStartTime = '' + this.getInfinityStartTime();
     // console.log(this.queryStore.runtimeVariables);
   }
 
@@ -156,9 +183,20 @@ export class ExitQueryStore implements QueryStore<ExitsState> {
       return undefined;
     }
 
+    let exits: PlanetExitEvent[] = data.planetExitEvents;
+    if (data.planetExitedAtSessionEnds.length > 0) {
+      exits = [].concat(data.planetExitEvents);
+      // removing duplicates
+      for (const ev of data.planetExitedAtSessionEnds) {
+        if (!exits.find((v) => v.planet.id === ev.planet.id)) {
+          exits.push(ev);
+        }
+      }
+    }
+
     return {
       loading: false,
-      exits: data.planetExitEvents,
+      exits,
       balanceToWithdraw: data.owner ? BigNumber.from(data.owner.tokenToWithdraw) : BigNumber.from(0),
     };
   }

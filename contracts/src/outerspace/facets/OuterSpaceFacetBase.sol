@@ -40,6 +40,7 @@ contract OuterSpaceFacetBase is
     uint256 internal immutable _productionCapAsDuration;
     uint256 internal immutable _upkeepProductionDecreaseRatePer10000th;
     uint256 internal immutable _fleetSizeFactor6;
+    uint32 internal immutable _initialSpaceExpansion; // = 16;
     uint32 internal immutable _expansionDelta; // = 8;  // TODO use uint256
     uint256 internal immutable _giftTaxPer10000; // = 2500;
     // // 4,5,5,10,10,15,15, 20, 20, 30,30,40,40,80,80,100
@@ -48,6 +49,8 @@ contract OuterSpaceFacetBase is
     // bytes32 internal constant stakeRange = 0x00060008000A000C000E00100012001400140016001800200028003000380048;
     bytes32 internal immutable _stakeRange;
     uint256 internal immutable _stakeMultiplier10000th;
+    uint256 internal immutable _bootstrapSessionEndTime;
+    uint256 internal immutable _infinityStartTime;
 
     struct Config {
         StakingToken stakingToken;
@@ -63,10 +66,13 @@ contract OuterSpaceFacetBase is
         uint256 productionCapAsDuration;
         uint256 upkeepProductionDecreaseRatePer10000th;
         uint256 fleetSizeFactor6;
+        uint32 initialSpaceExpansion;
         uint32 expansionDelta;
         uint256 giftTaxPer10000;
         bytes32 stakeRange;
         uint256 stakeMultiplier10000th;
+        uint256 bootstrapSessionEndTime;
+        uint256 infinityStartTime;
     }
 
     constructor(Config memory config) {
@@ -87,10 +93,13 @@ contract OuterSpaceFacetBase is
         _productionCapAsDuration = config.productionCapAsDuration;
         _upkeepProductionDecreaseRatePer10000th = config.upkeepProductionDecreaseRatePer10000th;
         _fleetSizeFactor6 = config.fleetSizeFactor6;
+        _initialSpaceExpansion = config.initialSpaceExpansion;
         _expansionDelta = config.expansionDelta;
         _giftTaxPer10000 = config.giftTaxPer10000;
         _stakeRange = config.stakeRange;
         _stakeMultiplier10000th = config.stakeMultiplier10000th;
+        _bootstrapSessionEndTime = config.bootstrapSessionEndTime;
+        _infinityStartTime = config.infinityStartTime;
     }
 
     // ---------------------------------------------------------------------------------------------------------------
@@ -286,7 +295,7 @@ contract OuterSpaceFacetBase is
     // STAKING / PRODUCTION CAPTURE
     // ---------------------------------------------------------------------------------------------------------------
 
-    function _acquire(address player, uint256 stake, uint256 location, bool freegift) internal {
+    function _acquire(address player, uint256 stake, uint256 location, bool freegift) internal whenNotPaused {
         // -----------------------------------------------------------------------------------------------------------
         // Initialise State Update
         // -----------------------------------------------------------------------------------------------------------
@@ -566,15 +575,15 @@ contract OuterSpaceFacetBase is
     }
 
     function _hasJustExited(uint40 exitTime) internal view returns (bool) {
-        return exitTime > 0 && block.timestamp > exitTime + _exitDuration;
-    }
+        if (exitTime == 0) {
+            return false;
+        }
+        uint256 timestamp = block.timestamp;
+        if (_bootstrapSessionEndTime > 0 && timestamp >= _bootstrapSessionEndTime && exitTime < _infinityStartTime) {
+            return true;
+        }
 
-    function _ping(uint256 location) internal {
-        Planet storage planet = _getPlanet(location);
-        PlanetUpdateState memory planetUpdate = _createPlanetUpdateState(planet, location);
-        _computePlanetUpdateForTimeElapsed(planetUpdate);
-        _setPlanet(planet, planetUpdate, false);
-        // _setAccountFromPlanetUpdate(planetUpdate);
+        return timestamp > exitTime + _exitDuration;
     }
 
     // ---------------------------------------------------------------------------------------------------------------
@@ -593,7 +602,7 @@ contract OuterSpaceFacetBase is
     // FLEET SENDING
     // ---------------------------------------------------------------------------------------------------------------
 
-    function _unsafe_sendFor(uint256 fleetId, address operator, FleetLaunch memory launch) internal {
+    function _unsafe_sendFor(uint256 fleetId, address operator, FleetLaunch memory launch) internal whenNotPaused {
         // -----------------------------------------------------------------------------------------------------------
         // Initialise State Update
         // -----------------------------------------------------------------------------------------------------------
@@ -755,6 +764,14 @@ contract OuterSpaceFacetBase is
             rState.fromData,
             rState
         );
+
+        if (_bootstrapSessionEndTime > 0) {
+            uint256 timestamp = block.timestamp;
+
+            if (timestamp >= _bootstrapSessionEndTime) {
+                require(rState.fleetLaunchTime >= _infinityStartTime, "FLEET_LAUNCHED_IN_BOOTSTRAP");
+            }
+        }
 
         // -----------------------------------------------------------------------------------------------------------
         // Compute Basic Planet Updates
@@ -1706,5 +1723,16 @@ contract OuterSpaceFacetBase is
 
     function _msgSender() internal view returns (address) {
         return msg.sender; // TODO metatx
+    }
+
+    modifier whenNotPaused() {
+        if (_bootstrapSessionEndTime > 0) {
+            uint256 timestamp = block.timestamp;
+            uint256 pauseStart = _bootstrapSessionEndTime;
+            uint256 pauseEnd = _infinityStartTime;
+
+            require(timestamp < pauseStart || timestamp >= pauseEnd, "PAUSED");
+        }
+        _;
     }
 }

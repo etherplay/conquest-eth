@@ -193,6 +193,13 @@ export class PlanetStates {
       planetState.overflow = contractState.overflow;
       planetState.exiting = !!contractState.exitTime;
       planetState.exitTimeLeft = Math.max(spaceInfo.exitDuration - (time - contractState.exitTime), 0);
+      if (spaceInfo.bootstrapSessionEndTime > 0 && time > spaceInfo.bootstrapSessionEndTime) {
+        if (contractState.exitTime > 0 && contractState.exitTime < spaceInfo.infinityStartTime) {
+          planetState.exitTimeLeft = 0;
+          planetState.exiting = false;
+          planetState.owner = undefined;
+        }
+      }
 
       spaceInfo.computePlanetUpdateForTimeElapsed(planetState, planetInfo, time);
       planetState.lastUpdatedSaved = time;

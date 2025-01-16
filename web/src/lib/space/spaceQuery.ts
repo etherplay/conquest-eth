@@ -317,7 +317,19 @@ export class SpaceQueryStore implements QueryStore<SpaceState> {
           // if (variables.blockNumber && typeof variables.blockNumber === 'number') {
           //   variables.fromBlock = Math.max(0, variables.blockNumber - blockRange);
           // }
-          variables.exitTimeEnd = Math.floor(Math.max(0, now() - spaceInfo.exitDuration));
+
+          const timestamp = now();
+          let exitTimeEnd = Math.floor(Math.max(0, timestamp - spaceInfo.exitDuration));
+
+          const bootstrapSessionEndTime = spaceInfo.bootstrapSessionEndTime;
+          if (bootstrapSessionEndTime > 0) {
+            const infinityStartTime = spaceInfo.infinityStartTime;
+            if (timestamp >= bootstrapSessionEndTime && timestamp < infinityStartTime) {
+              exitTimeEnd = Math.floor(timestamp);
+            }
+          }
+
+          variables.exitTimeEnd = exitTimeEnd;
           variables.fromTime = Math.floor(Math.max(0, now() - timeRange));
         },
       }

@@ -75,6 +75,8 @@ export class SpaceInfo {
   public readonly stakeRange: string;
   public readonly stakeMultiplier10000th: number;
   public readonly roundTo1Decimal: boolean;
+  public readonly bootstrapSessionEndTime: number;
+  public readonly infinityStartTime: number;
 
   // public readonly planetsOnFocus: PlanetInfo[] = [];
   // private lastFocus: {x0: number; y0: number; x1: number; y1: number} = {x0: 0, y0: 0, x1: 0, y1: 0};
@@ -94,6 +96,8 @@ export class SpaceInfo {
     stakeRange: string;
     stakeMultiplier10000th: number;
     roundTo1Decimal?: boolean;
+    bootstrapSessionEndTime: number;
+    infinityStartTime: number;
   }) {
     this.resolveWindow = config.resolveWindow;
     this.timePerDistance = Math.floor(config.timePerDistance / 4); // Same as in OuterSpace.sol: the coordinates space is 4 times bigger
@@ -108,6 +112,8 @@ export class SpaceInfo {
     this.stakeRange = config.stakeRange;
     this.stakeMultiplier10000th = config.stakeMultiplier10000th;
     this.roundTo1Decimal = config.roundTo1Decimal || false;
+    this.bootstrapSessionEndTime = config.bootstrapSessionEndTime;
+    this.infinityStartTime = config.infinityStartTime;
     // this.store = writable(this.planetsOnFocus);
   }
 

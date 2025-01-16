@@ -57,6 +57,19 @@
       return `${Math.floor(numSeconds / 60 / 60)} hours and ${Math.floor((numSeconds % 3600) / 60)} minutes`;
     }
   }
+
+  $: session =
+    contractsInfos.contracts.OuterSpace.linkedData.bootstrapSessionEndTime > 0
+      ? $time < contractsInfos.contracts.OuterSpace.linkedData.infinityStartTime
+        ? $time >= contractsInfos.contracts.OuterSpace.linkedData.bootstrapSessionEndTime
+          ? {ended: true, timeLeft: contractsInfos.contracts.OuterSpace.linkedData.infinityStartTime - $time}
+          : $time >=
+            contractsInfos.contracts.OuterSpace.linkedData.bootstrapSessionEndTime -
+              contractsInfos.contracts.OuterSpace.linkedData.exitDuration
+          ? {ended: false, timeLeft: contractsInfos.contracts.OuterSpace.linkedData.bootstrapSessionEndTime - $time}
+          : undefined
+        : undefined
+      : undefined;
 </script>
 
 <Map />
@@ -245,6 +258,18 @@
     </div>
   </div>
 </div>
+
+{#if session}
+  <div class="bg-black text-red-500 bottom-0 z-50 w-full text-lg fixed text-center border-red-400">
+    {#if session.ended}
+      Session has ended, Infinite version start in {time2text(session.timeLeft)}
+    {:else if session.timeLeft < contractsInfos.contracts.OuterSpace.linkedData.timePerDistance}
+      Session is going to end , last time to reveal your fleet, No time for sending fleet anymore!
+    {:else}
+      Session ends in {time2text(session.timeLeft)}. Last time to send your fleets!
+    {/if}
+  </div>
+{/if}
 
 <style>
   @media (min-width: 768px) {

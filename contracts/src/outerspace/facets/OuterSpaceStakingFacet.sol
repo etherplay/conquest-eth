@@ -82,6 +82,17 @@ contract OuterSpaceStakingFacet is OuterSpaceFacetBase {
         _unsafe_exit_for(owner, location);
     }
 
+    function exitMultipleFor(address owner, uint256[] calldata locations) external {
+        address operator = _msgSender();
+        if (operator != owner) {
+            require(_operators[owner][operator], "NOT_AUTHORIZED_TO_SEND");
+        }
+        uint256 numLocations = locations.length;
+        for (uint256 i = 0; i < numLocations; i++) {
+            _unsafe_exit_for(owner, locations[i]);
+        }
+    }
+
     function fetchAndWithdrawFor(address owner, uint256[] calldata locations) external {
         _fetchAndWithdrawFor(owner, locations);
     }

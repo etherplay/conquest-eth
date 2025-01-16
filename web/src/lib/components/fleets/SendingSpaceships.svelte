@@ -144,7 +144,6 @@
   }
 
   $: defaultTimeToArrive = spaceInfo.timeToArrive(fromPlanetInfo, toPlanetInfo);
-  // $: arrivalTime = $time + defaultTimeToArrive;
 
   $: currentTimeToArrive = arrivalTimeWanted
     ? arrivalTimeWanted.getTime() / 1000 - $time > defaultTimeToArrive
@@ -157,6 +156,22 @@
   $: actualDefaultArrivalDateTime = defaultTimeToArrive + $time;
 
   $: defaultArrivalDateTime = Math.ceil((defaultTimeToArrive + $time) / 60) * 60 + 1 * 60;
+
+  $: currentArrivalDateTime = Math.ceil((currentTimeToArrive + $time) / 60) * 60 + 1 * 60;
+
+  let endOfSessionWarning: false | 'warning' | 'impossible' = false;
+  $: {
+    endOfSessionWarning = false;
+    if (spaceInfo.bootstrapSessionEndTime > 0) {
+      if ($time < spaceInfo.infinityStartTime) {
+        if (currentArrivalDateTime > spaceInfo.bootstrapSessionEndTime) {
+          endOfSessionWarning = 'impossible';
+        } else if (currentArrivalDateTime > spaceInfo.bootstrapSessionEndTime - 30 * 60) {
+          endOfSessionWarning = 'warning';
+        }
+      }
+    }
+  }
 
   let attentionRequired: 'TIME_PASSED' | undefined;
   $: {
@@ -282,6 +297,9 @@
   $: {
     if (toPlanetState) {
       confirmDisabled = prediction?.outcome.nativeResist;
+    }
+    if (endOfSessionWarning === 'impossible') {
+      confirmDisabled = true;
     }
   }
 
@@ -490,7 +508,11 @@
               <span>Predicted outcome at time of arrival</span>
             </div>
             <div class="flex flex-row justify-center">
-              {#if prediction?.outcome.min.captured}
+              {#if endOfSessionWarning === 'impossible'}
+                <span class="text-red-400">Will not arrive before the end of session</span>
+              {:else if endOfSessionWarning === 'warning'}
+                <span class="text-orange-400">Might not arrive before the end of session (30 min risk)</span>
+              {:else if prediction?.outcome.min.captured}
                 <span class="text-green-600">{prediction?.outcome.min.numSpaceshipsLeft} (captured)</span>
               {:else if prediction?.outcome.nativeResist}
                 <span class="text-red-400">{prediction?.outcome.min.numSpaceshipsLeft} (native population resists)</span
@@ -527,6 +549,14 @@
               <span>{currentTimeToArriveFormatted}</span><span class="text-right"
                 >{prediction?.outcome.min.numSpaceshipsLeft || 0}</span
               >
+            </div>
+
+            <div class="flex flex-row justify-center">
+              {#if endOfSessionWarning === 'impossible'}
+                <span class="text-red-400">Will not arrive before the end of session</span>
+              {:else if endOfSessionWarning === 'warning'}
+                <span class="text-orange-400">Might not arrive before the end of session (30 min risk)</span>
+              {/if}
             </div>
           {/if}
         </div>
@@ -606,7 +636,11 @@
               )}
           >
             <p>Confirm</p>
-            {#if confirmDisabled}(need higher attack){/if}
+            {#if confirmDisabled}
+              {#if endOfSessionWarning === 'impossible'}(will not make it){:else}
+                (need higher attack)
+              {/if}
+            {/if}
           </PanelButton>
         </div>
 
@@ -632,7 +666,9 @@
                 )}
             >
               <p>FORCE</p>
-              {#if confirmDisabled}(need higher attack){/if}
+              {#if endOfSessionWarning === 'impossible'}(will not make it){:else}
+                (need higher attack)
+              {/if}
             </PanelButton>
           </div>
         {/if}
