@@ -2,6 +2,7 @@
 import {Address, ethereum} from '@graphprotocol/graph-ts';
 import {ZERO, toOwnerId} from './utils';
 import {Owner, Chain, Transaction, Space} from '../generated/schema';
+import {VERSION} from './config';
 
 export function handleSpace(): Space {
   let space = Space.load('Space');
@@ -94,6 +95,7 @@ export function updateChainAndReturnTransactionID(event: ethereum.Event): string
   let chain = Chain.load('Chain');
   if (chain == null) {
     chain = new Chain('Chain');
+    chain.v = VERSION;
   }
   chain.blockHash = event.block.hash.toHex();
   chain.blockNumber = event.block.number;

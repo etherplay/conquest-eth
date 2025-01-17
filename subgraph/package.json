@@ -12,13 +12,12 @@
     "remove:local": "ldenv wait-on http://@@GRAPH_NODE_GRAPHQL ~~ graph remove --node @@GRAPH_DEPLOY_ENDPOINT @@SUBGRAPH_NAME ~~",
     "generate:codegen": "ldenv -m localhost pnpm generate @@MODE ~~ pnpm codegen ~~ @@",
     "deploy:build": "ldenv -m localhost pnpm generate @@MODE ~~ pnpm codegen ~~ pnpm run deploy @@MODE ~~ @@",
-    "TODO:deploy": "echo --verion-label need to be passed or auto-incremented or fetched",
-    "deploy": "ldenv graph deploy --version-label v0.0.2 --deploy-key=@@ALCHEMY_GRAPH_TOKEN --ipfs @@IPFS_URL --node @@GRAPH_DEPLOY_ENDPOINT @@SUBGRAPH_NAME @@",
+    "deploy": "git diff --exit-code && ldenv graph deploy --version-label `git rev-parse --short HEAD` --deploy-key=@@ALCHEMY_GRAPH_TOKEN --ipfs @@IPFS_URL --node @@GRAPH_DEPLOY_ENDPOINT @@SUBGRAPH_NAME @@",
     "test": "graph test"
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "0.73.0",
-    "@graphprotocol/graph-ts": "0.32.0"
+    "@graphprotocol/graph-cli": "0.94.0",
+    "@graphprotocol/graph-ts": "0.37.0"
   },
   "devDependencies": {
     "as-soon": "^0.0.10",
@@ -29,6 +28,6 @@
     "wait-on": "^8.0.1"
   },
   "volta": {
-    "node": "16.20.2"
+    "node": "20.18.1"
   }
 }

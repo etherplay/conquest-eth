@@ -5,11 +5,11 @@ import {Transfer} from '../generated/PlayToken/PlayToken_Contract';
 import {handleOwner, updateChainAndReturnTransactionID} from './shared';
 import {Owner, Points} from '../generated/schema';
 
+import {REWARD_RATE_millionth, FIXED_REWARD_RATE_thousands_millionth} from './config';
+
 let DECIMALS_9: BigInt = BigInt.fromString('1000000000');
 let DECIMALS_18_MILLIONTH: BigInt = BigInt.fromString('1000000000000');
 let PRECISION: BigInt = BigInt.fromString('1000000000000000000000000');
-let REWARD_RATE_millionth = BigInt.fromU32(100); // TODO CONFIG
-let FIXED_REWARD_RATE_thousands_millionth = BigInt.fromU32(10); // TODO CONFIG
 
 function _computeRewardsEarned(
   totalRewardPerPointAccountedSoFar: BigInt,

@@ -2,6 +2,7 @@
 const fs = require("fs-extra");
 const path = require("path");
 const Handlebars = require("handlebars");
+const {execSync} = require('child_process');
 
 const args = process.argv.slice(2);
 const pathArg = args[0];
@@ -31,17 +32,20 @@ const chainNames = {
 const stat = fs.statSync(pathArg);
 let contractsInfo;
 if (stat.isDirectory()) {
-  const chainId = fs.readFileSync(path.join(pathArg, ".chainId").toString());
+  const chainId = fs.readFileSync(path.join(pathArg, ".chainId")).toString();
   const chainName = chainNames[chainId];
   if (!chainName) {
     throw new Error(`chainId ${chainId} not know`);
   }
+
+  console.log({directory: true, chainName, chainId});
   contractsInfo = {
     contracts: {},
     chainName,
   };
   const files = fs.readdirSync(pathArg, { withFileTypes: true });
   for (const file of files) {
+    console.log(`${file.path}...`);
     if (
       !file.isDirectory() &&
       file.name.substr(file.name.length - 5) === ".json" &&
@@ -55,9 +59,18 @@ if (stat.isDirectory()) {
   }
 } else {
   const contractsInfoFile = JSON.parse(fs.readFileSync(pathArg).toString());
+
+  const chainId = contractsInfoFile.chainId;
+  const chainName = chainNames[chainId];
+  if (!chainName) {
+    throw new Error(`chainId ${chainId} not know`);
+  }
+
+  console.log({directory: false, chainName, chainId});
+
   contractsInfo = {
     contracts: contractsInfoFile.contracts,
-    chainName: chainNames[contractsInfoFile.chainId],
+    chainName,
   };
 }
 
@@ -72,21 +85,40 @@ for (const contractName of Object.keys(contracts)) {
   );
 }
 
+console.log({chainName: contractsInfo.chainName});
+
 const templateSubgraphYaml = Handlebars.compile(
   fs.readFileSync("./templates/subgraph.yaml").toString()
 );
 const resultSubgraphYaml = templateSubgraphYaml(contractsInfo);
 fs.writeFileSync("./subgraph.yaml", resultSubgraphYaml);
 
-let configTemplateFile;
-try {
-  configTemplateFile = fs.readFileSync("./templates/config.ts").toString();
-}  catch{}
-if (templateConfigFile) {
-  const templateConfig = Handlebars.compile(
-    configTemplateFile
-  );
-  const resultConfig = templateConfig(contractsInfo);
-  fs.writeFileSync("./src/config.ts", resultConfig);
-  
+if (contractsInfo.contracts.RewardsGenerator.linkedData) {
+  let templateConfigFile;
+  try {
+    templateConfigFile = fs.readFileSync("./templates/config.ts").toString();
+  }  catch{}
+  if (templateConfigFile) {
+    const templateConfig = Handlebars.compile(
+      templateConfigFile
+    );
+
+    function getCommitHash() {
+      try {
+        return execSync('git rev-parse --short HEAD').toString().trim();
+      } catch (err){
+        const timestamp = Date.now().toString();
+        console.error(err);
+        console.error(`could not get commit-hash to set a version id, falling back on timestamp ${timestamp}`);
+        
+        return timestamp;
+      }
+    }
+    const commitHash = getCommitHash();
+
+    const resultConfig = templateConfig({...contractsInfo, commitHash});
+    fs.writeFileSync("./src/config.ts", resultConfig);
+    
+  }
 }
+

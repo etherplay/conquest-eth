@@ -51,6 +51,7 @@ type Reward @entity {
 
 type Chain @entity {
   id: ID! # Chain
+  v: String!
   blockHash: String!
   blockNumber: BigInt!
 }

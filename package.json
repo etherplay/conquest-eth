@@ -38,15 +38,15 @@
     "agent-service:dev": "pnpm wait-on web/src/lib/contracts.json && ldenv -m localhost pnpm run --filter ./agent-service dev ../contracts/deployments/@@MODE @@",
     "agent-service:deploy": "ldenv pnpm run --filter ./agent-service deploy ../contracts/deployments/@@MODE @@",
     "fuzd:dev": "pnpm --filter ./helper-services/fuzd dev",
-		"sync:dev": "pnpm --filter ./helper-services/secp256k1-db dev",
-		"missiv:dev": "pnpm --filter ./helper-services/missiv dev",
+    "sync:dev": "pnpm --filter ./helper-services/secp256k1-db dev",
+    "missiv:dev": "pnpm --filter ./helper-services/missiv dev",
     "---------------------- RUN FULL LOCAL SETUP ----------------------": "compile and deploy smart contracts",
     "cleanup": "rm -Rf contracts/deployments/localhost",
     "web": "ldenv pnpm contracts:export @@MODE ~~ pnpm zellij:web ~~ @@",
     "start": "pnpm cleanup; zellij-launcher --layout dev/zellij.kdl a $npm_package_name || zellij --layout dev/zellij.kdl -s $npm_package_name"
   },
   "volta": {
-    "node": "16.20.2"
+    "node": "20.18.1"
   },
   "pnpm": {
     "overrides": {

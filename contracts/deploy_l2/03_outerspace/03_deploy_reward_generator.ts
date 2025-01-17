@@ -37,7 +37,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       accountsToInitialise,
     ],
     linkedData: {
-      rewardRateMillionth, // 100 for every million of second. or 8.64 / day
+      rewardRateMillionth,
       fixedRewardRateThousandsMillionth,
     },
     log: true,
