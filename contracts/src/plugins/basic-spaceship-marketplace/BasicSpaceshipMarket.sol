@@ -72,7 +72,9 @@ contract BasicSpaceshipMarket is IApprovalForAllReceiver {
         uint256 location,
         uint32 numSpaceships,
         address payable fleetSender,
-        bytes32 toHash
+        bytes32 toHash,
+        address payable payee,
+        uint256 amountForPayee
     ) external payable {
         SpaceshipSale memory sale = _sales[location];
         (, uint40 ownershipStartTime) = _outerspace.ownerAndOwnershipStartTimeOf(location);
@@ -88,10 +90,11 @@ contract BasicSpaceshipMarket is IApprovalForAllReceiver {
         // }
 
         uint256 toPay = numSpaceships * sale.pricePerUnit;
-        require(msg.value >= toPay, "NOT_ENOUGH_FUND");
+        uint256 value = msg.value - amountForPayee;
+        require(value >= toPay, "NOT_ENOUGH_FUND");
         fleetSender.transfer(toPay);
-        if (msg.value > toPay) {
-            payable(msg.sender).transfer(msg.value - toPay);
+        if (value > toPay) {
+            payable(msg.sender).transfer(value - toPay);
         }
 
         IOuterSpace.FleetLaunch memory launch;
@@ -100,7 +103,7 @@ contract BasicSpaceshipMarket is IApprovalForAllReceiver {
         launch.from = location;
         launch.quantity = numSpaceships;
         launch.toHash = toHash;
-        _outerspace.sendFor(launch);
+        _outerspace.sendForWithPayee{value: amountForPayee}(launch, payee);
 
         if (sale.spaceshipsToKeep > 0) {
             // we can call getPlanetState as the plane state has been updated above

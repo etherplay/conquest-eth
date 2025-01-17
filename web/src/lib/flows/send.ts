@@ -426,6 +426,26 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
 
     // console.log({potentialAlliances});
 
+    const agentData = {
+      fleetID: fleetId,
+      nonce,
+      fleetOwner,
+      secret: secretHash,
+      from,
+      to,
+      distance,
+      arrivalTimeWanted,
+      gift,
+      specific,
+      potentialAlliances,
+      startTime: latestBlock.timestamp,
+      minDuration,
+      fleetSender,
+      operator,
+    };
+
+    const {cost: resolutionCost, remoteAccount, submission} = await agentService.prepareSubmission(agentData);
+
     const abi = flow.data.config?.abi;
     const args = flow.data.config?.args;
     if (args) {
@@ -437,8 +457,15 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
         } else if (args[i] === '{numSpaceships*pricePerUnit}') {
           // TODO dynamic value (not only '{numSpaceships*pricePerUnit}')
           args[i] = pricePerUnit.mul(flow.data.fleetAmount);
+        } else if (args[i] === '{numSpaceships*pricePerUnit+amountForPayee}') {
+          // TODO dynamic value (not only '{numSpaceships*pricePerUnit}')
+          args[i] = pricePerUnit.mul(flow.data.fleetAmount).add(resolutionCost);
         } else if (args[i] === '{fleetOwner}') {
           args[i] = fleetOwner;
+        } else if (args[i] === '{payee}') {
+          args[i] = remoteAccount;
+        } else if (args[i] === '{amountForPayee}') {
+          args[i] = resolutionCost;
         }
       }
     }
@@ -447,6 +474,8 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
     let msgValue = BigNumber.from(0);
     if (msgValueString === '{numSpaceships*pricePerUnit}') {
       msgValue = pricePerUnit.mul(flow.data.fleetAmount);
+    } else if (msgValueString === '{numSpaceships*pricePerUnit+amountForPayee}') {
+      msgValue = pricePerUnit.mul(flow.data.fleetAmount).add(resolutionCost);
     } else if (msgValueString) {
       msgValue = BigNumber.from(msgValueString);
     }
@@ -464,13 +493,21 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
             value: msgValue,
           });
         } else {
-          gasEstimation = await wallet.contracts?.OuterSpace.estimateGas.sendFor({
-            fleetSender,
-            fleetOwner,
-            from: xyToLocation(from.x, from.y),
-            quantity: fleetAmount,
-            toHash,
-          });
+          gasEstimation = await wallet.contracts?.OuterSpace.estimateGas.sendForWithPayee(
+            {
+              fleetSender,
+              fleetOwner,
+              from: xyToLocation(from.x, from.y),
+              quantity: fleetAmount,
+              toHash,
+            },
+            remoteAccount,
+            {
+              value: resolutionCost,
+              nonce,
+              gasPrice,
+            }
+          );
         }
       } catch (e) {
         this.setPartial({
@@ -509,26 +546,6 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
         },
       },
     });
-
-    const agentData = {
-      fleetID: fleetId,
-      nonce,
-      fleetOwner,
-      secret: secretHash,
-      from,
-      to,
-      distance,
-      arrivalTimeWanted,
-      gift,
-      specific,
-      potentialAlliances,
-      startTime: latestBlock.timestamp,
-      minDuration,
-      fleetSender,
-      operator,
-    };
-
-    const {cost: resolutionCost, remoteAccount, submission} = await agentService.prepareSubmission(agentData);
 
     let tx: {hash: string; nonce?: number};
     try {
