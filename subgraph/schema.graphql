@@ -339,3 +339,22 @@ type Points @entity {
   totalRewardPerPointAtLastUpdate: BigInt!
   totalPoints: BigInt!
 }
+
+#######################################################################################
+# PLUGINS
+#######################################################################################
+
+#######################################################################################
+# Basic SPaceships Marketplace
+#######################################################################################
+
+type SpaceshipSale @entity {
+  id: ID!
+  seller: Bytes!
+  pricePerUnit: BigInt!
+  timestamp: BigInt!
+  spaceshipsToKeep: BigInt!
+  spaceshipsLeftToSell: BigInt!
+}
+
+#######################################################################################

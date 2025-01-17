@@ -22,7 +22,7 @@ const l2_deployments_dev: string[] = [
   'deploy_l2/04_setup',
   'deploy_l2/10_agent_service',
   'deploy_l2/20_basic_alliances',
-  // 'deploy_l2/30_spaceship_markets', // TODO
+  'deploy_l2/30_plugins',
 ];
 
 const hardhatNetworkDeploymentFolders = l1_deployments.concat(l1_deployments_dev, l2_deployments, l2_deployments_dev);

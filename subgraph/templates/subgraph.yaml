@@ -141,3 +141,50 @@ dataSources:
         - event: AllianceLink(indexed address,indexed address,bool)
           handler: handleAllianceLink
       file: ./src/alliances.ts
+  - kind: ethereum/contract
+    name: BasicSpaceshipMarket
+    network: {{chainName}}
+    source:
+      address: '{{contracts.BasicSpaceshipMarket.address}}'
+      abi: BasicSpaceshipMarketContract
+      startBlock: {{contracts.BasicSpaceshipMarket.receipt.blockNumber}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - SpaceshipSale
+      abis:
+        - name: BasicSpaceshipMarketContract
+          file: ./abis/BasicSpaceshipMarket.json
+      eventHandlers:
+        - event: SpaceshipsForSale(indexed uint256,indexed address,uint256,uint256,uint256)
+          handler: handleSpaceshipsForSale
+        - event: SpaceshipsSold(indexed uint256,indexed address,uint256)
+          handler: handleSpaceshipsSold
+        - event: SaleCancelled(indexed uint256,indexed address)
+          handler: handleSaleCancelled
+      file: ./src/plugins/basic-spaceships-marketplace.ts
+  - kind: ethereum/contract
+    name: OuterSpaceForMarketPlace
+    network: {{chainName}}
+    source:
+      address: '{{contracts.OuterSpace.address}}'
+      abi: OuterSpaceContract
+      startBlock: {{contracts.OuterSpace.receipt.blockNumber}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - SpaceshipSale
+      abis:
+        - name: OuterSpaceContract
+          file: ./abis/OuterSpace.json
+      eventHandlers:
+        #// TODO use transfer event ?
+        - event: FleetArrived(indexed uint256,indexed address,indexed address,uint256,bool,bool,(uint32,int40,uint32,uint32,uint32,uint32,uint32,uint32,uint32,uint32,uint32))
+          handler: handleFleetArrived
+        - event: ExitComplete(indexed address,indexed uint256,uint256)
+          handler: handleExitComplete
+      file: ./src/plugins/basic-spaceships-marketplace.ts
