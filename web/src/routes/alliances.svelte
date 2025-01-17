@@ -54,7 +54,8 @@
       <p>
         For now we have created a basic alliance that is managed by one admin user. Check it out <a
           class="underline"
-          href={BASIC_ALLIANCES_URL}>here</a
+          href={BASIC_ALLIANCES_URL}
+          target="_blank">here</a
         >
       </p>
     </div>
