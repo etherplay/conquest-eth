@@ -16,6 +16,7 @@
   import {playersQuery} from '$lib/space/playersQuery';
   import {url} from '$lib/utils/url';
   import {BigNumber} from '@ethersproject/bignumber';
+  import {BASIC_ALLIANCES_URL} from '$lib/config';
 
   function connect() {
     flow.connect();
@@ -335,7 +336,7 @@
           {/if}
 
           <div class="max-w-2xl mx-auto text-center py-16 px-4 sm:py-20 sm:px-6 lg:px-8">
-            <PanelButton href={url('/')} label="Connect">Create An Alliance</PanelButton>
+            <PanelButton href={url(BASIC_ALLIANCES_URL)} label="create an alliance">Create An Alliance</PanelButton>
           </div>
 
           <div />
