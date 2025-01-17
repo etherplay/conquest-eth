@@ -21,14 +21,21 @@ if (typeof localStorage !== `undefined`) {
   }
 }
 
-if (typeof window !== 'undefined' && import.meta.env.VITE_DEFAULT_SALE_PLUGIN_IFRAME) {
+let defaultPluginURL = typeof window !== 'undefined' && (import.meta.env.VITE_DEFAULT_SALE_PLUGIN_IFRAME as string);
+if (defaultPluginURL) {
+  if (!defaultPluginURL.startsWith('http://')) {
+    defaultPluginURL = `${location.protocol}//${location.host}${defaultPluginURL}`;
+  }
+}
+
+if (defaultPluginURL) {
   const DEFAULT_SALE_PLUGIN_ID = '_conquest_default_sale_plugin';
 
   const defaultSalePlugin = {
     id: DEFAULT_SALE_PLUGIN_ID,
     name: 'Basic Spaceship Marketplace',
     // https://basic-marketplace-dev.conquest.etherplay.io/
-    iframe: import.meta.env.VITE_DEFAULT_SALE_PLUGIN_IFRAME,
+    iframe: defaultPluginURL,
     config: {
       actions: [
         {
