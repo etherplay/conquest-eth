@@ -413,7 +413,7 @@
     >
       <svg viewBox="0 0 36 36">
         <path
-          style="fill: none; stroke-width: 2.8; stroke-linecap: round; stroke: #86efac;"
+          style="fill: none; stroke-width: 2.24; stroke-linecap: round; stroke: #86efac;"
           stroke-dasharray={`${Math.min(
             Math.max(
               (($planetState.flagTime + (6 * 24 * 3600) / spaceInfo.productionSpeedUp - $time) /
@@ -423,9 +423,9 @@
             ),
             95
           )} 95`}
-          d="M18 2.0845
-        a 15.9155 15.9155 0 0 1 0 31.831
-        a 15.9155 15.9155 0 0 1 0 -31.831"
+          d="M18 4.5014
+        a 12.7324 12.7324 0 0 1 0 25.4648
+        a 12.7324 12.7324 0 0 1 0 -25.4648"
         />
       </svg>
     </div>
