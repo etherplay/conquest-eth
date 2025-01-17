@@ -2,7 +2,7 @@
 import {Address, ethereum} from '@graphprotocol/graph-ts';
 import {ZERO, toOwnerId} from './utils';
 import {Owner, Chain, Transaction, Space} from '../generated/schema';
-import {VERSION} from './config';
+import {VERSION} from '../config';
 
 export function handleSpace(): Space {
   let space = Space.load('Space');

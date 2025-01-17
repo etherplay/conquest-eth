@@ -5,7 +5,7 @@ import {Transfer} from '../generated/PlayToken/PlayToken_Contract';
 import {handleOwner, updateChainAndReturnTransactionID} from './shared';
 import {Owner, Points} from '../generated/schema';
 
-import {REWARD_RATE_millionth, FIXED_REWARD_RATE_thousands_millionth} from './config';
+import {REWARD_RATE_millionth, FIXED_REWARD_RATE_thousands_millionth} from '../config';
 
 let DECIMALS_9: BigInt = BigInt.fromString('1000000000');
 let DECIMALS_18_MILLIONTH: BigInt = BigInt.fromString('1000000000000');
