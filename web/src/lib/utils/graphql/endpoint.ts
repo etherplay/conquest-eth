@@ -99,6 +99,54 @@ export class EndPoint {
     return entries;
   }
 
+  async queryListWithData<T, Variables extends Record<string, unknown> = Record<string, unknown>>(
+    query: DocumentNode | string,
+    path: string,
+    args?: {
+      variables?: Variables;
+      context?: Partial<OperationContext>;
+      getLastId?: (entries: T[]) => string;
+    }
+  ): Promise<T> {
+    const fields = path.split('.');
+    const first = 100;
+    let lastId = '0x0';
+    let numEntries = first;
+    let entries: T[] = [];
+    let other: any | undefined = undefined;
+    while (numEntries === first) {
+      const result = await this.client.query(query, {first, lastId, ...args?.variables}, args?.context).toPromise();
+      if (result.error) {
+        throw new Error(result.error.message);
+      }
+      const data = result.data;
+
+      other = data;
+
+      // TODO deep access on root array
+      let newEntries = [];
+      if (data) {
+        let tmp = data;
+        for (const fieldPart of fields) {
+          tmp = tmp[fieldPart];
+        }
+        newEntries = tmp;
+      }
+
+      numEntries = newEntries.length;
+      if (numEntries > 0) {
+        const newLastId = args?.getLastId !== undefined ? args?.getLastId(entries) : newEntries[numEntries - 1].id;
+        if (lastId === newLastId) {
+          console.log('same query, stop');
+          break;
+        }
+        lastId = newLastId;
+      }
+      entries = entries.concat(newEntries);
+    }
+    return {...other, [path]: entries};
+  }
+
   subscribeToQuery<
     Data extends Record<string, unknown>,
     Variables extends Record<string, unknown> = Record<string, unknown>

@@ -72,8 +72,21 @@ for (const contractName of Object.keys(contracts)) {
   );
 }
 
-const template = Handlebars.compile(
+const templateSubgraphYaml = Handlebars.compile(
   fs.readFileSync("./templates/subgraph.yaml").toString()
 );
-const result = template(contractsInfo);
-fs.writeFileSync("./subgraph.yaml", result);
+const resultSubgraphYaml = templateSubgraphYaml(contractsInfo);
+fs.writeFileSync("./subgraph.yaml", resultSubgraphYaml);
+
+let configTemplateFile;
+try {
+  configTemplateFile = fs.readFileSync("./templates/config.ts").toString();
+}  catch{}
+if (templateConfigFile) {
+  const templateConfig = Handlebars.compile(
+    configTemplateFile
+  );
+  const resultConfig = templateConfig(contractsInfo);
+  fs.writeFileSync("./src/config.ts", resultConfig);
+  
+}

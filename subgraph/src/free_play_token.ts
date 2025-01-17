@@ -9,13 +9,13 @@ export function handleFreePlayTokenTransfer(event: Transfer): void {
   let from: Owner | null;
   if (!event.params.from.equals(ZERO_ADDRESS)) {
     from = handleOwner(event.params.from);
-    from.freePlayTokenBalance = from.freePlayTokenBalance.minus(event.params.value);
+    from.points = from.points.minus(event.params.value);
     from.save();
   }
 
   if (!event.params.to.equals(ZERO_ADDRESS)) {
     let to = handleOwner(event.params.to);
-    to.freePlayTokenBalance = to.freePlayTokenBalance.plus(event.params.value);
+    to.points = to.points.plus(event.params.value);
     to.save();
   }
 }

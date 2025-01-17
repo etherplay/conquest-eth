@@ -23,6 +23,11 @@ type Owner @entity {
   playTokenBalance: BigInt!
   freePlayTokenBalance: BigInt!
   tokenToWithdraw: BigInt!
+  points: BigInt!
+  points_shared_totalRewardPerPointAccounted: BigInt!
+  points_shared_rewardsToWithdraw: BigInt!
+  points_fixed_toWithdraw: BigInt!
+  points_fixed_lastTime: BigInt!
 
   # stake_gas: BigInt! //https://github.com/graphprotocol/graph-node/issues/2619
   stake_num: BigInt!
@@ -325,4 +330,11 @@ type RewardToWithdrawEvent implements OwnerEvent & PlanetEvent @entity {
   owner: Owner!
   planet: Planet!
   rewardId: BigInt!
+}
+
+type Points @entity {
+  id: ID!
+  lastUpdateTime: BigInt!
+  totalRewardPerPointAtLastUpdate: BigInt!
+  totalPoints: BigInt!
 }

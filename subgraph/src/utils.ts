@@ -4,6 +4,7 @@ import {Bytes, ByteArray, BigInt, Address} from '@graphprotocol/graph-ts';
 import {ethereum} from '@graphprotocol/graph-ts/chain/ethereum';
 
 export let ZERO_ADDRESS: Bytes = Bytes.fromHexString('0x0000000000000000000000000000000000000000') as Bytes;
+
 export let ZERO = BigInt.fromI32(0);
 export let ONE = BigInt.fromI32(1);
 
@@ -66,7 +67,13 @@ export function c2(str: string): BigInt {
 }
 
 export function toPlanetId(location: BigInt): string {
-  return '0x' + location.toHex().slice(2).padStart(64, '0');
+  return (
+    '0x' +
+    location
+      .toHex()
+      .slice(2)
+      .padStart(64, '0')
+  );
 }
 
 export function toOwnerId(address: Address): string {
@@ -82,5 +89,8 @@ export function toFleetId(fleet: BigInt): string {
 }
 
 export function toEventId(event: ethereum.Event): string {
-  return event.block.number.toString().concat('-').concat(event.logIndex.toString());
+  return event.block.number
+    .toString()
+    .concat('-')
+    .concat(event.logIndex.toString());
 }

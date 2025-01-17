@@ -7,7 +7,7 @@ dataSources:
     name: OuterSpace
     network: {{chainName}}
     source:
-      address: "{{contracts.OuterSpace.address}}"
+      address: '{{contracts.OuterSpace.address}}'
       abi: OuterSpaceContract
       startBlock: {{contracts.OuterSpace.receipt.blockNumber}}
     mapping:
@@ -59,7 +59,7 @@ dataSources:
     name: PlayToken
     network: {{chainName}}
     source:
-      address: "{{contracts.PlayToken.address}}"
+      address: '{{contracts.PlayToken.address}}'
       abi: PlayToken_Contract
       startBlock: {{contracts.PlayToken.receipt.blockNumber}}
     mapping:
@@ -77,10 +77,31 @@ dataSources:
           handler: handlePlayTokenTransfer
       file: ./src/play_token.ts
   - kind: ethereum/contract
+    name: RewardsGenerator
+    network: {{chainName}}
+    source:
+      address: '{{contracts.RewardsGenerator.address}}'
+      abi: RewardsGenerator_Contract
+      startBlock: {{contracts.RewardsGenerator.receipt.blockNumber}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Owner
+        - Chain
+      abis:
+        - name: RewardsGenerator_Contract
+          file: ./abis/RewardsGenerator.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleGeneratorPointsTransfer
+      file: ./src/points.ts
+  - kind: ethereum/contract
     name: FreePlayToken
     network: {{chainName}}
     source:
-      address: "{{contracts.FreePlayToken.address}}"
+      address: '{{contracts.FreePlayToken.address}}'
       abi: FreePlayToken_Contract
       startBlock: {{contracts.FreePlayToken.receipt.blockNumber}}
     mapping:
@@ -101,7 +122,7 @@ dataSources:
     name: AllianceRegistry
     network: {{chainName}}
     source:
-      address: "{{contracts.AllianceRegistry.address}}"
+      address: '{{contracts.AllianceRegistry.address}}'
       abi: AllianceRegistry_Contract
       startBlock: {{contracts.AllianceRegistry.receipt.blockNumber}}
     mapping:

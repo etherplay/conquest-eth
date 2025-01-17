@@ -21,18 +21,25 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     {account: `0x283aFaad5c345680144f20F3910EA95e5F0bA932`, amount: '14800000000000000000'},
   ];
 
+  const rewardRateMillionth = 100; // 100 for every million of second. or 8.64 / day
+  const fixedRewardRateThousandsMillionth = 10; // 10 for every  thousand million of seconds, or 0.000864 per day per stake or 315.36 / year / 1000 stake
+
   const RewardsGenerator = await deploy('RewardsGenerator', {
     from: deployer,
     proxy: hre.network.name !== 'mainnet' ? 'postUpgrade' : undefined,
     args: [
       ConquestCredits.address,
       {
-        rewardRateMillionth: 100, // 100 for every million of second. or 8.64 / day
-        fixedRewardRateThousandsMillionth: 10, // 10 for every  thousand million of seconds, or 0.000864 per day per stake or 315.36 / year / 1000 stake
+        rewardRateMillionth,
+        fixedRewardRateThousandsMillionth,
       },
       gamesToEnable,
       accountsToInitialise,
     ],
+    linkedData: {
+      rewardRateMillionth, // 100 for every million of second. or 8.64 / day
+      fixedRewardRateThousandsMillionth,
+    },
     log: true,
     autoMine: true,
   });

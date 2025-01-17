@@ -12,7 +12,8 @@
     "remove:local": "ldenv wait-on http://@@GRAPH_NODE_GRAPHQL ~~ graph remove --node @@GRAPH_DEPLOY_ENDPOINT @@SUBGRAPH_NAME ~~",
     "generate:codegen": "ldenv -m localhost pnpm generate @@MODE ~~ pnpm codegen ~~ @@",
     "deploy:build": "ldenv -m localhost pnpm generate @@MODE ~~ pnpm codegen ~~ pnpm run deploy @@MODE ~~ @@",
-    "deploy": "ldenv graph deploy --version-label v0.0.1 --deploy-key=@@ALCHEMY_GRAPH_TOKEN --ipfs @@IPFS_URL --node @@GRAPH_DEPLOY_ENDPOINT @@SUBGRAPH_NAME @@",
+    "TODO:deploy": "echo --verion-label need to be passed or auto-incremented or fetched",
+    "deploy": "ldenv graph deploy --version-label v0.0.2 --deploy-key=@@ALCHEMY_GRAPH_TOKEN --ipfs @@IPFS_URL --node @@GRAPH_DEPLOY_ENDPOINT @@SUBGRAPH_NAME @@",
     "test": "graph test"
   },
   "dependencies": {
