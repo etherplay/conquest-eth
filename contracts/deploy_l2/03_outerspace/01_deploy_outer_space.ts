@@ -57,6 +57,9 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   let bootstrapSessionEndTime = 0;
   let infinityStartTime = 0;
 
+  bootstrapSessionEndTime = deploymentTimestamp + 30 * 24 * 3600;
+  infinityStartTime = bootstrapSessionEndTime + exitDuration / 3;
+
   // use a command to increase time in 1337
   if (localTesting) {
     timePerDistance /= 180;
@@ -119,6 +122,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   if (networkName === 'beta') {
     genesisHash = '0xf69ea25ce5e4aa509188e7ece284702358d8df5e656a9a3c8509506343f9faa8';
+  }
+
+  if (networkName === '2025_1') {
+    genesisHash = '0x69AB0921CC2BCC5C203B2BCCC4B5CE33ACB9520A4776421236C81AD3DA565991';
+  }
+
+  if (networkName === '2025_1_test') {
+    genesisHash = '0x2E8844C4BE4BB08968BF024167442FF346C1277CFA814ADCE21207B6A4BCD005';
   }
 
   console.log({
