@@ -211,11 +211,11 @@
 <!-- <Header /> -->
 
 <WalletAccess>
-  <div class="py-16 bg-gray-50 overflow-hidden lg:py-24">
+  <div class="py-16 bg-black overflow-hidden lg:py-24">
     <div class="relative max-w-xl mx-auto px-4 sm:px-6 lg:px-8 lg:max-w-7xl">
       <div class="relative">
         {#if id}
-          <h2 class="text-center text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+          <h2 class="text-center text-3xl leading-8 font-extrabold tracking-tight text-gray-100 sm:text-4xl">
             <Blockie address={id} class="w-12 h-12 inline" />
           </h2>
           <h2
@@ -290,11 +290,11 @@
 
               <div>
                 <div>
-                  <label for="addressToInvite">Address:</label><input
+                  <label class="mx-1" for="addressToInvite">Address:</label><input
                     id="addressToInvite"
                     type="text"
                     bind:value={addressToInvite}
-                    class="bg-gray-200"
+                    class="bg-gray-800"
                   />
                 </div>
                 <PanelButton on:click={createInvite} label="Create Invite">Create Invite</PanelButton>
@@ -308,11 +308,12 @@
 
               <div>
                 <div>
-                  <label for="addressToRemove">Address:</label><input
+                  <label class="mx-1" for="addressToRemove">Address:</label><input
                     id="addressToRemove"
                     type="text"
                     bind:value={addressToRemove}
-                    class="bg-gray-200"
+                    class="bg-gray-800"
+                    style="background-color: #22222;"
                   />
                 </div>
                 <PanelButton on:click={removeMember} label="Remove">Remove</PanelButton>

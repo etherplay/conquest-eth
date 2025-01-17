@@ -127,7 +127,7 @@
 <!-- <Header /> -->
 
 <WalletAccess>
-  <div class="py-16 bg-gray-50 overflow-hidden lg:py-24">
+  <div class="py-16 bg-black overflow-hidden lg:py-24">
     <div class="relative max-w-xl mx-auto px-4 sm:px-6 lg:px-8 lg:max-w-7xl">
       <div class="m-2">
         {#if $wallet.state !== 'Ready'}
