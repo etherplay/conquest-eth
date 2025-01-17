@@ -12,8 +12,8 @@
     "remove:local": "ldenv wait-on http://@@GRAPH_NODE_GRAPHQL ~~ graph remove --node @@GRAPH_DEPLOY_ENDPOINT @@SUBGRAPH_NAME ~~",
     "generate:codegen": "ldenv -m localhost pnpm generate @@MODE ~~ pnpm codegen ~~ @@",
     "deploy:build": "ldenv -m localhost pnpm generate @@MODE ~~ pnpm codegen ~~ pnpm run deploy @@MODE ~~ @@",
-    "deploy:alchemy": "git diff --exit-code && ldenv graph deploy --version-label `git rev-parse --short HEAD` --deploy-key=@@ALCHEMY_GRAPH_TOKEN --ipfs @@IPFS_URL --node @@GRAPH_DEPLOY_ENDPOINT @@SUBGRAPH_NAME @@",
-    "deploy": "git diff --exit-code && ldenv graph deploy --version-label `git rev-parse --short HEAD` @@SUBGRAPH_NAME @@",
+    "deploy": "git diff --exit-code && ldenv graph deploy --version-label `git rev-parse --short HEAD` --deploy-key=@@SUBGRAPH_DEPLOY_KEY --ipfs @@IPFS_URL --node @@GRAPH_DEPLOY_ENDPOINT @@SUBGRAPH_NAME @@",
+    "deploy:graph:default": "git diff --exit-code && ldenv graph deploy --version-label `git rev-parse --short HEAD` @@SUBGRAPH_NAME @@",
     "test": "graph test"
   },
   "dependencies": {
