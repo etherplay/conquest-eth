@@ -26,9 +26,11 @@
 
 # A Game of Diplomacy, Fully Persistent and Permission-less
 
-[Conquest.eth](https://conquest.game) is an "infinite game", a permission-less, immutable, and interoperable game. An Unstoppable game where all meaningful actions happen on-chain.
+[Conquest.eth](https://conquest.game) is an "infinite game", a permission-less, immutable, and interoperable game. An Unstoppable game where all meaningful actions happen without an intermediaries.
 
 If you are interested to know more about infinite games and autonomous worlds, check out our [blog post](https://ronan.eth.limo/blog/infinite-games/)
+
+Note that, to achieve this Conquest use real stake and while you can win money, you can also lose. Be careful out there!
 
 ## What will you find here ?
 
@@ -58,7 +60,7 @@ Ronan is a game designer with love for permissionless-ness. He is also an active
 >
 > And [Zellij](https://zellij.dev/) for easily launching the game locally
 >
-> For nodejs we use version 16. If you use volta for version management, it will automatically pick the correct version
+> For nodejs we use volta for version management, it allow to automatically pick the correct version for each sub package.
 
 ### docker and docker-compose
 
@@ -85,5 +87,11 @@ pnpm start
 The following will launch the client on http://localhost:3000
 
 ```bash
-pnpm web defcon
+pnpm web <release-name>
 ```
+
+where `release-name` can be
+
+- `defcon` for the game launched in 2022 that will be running forever
+- `2025_1` for the most recent version that start as a 1 month session with extra reward and continue forever.
+- `sepolia` for a testnet version that is used for testing and can be updated at any time. No real money here
