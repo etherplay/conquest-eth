@@ -7,7 +7,7 @@ import {increaseTime} from '../../test/test-utils';
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const {deployer, player} = await hre.getNamedAccounts();
-  const {deploy, read, execute, rawTx} = hre.deployments;
+  const {deploy, read, execute, rawTx, getOrNull} = hre.deployments;
 
   const ConquestCredits = await hre.deployments.get('ConquestCredits');
   const OuterSpace = await hre.deployments.get('OuterSpace');
@@ -22,6 +22,26 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   // will be upgraded with these parameters:
   // const rewardRateMillionth = 100; // 100 for every million of second. or 8.64 / day
   // const fixedRewardRateThousandsMillionth = 10; // 10 for every  thousand million of seconds, or 0.000864 per day per stake or 315.36 / year / 1000 stake
+
+  const timestamp = Math.floor(Date.now() / 1000);
+  const ExistingRewardsGenerator = await getOrNull('RewardsGenerator');
+  if (ExistingRewardsGenerator) {
+    const existing_rewardRateMillionth = await read('RewardsGenerator', 'REWARD_RATE_millionth');
+    const existing_fixedRewardRateThousandsMillionth = await read(
+      'RewardsGenerator',
+      'FIXED_REWARD_RATE_thousands_millionth'
+    );
+
+    if (
+      !existing_fixedRewardRateThousandsMillionth.eq(fixedRewardRateThousandsMillionth) ||
+      !existing_rewardRateMillionth.eq(rewardRateMillionth)
+    ) {
+      const lastUpdate = await read('RewardsGenerator', 'lastUpdate');
+      if (lastUpdate - timestamp > 5 * 60) {
+        await execute('RewardsGenerator', {from: deployer}, 'update');
+      }
+    }
+  }
 
   const RewardsGenerator = await deploy('RewardsGenerator', {
     from: deployer,
