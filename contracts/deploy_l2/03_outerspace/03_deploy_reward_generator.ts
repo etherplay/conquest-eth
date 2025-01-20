@@ -12,17 +12,16 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const ConquestCredits = await hre.deployments.get('ConquestCredits');
   const OuterSpace = await hre.deployments.get('OuterSpace');
   const gamesToEnable = [OuterSpace.address];
-  console.log(`games to enable : ${gamesToEnable}`);
 
-  const accountsToInitialise: {account: `0x${string}`; amount: string}[] = [
-    {account: `0x8888888884d2e4E981023dA51B43066461F46Dca`, amount: '2600000000000000000'},
-    {account: `0x1ffb5056730672AB48597Ce24371Feb0eC88a2b8`, amount: '2900000000000000000'},
-    {account: `0x7fCe02BB66c0D9396fb9bC60a80d45462E60fdfF`, amount: '6200000000000000000'},
-    {account: `0x283aFaad5c345680144f20F3910EA95e5F0bA932`, amount: '14800000000000000000'},
-  ];
+  const accountsToInitialise: {account: `0x${string}`; amount: string}[] = [];
 
-  const rewardRateMillionth = 100; // 100 for every million of second. or 8.64 / day
-  const fixedRewardRateThousandsMillionth = 10; // 10 for every  thousand million of seconds, or 0.000864 per day per stake or 315.36 / year / 1000 stake
+  // Disabled first
+  const rewardRateMillionth = 0;
+  const fixedRewardRateThousandsMillionth = 0;
+
+  // will be upgraded with these parameters:
+  // const rewardRateMillionth = 100; // 100 for every million of second. or 8.64 / day
+  // const fixedRewardRateThousandsMillionth = 10; // 10 for every  thousand million of seconds, or 0.000864 per day per stake or 315.36 / year / 1000 stake
 
   const RewardsGenerator = await deploy('RewardsGenerator', {
     from: deployer,
@@ -54,10 +53,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     await execute('OuterSpace', {from: deployer, log: true}, 'setGenerator', RewardsGenerator.address);
   }
 
-  const isGeneratorAllowedToMint = await read('ConquestCredits', 'generators', RewardsGenerator.address);
-  if (!isGeneratorAllowedToMint) {
-    await execute('ConquestCredits', {from: deployer, log: true}, 'setGenerator', RewardsGenerator.address, true);
-  }
+  // we do not allow claim yet
+  // const isGeneratorAllowedToMint = await read('ConquestCredits', 'generators', RewardsGenerator.address);
+  // if (!isGeneratorAllowedToMint) {
+  //   await execute('ConquestCredits', {from: deployer, log: true}, 'setGenerator', RewardsGenerator.address, true);
+  // }
 
   // const shared = formatEther(await read('RewardsGenerator', 'earnedFromPoolRate', player));
   // const self = formatEther(await read('RewardsGenerator', 'earnedFromFixedRate', player));
