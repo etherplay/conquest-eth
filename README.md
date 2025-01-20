@@ -94,4 +94,4 @@ where `release-name` can be
 
 - `defcon` for the game launched in 2022 that will be running forever
 - `2025_1` for the most recent version that start as a 1 month session with extra reward and continue forever.
-- `sepolia` for a testnet version that is used for testing and can be updated at any time. No real money here
+  //TODO: - `sepolia` for a testnet version that is used for testing and can be updated at any time. No real money here
