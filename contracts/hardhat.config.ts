@@ -95,31 +95,6 @@ const config: HardhatUserConfig = {
       accounts: accounts(),
       deploy: l1_deployments.concat(l1_deployments_dev, l2_deployments, l2_deployments_dev),
     },
-    localhost_8546: {
-      url: node_url('localhost_8546'),
-      accounts: accounts(),
-      deploy: l1_deployments.concat(l1_deployments_dev, l2_deployments, l2_deployments_dev),
-    },
-    dev: {
-      url: node_url('gnosis_chain'),
-      accounts: accounts('gnosis_chain'),
-      deploy: l1_deployments.concat(l1_deployments_dev, l2_deployments, l2_deployments_dev),
-    },
-    quick: {
-      url: node_url('goerli'),
-      accounts: accounts('goerli'),
-      deploy: l1_deployments.concat(l1_deployments_dev, l2_deployments, l2_deployments_dev),
-    },
-    alpha: {
-      url: node_url('goerli'),
-      accounts: accounts('goerli'),
-      deploy: l1_deployments.concat(l1_deployments_dev, l2_deployments, l2_deployments_dev),
-    },
-    forfun: {
-      url: node_url('goerli'),
-      accounts: accounts('goerli'),
-      deploy: l1_deployments.concat(l1_deployments_dev, l2_deployments, l2_deployments_dev),
-    },
     beta: {
       url: node_url('gnosis_chain'),
       accounts: accounts('gnosis_chain'),
@@ -140,10 +115,10 @@ const config: HardhatUserConfig = {
       accounts: accounts('sepolia'),
       deploy: l1_deployments.concat(l1_deployments_dev, l2_deployments, l2_deployments_dev),
     },
-    production: {
-      url: node_url('mainnet'),
-      accounts: accounts('mainnet'),
-      deploy: l1_deployments.concat(l1_deployments_dev),
+    '2025_1_test': {
+      url: node_url('gnosis_chain'),
+      accounts: accounts('gnosis_chain'),
+      deploy: l1_deployments.concat(l1_deployments_dev, l2_deployments, l2_deployments_dev),
     },
   }),
   paths: {
