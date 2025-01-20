@@ -7,6 +7,7 @@
   export let cornerColor: string | undefined = undefined;
   export let disabled = false;
   export let href: string | undefined;
+  export let target: string | undefined;
 
   $: actualColor = disabled ? 'text-gray-600' : color || 'text-cyan-300';
   $: actualCornerColor = disabled
@@ -34,7 +35,7 @@
     <div class="block relative border overflow-hidden {actualBorderColor}">
       <div>
         {#if href}
-          <a {href}>
+          <a {href} {target}>
             <div class="px-4 py-2 relative">
               <slot />
             </div>

@@ -24,7 +24,8 @@ export type ClaimFlow = {
     | 'SUCCESS'
     | 'REQUIRE_ALLOWANCE'
     | 'SETTING_ALLOWANCE'
-    | 'CHECKING_ALLOWANCE';
+    | 'CHECKING_ALLOWANCE'
+    | 'NOT_ENOUGH_NATIVE_TOKEN';
   cancelingConfirmation?: boolean;
   data?: Data;
   error?: {message?: string}; // TODO other places: add message as optional field
@@ -115,6 +116,28 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
       return;
     }
 
+    let currentGasPrice;
+    try {
+      currentGasPrice = await wallet.provider.getGasPrice();
+    } catch (e) {
+      this.setPartial({
+        step: 'CHOOSE_STAKE',
+        error: e,
+      });
+      return;
+    }
+
+    let currentNativeBalance;
+    try {
+      currentNativeBalance = await wallet.provider.getBalance(wallet.address);
+    } catch (e) {
+      this.setPartial({
+        step: 'CHOOSE_STAKE',
+        error: e,
+      });
+      return;
+    }
+
     // console.log('HELLO');
     const planetInfo = spaceInfo.getPlanetInfo(flow.data.coords.x, flow.data.coords.y);
     if (!planetInfo) {
@@ -184,6 +207,15 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
       // TODO gasEstimation for Acquire Planet
       const gasLimit = gasEstimation.add(100000);
 
+      const valueNeeded = gasLimit.mul(currentGasPrice);
+
+      if (currentNativeBalance.lt(valueNeeded)) {
+        this.setPartial({
+          step: 'NOT_ENOUGH_NATIVE_TOKEN',
+        });
+        return;
+      }
+
       this.setPartial({step: 'WAITING_TX'});
       try {
         tx = await paymentTokenContract.transferAndCall(wallet.contracts?.OuterSpace.address, tokenAmount, callData, {
@@ -221,6 +253,13 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
       const nativeTokenAmount = requireMint.amountToMint
         .mul('1000000000000000000')
         .div(initialContractsInfos.contracts.PlayToken.linkedData.numTokensPerNativeTokenAt18Decimals);
+
+      if (currentNativeBalance.lt(nativeTokenAmount)) {
+        this.setPartial({
+          step: 'NOT_ENOUGH_NATIVE_TOKEN',
+        });
+        return;
+      }
       let gasEstimation: BigNumber;
       try {
         gasEstimation = await outerspaceContract.estimateGas.acquireViaNativeTokenAndStakingToken(
@@ -230,6 +269,7 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
           {value: nativeTokenAmount}
         );
       } catch (e) {
+        console.error(e);
         this.setPartial({
           step: 'CHOOSE_STAKE',
           error: e,
@@ -237,6 +277,15 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
         return;
       }
       const gasLimit = gasEstimation.add(100000);
+
+      const valueNeeded = gasLimit.mul(currentGasPrice);
+
+      if (currentNativeBalance.lt(valueNeeded)) {
+        this.setPartial({
+          step: 'NOT_ENOUGH_NATIVE_TOKEN',
+        });
+        return;
+      }
 
       this.setPartial({step: 'WAITING_TX'});
 
@@ -295,6 +344,10 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
     if (this.$store.step === 'PROFILE_INFO') {
       this.setPartial({step: 'SUCCESS'});
     }
+  }
+
+  continueAfterOnRamp() {
+    this.setPartial({step: 'CHOOSE_STAKE', cancelingConfirmation: false});
   }
 
   private _reset() {

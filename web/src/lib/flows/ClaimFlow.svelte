@@ -78,6 +78,34 @@
   </Modal>
 {:else if $claimFlow.step === 'CONNECTING'}
   <!---->
+{:else if $claimFlow.step === 'NOT_ENOUGH_NATIVE_TOKEN'}
+  <Modal on:close={() => claimFlow.cancel()}>
+    <div class="flex flex-col justify-center items-center">
+      <div class="mb-8 text-center">
+        You don't have enough {nativeTokenSymbol}, the crypto currency required to perform action on the network.
+      </div>
+      <!-- <div class="m-2">
+        <Button
+          href="https://app.ramp.network?hostApiKey=your_host_apiKey&hostAppName=Conquest.eth&hostLogoUrl=https://conquest.game/maskable_icon_512x512.png&userAddress={wallet.address}"
+          target="_blank"
+          >Purchase XDAI
+        </Button>
+      </div> -->
+      <div class="m-2">
+        <Button href="https://ramp.network/buy" target="_blank">Purchase XDAI</Button>
+      </div>
+      <div class="m-2">
+        <Button href="https://bridge.gnosischain.com/" target="_blank">Or Bridge Some</Button>
+      </div>
+
+      <div class="m-2">
+        <Button href="https://docs.gnosischain.com/about/third-parties" target="_blank">More Options...</Button>
+      </div>
+      <div>
+        <Button class="mt-5" label="Allow" on:click={() => claimFlow.continueAfterOnRamp()}>Go Back</Button>
+      </div>
+    </div>
+  </Modal>
 {:else if $claimFlow.step === 'REQUIRE_ALLOWANCE'}
   <Modal on:close={() => claimFlow.cancel()}
     >You ll need to allow Conquest to transfer your token
