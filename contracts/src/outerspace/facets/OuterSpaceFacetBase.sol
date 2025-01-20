@@ -305,7 +305,7 @@ contract OuterSpaceFacetBase is
         // -----------------------------------------------------------------------------------------------------------
         // check requirements
         // -----------------------------------------------------------------------------------------------------------
-        require(stake == uint256(_stake(planetUpdate.data)) * (DECIMALS_14), "INVALID_AMOUNT");
+        require(stake == uint256(_stake(planetUpdate.data)) * (DECIMALS_14), "INVALID_STAKE_AMOUNT");
 
         // -----------------------------------------------------------------------------------------------------------
         // Compute Basic Planet Updates
@@ -1636,8 +1636,12 @@ contract OuterSpaceFacetBase is
         //     stakeIndex -= 4;
         // }
         uint16 stakeIndex = productionIndex;
-        // skip stakeIndex * 2 + 0 as it is always zero in stakeRange
-        return uint32(uint256(uint8(_stakeRange[stakeIndex * 2 + 1])) * _stakeMultiplier10000th);
+        return
+            uint32(
+                uint256(
+                    uint16(uint8(_stakeRange[stakeIndex * 2])) * 0x100 + uint16(uint8(_stakeRange[stakeIndex * 2 + 1]))
+                ) * _stakeMultiplier10000th
+            );
     }
 
     function _production(bytes32 data) internal pure returns (uint16) {

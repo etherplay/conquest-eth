@@ -111,7 +111,7 @@ export class PlanetStates {
   }
 
   private processSpace(space: SpaceQueryWithPendingState, time: number): void {
-    if (!space.queryState.data) {
+    if (!space.queryState.data || !space.queryState.data.space) {
       return;
     }
 

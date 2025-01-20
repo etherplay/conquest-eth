@@ -4,6 +4,7 @@ import {SUBGRAPH_ENDPOINT} from '$lib/blockchain/subgraph';
 import {BigNumber} from '@ethersproject/bignumber';
 import {derived, type Readable} from 'svelte/store';
 import {time} from '$lib/time';
+import {initialContractsInfos} from '$lib/blockchain/contracts';
 
 type Highscore = {
   id: string;
@@ -130,10 +131,10 @@ query($first: Int! $lastId: ID!) {
 export const highscoresData = new HighscoresStore();
 
 const FIXED_REWARD_RATE_thousands_millionth = BigNumber.from(
-  10 // TODO initialContractsInfos.contracts.RewardsGenerator.linkedData.fixedRewardRateThousandsMillionth
+  initialContractsInfos.contracts.RewardsGenerator.linkedData.fixedRewardRateThousandsMillionth
 );
 const REWARD_RATE_millionth = BigNumber.from(
-  100 // TODO initialContractsInfos.contracts.RewardsGenerator.linkedData.fixedRewardRateThousandsMillionth
+  initialContractsInfos.contracts.RewardsGenerator.linkedData.fixedRewardRateThousandsMillionth
 );
 const PRECISION: BigNumber = BigNumber.from('1000000000000000000000000');
 let DECIMALS_18_MILLIONTH: BigNumber = BigNumber.from('1000000000000');
