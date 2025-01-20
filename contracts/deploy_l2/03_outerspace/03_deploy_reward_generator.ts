@@ -36,9 +36,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       !existing_fixedRewardRateThousandsMillionth.eq(fixedRewardRateThousandsMillionth) ||
       !existing_rewardRateMillionth.eq(rewardRateMillionth)
     ) {
-      const lastUpdate = await read('RewardsGenerator', 'lastUpdate');
-      if (lastUpdate - timestamp > 5 * 60) {
-        await execute('RewardsGenerator', {from: deployer}, 'update');
+      if (!existing_fixedRewardRateThousandsMillionth.eq(0) || !existing_rewardRateMillionth.eq(0)) {
+        throw new Error(`cannot update from non-zero`);
+      }
+      console.log(`RewardsGenerator parameters changed, updating`);
+      const lastUpdate = await read('RewardsGenerator', 'lastUpdated');
+      if (timestamp - lastUpdate > 1 * 60) {
+        await execute('RewardsGenerator', {from: deployer, log: true}, 'update');
       }
     }
   }
