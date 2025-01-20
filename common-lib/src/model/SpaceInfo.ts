@@ -73,6 +73,7 @@ export class SpaceInfo {
   public readonly upkeepProductionDecreaseRatePer10000th: number;
   public readonly giftTaxPer10000: number;
   public readonly stakeRange: string;
+  public readonly stakeRangeArray: number[];
   public readonly stakeMultiplier10000th: number;
   public readonly roundTo1Decimal: boolean;
   public readonly bootstrapSessionEndTime: number;
@@ -115,6 +116,13 @@ export class SpaceInfo {
     this.bootstrapSessionEndTime = config.bootstrapSessionEndTime;
     this.infinityStartTime = config.infinityStartTime;
     // this.store = writable(this.planetsOnFocus);
+
+    // const stakeRange = [6, 8, 10, 12, 14, 16, 18, 20, 20, 22, 24, 32, 40, 48, 56, 72]; //[4, 5, 5, 10, 10, 15, 15, 20, 20, 30, 30, 40, 40, 80, 80, 100];
+    this.stakeRangeArray = [];
+    for (let i = 2; i < this.stakeRange.length; i += 4) {
+      this.stakeRangeArray.push(parseInt(this.stakeRange.slice(i, i + 4), 16));
+    }
+    // console.log({stakeRangeArray});
   }
 
   // subscribe(run: (value: PlanetInfo[]) => void, invalidate?: (value?: PlanetInfo[]) => void): () => void {
@@ -315,12 +323,6 @@ export class SpaceInfo {
     const subX = 1 - value8Mod(data, 0, 3);
     const subY = 1 - value8Mod(data, 2, 3);
 
-    // const stakeRange = [6, 8, 10, 12, 14, 16, 18, 20, 20, 22, 24, 32, 40, 48, 56, 72]; //[4, 5, 5, 10, 10, 15, 15, 20, 20, 30, 30, 40, 40, 80, 80, 100];
-    const stakeRangeArray = [];
-    for (let i = 2; i < this.stakeRange.length; i += 4) {
-      stakeRangeArray.push(parseInt(this.stakeRange.slice(i, i + 4), 16));
-    }
-    // console.log({stakeRangeArray});
     const productionIndex = normal8(data, 12);
     // const offset = normal16(data, 4, '0x0000000100010002000200030003000400040005000500060006000700070008');
     // let stakeIndex = productionIndex + offset;
@@ -333,8 +335,8 @@ export class SpaceInfo {
     // }
     const stakeIndex = productionIndex;
     const stake = this.roundTo1Decimal
-      ? Math.floor((stakeRangeArray[stakeIndex] * this.stakeMultiplier10000th) / 1000) * 1000
-      : Math.floor(stakeRangeArray[stakeIndex] * this.stakeMultiplier10000th);
+      ? Math.floor((this.stakeRangeArray[stakeIndex] * this.stakeMultiplier10000th) / 1000) * 1000
+      : Math.floor(this.stakeRangeArray[stakeIndex] * this.stakeMultiplier10000th);
     // console.log({stake});
     const production = normal16(data, 12, '0x0708083409600a8c0bb80ce40e100e100e100e101068151819c81e7823282ee0');
     const attackRoll = normal8(data, 20);

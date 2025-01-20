@@ -184,7 +184,11 @@
       <div class="box-border rounded-md bg-gray-600">
         <div
           class="w-full h-3 rounded-md bg-yellow-400"
-          style="width: {Math.floor(((planetInfo.stats.stake / 10000) * 100) / 11.9)}%;"
+          style="width: {Math.floor(
+            ((planetInfo.stats.stake / 10000) * 100) /
+              ((spaceInfo.stakeRangeArray[spaceInfo.stakeRangeArray.length - 1] * spaceInfo.stakeMultiplier10000th) /
+                10000)
+          )}%;"
         />
       </div>
     </div>

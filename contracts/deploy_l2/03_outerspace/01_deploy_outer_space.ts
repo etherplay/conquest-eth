@@ -52,8 +52,29 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const initialSpaceExpansion = 12;
   const expansionDelta = 6;
   const giftTaxPer10000 = 2000;
-  const stakeRange = '0x00060008000A000C000E00100012001400140016001800200028003000380048';
-  let stakeMultiplier10000th = 10;
+
+  // ----------------------------------------------------------------------------------------------
+  // STAKE
+  // ----------------------------------------------------------------------------------------------
+  // 100
+  // 130
+  // 170
+  // 200
+  // 240
+  // 270
+  // 300
+  // 330
+  // 330
+  // 370
+  // 400
+  // 530
+  // 670
+  // 800
+  // 930
+  // 1200
+  let stakeRange = '0x0064008200aa00c800f0010e012c014a014a017201900212029e032003a204b0';
+  // ----------------------------------------------------------------------------------------------
+  let stakeMultiplier10000th = 100;
   let bootstrapSessionEndTime = 0;
   let infinityStartTime = 0;
 
@@ -68,6 +89,10 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     frontrunningDelay /= 180;
     resolveWindow /= 30; // 180;
     stakeMultiplier10000th = 1666;
+    // stakeRange = '0x000200030004000500060007000800090009000A000B000C000D000E000F0010';
+    // stakeMultiplier10000th = 10000;
+    stakeRange = '0x0064008200aa00c800f0010e012c014a014a017201900212029e032003a204b0';
+    stakeMultiplier10000th = 100;
 
     bootstrapSessionEndTime = deploymentTimestamp + 5 * 60; //exitDuration * 2; // in 48 min (2 * 24)
     infinityStartTime = bootstrapSessionEndTime + exitDuration / 6; // (4min) /// + 10 * 60 + 5 * 60; // 5 min pause
@@ -81,18 +106,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     productionSpeedUp = 180;
     frontrunningDelay /= 180;
     resolveWindow /= 180;
-    // productionCapAsDuration /= 180;
-  }
-
-  if (networkName === 'defcon') {
-    // TODO remove when updating quick to a new contract
-    genesisHash = '0xdefd8666ec077c932b62f77bcfea4badcb3c296fc1f8a8792c9b7ca2ee6c8c4c';
-    // timePerDistance = Math.floor(timePerDistance / 5);
-    // exitDuration = Math.floor(exitDuration / 5);
-    // productionSpeedUp = 5;
-    // frontrunningDelay = Math.floor(frontrunningDelay / 5);
-    // resolveWindow = Math.floor(resolveWindow / 5);
-    stakeMultiplier10000th = 1666;
     // productionCapAsDuration /= 180;
   }
 
@@ -116,20 +129,55 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     genesisHash = '0xee563ebbe85edccc120c5082a5066539b0e9b7958b5fbac114523a95a8162672';
   }
 
-  if (networkName === 'alpha') {
+  if (networkName === 'alpha2') {
+    throw new Error(`we do not support alpha2`);
     genesisHash = '0x015e3b02f1bb647546a9856205a64f1c2263856de7acb3fe65aa303c9c8ce7fc';
+  }
+  if (networkName === 'alpha1') {
+    throw new Error(`we do not support alpha1`);
   }
 
   if (networkName === 'beta') {
+    throw new Error(`we do not support beta`);
     genesisHash = '0xf69ea25ce5e4aa509188e7ece284702358d8df5e656a9a3c8509506343f9faa8';
   }
 
+  // ----------------------------------------------------------------------------------------------
+  // GNOSIS
+  // ----------------------------------------------------------------------------------------------
+  if (networkName === 'defcon') {
+    genesisHash = '0xdefd8666ec077c932b62f77bcfea4badcb3c296fc1f8a8792c9b7ca2ee6c8c4c';
+    resolveWindow = hours(12);
+    timePerDistance = hours(2);
+    exitDuration = hours(3 * 24);
+    // acquireNumSpaceships = 100000;
+    productionSpeedUp = 1;
+    frontrunningDelay = 30 * 60;
+    // productionCapAsDuration = 3 * 24 * 3600; // 3 days
+    // upkeepProductionDecreaseRatePer10000th = 5000;
+    // fleetSizeFactor6 = 500000;
+    // initialSpaceExpansion = 12;
+    // expansionDelta = 6;
+    // giftTaxPer10000 = 2000;
+    stakeRange = '0x00060008000A000C000E00100012001400140016001800200028003000380048';
+    stakeMultiplier10000th = 1666;
+  }
   if (networkName === '2025_1') {
     genesisHash = '0x69AB0921CC2BCC5C203B2BCCC4B5CE33ACB9520A4776421236C81AD3DA565991';
   }
 
   if (networkName === '2025_1_test') {
     genesisHash = '0x2E8844C4BE4BB08968BF024167442FF346C1277CFA814ADCE21207B6A4BCD005';
+  }
+  // ----------------------------------------------------------------------------------------------
+
+  if (networkName === 'sepolia') {
+    genesisHash = '0x21B25FA48DFAF94F6FC5D7C14C206CC0F716AAE46A5EA817445EA411E3299541';
+    timePerDistance /= 100;
+    exitDuration /= 100;
+    productionSpeedUp = 100;
+    frontrunningDelay /= 100;
+    resolveWindow /= 25;
   }
 
   console.log({
