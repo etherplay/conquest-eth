@@ -11,8 +11,8 @@ contract RewardsGenerator is IERC20, Proxied, IOnStakeChange {
     uint256 internal constant PRECISION = 1e24;
     uint256 internal constant DECIMALS_18_MILLIONTH = 1000000000000; // 1 millionth of a token so that it matches with REWARD_RATE_millionth
 
-    uint256 internal immutable REWARD_RATE_millionth;
-    uint256 internal immutable FIXED_REWARD_RATE_thousands_millionth;
+    uint256 public immutable REWARD_RATE_millionth;
+    uint256 public immutable FIXED_REWARD_RATE_thousands_millionth;
 
     event GameEnabled(address indexed game, uint256 weight, uint256 timestamp);
 
@@ -181,6 +181,15 @@ contract RewardsGenerator is IERC20, Proxied, IOnStakeChange {
 
     function transferFrom(address, address, uint256) external returns (bool) {
         revert("NON_TRANSFERABLE");
+    }
+
+    /// @notice update the global pool rate
+    function update() external {
+        _updateGlobal();
+    }
+
+    function lastUpdated() external view returns (uint256) {
+        return _global.lastUpdateTime;
     }
 
     // ---------------------------------------------------------------------------------------------------------------
