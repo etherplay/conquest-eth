@@ -91,6 +91,7 @@
           >Purchase XDAI
         </Button>
       </div> -->
+      <!-- https://www.mtpelerin.com/buy-crypto  -->
       <div class="m-2">
         <Button href="https://ramp.network/buy" target="_blank">Purchase XDAI</Button>
       </div>
