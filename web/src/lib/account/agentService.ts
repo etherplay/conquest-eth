@@ -8,11 +8,32 @@ import {getResolutionTransactionData} from '$lib/flows/resolve';
 import {spaceInfo} from '$lib/space/spaceInfo';
 import type {FuzdClient} from 'fuzd-client';
 
+// TODO fix fuzd-client types exports ?
+type Fees = {
+  fixed: string;
+  per_1_000_000: number;
+};
+type DerivationParameters = {
+  type: string;
+  data: any;
+};
+type ExecutionServiceParameters = {
+  derivationParameters: DerivationParameters;
+  expectedWorstCaseGasPrice?: string;
+  fees: Fees;
+};
+type RemoteAccountInfo = {
+  serviceParameters: ExecutionServiceParameters;
+  address: `0x${string}`;
+  debt: string;
+};
+
 type Position = {x: number; y: number};
 
 type AgentServiceAccountData = {
   balance: BigNumber;
   remoteAccount: `0x${string}`;
+  serviceParameters: ExecutionServiceParameters;
   requireTopUp: boolean;
   minimumBalance: BigNumber;
 };
@@ -35,6 +56,7 @@ export type Submission = {
   time: number;
   expiry: number;
   paymentReserve?: {amount: bigint; broadcaster: `0x${string}`};
+  onBehalf?: `0x${string}`;
 };
 
 export type AgentData = {
@@ -64,8 +86,15 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
 
   async createSubmission(data: AgentData, options?: {force?: boolean}): Promise<Submission> {
     const remoteAccount = this.$store.account.remoteAccount;
+    const serviceParameters = this.$store.account.serviceParameters;
     const maxFeePerGas = await wallet.provider.getGasPrice();
-    const maxFeePerGasAuthorized = maxFeePerGas.mul(2).toBigInt();
+
+    let maxFeePerGasAuthorized: bigint;
+    if (!serviceParameters?.expectedWorstCaseGasPrice) {
+      maxFeePerGasAuthorized = maxFeePerGas.mul(2).toBigInt();
+    } else {
+      maxFeePerGasAuthorized = BigInt(serviceParameters.expectedWorstCaseGasPrice);
+    }
 
     const fromPlanetInfo = spaceInfo.getPlanetInfo(data.from.x, data.from.y);
     const toPlanetInfo = spaceInfo.getPlanetInfo(data.to.x, data.to.y);
@@ -101,6 +130,7 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
         to: txData.to as `0x${string}`,
       },
       paymentReserve: {amount: maxFeePerGasAuthorized * gas, broadcaster: remoteAccount},
+      onBehalf: wallet.address.toLowerCase() as `0x${string}`,
     };
 
     return submission;
@@ -186,11 +216,12 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
     try {
       if (this._lastPrivateKey) {
         this.fuzdClient = createFuzdClient(this._lastPrivateKey);
-        const remoteAccount = await this.fuzdClient.assignRemoteAccount(chainId);
+        const remoteAccount: RemoteAccountInfo = await this.fuzdClient.assignRemoteAccount(chainId);
         const balance = await wallet.provider.getBalance(remoteAccount.address);
         const account: AgentServiceAccountData = {
           balance,
           remoteAccount: remoteAccount.address,
+          serviceParameters: remoteAccount.serviceParameters,
           requireTopUp: false,
           minimumBalance: balance,
         };
@@ -201,6 +232,7 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
             ? {
                 balance: BigNumber.from(account.balance),
                 remoteAccount: account.remoteAccount,
+                serviceParameters: account.serviceParameters,
                 requireTopUp: account.requireTopUp,
                 minimumBalance: BigNumber.from(account.minimumBalance),
               }
