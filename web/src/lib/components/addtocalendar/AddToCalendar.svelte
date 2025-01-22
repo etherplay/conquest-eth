@@ -16,5 +16,5 @@
   <AddToCalendarGoogle {timestamp} {duration} {title} {description} {location} />
   <!-- <AddToCalendarYahoo {timestamp} {duration} {title} {description} {location} /> -->
   <AddToCalendarICS {timestamp} {duration} {title} {url} {description} {location} />
-  <AddToCalendarOutlook {timestamp} {duration} {title} {description} {location} />
+  <!-- <AddToCalendarOutlook {timestamp} {duration} {title} {description} {location} /> -->
 </div>
