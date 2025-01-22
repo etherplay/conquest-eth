@@ -36,10 +36,11 @@
     <p class="text-center">
       Exiting a planet will allow you to claim the stake back ({planetInfo.stats.stake / 10000}
       <PlayCoin class="inline w-4" />
-      for this planet). But be careful, while you are exiting (this takes
+      for this planet). But be careful, you cannot cancel it and while you are exiting (this takes
       {timeToText(spaceInfo.exitDuration, {verbose: true})}), you cannot operate with the spaceships and someone else
       might be able to capture the planet before exit complete. Note however that the planet will continue producting
-      spaceships for its defense. Upon exit, the number of spaceships will then be zero.
+      spaceships for its defense and you can always send more spaceships to help it. Then upon exit, the native
+      population will take over.
     </p>
     <p class="text-center">
       <PanelButton class="mt-5" label="Exit" on:click={() => exitFlow.confirm()}>Confirm Exit</PanelButton>
