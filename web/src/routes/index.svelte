@@ -16,6 +16,8 @@
   import selection from '$lib/map/selection';
   import {url} from '$lib/utils/url';
   import IFramePluginList from '$lib/plugins/IFramePluginList.svelte';
+  import {time} from '$lib/time';
+  import CountdownScreen from '$lib/screens/countdown/CountdownScreen.svelte';
 
   onMount(() => {
     let x = parseInt($page.url.searchParams.get('x'));
@@ -56,14 +58,23 @@
       }
     }
   });
+
+  $: countdown =
+    typeof window !== 'undefined' && location.hostname == '2025-1.conquest.game'
+      ? {timeLeft: 1738575000 - $time}
+      : undefined;
 </script>
 
 <Storereader />
 
-<WalletAccess>
-  <ClaimTokenScreen />
-  <MapScreen />
-</WalletAccess>
+{#if countdown && countdown.timeLeft > 0}
+  <CountdownScreen {countdown} />
+{:else}
+  <WalletAccess>
+    <ClaimTokenScreen />
+    <MapScreen />
+  </WalletAccess>
+{/if}
 
 {#if $logo && $logo.stage === 1}
   <div class="fixed z-50 inset-0 overflow-y-auto bg-black" out:fade on:click={() => logo.nextStage()}>
