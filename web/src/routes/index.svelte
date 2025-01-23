@@ -16,7 +16,7 @@
   import selection from '$lib/map/selection';
   import {url} from '$lib/utils/url';
   import IFramePluginList from '$lib/plugins/IFramePluginList.svelte';
-  import {time} from '$lib/time';
+  import {startTime, time} from '$lib/time';
   import CountdownScreen from '$lib/screens/countdown/CountdownScreen.svelte';
 
   onMount(() => {
@@ -63,6 +63,9 @@
     typeof window !== 'undefined' && location.hostname == '2025-1.conquest.game'
       ? {timeLeft: 1738575000 - $time}
       : undefined;
+
+  $: timePassed = Math.max($time - startTime, 1);
+  $: percent = (timePassed * 100) / 5;
 </script>
 
 <Storereader />
@@ -90,6 +93,8 @@
         An unstoppable and open-ended game of strategy and diplomacy running on ethereum.
       </p>
     </div>
+
+    <div class="h-1 fixed bottom-0 left-0 bg-indigo-500 rounded" style="width: {percent}%;" />
   </div>
 {/if}
 
