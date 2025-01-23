@@ -25,6 +25,7 @@
     "contracts:deploy": "ldenv -m localhost pnpm run --filter ./contracts deploy @@MODE @@",
     "contracts:export": "rm web/src/lib/contracts.json; ldenv -m localhost pnpm run --filter ./contracts export @@MODE ../web/src/lib/contracts.json @@",
     "contracts:execute": "ldenv -m localhost pnpm run --filter ./contracts execute @@MODE @@",
+    "contracts:verify": "ldenv -m localhost pnpm run --filter ./contracts verify @@MODE @@",
     "---------------------- WEB ----------------------": "web client",
     "web:dev": "pnpm wait-on web/src/lib/contracts.json && ldenv -m localhost pnpm run --filter ./web dev @@",
     "web:build": "pnpm common:build && ldenv -d localhost pnpm contracts:export @@MODE ~~ pnpm run --filter ./web build ~~ @@",
