@@ -212,6 +212,8 @@
             <key type="filename">Gnosis_sun.png</key>
             <key type="filename">Soccerverse_sun.png</key>
             <key type="filename">Xaya_sun.png</key>
+            <key type="filename">gg_sun_gray.png</key>
+            <key type="filename">gg_sun_green.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -286,6 +288,36 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">cafecosmos_planet.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>16,11,33,21</rect>
+                <key>scale9Paddings</key>
+                <rect>16,11,33,21</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">gg_logo.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>spriteScale</key>
+                <double>1</double>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>10,9,19,17</rect>
+                <key>scale9Paddings</key>
+                <rect>10,9,19,17</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
         </map>
         <key>fileLists</key>
         <map type="SpriteSheetMap">
@@ -322,6 +354,10 @@
                     <filename>Gnosis_sun.png</filename>
                     <filename>Soccerverse_sun.png</filename>
                     <filename>Blockscout_sun.png</filename>
+                    <filename>cafecosmos_planet.png</filename>
+                    <filename>gg_logo.png</filename>
+                    <filename>gg_sun_gray.png</filename>
+                    <filename>gg_sun_green.png</filename>
                 </array>
             </struct>
         </map>

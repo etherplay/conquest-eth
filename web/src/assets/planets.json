@@ -2,7 +2,7 @@
 
 "Baren.png":
 {
-	"frame": {"x":56,"y":1,"w":48,"h":48},
+	"frame": {"x":125,"y":67,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -10,7 +10,7 @@
 },
 "Barren_2.png":
 {
-	"frame": {"x":106,"y":1,"w":48,"h":48},
+	"frame": {"x":175,"y":67,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -18,15 +18,23 @@
 },
 "Blockscout_sun.png":
 {
-	"frame": {"x":153,"y":101,"w":64,"h":64},
+	"frame": {"x":69,"y":1,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
 	"sourceSize": {"w":64,"h":64}
 },
+"cafecosmos_planet.png":
+{
+	"frame": {"x":1,"y":69,"w":70,"h":48},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":70,"h":48},
+	"sourceSize": {"w":70,"h":48}
+},
 "Desert.png":
 {
-	"frame": {"x":156,"y":1,"w":48,"h":48},
+	"frame": {"x":225,"y":67,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -34,7 +42,7 @@
 },
 "Desert_1.png":
 {
-	"frame": {"x":206,"y":1,"w":48,"h":48},
+	"frame": {"x":275,"y":67,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -42,7 +50,7 @@
 },
 "Desert_2.png":
 {
-	"frame": {"x":256,"y":1,"w":48,"h":48},
+	"frame": {"x":325,"y":67,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -50,7 +58,7 @@
 },
 "Forest.png":
 {
-	"frame": {"x":306,"y":1,"w":48,"h":48},
+	"frame": {"x":375,"y":67,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -58,15 +66,39 @@
 },
 "Gas_1.png":
 {
-	"frame": {"x":356,"y":1,"w":48,"h":48},
+	"frame": {"x":425,"y":67,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
 	"sourceSize": {"w":48,"h":48}
 },
+"gg_logo.png":
+{
+	"frame": {"x":815,"y":1,"w":39,"h":35},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":39,"h":35},
+	"sourceSize": {"w":39,"h":35}
+},
+"gg_sun_gray.png":
+{
+	"frame": {"x":135,"y":1,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64}
+},
+"gg_sun_green.png":
+{
+	"frame": {"x":201,"y":1,"w":64,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
+	"sourceSize": {"w":64,"h":64}
+},
 "Gnosis_sun.png":
 {
-	"frame": {"x":219,"y":101,"w":64,"h":64},
+	"frame": {"x":267,"y":1,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -74,7 +106,7 @@
 },
 "Ice.png":
 {
-	"frame": {"x":406,"y":1,"w":48,"h":48},
+	"frame": {"x":465,"y":1,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -82,7 +114,7 @@
 },
 "Ice_1.png":
 {
-	"frame": {"x":456,"y":1,"w":48,"h":48},
+	"frame": {"x":475,"y":51,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -90,7 +122,7 @@
 },
 "Ice_2.png":
 {
-	"frame": {"x":1,"y":37,"w":48,"h":48},
+	"frame": {"x":515,"y":1,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -98,7 +130,7 @@
 },
 "Jungle32.png":
 {
-	"frame": {"x":20,"y":1,"w":34,"h":34},
+	"frame": {"x":825,"y":38,"w":34,"h":34},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":34,"h":34},
@@ -106,7 +138,7 @@
 },
 "Jungle48.png":
 {
-	"frame": {"x":51,"y":51,"w":48,"h":48},
+	"frame": {"x":525,"y":51,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -114,7 +146,7 @@
 },
 "Jungle64.png":
 {
-	"frame": {"x":417,"y":101,"w":66,"h":66},
+	"frame": {"x":1,"y":1,"w":66,"h":66},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":2,"y":2,"w":66,"h":66},
@@ -122,7 +154,7 @@
 },
 "Lava.png":
 {
-	"frame": {"x":101,"y":51,"w":48,"h":48},
+	"frame": {"x":565,"y":1,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -130,7 +162,7 @@
 },
 "Lava_1.png":
 {
-	"frame": {"x":151,"y":51,"w":48,"h":48},
+	"frame": {"x":575,"y":51,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -138,7 +170,7 @@
 },
 "Lava_2.png":
 {
-	"frame": {"x":201,"y":51,"w":48,"h":48},
+	"frame": {"x":615,"y":1,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -146,7 +178,7 @@
 },
 "Moon.png":
 {
-	"frame": {"x":1,"y":1,"w":17,"h":17},
+	"frame": {"x":825,"y":74,"w":17,"h":17},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":17,"h":17},
@@ -154,7 +186,7 @@
 },
 "Ocean.png":
 {
-	"frame": {"x":251,"y":51,"w":48,"h":48},
+	"frame": {"x":625,"y":51,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -162,7 +194,7 @@
 },
 "Ocean_1.png":
 {
-	"frame": {"x":101,"y":101,"w":50,"h":50},
+	"frame": {"x":73,"y":67,"w":50,"h":50},
 	"rotated": false,
 	"trimmed": true,
 	"spriteSourceSize": {"x":1,"y":1,"w":50,"h":50},
@@ -170,7 +202,7 @@
 },
 "Soccerverse_sun.png":
 {
-	"frame": {"x":285,"y":101,"w":64,"h":64},
+	"frame": {"x":333,"y":1,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -178,7 +210,7 @@
 },
 "Tech_1.png":
 {
-	"frame": {"x":301,"y":51,"w":48,"h":48},
+	"frame": {"x":665,"y":1,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -186,7 +218,7 @@
 },
 "Tech_2.png":
 {
-	"frame": {"x":351,"y":51,"w":48,"h":48},
+	"frame": {"x":675,"y":51,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -194,7 +226,7 @@
 },
 "Terran.png":
 {
-	"frame": {"x":401,"y":51,"w":48,"h":48},
+	"frame": {"x":715,"y":1,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -202,7 +234,7 @@
 },
 "Terran_1.png":
 {
-	"frame": {"x":451,"y":51,"w":48,"h":48},
+	"frame": {"x":725,"y":51,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -210,7 +242,7 @@
 },
 "Terran_2.png":
 {
-	"frame": {"x":1,"y":87,"w":48,"h":48},
+	"frame": {"x":765,"y":1,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -218,7 +250,7 @@
 },
 "Tundra.png":
 {
-	"frame": {"x":51,"y":101,"w":48,"h":48},
+	"frame": {"x":775,"y":51,"w":48,"h":48},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":48,"h":48},
@@ -226,7 +258,7 @@
 },
 "Xaya_sun.png":
 {
-	"frame": {"x":351,"y":101,"w":64,"h":64},
+	"frame": {"x":399,"y":1,"w":64,"h":64},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":64,"h":64},
@@ -237,8 +269,8 @@
 	"version": "1.0",
 	"image": "planets.png",
 	"format": "RGBA8888",
-	"size": {"w":505,"h":168},
+	"size": {"w":860,"h":118},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:2a8e30f2942fa30046a41dfffbc211ac:ee71b78855df5962b6f0e9c90028dc18:b39012af8c10e6f2542ba48f4ca1957d$"
+	"smartupdate": "$TexturePacker:SmartUpdate:9d389a5071cbe1854002647ec2048901:fed9d0f62d19a6d724b864931a290c1b:b39012af8c10e6f2542ba48f4ca1957d$"
 }
 }

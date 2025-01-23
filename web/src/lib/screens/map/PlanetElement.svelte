@@ -84,6 +84,10 @@
       frameType = 'Soccerverse_sun.png';
     } else if ($planetState?.rewardGiver === '0x4444444444444444444444444444444444444444') {
       frameType = 'Blockscout_sun.png';
+    } else if ($planetState?.rewardGiver === '0x5555555555555555555555555555555555555555') {
+      frameType = 'gg_logo.png';
+    } else if ($planetState?.rewardGiver === '0x6666666666666666666666666666666666666666') {
+      frameType = 'cafecosmos_planet.png';
     }
 
     frameInfo = (planetsFrame.frames as any)[frameType] as {frame: Frame};
