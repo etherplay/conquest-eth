@@ -168,7 +168,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   if (networkName === '2025_1_test') {
     timePerDistance /= 100;
-    // exitDuration /= 100; // TODO
+    exitDuration /= 100;
     productionSpeedUp = 100;
     frontrunningDelay /= 100;
     resolveWindow /= 25;

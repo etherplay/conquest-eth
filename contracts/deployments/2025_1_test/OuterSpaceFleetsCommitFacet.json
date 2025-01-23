@@ -1,5 +1,5 @@
 {
-  "address": "0x99a3A8Af81ece2d8D70041575f09d348c609d61A",
+  "address": "0xE4fD9D3eb957F9C8559f26D71cf119eE629A7525",
   "abi": [
     {
       "inputs": [
@@ -904,19 +904,19 @@
       "type": "function"
     }
   ],
-  "transactionHash": "0xd4d8f1819736aaeb1221e2379f22973b12e980ac770c5fd667313ef959fb94d4",
+  "transactionHash": "0x4170134ca2198f814ff64329ba037864b038fe0f272b1fbf001917b5919de1ca",
   "receipt": {
     "to": "0x4e59b44847b379578588920cA78FbF26c0B4956C",
     "from": "0xbE19B59E8C588d68f475A407C7BA5fE813AEb792",
     "contractAddress": null,
-    "transactionIndex": 10,
-    "gasUsed": "2251557",
+    "transactionIndex": 13,
+    "gasUsed": "2251545",
     "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-    "blockHash": "0xf850e3354080ced80425b3d0bf5379ac2d59d2f402896d9a79877f22a8973f78",
-    "transactionHash": "0xd4d8f1819736aaeb1221e2379f22973b12e980ac770c5fd667313ef959fb94d4",
+    "blockHash": "0xbca212904f1fe7b850207c3ada368141a67bfbdfafcd5d70fef4a2315a4d6740",
+    "transactionHash": "0x4170134ca2198f814ff64329ba037864b038fe0f272b1fbf001917b5919de1ca",
     "logs": [],
-    "blockNumber": 38187409,
-    "cumulativeGasUsed": "3406855",
+    "blockNumber": 38187669,
+    "cumulativeGasUsed": "6413565",
     "status": 1,
     "byzantium": true
   },
@@ -928,7 +928,7 @@
       "genesis": "0x2E8844C4BE4BB08968BF024167442FF346C1277CFA814ADCE21207B6A4BCD005",
       "resolveWindow": 1728,
       "timePerDistance": 72,
-      "exitDuration": 259200,
+      "exitDuration": 2592,
       "acquireNumSpaceships": 100000,
       "productionSpeedUp": 100,
       "frontrunningDelay": 18,
@@ -944,12 +944,12 @@
       "infinityStartTime": 1740062529
     }
   ],
-  "numDeployments": 11,
+  "numDeployments": 12,
   "linkedData": {
     "genesisHash": "0x2E8844C4BE4BB08968BF024167442FF346C1277CFA814ADCE21207B6A4BCD005",
     "resolveWindow": 1728,
     "timePerDistance": 72,
-    "exitDuration": 259200,
+    "exitDuration": 2592,
     "acquireNumSpaceships": 100000,
     "productionSpeedUp": 100,
     "chainGenesisHash": "",
