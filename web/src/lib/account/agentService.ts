@@ -7,6 +7,7 @@ import {createFuzdClient} from '$lib/utils/fuzd';
 import {getResolutionTransactionData} from '$lib/flows/resolve';
 import {spaceInfo} from '$lib/space/spaceInfo';
 import type {FuzdClient} from 'fuzd-client';
+import {initialContractsInfos} from '$lib/blockchain/contracts';
 
 // TODO fix fuzd-client types exports ?
 type Fees = {
@@ -121,7 +122,10 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
     const submission: Submission = {
       chainId,
       slot: data.fleetID,
-      expiry: resolutionData.expectedArrivalTime + 24 * 60 * 60, // TODO
+      expiry:
+        resolutionData.expectedArrivalTime +
+        initialContractsInfos.contracts.OuterSpace.linkedData.resolveWindow +
+        Math.ceil(initialContractsInfos.contracts.OuterSpace.linkedData.resolveWindow / 10),
       maxFeePerGasAuthorized,
       time: resolutionData.expectedArrivalTime,
       transaction: {
