@@ -379,8 +379,8 @@ importers:
         specifier: ^4.6.9
         version: 4.6.9
       fuzd-client:
-        specifier: ^0.8.1
-        version: 0.8.1(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1)
+        specifier: ^0.8.2
+        version: 0.8.2(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1)
       graphql:
         specifier: ^16.2.0
         version: 16.2.0
@@ -4944,8 +4944,8 @@ packages:
   fuzd-chain-protocol@0.8.0:
     resolution: {integrity: sha512-WtyQni/NA8RIPcHfXcfWm1QdA56LMjJ4nrawfzh4vnCN55kihzBdhnPsmM0vjhSbudP1GNcVLWWxuHUipHK5uQ==}
 
-  fuzd-client@0.8.1:
-    resolution: {integrity: sha512-QQmRj1CJx5GmlSdglB+vRV40vLmJfHyvm+NtbK1o7Gfxw6z5yLJBRWrArB/Nx/wz70cwNkdE7hnreSCaeuoh8Q==}
+  fuzd-client@0.8.2:
+    resolution: {integrity: sha512-SuAoT7/Vtq2OBYJ9wgiG+4qftR01ACEVM8SzqTJyydN9vOIryFSkBPNvWffdJ9Crnlz2QIHmEmHZnw0kV7S1lQ==}
     hasBin: true
 
   fuzd-common@0.8.0:
@@ -15306,7 +15306,7 @@ snapshots:
 
   fuzd-chain-protocol@0.8.0(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1):
     dependencies:
-      '@noble/hashes': 1.6.1
+      '@noble/hashes': 1.7.0
       '@scure/bip32': 1.6.0
       '@scure/starknet': 1.1.0
       eip-1193-signer: 0.1.0(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1)
@@ -15338,7 +15338,7 @@ snapshots:
 
   fuzd-chain-protocol@0.8.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8):
     dependencies:
-      '@noble/hashes': 1.6.1
+      '@noble/hashes': 1.7.0
       '@scure/bip32': 1.6.0
       '@scure/starknet': 1.1.0
       eip-1193-signer: 0.1.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)
@@ -15368,7 +15368,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  fuzd-client@0.8.1(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1):
+  fuzd-client@0.8.2(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1):
     dependencies:
       commander: 12.1.0
       fuzd-chain-protocol: 0.8.0(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1)
@@ -19157,7 +19157,7 @@ snapshots:
 
   remote-account@0.2.2:
     dependencies:
-      '@noble/hashes': 1.6.1
+      '@noble/hashes': 1.7.0
       '@noble/secp256k1': 2.1.0
       '@scure/bip32': 1.6.0
       '@scure/bip39': 1.5.0
@@ -19824,8 +19824,8 @@ snapshots:
 
   starknet-core@0.0.2:
     dependencies:
-      '@noble/curves': 1.7.0
-      '@noble/hashes': 1.6.1
+      '@noble/curves': 1.8.0
+      '@noble/hashes': 1.7.0
       '@scure/base': 1.2.1
       '@scure/starknet': 1.1.0
       '@starknet-io/types-js': 0.7.10
@@ -19833,8 +19833,8 @@ snapshots:
 
   starknet-core@0.0.3:
     dependencies:
-      '@noble/curves': 1.7.0
-      '@noble/hashes': 1.6.1
+      '@noble/curves': 1.8.0
+      '@noble/hashes': 1.7.0
       '@scure/base': 1.2.1
       '@scure/starknet': 1.1.0
       '@starknet-io/types-js': 0.7.10

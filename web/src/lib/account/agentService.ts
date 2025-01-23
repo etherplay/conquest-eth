@@ -139,14 +139,18 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
   async prepareSubmission(data: AgentData) {
     const remoteAccount = this.$store.account.remoteAccount;
     const submission = await this.createSubmission(data, {force: true});
-    const balanceRequired: bigint = await this.fuzdClient.computeBalanceRequired({
-      slot: submission.slot,
-      chainId: submission.chainId,
-      maxFeePerGasAuthorized: submission.maxFeePerGasAuthorized,
-      gas: submission.transaction.gas,
-    });
+    const requirement: {amountReserved: bigint; totalMaxCost: bigint; balanceRequired: bigint} =
+      await this.fuzdClient.computeBalanceRequired({
+        slot: submission.slot,
+        chainId: submission.chainId,
+        maxFeePerGasAuthorized: submission.maxFeePerGasAuthorized,
+        gas: submission.transaction.gas,
+      });
 
+    const {balanceRequired, amountReserved, totalMaxCost} = requirement;
     const balance = (await wallet.provider.getBalance(remoteAccount)).toBigInt();
+
+    console.log(`remoteAccount`, {balance, balanceRequired, amountReserved, totalMaxCost});
 
     return {
       cost: balanceRequired > balance ? balanceRequired - balance : 0n,

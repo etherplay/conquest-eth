@@ -1,5 +1,5 @@
 {
-  "address": "0x9725444b6ABf0bfEC52Daa358321FA1B358c925C",
+  "address": "0x9d0cEE2Aed0f2931B5bE34766DEA2Ba57af6f1Ad",
   "abi": [
     {
       "inputs": [
@@ -730,19 +730,19 @@
       "type": "function"
     }
   ],
-  "transactionHash": "0x8b3dced5f35e9edb6ab167398043eacc66ce5f5902fed3a824d33edb2e8d8854",
+  "transactionHash": "0xffabe9e39685a9a16e77ebf9a094a8fa186b6a675871f83c251653070f5bf44d",
   "receipt": {
     "to": "0x4e59b44847b379578588920cA78FbF26c0B4956C",
     "from": "0xbE19B59E8C588d68f475A407C7BA5fE813AEb792",
     "contractAddress": null,
-    "transactionIndex": 10,
-    "gasUsed": "323239",
+    "transactionIndex": 12,
+    "gasUsed": "323215",
     "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-    "blockHash": "0xbb05f5d62cd4ea3222b440914d5695a433bc48ccd9995dc5a66717b2de856a6d",
-    "transactionHash": "0x8b3dced5f35e9edb6ab167398043eacc66ce5f5902fed3a824d33edb2e8d8854",
+    "blockHash": "0xdd1bc48b40395a95bfd9726969c5c2d88cc74550e2fb6d5a558c103daee25a76",
+    "transactionHash": "0xffabe9e39685a9a16e77ebf9a094a8fa186b6a675871f83c251653070f5bf44d",
     "logs": [],
-    "blockNumber": 38141180,
-    "cumulativeGasUsed": "1572477",
+    "blockNumber": 38187402,
+    "cumulativeGasUsed": "2955452",
     "status": 1,
     "byzantium": true
   },
@@ -752,12 +752,12 @@
       "freeStakingToken": "0x8d82B1900bc77fACdf6f2209869E4f816E4fbcB2",
       "allianceRegistry": "0x10927DfafAc6915dE45CDd9955b7Cd18beaCeAbb",
       "genesis": "0x2E8844C4BE4BB08968BF024167442FF346C1277CFA814ADCE21207B6A4BCD005",
-      "resolveWindow": 43200,
-      "timePerDistance": 7200,
+      "resolveWindow": 1728,
+      "timePerDistance": 72,
       "exitDuration": 259200,
       "acquireNumSpaceships": 100000,
-      "productionSpeedUp": 1,
-      "frontrunningDelay": 1800,
+      "productionSpeedUp": 100,
+      "frontrunningDelay": 18,
       "productionCapAsDuration": 259200,
       "upkeepProductionDecreaseRatePer10000th": 5000,
       "fleetSizeFactor6": 500000,
@@ -770,16 +770,16 @@
       "infinityStartTime": 1740062529
     }
   ],
-  "numDeployments": 13,
+  "numDeployments": 14,
   "linkedData": {
     "genesisHash": "0x2E8844C4BE4BB08968BF024167442FF346C1277CFA814ADCE21207B6A4BCD005",
-    "resolveWindow": 43200,
-    "timePerDistance": 7200,
+    "resolveWindow": 1728,
+    "timePerDistance": 72,
     "exitDuration": 259200,
     "acquireNumSpaceships": 100000,
-    "productionSpeedUp": 1,
+    "productionSpeedUp": 100,
     "chainGenesisHash": "",
-    "frontrunningDelay": 1800,
+    "frontrunningDelay": 18,
     "productionCapAsDuration": 259200,
     "upkeepProductionDecreaseRatePer10000th": 5000,
     "fleetSizeFactor6": 500000,

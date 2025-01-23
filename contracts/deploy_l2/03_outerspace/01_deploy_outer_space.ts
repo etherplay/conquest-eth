@@ -167,6 +167,11 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   }
 
   if (networkName === '2025_1_test') {
+    timePerDistance /= 100;
+    // exitDuration /= 100; // TODO
+    productionSpeedUp = 100;
+    frontrunningDelay /= 100;
+    resolveWindow /= 25;
     genesisHash = '0x2E8844C4BE4BB08968BF024167442FF346C1277CFA814ADCE21207B6A4BCD005';
   }
   // ----------------------------------------------------------------------------------------------
