@@ -293,13 +293,18 @@
   //   })
   // }
 
-  let confirmDisabled = false;
+  let confirmDisabled: false | {reason: string} = false;
   $: {
-    if (toPlanetState) {
-      confirmDisabled = prediction?.outcome.nativeResist;
-    }
-    if (endOfSessionWarning === 'impossible') {
-      confirmDisabled = true;
+    confirmDisabled = false;
+    if ($agentService.state === 'Loading') {
+      confirmDisabled = {reason: 'loading'};
+    } else {
+      if (toPlanetState) {
+        confirmDisabled = prediction?.outcome.nativeResist ? {reason: 'nativeResist'} : false;
+      }
+      if (endOfSessionWarning === 'impossible') {
+        confirmDisabled = {reason: 'impossible'};
+      }
     }
   }
 
@@ -636,10 +641,10 @@
               )}
           >
             <p>Confirm</p>
-            {#if confirmDisabled}
-              {#if endOfSessionWarning === 'impossible'}(will not make it){:else}
-                (need higher attack)
-              {/if}
+            {#if confirmDisabled && confirmDisabled.reason === 'impossible'}
+              (will not make it)
+            {:else if confirmDisabled && confirmDisabled.reason === 'nativeResist'}
+              (need higher attack)
             {/if}
           </PanelButton>
         </div>
@@ -666,7 +671,9 @@
                 )}
             >
               <p>FORCE</p>
-              {#if endOfSessionWarning === 'impossible'}(will not make it){:else}
+              {#if confirmDisabled && confirmDisabled.reason === 'impossible'}
+                (will not make it)
+              {:else if confirmDisabled && confirmDisabled.reason === 'nativeResist'}
                 (need higher attack)
               {/if}
             </PanelButton>

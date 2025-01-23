@@ -573,6 +573,7 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
             from: xyToLocation(from.x, from.y),
             quantity: fleetAmount,
             toHash,
+            //toHash: '0x0000000000000000000000000000000000000000000000000000000000000001',// to make it fail
           },
           remoteAccount,
           {
