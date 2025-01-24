@@ -10,6 +10,7 @@
   import {formatError} from '$lib/utils';
   import {IAmRunningOnAMobileOrTablet} from '$lib/utils/web';
   import {onMount} from 'svelte';
+  import Copiable from '$lib/components/generic/Copiable.svelte';
 
   $: executionError = $flow.executionError as any;
 
@@ -67,10 +68,55 @@
 
   let encodedLocation = encodeURIComponent('https://2025-1.conquest.game');
   let host = '2025-1.conquest.game';
-  onMount(() => {
-    encodedLocation = encodeURIComponent(window.location.href);
-    host = window.location.host;
-  });
+  // onMount(() => {
+  //   encodedLocation = encodeURIComponent(window.location.href);
+  //   host = window.location.host;
+  // });
+
+  async function setClipboard(text) {
+    const type = 'text/plain';
+    const blob = new Blob([text], {type});
+    const data = [new ClipboardItem({[type]: blob})];
+    await navigator.clipboard.write(data);
+  }
+
+  const appUrls = {
+    coinbase: `https://go.cb-w.com/dapp?cb_url={encodedLocation}`,
+    //phantom:  `https://phantom.app/ul/browse/{encodedLocation}?ref={encodedLocation}`,
+    phantom: `phantom://browse/{encodedLocation}?ref={encodedLocation}`,
+    trust: `https://link.trustwallet.com/open_url?coin_id=60&url={encodedLocation}`,
+    // metamask: `metamask://dapp/{host}`, //`https://metamask.app.link/dapp/${host}`
+    // rainbow: `https://rainbow.com/add/{encodedLocation}`,
+    // brave: `brave://dapp/${host}`,
+    // opera: `opera://dapp/${host}`,
+    // imtoken: `imtokenv2://navigate?url=${encodedLocation}`,
+    // tokenpocket: `tokenpocket://navigate?url=${encodedLocation}`,
+    // math: `mathwallet://navigate?url=${encodedLocation}`,
+    // bitkeep: `bitkeep://navigate?url=${encodedLocation}`,
+    // okx: `okex://dapp/dapp?url=${encodedLocation}`,
+    // huobi: `huobiwallet://dapp?url=${encodedLocation}`,
+    // zengo: `zengo://dapp?url=${encodedLocation}`,
+    // bitpie: `bitpie://dapp?url=${encodedLocation}`,
+    // xdefi: `xdefi://dapp?url=${encodedLocation}`,
+    // alpha: `alpha://dapp?url=${encodedLocation}`,
+    // tongue: `tongue://dapp?url=${encodedLocation}`,
+    // safe: `safe://dapp?url=${encodedLocation}`,
+  };
+
+  async function goto(app: string) {
+    let url = window.location.href;
+    try {
+      await setClipboard(url);
+    } catch {}
+
+    const href = appUrls[app].replaceAll('{encodedLocation}', encodedLocation).replaceAll('{host}', host);
+
+    const link = document.createElement('a');
+    link.href = href;
+    link.target = '_self';
+    link.rel = 'noreferrer noopener';
+    link.click();
+  }
 </script>
 
 <slot />
@@ -170,24 +216,37 @@
 
           {#if IAmRunningOnAMobileOrTablet}
             <div class="text-center">Connect via Wallet App</div>
-            <div class="flex justify-center flex-col">
-              <NavButton
-                label="Use Phantom"
-                blank={true}
-                href={`https://phantom.app/ul/browse/${encodedLocation}?ref=${encodedLocation}`}
-                class="m-4 w-max-content"
-              >
+            <div class="flex justify-center flex-col align-middle items-center">
+              <NavButton label="Use Coinbase" blank={true} on:click={() => goto('coinbase')} class="m-4 w-max-content">
                 <img
                   class="cursor-pointer p-0 m-auto h-10 w-10 object-contain mb-2"
-                  alt={`Use Phantom}`}
+                  alt={`Use Coinbase`}
+                  src={`${base}images/coinbase.svg`}
+                />
+                Coinbase
+              </NavButton>
+              <NavButton label="Use Phantom" blank={true} on:click={() => goto('phantom')} class="m-4 w-max-content">
+                <img
+                  class="cursor-pointer p-0 m-auto h-10 w-10 object-contain mb-2"
+                  alt={`Use Phantom`}
                   src={`${base}images/phantom.svg`}
                 />
                 Phantom
               </NavButton>
-              <NavButton
+              <NavButton label="Use Trust" blank={true} on:click={() => goto('trust')} class="m-4 w-max-content">
+                <img
+                  class="cursor-pointer p-0 m-auto h-10 w-10 object-contain mb-2"
+                  alt={`Use Trust`}
+                  src={`${base}images/trust.svg`}
+                />
+                Trust
+              </NavButton>
+              <!-- <NavButton
                 label="Use Metamask"
                 blank={true}
-                href={`https://metamask.app.link/dapp/${host}`}
+                ahref={`https://metamask.app.link/dapp/${host}`}
+                bhref={`metamask://dapp/${host}`}
+                on:click={() => goto('metamask')}
                 class="m-4 w-max-content"
               >
                 <img
@@ -195,8 +254,15 @@
                   alt={`Use Metamask}`}
                   src={`${base}images/metamask.svg`}
                 />
-                Metamask
-              </NavButton>
+                Metamask<br />
+              </NavButton> -->
+              <!-- <div class="text-center">
+                (if you are not redirected to the game in the app, you'll get the url in your clipboard)
+              </div> -->
+
+              <!-- {#each Object.keys(appUrls) as app}
+                <button class="m-2 border-2 text-lg" on:click={() => goto(app)}>{app}</button>
+              {/each} -->
             </div>
           {:else}
             <div class="text-center">Download a Wallet</div>
