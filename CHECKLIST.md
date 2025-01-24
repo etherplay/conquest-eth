@@ -1,5 +1,4 @@
-- [ ] update genesisHash
-- [ ] pnpm deploy <networkName>
-- [ ] call deleteAll on agent-service
-- [ ] generate claim keys
-- [ ] test
+- [ ] configure .env<networkName> and .env<networkName>.local
+- [ ] update genesisHash in deploy_outerspace
+- [ ] plus any specific config there
+- [ ] pnpm contracts:deploy <networkName>
