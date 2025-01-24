@@ -57,6 +57,7 @@ export type Submission = {
   time: number;
   expiry: number;
   paymentReserve?: {amount: bigint; broadcaster: `0x${string}`};
+  bestTime?: number;
   onBehalf?: `0x${string}`;
 };
 
@@ -128,6 +129,8 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
         Math.ceil(initialContractsInfos.contracts.OuterSpace.linkedData.resolveWindow / 10),
       maxFeePerGasAuthorized,
       time: resolutionData.expectedArrivalTime,
+      bestTime:
+        resolutionData.expectedArrivalTime + initialContractsInfos.contracts.OuterSpace.linkedData.resolveWindow / 20,
       transaction: {
         data: (txData.data || `0x`) as `0x${string}`,
         gas, // TODO:fuzd make it optional
