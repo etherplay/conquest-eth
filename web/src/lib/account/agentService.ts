@@ -124,13 +124,19 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
       resolutionData.expectedArrivalTime +
       initialContractsInfos.contracts.OuterSpace.linkedData.resolveWindow +
       Math.ceil(initialContractsInfos.contracts.OuterSpace.linkedData.resolveWindow / 10);
+    let bestTime =
+      resolutionData.expectedArrivalTime + initialContractsInfos.contracts.OuterSpace.linkedData.resolveWindow / 20;
+    if (bestTime > expiry) {
+      console.error({bestTime, expiry});
+      bestTime = undefined;
+    }
     const submission: Submission = {
       chainId,
       slot: data.fleetID,
       expiry,
       maxFeePerGasAuthorized,
       time: resolutionData.expectedArrivalTime,
-      bestTime: expiry + initialContractsInfos.contracts.OuterSpace.linkedData.resolveWindow / 20,
+      bestTime,
       transaction: {
         data: (txData.data || `0x`) as `0x${string}`,
         gas, // TODO:fuzd make it optional
