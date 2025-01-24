@@ -1,4 +1,6 @@
-- [ ] configure .env<networkName> and .env<networkName>.local
+- [ ] configure `.env<networkName>` and `.env<networkName>.local`
 - [ ] update genesisHash in deploy_outerspace
 - [ ] plus any specific config there
-- [ ] pnpm contracts:deploy <networkName>
+- [ ] `pnpm contracts:deploy <networkName>`
+- [ ] ensure you have a graph created in studio or in alchemy (actiualy alchemy might not need precreation)
+- [ ] `pnpm subgraph:deploy <networkName>`
