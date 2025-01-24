@@ -8,6 +8,8 @@
   import {wallet, builtin, chain, transactions, balance, flow, fallback, switchChain} from '$lib/blockchain/wallet';
   import {privateWallet} from '$lib/account/privateWallet';
   import {formatError} from '$lib/utils';
+  import {IAmRunningOnAMobileOrTablet} from '$lib/utils/web';
+  import {onMount} from 'svelte';
 
   $: executionError = $flow.executionError as any;
 
@@ -62,6 +64,13 @@
   }
 
   let onSharedStorage = !!(base && (base.startsWith('/ipfs/') || base.startsWith('/ipns/')));
+
+  let encodedLocation = encodeURIComponent('https://2025-1.conquest.game');
+  let host = '2025-1.conquest.game';
+  onMount(() => {
+    encodedLocation = encodeURIComponent(window.location.href);
+    host = window.location.host;
+  });
 </script>
 
 <slot />
@@ -127,9 +136,9 @@
       {:else if $wallet.connecting}
         Connecting to wallet...
       {:else}
-        <div class="text-center">
+        <!-- <div class="text-center">
           <p>You need to connect your wallet.</p>
-        </div>
+        </div> -->
         <div class="flex flex-wrap justify-center pb-3">
           {#each options as option}
             {#if !(option.id === 'builtin' && $builtin.walletsAnnounced.length > 0)}
@@ -157,22 +166,76 @@
           {/if}
         </div>
         {#if builtinNeedInstalation}
-          <div class="text-center">OR</div>
-          <div class="flex justify-center">
-            <NavButton
-              label="Download Metamask"
-              blank={true}
-              href="https://metamask.io/download.html"
-              class="m-4 w-max-content"
-            >
-              <img
-                class="cursor-pointer p-0 m-auto h-10 w-10 object-contain"
-                alt={`Download Metamask}`}
-                src={`${base}images/metamask.svg`}
-              />
-              Download metamask
-            </NavButton>
-          </div>
+          <!-- <div class="text-center">OR</div> -->
+          <div class="text-center">Connect via Wallet App</div>
+
+          {#if !IAmRunningOnAMobileOrTablet}
+            <div class="flex justify-center flex-col">
+              <NavButton
+                label="Use Phantom"
+                blank={true}
+                href={`https://phantom.app/ul/browse/${encodedLocation}?ref=${encodedLocation}`}
+                class="m-4 w-max-content"
+              >
+                <img
+                  class="cursor-pointer p-0 m-auto h-10 w-10 object-contain mb-2"
+                  alt={`Use Phantom}`}
+                  src={`${base}images/phantom.svg`}
+                />
+                Phantom
+              </NavButton>
+              <NavButton
+                label="Use Metamask"
+                blank={true}
+                href={`https://metamask.app.link/dapp/${host}`}
+                class="m-4 w-max-content"
+              >
+                <img
+                  class="cursor-pointer p-0 m-auto h-10 w-10 object-contain mb-2"
+                  alt={`Use Metamask}`}
+                  src={`${base}images/metamask.svg`}
+                />
+                Metamask
+              </NavButton>
+            </div>
+          {:else}
+            <div class="flex justify-center">
+              <NavButton label="Download Rabby Wallet" blank={true} href="https://rabby.io/" class="m-4 w-max-content">
+                <img
+                  class="cursor-pointer p-0 m-auto h-10 w-10 object-contain mb-2"
+                  alt={`Download Rabby Wallet}`}
+                  src={`${base}images/rabby.svg`}
+                />
+                Rabby
+              </NavButton>
+              <NavButton
+                label="Download Phantom"
+                blank={true}
+                href="https://phantom.com/download"
+                class="m-4 w-max-content"
+              >
+                <img
+                  class="cursor-pointer p-0 m-auto h-10 w-10 object-contain mb-2"
+                  alt={`Download Phantom}`}
+                  src={`${base}images/phantom.svg`}
+                />
+                Phantom
+              </NavButton>
+              <NavButton
+                label="Download Metamask"
+                blank={true}
+                href="https://metamask.io/download.html"
+                class="m-4 w-max-content"
+              >
+                <img
+                  class="cursor-pointer p-0 m-auto h-10 w-10 object-contain mb-2"
+                  alt={`Download Metamask}`}
+                  src={`${base}images/metamask.svg`}
+                />
+                Metamask
+              </NavButton>
+            </div>
+          {/if}
         {/if}
       {/if}
     {:else if $wallet.state === 'Locked'}
