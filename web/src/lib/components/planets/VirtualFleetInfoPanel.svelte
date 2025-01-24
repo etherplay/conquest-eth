@@ -22,7 +22,7 @@
 </script>
 
 <div
-  class="absolute right-0 top-14 inline-block w-36 md:w-48 bg-gray-900 bg-opacity-80 text-cyan-300 border-2 border-cyan-300 m-4 text-sm"
+  class="z-10 absolute right-0 top-14 inline-block w-36 md:w-48 bg-gray-900 bg-opacity-80 text-cyan-300 border-2 border-cyan-300 m-4 text-sm"
 >
   <PlanetStats copiedDirection="left" {planetState} {planetInfo} />
 
