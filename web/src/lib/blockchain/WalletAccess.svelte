@@ -167,9 +167,9 @@
         </div>
         {#if builtinNeedInstalation}
           <!-- <div class="text-center">OR</div> -->
-          <div class="text-center">Connect via Wallet App</div>
 
-          {#if !IAmRunningOnAMobileOrTablet}
+          {#if IAmRunningOnAMobileOrTablet}
+            <div class="text-center">Connect via Wallet App</div>
             <div class="flex justify-center flex-col">
               <NavButton
                 label="Use Phantom"
@@ -199,6 +199,7 @@
               </NavButton>
             </div>
           {:else}
+            <div class="text-center">Download a Wallet</div>
             <div class="flex justify-center">
               <NavButton label="Download Rabby Wallet" blank={true} href="https://rabby.io/" class="m-4 w-max-content">
                 <img
