@@ -120,17 +120,17 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
     );
 
     const gas = txData.gasLimit?.toBigInt() || 0n;
+    const expiry =
+      resolutionData.expectedArrivalTime +
+      initialContractsInfos.contracts.OuterSpace.linkedData.resolveWindow +
+      Math.ceil(initialContractsInfos.contracts.OuterSpace.linkedData.resolveWindow / 10);
     const submission: Submission = {
       chainId,
       slot: data.fleetID,
-      expiry:
-        resolutionData.expectedArrivalTime +
-        initialContractsInfos.contracts.OuterSpace.linkedData.resolveWindow +
-        Math.ceil(initialContractsInfos.contracts.OuterSpace.linkedData.resolveWindow / 10),
+      expiry,
       maxFeePerGasAuthorized,
       time: resolutionData.expectedArrivalTime,
-      bestTime:
-        resolutionData.expectedArrivalTime + initialContractsInfos.contracts.OuterSpace.linkedData.resolveWindow / 20,
+      bestTime: expiry + initialContractsInfos.contracts.OuterSpace.linkedData.resolveWindow / 20,
       transaction: {
         data: (txData.data || `0x`) as `0x${string}`,
         gas, // TODO:fuzd make it optional
