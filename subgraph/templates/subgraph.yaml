@@ -119,6 +119,27 @@ dataSources:
           handler: handleFreePlayTokenTransfer
       file: ./src/free_play_token.ts
   - kind: ethereum/contract
+    name: FreePlayTokenClaim
+    network: {{chainName}}
+    source:
+      address: '{{contracts.FreePlayTokenClaim.address}}'
+      abi: FreePlayTokenClaim_Contract
+      startBlock: {{contracts.FreePlayTokenClaim.receipt.blockNumber}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.6
+      language: wasm/assemblyscript
+      entities:
+        - Owner
+        - Chain
+      abis:
+        - name: FreePlayTokenClaim_Contract
+          file: ./abis/FreePlayTokenClaim.json
+      eventHandlers:
+        - event: Transfer(indexed address,indexed address,uint256)
+          handler: handleFreePlayTokenClaimTransfer
+      file: ./src/free_play_token_claim.ts
+  - kind: ethereum/contract
     name: AllianceRegistry
     network: {{chainName}}
     source:

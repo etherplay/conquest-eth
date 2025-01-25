@@ -64,6 +64,7 @@ contract OuterSpaceStakingFacet is OuterSpaceFacetBase {
         uint256 amountToMint,
         uint256 tokenAmount
     ) public payable {
+        // TODO permit
         address sender = msg.sender;
         _acquire(sender, amountToMint + tokenAmount, location, false);
         _stakingToken.mint{value: msg.value}(address(this), amountToMint);

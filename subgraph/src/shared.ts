@@ -64,6 +64,7 @@ export function handleOwnerViaId(id: string): Owner {
   entity.tokenToWithdraw = ZERO;
   entity.playTokenBalance = ZERO;
   entity.freePlayTokenBalance = ZERO;
+  entity.freePlayTokenClaimBalance = ZERO;
   entity.points = ZERO;
   entity.points_shared_totalRewardPerPointAccounted = ZERO;
   entity.points_shared_rewardsToWithdraw = ZERO;

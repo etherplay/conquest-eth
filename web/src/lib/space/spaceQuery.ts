@@ -63,7 +63,13 @@ export type SpaceQueryResult = {
   nullplanets: PlanetQueryState[]; // TODO remove: make owner == null => 0x00000
   otherplanets: PlanetQueryState[];
   myplanets?: PlanetQueryState[];
-  owner?: {id: string; playTokenBalance: string; freePlayTokenBalance: string; tokenToWithdraw: string};
+  owner?: {
+    id: string;
+    playTokenBalance: string;
+    freePlayTokenBalance: string;
+    freePlayTokenClaimBalance: string;
+    tokenToWithdraw: string;
+  };
   space?: {minX: string; maxX: string; minY: string; maxY: string; address: string};
   chain?: {blockHash: string; blockNumber: string};
   _meta: {
@@ -85,7 +91,13 @@ export type SpaceState = {
   outofsync?: {
     delta: number;
   };
-  player?: {id: string; playTokenBalance: BigNumber; freePlayTokenBalance: BigNumber; tokenToWithdraw: BigNumber};
+  player?: {
+    id: string;
+    playTokenBalance: BigNumber;
+    freePlayTokenBalance: BigNumber;
+    freePlayTokenClaimBalance: BigNumber;
+    tokenToWithdraw: BigNumber;
+  };
   planets: PlanetContractState[];
   loading: boolean;
   space?: {x1: number; x2: number; y1: number; y2: number; address: string};
@@ -165,6 +177,7 @@ export class SpaceQueryStore implements QueryStore<SpaceState> {
     id
     playTokenBalance
     freePlayTokenBalance
+    freePlayTokenClaimBalance
     tokenToWithdraw
   }
   myplanets: planets(first: 1000 where: {owner: $owner}) {
@@ -402,6 +415,7 @@ export class SpaceQueryStore implements QueryStore<SpaceState> {
               id: data.owner.id,
               playTokenBalance: BigNumber.from(data.owner.playTokenBalance),
               freePlayTokenBalance: BigNumber.from(data.owner.freePlayTokenBalance),
+              freePlayTokenClaimBalance: BigNumber.from(data.owner.freePlayTokenClaimBalance),
               tokenToWithdraw: BigNumber.from(data.owner.tokenToWithdraw),
             }
           : this.queryStore.runtimeVariables.owner
@@ -409,6 +423,7 @@ export class SpaceQueryStore implements QueryStore<SpaceState> {
               id: this.queryStore.runtimeVariables.owner,
               playTokenBalance: BigNumber.from(0),
               freePlayTokenBalance: BigNumber.from(0),
+              freePlayTokenClaimBalance: BigNumber.from(0),
               tokenToWithdraw: BigNumber.from(0),
             }
           : undefined,
@@ -454,6 +469,7 @@ export class SpaceQueryStore implements QueryStore<SpaceState> {
             id: data.owner.id,
             playTokenBalance: BigNumber.from(data.owner.playTokenBalance),
             freePlayTokenBalance: BigNumber.from(data.owner.freePlayTokenBalance),
+            freePlayTokenClaimBalance: BigNumber.from(data.owner.freePlayTokenClaimBalance),
             tokenToWithdraw: BigNumber.from(data.owner.tokenToWithdraw),
           }
         : this.queryStore.runtimeVariables.owner
@@ -461,6 +477,7 @@ export class SpaceQueryStore implements QueryStore<SpaceState> {
             id: this.queryStore.runtimeVariables.owner,
             playTokenBalance: BigNumber.from(0),
             freePlayTokenBalance: BigNumber.from(0),
+            freePlayTokenClaimBalance: BigNumber.from(0),
             tokenToWithdraw: BigNumber.from(0),
           }
         : undefined,

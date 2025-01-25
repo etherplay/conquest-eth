@@ -22,6 +22,7 @@ type Owner @entity {
   totalCollected: BigInt!
   playTokenBalance: BigInt!
   freePlayTokenBalance: BigInt!
+  freePlayTokenClaimBalance: BigInt!
   tokenToWithdraw: BigInt!
   points: BigInt!
   points_shared_totalRewardPerPointAccounted: BigInt!

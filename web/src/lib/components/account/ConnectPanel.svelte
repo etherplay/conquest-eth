@@ -55,6 +55,12 @@
             <PlayCoin class="inline w-4" free={true} />
           </span>
         {/if}
+        {#if $myTokens.freePlayTokenClaimBalance.gt(0)}
+          <a href={url('free-token-claim/')} class="text-green-300 font-black pr-4 animate-bounce">
+            {'+' + $myTokens.freePlayTokenClaimBalance.div('10000000000000000').toNumber() / 100 + ''}
+            <PlayCoin class="inline w-4" free={true} />
+          </a>
+        {/if}
       {:else}
         <span class="text-yellow-300 font-black pr-4">
           ...

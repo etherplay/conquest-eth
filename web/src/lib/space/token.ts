@@ -10,6 +10,7 @@ import {now} from '$lib/time';
 export type MyToken = {
   playTokenBalance?: BigNumber;
   freePlayTokenBalance?: BigNumber;
+  freePlayTokenClaimBalance?: BigNumber;
   playTokenAllowance?: BigNumber;
   freePlayTokenAllowance?: BigNumber;
 };
@@ -85,8 +86,9 @@ export class MyTokenStore implements Readable<MyToken> {
       if (freePlayTokenBalance.lt(0)) {
         freePlayTokenBalance = BigNumber.from(0);
       }
+      const freePlayTokenClaimBalance = update.queryState.data.player.freePlayTokenClaimBalance;
 
-      this.data = {playTokenBalance, freePlayTokenBalance};
+      this.data = {playTokenBalance, freePlayTokenBalance, freePlayTokenClaimBalance};
     }
     this.store.set(this.data);
   }
