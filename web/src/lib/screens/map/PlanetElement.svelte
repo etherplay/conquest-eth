@@ -405,7 +405,7 @@
     </div>
   {/if}
 
-  {#if $planetState && $planetState.flagTime > 0 && $time < $planetState.flagTime + (6 * 24 * 3600) / spaceInfo.productionSpeedUp}
+  {#if $planetState && !$planetState.exiting && $planetState.flagTime > 0 && $time < $planetState.flagTime + (6 * 24 * 3600) / spaceInfo.productionSpeedUp}
     <div
       style={`
     z-index: 5;
@@ -430,6 +430,28 @@
           d="M18 4.5014
         a 12.7324 12.7324 0 0 1 0 25.4648
         a 12.7324 12.7324 0 0 1 0 -25.4648"
+        />
+      </svg>
+    </div>
+  {/if}
+
+  {#if $planetState && $planetState.exiting && $planetState.flagTime > 0 && $planetState.startExitTime < $planetState.flagTime + (6 * 24 * 3600) / spaceInfo.productionSpeedUp}
+    <div
+      style={`
+  z-index: 5;
+  position: absolute;
+  transform: translate(${x}px,${y}px) scale(${blockieScale * 2}, ${blockieScale * 2});
+  width: ${frame.w}px;
+  height: ${frame.h}px;
+`}
+    >
+      <svg viewBox="0 0 36 36">
+        <path
+          style="fill: none; stroke-width: 2.24; stroke-linecap: round; stroke: #86efac;"
+          stroke-dasharray="95 95"
+          d="M18 4.5014
+      a 12.7324 12.7324 0 0 1 0 25.4648
+      a 12.7324 12.7324 0 0 1 0 -25.4648"
         />
       </svg>
     </div>

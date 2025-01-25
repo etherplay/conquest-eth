@@ -14,6 +14,7 @@
   import type {PlanetInfo, PlanetState} from 'conquest-eth-common';
   import type {Readable} from 'svelte/store';
   import Copiable from '../generic/Copiable.svelte';
+  import {time} from '$lib/time';
 
   $: walletIsOwner = $wallet.address && $wallet.address?.toLowerCase() === $planetState?.owner?.toLowerCase();
   $: textColor =
@@ -75,6 +76,13 @@
       <div class="m-1 w-26 md:w-36 flex justify-between text-red-400">
         <p class="p-0 mb-1">Exiting in:</p>
         <p class="p-0 mb-1">{timeToText($planetState.exitTimeLeft)}</p>
+      </div>
+    {:else if $planetState.flagTime > 0}
+      <div class="m-1 w-26 md:w-36 flex justify-between text-green-300">
+        <p class="p-0 mb-1">Free until:</p>
+        <p class="p-0 mb-1">
+          {timeToText($planetState.flagTime + (6 * 24 * 3600) / spaceInfo.productionSpeedUp - $time)}
+        </p>
       </div>
     {/if}
 
