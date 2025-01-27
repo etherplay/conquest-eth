@@ -55,7 +55,7 @@ export type Submission = {
     gas: bigint;
   };
   time: number;
-  expiry: number;
+  expiryDelta: number;
   paymentReserve?: {amount: bigint; broadcaster: `0x${string}`};
   criticalDelta?: number;
   onBehalf?: `0x${string}`;
@@ -120,8 +120,7 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
     );
 
     const gas = txData.gasLimit?.toBigInt() || 0n;
-    const expiry =
-      resolutionData.expectedArrivalTime +
+    const expiryDelta =
       initialContractsInfos.contracts.OuterSpace.linkedData.resolveWindow +
       Math.ceil(initialContractsInfos.contracts.OuterSpace.linkedData.resolveWindow / 10);
 
@@ -130,7 +129,7 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
     const submission: Submission = {
       chainId,
       slot: data.fleetID,
-      expiry,
+      expiryDelta,
       maxFeePerGasAuthorized,
       time: resolutionData.expectedArrivalTime,
       criticalDelta,
