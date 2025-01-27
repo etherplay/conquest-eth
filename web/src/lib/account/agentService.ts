@@ -57,7 +57,7 @@ export type Submission = {
   time: number;
   expiry: number;
   paymentReserve?: {amount: bigint; broadcaster: `0x${string}`};
-  bestTime?: number;
+  criticalDelta?: number;
   onBehalf?: `0x${string}`;
 };
 
@@ -124,19 +124,16 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
       resolutionData.expectedArrivalTime +
       initialContractsInfos.contracts.OuterSpace.linkedData.resolveWindow +
       Math.ceil(initialContractsInfos.contracts.OuterSpace.linkedData.resolveWindow / 10);
-    let bestTime =
-      resolutionData.expectedArrivalTime + initialContractsInfos.contracts.OuterSpace.linkedData.resolveWindow / 20;
-    if (bestTime > expiry) {
-      console.error({bestTime, expiry});
-      bestTime = undefined;
-    }
+
+    let criticalDelta = initialContractsInfos.contracts.OuterSpace.linkedData.resolveWindow / 20;
+
     const submission: Submission = {
       chainId,
       slot: data.fleetID,
       expiry,
       maxFeePerGasAuthorized,
       time: resolutionData.expectedArrivalTime,
-      bestTime,
+      criticalDelta,
       transaction: {
         data: (txData.data || `0x`) as `0x${string}`,
         gas, // TODO:fuzd make it optional
