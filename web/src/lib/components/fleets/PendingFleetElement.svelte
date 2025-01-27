@@ -52,7 +52,12 @@
       operator: fleet.operator,
     };
     const submission = await agentService.createSubmission(agentData, {force: true});
-    const {queueID} = await agentService.submitReveal(submission);
+    const {queueID} = await agentService.submitReveal(submission, {
+      broadcastTime: fleet.sending.action.timestamp,
+      from: fleet.walletAddress as `0x${string}`,
+      hash: fleet.sending.id as `0x${string}`,
+      nonce: `0x${fleet.sending.action.nonce.toString(16)}` as `0x${string}`,
+    });
     account.recordQueueID(fleet.sending.id, queueID);
   }
 

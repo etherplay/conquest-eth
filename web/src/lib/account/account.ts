@@ -49,6 +49,7 @@ export type PendingSend = PendingActionBase & {
   fleetOwner: string;
   fleetSender?: string;
   operator?: string;
+  walletAddress: string;
 };
 
 export type PendingResolution = PendingActionBase & {
@@ -225,6 +226,7 @@ class Account implements Readable<AccountState> {
       fleetSender?: string;
       operator?: string;
     },
+    walletAddress: string,
     txHash: string,
     timestamp: number,
     nonce: number,
@@ -247,6 +249,7 @@ class Account implements Readable<AccountState> {
       operator: fleet.operator,
       fleetOwner: fleet.owner,
       overrideTimestamp,
+      walletAddress,
     };
     await this.accountDB.save(this.state.data);
     this._notify('recordFleet');

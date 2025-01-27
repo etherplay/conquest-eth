@@ -65,3 +65,23 @@ export type Submission = {
   onBehalf?: `0x${string}`;
   inClear?: boolean;
 };
+
+export type PartialSubmission = {
+  slot: string;
+  chainId: string;
+  transaction: {
+    data: `0x${string}`;
+    to: `0x${string}`;
+    gas: bigint;
+  };
+  maxFeePerGasAuthorized: bigint;
+  criticalDelta?: number;
+  timing:
+    | Omit<FixedTime, 'assumedTransaction'>
+    | Omit<DeltaTime, 'startTransaction'>
+    | Omit<DeltaTimeWithTargetTime, 'startTransaction'>
+    | Omit<FixedRound, 'scheduledRound' | 'assumedTransaction'>;
+  paymentReserve?: {amount: bigint; broadcaster: `0x${string}`};
+  onBehalf?: `0x${string}`;
+  inClear?: boolean;
+};

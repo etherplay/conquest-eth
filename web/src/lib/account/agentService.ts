@@ -11,7 +11,7 @@ import {initialContractsInfos} from '$lib/blockchain/contracts';
 
 // TODO
 // needed because for some reason fuzd-client type cannot be imported
-import type {Submission} from './fuzd-client-types';
+import type {PartialSubmission, PriorTransactionInfo, Submission} from './fuzd-client-types';
 
 // TODO fix fuzd-client types exports ?
 type Fees = {
@@ -74,7 +74,7 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
   _unsubscribeFromPrivateWallet?: () => void;
   fuzdClient: FuzdClient;
 
-  async createSubmission(data: AgentData, options?: {force?: boolean}): Promise<Submission> {
+  async createSubmission(data: AgentData, options?: {force?: boolean}): Promise<PartialSubmission> {
     const remoteAccount = this.$store.account.remoteAccount;
     const serviceParameters = this.$store.account.serviceParameters;
     const maxFeePerGas = await wallet.provider.getGasPrice();
@@ -114,15 +114,16 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
 
     let criticalDelta = initialContractsInfos.contracts.OuterSpace.linkedData.resolveWindow / 20;
 
-    const submission: Submission = {
+    const submission: PartialSubmission = {
       chainId,
       slot: data.fleetID,
 
       maxFeePerGasAuthorized,
       timing: {
-        type: 'fixed-round',
+        type: 'delta-time-with-target-time',
         expiryDelta,
-        expectedTime: resolutionData.expectedArrivalTime,
+        delta: resolutionData.fleetDuration,
+        targetTimeUnlessHigherDelta: resolutionData.expectedArrivalTime,
       },
       criticalDelta,
       transaction: {
@@ -160,7 +161,20 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
     };
   }
 
-  async submitReveal(submission: Submission): Promise<{queueID: string}> {
+  async submitReveal(
+    partialSubmission: PartialSubmission,
+    transaction: PriorTransactionInfo
+  ): Promise<{queueID: string}> {
+    // could also support fixed-time and fixed-round with `assumedTransaction`
+    let submission: Submission;
+    if (
+      partialSubmission.timing.type === 'delta-time' ||
+      partialSubmission.timing.type === 'delta-time-with-target-time'
+    ) {
+      submission = {...partialSubmission, timing: {...partialSubmission.timing, startTransaction: transaction}};
+    } else {
+      submission = {...partialSubmission, timing: partialSubmission.timing};
+    }
     const result = await this.fuzdClient.scheduleExecution(submission, {
       // fakeEncrypt: time.hasTimeContract,
     });

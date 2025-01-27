@@ -107,7 +107,7 @@
     <!-- </div>
       </div> -->
     <div
-      class="absolute z-10 right-0 top-14 border-cyan-500 border-2 p-5 bg-opacity-80 bg-black flex mr-2 flex-col items-center"
+      class="absolute z-20 right-0 top-14 border-cyan-500 border-2 p-5 bg-opacity-80 bg-black flex mr-2 flex-col items-center"
     >
       <NavButton class="m-1" label="withdrawals" href={url('withdrawals/')}>
         Withdrawals
@@ -126,10 +126,16 @@
         Logs
         <Help class="w-4 h-4">See Global Logs</Help>
       </NavButton>
-      <!-- <NavButton class="m-1" label="help" href={url('highscores/')}>
+      <NavButton
+        borderColor="border-yellow-600"
+        textColor="text-yellow-300"
+        class="m-1"
+        label="help"
+        href={url('highscores/')}
+      >
         Highscores
         <Help class="w-4 h-4">See Highscores for current alpha</Help>
-      </NavButton> -->
+      </NavButton>
       <NavButton class="m-1" label="help" href={url('alliances/')}>
         Alliances
         <Help class="w-4 h-4">See All Public Alliances</Help>

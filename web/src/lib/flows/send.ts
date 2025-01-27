@@ -36,6 +36,7 @@ export type LastFleet = {
     fleetSender?: string;
     operator?: string;
   };
+  walletAddress: string;
   timestamp: number;
   nonce: number;
   useAgentService: boolean;
@@ -536,6 +537,7 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
           fleetSender,
           operator,
         },
+        walletAddress,
         timestamp: latestBlock.timestamp,
         nonce, // tx.nounce can be different it seems, metamask can change it, or maybe be even user
         useAgentService,
@@ -635,6 +637,7 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
         fleetSender,
         operator,
       },
+      walletAddress,
       tx.hash,
       latestBlock.timestamp,
       nonce // tx.nounce can be different it seems, metamask can change it, or maybe be even user
@@ -644,7 +647,12 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
 
     if (useAgentService) {
       try {
-        const {queueID} = await agentService.submitReveal(submission);
+        const {queueID} = await agentService.submitReveal(submission, {
+          broadcastTime: latestBlock.timestamp,
+          from: walletAddress as `0x${string}`,
+          hash: tx.hash as `0x${string}`,
+          nonce: `0x${nonce.toString(16)}`,
+        });
         account.recordQueueID(tx.hash, queueID);
       } catch (e) {
         console.error(e);
@@ -672,6 +680,7 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
       console.log({lastFleet});
       account.recordFleet(
         lastFleet.fleet,
+        tx.from,
         tx.hash,
         lastFleet.timestamp,
         lastFleet.nonce // tx.nonce can be different it seems, metamask can change it, or maybe be even user
@@ -701,7 +710,12 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
             operator: lastFleet.fleet.operator,
           };
           const submission = await agentService.createSubmission(agentData);
-          const {queueID} = await agentService.submitReveal(submission);
+          const {queueID} = await agentService.submitReveal(submission, {
+            broadcastTime: lastFleet.timestamp,
+            from: lastFleet.walletAddress as `0x${string}`,
+            hash: tx.hash as `0x${string}`,
+            nonce: `0x${lastFleet.nonce.toString(16)}` as `0x${string}`,
+          });
           account.recordQueueID(txHash, queueID);
         } catch (e) {
           console.error(e);

@@ -255,8 +255,8 @@ importers:
   helper-services/fuzd:
     devDependencies:
       fuzd-nodejs:
-        specifier: ^0.9.7
-        version: 0.9.7(@libsql/core@0.14.0)(bufferutil@4.0.8)(hono@4.6.14)(typescript@5.7.2)(typia@7.5.0(@samchon/openapi@1.2.4)(typescript@5.7.2))(utf-8-validate@5.0.8)(zod@3.24.1)
+        specifier: ^0.10.0
+        version: 0.10.0(@libsql/core@0.14.0)(bufferutil@4.0.8)(hono@4.6.14)(typescript@5.7.2)(typia@7.5.0(@samchon/openapi@1.2.4)(typescript@5.7.2))(utf-8-validate@5.0.8)(zod@3.24.1)
       ldenv:
         specifier: ^0.3.10
         version: 0.3.12
@@ -379,8 +379,8 @@ importers:
         specifier: ^4.6.9
         version: 4.6.9
       fuzd-client:
-        specifier: ^0.9.8
-        version: 0.9.8(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1)
+        specifier: ^0.10.0
+        version: 0.10.0(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1)
       graphql:
         specifier: ^16.2.0
         version: 16.2.0
@@ -4941,31 +4941,31 @@ packages:
   functions-have-names@1.2.3:
     resolution: {integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==}
 
-  fuzd-chain-protocol@0.9.5:
-    resolution: {integrity: sha512-iNybVfF2/ujGsnAVdcWgx5l8CdXZDIEI65Dt04FvM5+nIHYSUP82IbSQckRua2azbXApf93yVbbT00QaIpwLkw==}
+  fuzd-chain-protocol@0.10.0:
+    resolution: {integrity: sha512-43hxIxzTMLCTARGqCVGNCIDXR0H8S7JMPH9e2XP52UoC+e9msGik+TBEpNScINDoiACpUOnYR0Dvbc8W7534qg==}
 
-  fuzd-client@0.9.8:
-    resolution: {integrity: sha512-wvBBnfrNPTB+AGXutHO5UjBpz56DtqSXm7YvG9AHA6uskdwT0kZL3PWx/KUSIk6ERU0kZJlxaZI/7ScUJh5T0A==}
+  fuzd-client@0.10.0:
+    resolution: {integrity: sha512-AG9WKSZoGJXVEjkqumXVi+5w5lluU7cEPTG1nN4j/YKlVG5YNP13ddXZLoD+kM6mNFVBf5w8pyyuxImKWkl2tw==}
     hasBin: true
 
-  fuzd-common@0.9.4:
-    resolution: {integrity: sha512-WDAiL2vQ7KNUELMSFolQU3t8+S9ENG/V+w2cHbgYwAC7bnTQSqYNN3wELDib5Vfi/u2d/3tpNMtIDRHvrR63pA==}
+  fuzd-common@0.10.0:
+    resolution: {integrity: sha512-IWyosWvdHkvXc9tMbGKAnDY272eaEuh/TKWWVkjpoSthGXY8UKzutoLoH1W0Ox8l2EDyzObSyjH6twNfqOB48A==}
 
-  fuzd-executor@0.9.6:
-    resolution: {integrity: sha512-9HUt6Q9tZnstotQSLEu6693pptJlIR9i0RuGAFfHr2ZWRgFdGzOZdsCwldhwSoB+YK7HaDrTnipUOFU8jvoO9w==}
+  fuzd-executor@0.10.0:
+    resolution: {integrity: sha512-VBMGQpeFo/S2A/e15bgxBwcVb8reZkB6GxFutc6MbMCypXLYcE4mHD0qkE33nD8cG2yhGDniUdtKWT0pDop0Jw==}
 
-  fuzd-nodejs@0.9.7:
-    resolution: {integrity: sha512-KOJlAj6Esalql4qZocEmB9Vu0JKYVoQ/3anN/bye0YEyUeTm7ognzAYYjZ0d8xE7wVrYKB/snC5Qnl5pSSxMvA==}
+  fuzd-nodejs@0.10.0:
+    resolution: {integrity: sha512-166aTq7+UTW2zWHLzYDqwHXFQe44X/9vxhsV+XzZOu5nHoPQL+N0t4xsSktDJwYxef/S6BXyH0yv7FyteQlvvw==}
     hasBin: true
 
-  fuzd-scheduler@0.9.7:
-    resolution: {integrity: sha512-GopRPSQQvgOFwhvE7jGclj9z9T6bTh8mtf+DD29uwSV2dQ7gZ8oNL5tGMWpydg6PvsUjzMmz2BumwKUygic32A==}
+  fuzd-scheduler@0.10.0:
+    resolution: {integrity: sha512-RwcJEAw+8Z2ndTSKX4MUWQ/sDAz3T2A2CKcRq7pH0fTT1NTq90FAWqN4nVjslW5WUxVL8QtQqg09oymYdIG8rQ==}
 
-  fuzd-server@0.9.7:
-    resolution: {integrity: sha512-h8gkgjdTLnEvSJoMey8VpVoOMVF6U4hLEvQ7CPxI1CoHjQ1y+GbLWMLY+uCFLLUJUsEC8QTLZMbFqMTp5zxdqA==}
+  fuzd-server@0.10.0:
+    resolution: {integrity: sha512-jLiRUwylYPNgk92uX1Dfq/fvOxZl7q6HnAEL6bOtzOIMNn0t5IIrrrrBFuFU2SbCzSKt0U/ESOkuAS6D4vEL1w==}
 
-  fuzd-tlock-decrypter@0.9.7:
-    resolution: {integrity: sha512-ybXfQd8ga6fC6KBEtJbkLKjYvnzW6Ohl39vLnSFWmw/pOe/f4HH/FFCgTwt9volI5pdxbVA9xgLC6Iw8whaAHw==}
+  fuzd-tlock-decrypter@0.10.0:
+    resolution: {integrity: sha512-xb6uwW2lmu8IhcDwARqWC4ihmaO3ERh7W9SEz7GQT0SuDHi94V6Kfmc6fgSHqD+vlO1MvQcffbnt3T/j4Pw6ig==}
 
   gauge@2.7.4:
     resolution: {integrity: sha512-14x4kjc6lkD3ltw589k0NrPD6cCNTD6CWoVUNpB85+DrtONoZn+Rug6xZU5RvSC4+TZPxA5AnBibQYAvZn41Hg==}
@@ -15309,13 +15309,13 @@ snapshots:
 
   functions-have-names@1.2.3: {}
 
-  fuzd-chain-protocol@0.9.5(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1):
+  fuzd-chain-protocol@0.10.0(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1):
     dependencies:
       '@noble/hashes': 1.7.0
       '@scure/bip32': 1.6.0
       '@scure/starknet': 1.1.0
       eip-1193-signer: 0.1.0(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1)
-      fuzd-common: 0.9.4
+      fuzd-common: 0.10.0
       named-logs: 0.3.2
       remote-account: 0.2.2
       remote-procedure-call: 0.0.15(@types/node@22.10.7)
@@ -15342,13 +15342,13 @@ snapshots:
       - utf-8-validate
       - zod
 
-  fuzd-chain-protocol@0.9.5(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1):
+  fuzd-chain-protocol@0.10.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1):
     dependencies:
       '@noble/hashes': 1.7.0
       '@scure/bip32': 1.6.0
       '@scure/starknet': 1.1.0
       eip-1193-signer: 0.1.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1)
-      fuzd-common: 0.9.4
+      fuzd-common: 0.10.0
       named-logs: 0.3.2
       remote-account: 0.2.2
       remote-procedure-call: 0.0.15(@types/node@22.10.7)
@@ -15375,13 +15375,13 @@ snapshots:
       - utf-8-validate
       - zod
 
-  fuzd-client@0.9.8(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1):
+  fuzd-client@0.10.0(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1):
     dependencies:
       commander: 12.1.0
-      fuzd-chain-protocol: 0.9.5(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1)
-      fuzd-common: 0.9.4
-      fuzd-executor: 0.9.6(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1)
-      fuzd-scheduler: 0.9.7(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1)
+      fuzd-chain-protocol: 0.10.0(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1)
+      fuzd-common: 0.10.0
+      fuzd-executor: 0.10.0(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1)
+      fuzd-scheduler: 0.10.0(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1)
       ldenv: 0.3.12
       named-logs: 0.3.2
       remote-account: 0.2.2
@@ -15408,41 +15408,14 @@ snapshots:
       - utf-8-validate
       - zod
 
-  fuzd-common@0.9.4:
+  fuzd-common@0.10.0:
     dependencies:
       named-logs: 0.3.2
 
-  fuzd-executor@0.9.6(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1):
+  fuzd-executor@0.10.0(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1):
     dependencies:
-      fuzd-chain-protocol: 0.9.5(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1)
-      fuzd-common: 0.9.4
-      named-logs: 0.3.2
-      remote-account: 0.2.2
-    transitivePeerDependencies:
-      - '@edge-runtime/vm'
-      - '@types/node'
-      - '@vitest/browser'
-      - '@vitest/ui'
-      - bufferutil
-      - happy-dom
-      - jsdom
-      - less
-      - lightningcss
-      - msw
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - supports-color
-      - terser
-      - typescript
-      - utf-8-validate
-      - zod
-
-  fuzd-executor@0.9.6(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1):
-    dependencies:
-      fuzd-chain-protocol: 0.9.5(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1)
-      fuzd-common: 0.9.4
+      fuzd-chain-protocol: 0.10.0(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1)
+      fuzd-common: 0.10.0
       named-logs: 0.3.2
       remote-account: 0.2.2
     transitivePeerDependencies:
@@ -15466,12 +15439,39 @@ snapshots:
       - utf-8-validate
       - zod
 
-  fuzd-nodejs@0.9.7(@libsql/core@0.14.0)(bufferutil@4.0.8)(hono@4.6.14)(typescript@5.7.2)(typia@7.5.0(@samchon/openapi@1.2.4)(typescript@5.7.2))(utf-8-validate@5.0.8)(zod@3.24.1):
+  fuzd-executor@0.10.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1):
+    dependencies:
+      fuzd-chain-protocol: 0.10.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1)
+      fuzd-common: 0.10.0
+      named-logs: 0.3.2
+      remote-account: 0.2.2
+    transitivePeerDependencies:
+      - '@edge-runtime/vm'
+      - '@types/node'
+      - '@vitest/browser'
+      - '@vitest/ui'
+      - bufferutil
+      - happy-dom
+      - jsdom
+      - less
+      - lightningcss
+      - msw
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+      - typescript
+      - utf-8-validate
+      - zod
+
+  fuzd-nodejs@0.10.0(@libsql/core@0.14.0)(bufferutil@4.0.8)(hono@4.6.14)(typescript@5.7.2)(typia@7.5.0(@samchon/openapi@1.2.4)(typescript@5.7.2))(utf-8-validate@5.0.8)(zod@3.24.1):
     dependencies:
       '@hono/node-server': 1.13.7(hono@4.6.14)
       '@libsql/client': 0.14.0(bufferutil@4.0.8)(utf-8-validate@5.0.8)
       commander: 12.1.0
-      fuzd-server: 0.9.7(bufferutil@4.0.8)(typescript@5.7.2)(typia@7.5.0(@samchon/openapi@1.2.4)(typescript@5.7.2))(utf-8-validate@5.0.8)(zod@3.24.1)
+      fuzd-server: 0.10.0(bufferutil@4.0.8)(typescript@5.7.2)(typia@7.5.0(@samchon/openapi@1.2.4)(typescript@5.7.2))(utf-8-validate@5.0.8)(zod@3.24.1)
       ldenv: 0.3.12
       named-logs-context: 0.1.1
       remote-sql-libsql: 0.0.6(@libsql/core@0.14.0)
@@ -15499,10 +15499,10 @@ snapshots:
       - utf-8-validate
       - zod
 
-  fuzd-scheduler@0.9.7(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1):
+  fuzd-scheduler@0.10.0(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1):
     dependencies:
-      fuzd-chain-protocol: 0.9.5(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1)
-      fuzd-common: 0.9.4
+      fuzd-chain-protocol: 0.10.0(@types/node@22.10.7)(bufferutil@4.0.8)(typescript@4.5.5)(utf-8-validate@5.0.8)(zod@3.24.1)
+      fuzd-common: 0.10.0
       named-logs: 0.3.2
     transitivePeerDependencies:
       - '@edge-runtime/vm'
@@ -15525,10 +15525,10 @@ snapshots:
       - utf-8-validate
       - zod
 
-  fuzd-scheduler@0.9.7(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1):
+  fuzd-scheduler@0.10.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1):
     dependencies:
-      fuzd-chain-protocol: 0.9.5(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1)
-      fuzd-common: 0.9.4
+      fuzd-chain-protocol: 0.10.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1)
+      fuzd-common: 0.10.0
       named-logs: 0.3.2
     transitivePeerDependencies:
       - '@edge-runtime/vm'
@@ -15551,7 +15551,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  fuzd-server@0.9.7(bufferutil@4.0.8)(typescript@5.7.2)(typia@7.5.0(@samchon/openapi@1.2.4)(typescript@5.7.2))(utf-8-validate@5.0.8)(zod@3.24.1):
+  fuzd-server@0.10.0(bufferutil@4.0.8)(typescript@5.7.2)(typia@7.5.0(@samchon/openapi@1.2.4)(typescript@5.7.2))(utf-8-validate@5.0.8)(zod@3.24.1):
     dependencies:
       '@hono/swagger-ui': 0.5.0(hono@4.6.14)
       '@hono/typia-validator': 0.0.5(hono@4.6.14)(typia@7.5.0(@samchon/openapi@1.2.4)(typescript@5.7.2))
@@ -15560,11 +15560,11 @@ snapshots:
       eip-1193: 0.6.1
       eip-1193-jsonrpc-provider: 0.4.2
       eip-1193-signer: 0.1.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1)
-      fuzd-chain-protocol: 0.9.5(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1)
-      fuzd-common: 0.9.4
-      fuzd-executor: 0.9.6(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1)
-      fuzd-scheduler: 0.9.7(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1)
-      fuzd-tlock-decrypter: 0.9.7(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1)
+      fuzd-chain-protocol: 0.10.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1)
+      fuzd-common: 0.10.0
+      fuzd-executor: 0.10.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1)
+      fuzd-scheduler: 0.10.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1)
+      fuzd-tlock-decrypter: 0.10.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1)
       hono: 4.6.14
       named-logs: 0.3.2
       remote-account: 0.2.2
@@ -15593,10 +15593,10 @@ snapshots:
       - utf-8-validate
       - zod
 
-  fuzd-tlock-decrypter@0.9.7(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1):
+  fuzd-tlock-decrypter@0.10.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1):
     dependencies:
-      fuzd-common: 0.9.4
-      fuzd-scheduler: 0.9.7(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1)
+      fuzd-common: 0.10.0
+      fuzd-scheduler: 0.10.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@3.24.1)
       named-logs: 0.3.2
       tlock-js: 0.9.0
     transitivePeerDependencies:

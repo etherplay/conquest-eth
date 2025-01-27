@@ -32,6 +32,7 @@ export type Fleet = {
   arrivalTimeWanted: number;
   potentialAlliances?: string[];
   owner: string;
+  walletAddress: string;
   fleetSender?: string;
   operator?: string;
   sending: {
@@ -247,6 +248,7 @@ export class FleetsStore implements Readable<FleetListState> {
               owner: sendAction.fleetOwner,
               fleetSender: sendAction.fleetSender,
               operator: sendAction.operator,
+              walletAddress: sendAction.walletAddress,
             });
           }
         }

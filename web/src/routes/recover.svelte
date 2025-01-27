@@ -88,6 +88,7 @@
                 fleetSender?: string;
                 operator?: string;
               };
+              walletAddress: string;
               txHash: string;
               timestamp: number;
               nonce: number;
@@ -141,6 +142,7 @@
                     operator: operator,
                     // potentialAlliances: // TODO
                   },
+                  walletAddress: tx.from,
                   nonce: nonce,
                   txHash: tx.hash,
                   timestamp: block.timestamp,
@@ -174,6 +176,7 @@
               } else {
                 account.recordFleet(
                   fleetFound.fleet,
+                  fleetFound.walletAddress,
                   fleetFound.txHash,
                   fleetFound.timestamp,
                   fleetFound.nonce,
