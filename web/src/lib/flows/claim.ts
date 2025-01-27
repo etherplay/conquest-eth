@@ -10,6 +10,7 @@ import {xyToLocation} from 'conquest-eth-common';
 import {myTokens} from '$lib/space/token';
 import {get} from 'svelte/store';
 import {initialContractsInfos} from '$lib/blockchain/contracts';
+import {getGasPrice} from './gasPrice';
 
 type Data = {txHash?: string; coords: {x: number; y: number}};
 export type ClaimFlow = {
@@ -68,11 +69,30 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
 
   async allowConquestToTransferToken(): Promise<void> {
     this.setPartial({step: 'SETTING_ALLOWANCE'});
+
+    let maxFeePerGas: BigNumber;
+    let maxPriorityFeePerGas;
+    try {
+      const gasPrice = await getGasPrice(wallet.web3Provider);
+      maxFeePerGas = gasPrice.maxFeePerGas;
+      maxPriorityFeePerGas = gasPrice.maxPriorityFeePerGas;
+    } catch (e) {
+      this.setPartial({
+        step: 'CHOOSE_STAKE',
+        error: e,
+      });
+      return;
+    }
+
     let tx;
     try {
       tx = await wallet!.contracts.PlayToken.approve(
         wallet!.contracts.OuterSpace.address,
-        BigNumber.from('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF')
+        BigNumber.from('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF'),
+        {
+          maxFeePerGas,
+          maxPriorityFeePerGas,
+        }
       );
     } catch (err) {
       this.setPartial({step: 'CHOOSE_STAKE', error: err});
@@ -116,9 +136,12 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
       return;
     }
 
-    let currentGasPrice;
+    let maxFeePerGas: BigNumber;
+    let maxPriorityFeePerGas;
     try {
-      currentGasPrice = await wallet.provider.getGasPrice();
+      const gasPrice = await getGasPrice(wallet.web3Provider);
+      maxFeePerGas = gasPrice.maxFeePerGas;
+      maxPriorityFeePerGas = gasPrice.maxPriorityFeePerGas;
     } catch (e) {
       this.setPartial({
         step: 'CHOOSE_STAKE',
@@ -207,7 +230,7 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
       // TODO gasEstimation for Acquire Planet
       const gasLimit = gasEstimation.add(100000);
 
-      const valueNeeded = gasLimit.mul(currentGasPrice);
+      const valueNeeded = gasLimit.mul(maxFeePerGas);
 
       if (currentNativeBalance.lt(valueNeeded)) {
         this.setPartial({
@@ -220,6 +243,8 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
       try {
         tx = await paymentTokenContract.transferAndCall(wallet.contracts?.OuterSpace.address, tokenAmount, callData, {
           gasLimit,
+          maxFeePerGas,
+          maxPriorityFeePerGas,
         });
       } catch (e) {
         if (e.transactionHash) {
@@ -278,7 +303,7 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
       }
       const gasLimit = gasEstimation.add(100000);
 
-      const valueNeeded = gasLimit.mul(currentGasPrice);
+      const valueNeeded = gasLimit.mul(maxFeePerGas);
 
       if (currentNativeBalance.lt(valueNeeded)) {
         this.setPartial({
@@ -297,6 +322,8 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
           {
             gasLimit,
             value: nativeTokenAmount,
+            maxFeePerGas,
+            maxPriorityFeePerGas,
           }
         );
       } catch (e) {

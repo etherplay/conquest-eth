@@ -3,6 +3,7 @@ import {xyToLocation} from 'conquest-eth-common';
 import {BaseStoreWithData} from '$lib/utils/stores/base';
 import {account} from '$lib/account/account';
 import type {BigNumber} from '@ethersproject/bignumber';
+import {getGasPrice} from './gasPrice';
 
 type Data = {
   txHash?: string;
@@ -45,6 +46,21 @@ class ExitFlowStore extends BaseStoreWithData<ExitFlow, Data> {
       });
       return;
     }
+
+    let maxFeePerGas: BigNumber;
+    let maxPriorityFeePerGas;
+    try {
+      const gasPrice = await getGasPrice(wallet.web3Provider);
+      maxFeePerGas = gasPrice.maxFeePerGas;
+      maxPriorityFeePerGas = gasPrice.maxPriorityFeePerGas;
+    } catch (e) {
+      this.setPartial({
+        step: 'WAITING_CONFIRMATION',
+        error: e,
+      });
+      return;
+    }
+
     const location = flow.data.location;
     const locationId = xyToLocation(location.x, location.y);
 
@@ -64,7 +80,11 @@ class ExitFlowStore extends BaseStoreWithData<ExitFlow, Data> {
     this.setPartial({step: 'WAITING_TX'});
     let tx: {hash: string; nonce?: number};
     try {
-      tx = await wallet.contracts?.OuterSpace.exitFor(wallet.address, locationId, {gasLimit});
+      tx = await wallet.contracts?.OuterSpace.exitFor(wallet.address, locationId, {
+        gasLimit,
+        maxFeePerGas,
+        maxPriorityFeePerGas,
+      });
     } catch (e) {
       if (e.transactionHash) {
         tx = {hash: e.transactionHash};

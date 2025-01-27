@@ -15,6 +15,7 @@ import {get} from 'svelte/store';
 import {formatError} from '$lib/utils';
 import {BigNumber} from '@ethersproject/bignumber';
 import {Contract} from '@ethersproject/contracts';
+import {getGasPrice} from './gasPrice';
 
 export type VirtualFleet = {
   from: PlanetInfo;
@@ -319,6 +320,21 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
       });
       return;
     }
+
+    let maxFeePerGas: BigNumber;
+    let maxPriorityFeePerGas: BigNumber;
+    try {
+      const gasPrice = await getGasPrice(wallet.web3Provider);
+      maxFeePerGas = gasPrice.maxFeePerGas;
+      maxPriorityFeePerGas = gasPrice.maxPriorityFeePerGas;
+    } catch (e) {
+      this.setPartial({
+        step: 'CHOOSE_FLEET_AMOUNT',
+        error: e,
+      });
+      return;
+    }
+
     if (!isCorrected) {
       // TODO extreact or remove (assume time will be corrected by then)
       correctTime(latestBlock.timestamp);
@@ -412,19 +428,6 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
       secretHash,
     });
 
-    // let currentGasPrice;
-    // try {
-    //   currentGasPrice = await wallet.provider.getGasPrice();
-    // } catch (e) {
-    //   this.setPartial({
-    //     step: 'IDLE',
-    //     error: e,
-    //   });
-    //   return;
-    // }
-    // const gasPrice = currentGasPrice.mul(2);
-    const gasPrice = undefined;
-
     // console.log({potentialAlliances});
 
     const agentData = {
@@ -506,7 +509,6 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
             {
               value: resolutionCost,
               nonce,
-              gasPrice,
             }
           );
         }
@@ -556,7 +558,8 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
         const contract = new Contract(operator, [abi], wallet.provider.getSigner());
         tx = await contract[abi.name](...args, {
           nonce,
-          gasPrice,
+          maxFeePerGas,
+          maxPriorityFeePerGas,
           value: msgValue,
           gasLimit,
         });
@@ -581,7 +584,8 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
           {
             value: resolutionCost,
             nonce,
-            gasPrice,
+            maxFeePerGas,
+            maxPriorityFeePerGas,
             gasLimit,
           }
         );

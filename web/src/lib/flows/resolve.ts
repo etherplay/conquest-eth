@@ -7,6 +7,7 @@ import type {Fleet, FleetState} from '$lib/space/fleets';
 import {BigNumber} from '@ethersproject/bignumber';
 import selection from '$lib/map/selection';
 import {spaceInfo} from '$lib/space/spaceInfo';
+import {getGasPrice} from './gasPrice';
 
 export type PartialFleet = {
   from: PlanetInfo;
@@ -216,18 +217,19 @@ class ResolveFlowStore extends BaseStore<ResolveFlow> {
 
     const {secretHash, distance, gasLimit} = resolutionData;
 
-    // let currentGasPrice;
-    // try {
-    //   currentGasPrice = await wallet.provider.getGasPrice();
-    // } catch (e) {
-    //   this.setPartial({
-    //     step: 'IDLE',
-    //     error: e,
-    //   });
-    //   return;
-    // }
-    // const gasPrice = currentGasPrice.mul(2);
-    const gasPrice = undefined;
+    let maxFeePerGas: BigNumber;
+    let maxPriorityFeePerGas;
+    try {
+      const gasPrice = await getGasPrice(wallet.web3Provider, 0.9);
+      maxFeePerGas = gasPrice.maxFeePerGas;
+      maxPriorityFeePerGas = gasPrice.maxPriorityFeePerGas;
+    } catch (e) {
+      this.setPartial({
+        step: 'IDLE',
+        error: e,
+      });
+      return;
+    }
 
     this.setPartial({step: 'WAITING_TX'});
     try {
@@ -244,7 +246,7 @@ class ResolveFlowStore extends BaseStore<ResolveFlow> {
           fleetSender: fleet.fleetSender || fleet.owner,
           operator: fleet.operator || fleet.owner,
         },
-        {gasPrice, gasLimit}
+        {maxFeePerGas, maxPriorityFeePerGas, gasLimit}
       );
       account.recordFleetResolvingTxhash(
         fleetData.fleetId,

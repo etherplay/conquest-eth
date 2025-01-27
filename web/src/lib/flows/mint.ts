@@ -3,6 +3,7 @@ import {BaseStoreWithData} from '$lib/utils/stores/base';
 import {BigNumber} from '@ethersproject/bignumber';
 import {initialContractsInfos as contractsInfos} from '$lib/blockchain/contracts';
 import {spaceInfo} from '$lib/space/spaceInfo';
+import {getGasPrice} from './gasPrice';
 
 type Data = {
   txHash?: string;
@@ -35,6 +36,20 @@ class MintFlowStore extends BaseStoreWithData<MintFlow, Data> {
       throw new Error(`no flow data`);
     }
 
+    let maxFeePerGas: BigNumber;
+    let maxPriorityFeePerGas;
+    try {
+      const gasPrice = await getGasPrice(wallet.web3Provider);
+      maxFeePerGas = gasPrice.maxFeePerGas;
+      maxPriorityFeePerGas = gasPrice.maxPriorityFeePerGas;
+    } catch (e) {
+      this.setPartial({
+        step: 'WAITING_CONFIRMATION',
+        error: e,
+      });
+      return;
+    }
+
     if (!numTokenUnit) {
       numTokenUnit = flow.data.numTokenUnit;
     }
@@ -64,7 +79,12 @@ class MintFlowStore extends BaseStoreWithData<MintFlow, Data> {
     this.setPartial({step: 'WAITING_TX'});
     let tx: {hash: string; nonce?: number};
     try {
-      tx = await wallet.contracts?.PlayToken.mint(wallet.address, amount, {value: nativeTokenAmount, gasLimit});
+      tx = await wallet.contracts?.PlayToken.mint(wallet.address, amount, {
+        value: nativeTokenAmount,
+        gasLimit,
+        maxFeePerGas,
+        maxPriorityFeePerGas,
+      });
     } catch (e) {
       if (e.transactionHash) {
         tx = {hash: e.transactionHash};

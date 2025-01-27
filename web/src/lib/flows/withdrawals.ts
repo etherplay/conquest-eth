@@ -5,6 +5,7 @@ import type {PlanetExitEvent} from '$lib/space/exitsQuery';
 import type {ExitsState} from '$lib/space/exitsQuery';
 import type {QueryState} from '$lib/utils/stores/graphql';
 import {wallet} from '$lib/blockchain/wallet';
+import {getGasPrice} from './gasPrice';
 
 type Withdrawals = {
   state: 'Idle' | 'Loading' | 'Ready';
@@ -38,8 +39,17 @@ class WithdrawalsStore extends AutoStartBaseStore<Withdrawals> {
 
   async withdraw() {
     if (wallet.address && wallet.contracts) {
+      let maxFeePerGas: BigNumber;
+      let maxPriorityFeePerGas;
+      const gasPrice = await getGasPrice(wallet.web3Provider);
+      maxFeePerGas = gasPrice.maxFeePerGas;
+      maxPriorityFeePerGas = gasPrice.maxPriorityFeePerGas;
+
       const locations = this.exits.map((v) => v.planet.id);
-      const tx = await wallet.contracts.OuterSpace.fetchAndWithdrawFor(wallet.address, locations);
+      const tx = await wallet.contracts.OuterSpace.fetchAndWithdrawFor(wallet.address, locations, {
+        maxFeePerGas,
+        maxPriorityFeePerGas,
+      });
       // TODO :
       //  account.recordWithdrawal(tx.hash, tx.nonce);
     } else {
