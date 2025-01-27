@@ -6,6 +6,7 @@ import {formatEther, parseEther} from '@ethersproject/units';
 import {increaseTime} from '../../test/test-utils';
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
+  const networkName = await hre.deployments.getNetworkName();
   const {deployer, player} = await hre.getNamedAccounts();
   const {deploy, read, execute, rawTx, getOrNull} = hre.deployments;
 
@@ -16,12 +17,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const accountsToInitialise: {account: `0x${string}`; amount: string}[] = [];
 
   // Disabled first
-  const rewardRateMillionth = 0;
-  const fixedRewardRateThousandsMillionth = 0;
+  let rewardRateMillionth = 0;
+  let fixedRewardRateThousandsMillionth = 0;
 
-  // will be upgraded with these parameters:
-  // const rewardRateMillionth = 100; // 100 for every million of second. or 8.64 / day
-  // const fixedRewardRateThousandsMillionth = 10; // 10 for every  thousand million of seconds, or 0.000864 per day per stake or 315.36 / year / 1000 stake
+  if (networkName === 'localhost') {
+    // will be upgraded with these parameters:
+    // rewardRateMillionth = 100; // 100 for every million of second. or 8.64 / day
+    // fixedRewardRateThousandsMillionth = 10; // 10 for every  thousand million of seconds, or 0.000864 per day per stake or 315.36 / year / 1000 stake
+  }
 
   const timestamp = Math.floor(Date.now() / 1000);
   const ExistingRewardsGenerator = await getOrNull('RewardsGenerator');
@@ -36,13 +39,14 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
       !existing_fixedRewardRateThousandsMillionth.eq(fixedRewardRateThousandsMillionth) ||
       !existing_rewardRateMillionth.eq(rewardRateMillionth)
     ) {
-      if (!existing_fixedRewardRateThousandsMillionth.eq(0) || !existing_rewardRateMillionth.eq(0)) {
-        throw new Error(`cannot update from non-zero`);
-      }
-      console.log(`RewardsGenerator parameters changed, updating`);
-      const lastUpdate = await read('RewardsGenerator', 'lastUpdated');
-      if (timestamp - lastUpdate > 1 * 60) {
-        await execute('RewardsGenerator', {from: deployer, log: true}, 'update');
+      if (existing_fixedRewardRateThousandsMillionth.eq(0) && existing_rewardRateMillionth.eq(0)) {
+        console.log(`RewardsGenerator parameters changed, updating`);
+        const lastUpdate = await read('RewardsGenerator', 'lastUpdated');
+        if (timestamp - lastUpdate > 1 * 60) {
+          await execute('RewardsGenerator', {from: deployer, log: true}, 'update');
+        }
+      } else {
+        console.log(`do not update as it is non-zero`);
       }
     }
   }

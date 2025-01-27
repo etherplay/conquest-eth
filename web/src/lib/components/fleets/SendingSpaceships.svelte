@@ -159,12 +159,14 @@
 
   $: currentArrivalDateTime = Math.ceil((currentTimeToArrive + $time) / 60) * 60 + 1 * 60;
 
-  let endOfSessionWarning: false | 'warning' | 'impossible' = false;
+  let endOfSessionWarning: false | 'exitonly' | 'warning' | 'impossible' = false;
   $: {
     endOfSessionWarning = false;
     if (spaceInfo.bootstrapSessionEndTime > 0) {
       if ($time < spaceInfo.infinityStartTime) {
-        if (currentArrivalDateTime > spaceInfo.bootstrapSessionEndTime) {
+        if ($time > spaceInfo.bootstrapSessionEndTime) {
+          endOfSessionWarning = 'exitonly';
+        } else if (currentArrivalDateTime > spaceInfo.bootstrapSessionEndTime) {
           endOfSessionWarning = 'impossible';
         } else if (currentArrivalDateTime > spaceInfo.bootstrapSessionEndTime - 30 * 60) {
           endOfSessionWarning = 'warning';
@@ -513,7 +515,9 @@
               <span>Predicted outcome at time of arrival</span>
             </div>
             <div class="flex flex-row justify-center">
-              {#if endOfSessionWarning === 'impossible'}
+              {#if endOfSessionWarning === 'exitonly'}
+                <span class="text-red-400">Cannot send spaceships, can only exit.</span>
+              {:else if endOfSessionWarning === 'impossible'}
                 <span class="text-red-400">Will not arrive before the end of session</span>
               {:else if endOfSessionWarning === 'warning'}
                 <span class="text-orange-400">Might not arrive before the end of session (30 min risk)</span>
