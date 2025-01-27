@@ -16,6 +16,7 @@
     "prepare": "node ./.setup.js",
     "---------------------- EXTERNALS ----------------------": "externals",
     "externals": "docker compose -f dev/docker-compose-subgraph.yml down -v && docker compose -f dev/docker-compose-subgraph.yml up",
+    "externals:down": "docker compose -f dev/docker-compose-subgraph.yml down -v",
     "---------------------- COMMON LIB ----------------------": "compile the common library",
     "common:dev": "pnpm run --filter ./common-lib dev",
     "common:build": "pnpm run --filter ./common-lib build",

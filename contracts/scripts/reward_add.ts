@@ -24,6 +24,10 @@ if (sponsor === 'xaya') {
   giverAddress = '0x3333333333333333333333333333333333333333';
 } else if (sponsor === 'blockscout') {
   giverAddress = '0x4444444444444444444444444444444444444444';
+} else if (sponsor === 'cafecosmos') {
+  giverAddress = `0x5555555555555555555555555555555555555555`;
+} else if (sponsor === 'gg.xyz') {
+  giverAddress = `0x6666666666666666666666666666666666666666`;
 }
 
 if (!giverAddress) {
