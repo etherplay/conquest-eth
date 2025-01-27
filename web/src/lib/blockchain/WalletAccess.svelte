@@ -225,14 +225,14 @@
                 />
                 Coinbase
               </NavButton>
-              <NavButton label="Use Phantom" blank={true} on:click={() => goto('phantom')} class="m-4 w-max-content">
+              <!-- <NavButton label="Use Phantom" blank={true} on:click={() => goto('phantom')} class="m-4 w-max-content">
                 <img
                   class="cursor-pointer p-0 m-auto h-10 w-10 object-contain mb-2"
                   alt={`Use Phantom`}
                   src={`${base}images/phantom.svg`}
                 />
                 Phantom
-              </NavButton>
+              </NavButton> -->
               <NavButton label="Use Trust" blank={true} on:click={() => goto('trust')} class="m-4 w-max-content">
                 <img
                   class="cursor-pointer p-0 m-auto h-10 w-10 object-contain mb-2"
@@ -267,15 +267,15 @@
           {:else}
             <div class="text-center">Download a Wallet</div>
             <div class="flex justify-center">
-              <NavButton label="Download Rabby Wallet" blank={true} href="https://rabby.io/" class="m-4 w-max-content">
+              <!-- <NavButton label="Download Rabby Wallet" blank={true} href="https://rabby.io/" class="m-4 w-max-content">
                 <img
                   class="cursor-pointer p-0 m-auto h-10 w-10 object-contain mb-2"
                   alt={`Download Rabby Wallet}`}
                   src={`${base}images/rabby.svg`}
                 />
                 Rabby
-              </NavButton>
-              <NavButton
+              </NavButton> -->
+              <!-- <NavButton
                 label="Download Phantom"
                 blank={true}
                 href="https://phantom.com/download"
@@ -287,7 +287,7 @@
                   src={`${base}images/phantom.svg`}
                 />
                 Phantom
-              </NavButton>
+              </NavButton> -->
               <NavButton
                 label="Download Metamask"
                 blank={true}
