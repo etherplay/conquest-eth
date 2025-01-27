@@ -9,6 +9,10 @@ import {spaceInfo} from '$lib/space/spaceInfo';
 import type {FuzdClient} from 'fuzd-client';
 import {initialContractsInfos} from '$lib/blockchain/contracts';
 
+// TODO
+// needed because for some reason fuzd-client type cannot be imported
+import type {Submission} from './fuzd-client-types';
+
 // TODO fix fuzd-client types exports ?
 type Fees = {
   fixed: string;
@@ -43,22 +47,6 @@ type AgentServiceState = {
   state: 'Idle' | 'Loading' | 'Ready';
   error?: {code: number; message: string};
   account?: AgentServiceAccountData;
-};
-
-export type Submission = {
-  chainId: string;
-  slot: string;
-  maxFeePerGasAuthorized: bigint;
-  transaction: {
-    data: `0x${string}`;
-    to: `0x${string}`;
-    gas: bigint;
-  };
-  time: number;
-  expiryDelta: number;
-  paymentReserve?: {amount: bigint; broadcaster: `0x${string}`};
-  criticalDelta?: number;
-  onBehalf?: `0x${string}`;
 };
 
 export type AgentData = {
@@ -129,9 +117,13 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
     const submission: Submission = {
       chainId,
       slot: data.fleetID,
-      expiryDelta,
+
       maxFeePerGasAuthorized,
-      time: resolutionData.expectedArrivalTime,
+      timing: {
+        type: 'fixed-round',
+        expiryDelta,
+        expectedTime: resolutionData.expectedArrivalTime,
+      },
       criticalDelta,
       transaction: {
         data: (txData.data || `0x`) as `0x${string}`,
