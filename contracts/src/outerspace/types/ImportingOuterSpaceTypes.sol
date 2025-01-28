@@ -49,8 +49,27 @@ interface ImportingOuterSpaceTypes {
         uint40 launchTime; // ~ 34865 years, should be enough :)
         uint32 quantity; // TODO? first bit = done? to keep quantity value on-chain post resolution, actually not needed, can be given in the hash
         uint24 futureExtraProduction;
+        address defender;
+        uint40 arrivalTime;
+        uint32 defenderLoss;
+        bool planetActive;
+        bool victory;
         // we got 24bit more to store if needed
         // operator ? // signer ?
+    }
+
+    struct FleetData {
+        bool arrived;
+        address owner;
+        uint40 launchTime;
+        uint32 quantity;
+        uint64 flyingAtLaunch; // can be more than quantity if multiple fleet were launched around the same time from the same planet
+        uint64 destroyedAtLaunch;
+        address defender;
+        uint40 arrivalTime;
+        uint32 defenderLoss;
+        bool planetActive;
+        bool victory;
     }
 
     struct PlanetStats {

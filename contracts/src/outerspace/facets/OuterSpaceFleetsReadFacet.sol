@@ -30,4 +30,24 @@ contract OuterSpaceFleetsReadFacet is OuterSpaceFacetBase, IOuterSpaceFleetsRead
         destroyedAtLaunch = _inFlight[from][timeSlot].destroyed;
         flyingAtLaunch = _inFlight[from][timeSlot].flying;
     }
+
+    function getFleetData(uint256 fleetId, uint256 from) external view returns (FleetData memory) {
+        Fleet memory fleet = _fleets[fleetId];
+        uint256 timeSlot = fleet.launchTime / (_frontrunningDelay / 2);
+
+        return
+            FleetData({
+                arrived: fleet.quantity >> 31 == 1,
+                owner: fleet.owner,
+                launchTime: fleet.launchTime,
+                quantity: fleet.quantity & 0x3FFFFFFF,
+                destroyedAtLaunch: _inFlight[from][timeSlot].destroyed,
+                flyingAtLaunch: _inFlight[from][timeSlot].flying,
+                defender: fleet.defender,
+                arrivalTime: fleet.arrivalTime,
+                defenderLoss: fleet.defenderLoss,
+                planetActive: fleet.planetActive,
+                victory: fleet.victory
+            });
+    }
 }

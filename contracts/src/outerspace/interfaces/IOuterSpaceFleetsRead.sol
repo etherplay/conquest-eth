@@ -18,4 +18,6 @@ interface IOuterSpaceFleetsRead is ImportingOuterSpaceTypes, ImportingOuterSpace
             uint64 flyingAtLaunch, // can be more than quantity if multiple fleet were launched around the same time from the same planet
             uint64 destroyedAtLaunch
         );
+
+    function getFleetData(uint256 fleetId, uint256 from) external view returns (FleetData memory data);
 }

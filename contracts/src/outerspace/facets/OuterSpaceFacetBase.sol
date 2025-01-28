@@ -614,6 +614,7 @@ contract OuterSpaceFacetBase is
         // -----------------------------------------------------------------------------------------------------------
 
         require(launch.quantity < 2 ** 30, "TOO_MANY_SPACESHIPS"); // only 2^30 because the first 2 bits = resolution
+        require(launch.quantity > 0, "NO_SPACESHIPS");
         require(planet.exitStartTime == 0, "PLANET_EXIT");
         require(launch.fleetSender == planet.owner, "NOT_OWNER");
 
@@ -641,11 +642,17 @@ contract OuterSpaceFacetBase is
 
         _setFleetFlyingSlot(launch.from, launch.quantity);
 
+        require(_fleets[fleetId].quantity == 0, "FLEET_EXISTS");
         _fleets[fleetId] = Fleet({
             launchTime: uint40(block.timestamp),
             owner: launch.fleetOwner,
             quantity: launch.quantity,
-            futureExtraProduction: planetUpdate.futureExtraProduction
+            futureExtraProduction: planetUpdate.futureExtraProduction,
+            defender: address(0),
+            arrivalTime: 0,
+            defenderLoss: 0,
+            victory: false,
+            planetActive: false
         });
 
         emit BlockTime(block.number, block.timestamp);
@@ -811,6 +818,11 @@ contract OuterSpaceFacetBase is
         _setAccumulatedAttack(rState, toPlanetUpdate);
 
         _fleets[fleetId].quantity = (1 << 31) | _fleets[fleetId].quantity;
+        _fleets[fleetId].defender = ownerAtArrival;
+        _fleets[fleetId].defenderLoss = rState.defenderLoss;
+        _fleets[fleetId].arrivalTime = uint40(block.timestamp);
+        _fleets[fleetId].planetActive = toPlanetUpdate.active;
+        _fleets[fleetId].victory = rState.victory;
 
         // -----------------------------------------------------------------------------------------------------------
         // Events
