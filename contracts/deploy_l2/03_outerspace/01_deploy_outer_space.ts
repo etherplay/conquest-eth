@@ -234,6 +234,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     facets: [
       'OuterSpaceInitializationFacet',
       'OuterSpaceAdminFacet',
+      'OuterSpaceGenericReadFacet',
       'OuterSpaceFleetsReadFacet',
       'OuterSpaceFleetsCommitFacet',
       'OuterSpaceFleetsRevealFacet',
