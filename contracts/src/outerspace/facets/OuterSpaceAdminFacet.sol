@@ -48,4 +48,14 @@ contract OuterSpaceAdminFacet is UsingDiamondOwner, OuterSpaceFacetBase {
         require(msg.sender == _generatorAdmin(), "NOT_AUTHORIZED");
         _addReward(location, giverAddress);
     }
+
+    function addMultipleRewardViaAdmin(uint256[] calldata locations, address giverAddress) external {
+        require(msg.sender == _generatorAdmin(), "NOT_AUTHORIZED");
+        for (uint256 i = 0; i < locations.length; i++) {
+            uint256 location = locations[i];
+            if (_rewards[location] == 0) {
+                _addReward(location, giverAddress);
+            }
+        }
+    }
 }

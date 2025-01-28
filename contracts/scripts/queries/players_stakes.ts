@@ -1,21 +1,12 @@
 import {HardhatRuntimeEnvironment} from 'hardhat/types';
 import hre from 'hardhat';
 import 'dotenv/config';
-import {TheGraph} from '../utils/thegraph';
+import {getTHEGRAPH} from './utils';
 
 async function func(hre: HardhatRuntimeEnvironment): Promise<void> {
   const {deployments} = hre;
 
-  const chainId = await hre.getChainId();
-  let chainName = 'unknown';
-  if (chainId == '100') {
-    chainName = 'gnosis';
-  }
-
-  const theGraph = new TheGraph(
-    `https://subgraphs.etherplay.io/${chainName}/subgraphs/name/${process.env.SUBGRAPH_NAME}`
-  );
-
+  const theGraph = await getTHEGRAPH(hre);
   const args = process.argv.slice(2);
   const fromBlock = parseInt(args[0]);
   const toBlock = parseInt(args[1]);
@@ -56,21 +47,21 @@ query($fromBlock: Int! $toBlock: Int! $first: Int! $lastId: ID!) {
     },
   });
 
-  const players_captures: {playerAddress: string; amounntStaked: string; numPlanetsStaked: number}[] = [];
+  const players_captures: {playerAddress: string; amountStaked: string; numPlanetsStaked: number}[] = [];
 
   for (const event of planetStakeEvents) {
     const playerAddress = event.owner.id;
     if (event.planet.stakeDeposited != event.stake) {
       throw new Error(`mismarch stake`);
     }
-    const amounntStaked = event.planet.stakeDeposited;
+    const amountStaked = event.planet.stakeDeposited;
     const numPlanetsStaked = 1;
     const playerCapture = players_captures.find((player) => player.playerAddress === playerAddress);
     if (playerCapture) {
-      playerCapture.amounntStaked = (BigInt(playerCapture.amounntStaked) + BigInt(amounntStaked)).toString();
+      playerCapture.amountStaked = (BigInt(playerCapture.amountStaked) + BigInt(amountStaked)).toString();
       playerCapture.numPlanetsStaked += numPlanetsStaked;
     } else {
-      players_captures.push({playerAddress, amounntStaked, numPlanetsStaked});
+      players_captures.push({playerAddress, amountStaked, numPlanetsStaked});
     }
   }
 

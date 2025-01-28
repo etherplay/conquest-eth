@@ -9,6 +9,7 @@ const args = process.argv.slice(2);
 //   throw new Error(`need to pass sponsor name`);
 // }
 const sponsor = args[0];
+
 let giverAddress: string | undefined;
 if (sponsor === 'xaya') {
   giverAddress = '0xdddddddddddddddddddddddddddddddddddddddd';
@@ -24,35 +25,32 @@ if (sponsor === 'xaya') {
   giverAddress = `0x5555555555555555555555555555555555555555`;
 } else if (sponsor === 'gg.xyz') {
   giverAddress = `0x6666666666666666666666666666666666666666`;
+} else {
+  throw new Error(`no sponsor selected`);
 }
 
 async function func(hre: HardhatRuntimeEnvironment): Promise<void> {
   const planets = JSON.parse(await hre.deployments.readDotFile('.planets-chosen.json'));
 
-  if (sponsor === 'xaya') {
-    if (planets.length !== 8) {
-      throw new Error(`8 required`);
+  // if (sponsor === 'xaya') {
+  //   if (planets.length !== 5) {
+  //     throw new Error(`5 required`);
+  //   }
+  // } else
+  if (sponsor === 'blockscout') {
+    if (planets.length !== 4) {
+      throw new Error(`4 required`);
     }
   } else {
-    if (planets.length !== 7) {
-      throw new Error(`7 required`);
-    }
+    throw new Error(`no number of planet specified`);
   }
 
   const {deployer} = await hre.getNamedAccounts();
   const {execute} = hre.deployments;
+
+  const locations: string[] = [];
   for (let i = 0; i < planets.length; i++) {
     const planet = planets[i];
-    // let giverAddress: string | undefined;
-    // if (i % 3 == 0) {
-    // } else if (i % 3 == 1) {
-    // } else if (i % 3 == 2) {
-    // }
-
-    // if (!giverAddress) {
-    //   throw new Error(`no giverAddress`);
-    // }
-
     const OuterSpace = await hre.ethers.getContract('OuterSpace');
     const state = await OuterSpace.callStatic.getPlanet(planet.location);
 
@@ -61,25 +59,20 @@ async function func(hre: HardhatRuntimeEnvironment): Promise<void> {
       console.log(`reward already added to (${x},${y}) (${planet.location})`);
       continue;
     } else if (state.state.lastUpdated > 0) {
-      console.log(`planet already colonized: (${x},${y}) (${planet.location})`);
-      continue;
+      console.error(`planet already colonized: (${x},${y}) (${planet.location})`);
+      process.exit(1);
     }
-
-    if (!giverAddress) {
-      console.log(`no giver specified`);
-      continue;
-    }
-
-    console.log(planet.location);
-    const receipt = await execute(
-      'OuterSpace',
-      {from: deployer, log: true, autoMine: true, maxFeePerGas: '10000000000', maxPriorityFeePerGas: '5000000000'},
-      'addReward',
-      planet.location,
-      giverAddress
-    );
-    console.log(receipt.transactionHash);
+    locations.push(planet.location);
   }
+
+  const receipt = await execute(
+    'OuterSpace',
+    {from: deployer, log: true, autoMine: true, maxFeePerGas: '10000000000', maxPriorityFeePerGas: '5000000000'},
+    'addMultipleRewardViaAdmin',
+    locations,
+    giverAddress
+  );
+  console.log(receipt.transactionHash);
 }
 if (require.main === module) {
   func(hre);

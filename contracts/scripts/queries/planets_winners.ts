@@ -1,34 +1,54 @@
 import {locationToXY, xyToLocation} from 'conquest-eth-common';
 import 'dotenv/config';
-import {deployments} from 'hardhat';
-import {TheGraph} from './utils/thegraph';
-// const theGraph = new TheGraph(`https://api.thegraph.com/subgraphs/name/${process.env.SUBGRAPH_NAME}`);
-// const blockNumber = 21538868;
-const theGraph = new TheGraph(`http://127.0.0.1:8000/subgraphs/name/conquest-eth/conquest-eth`);
-const blockNumber = 41141; // the end of session
+import hre, {deployments} from 'hardhat';
+import {getTHEGRAPH} from './utils';
 
 const args = process.argv.slice(2);
+const blockNumber = parseInt(args[0]);
+const sponsor = args[1];
 
-const all = args[0] === 'all';
-
-// const gnosisPlanets = ['-49,-43', '-9,80', '-120,-11', '-2,67', '-46,51', '-21,74', '-6,-27'];
-// const poktPlanets = ['-127,116', '-98,44', '-140,128', '-137,58', '-66,117', '54,58', '-111,-77'];
-// const xayaPlanets = ['-86,53', '42,32', '7,35', '-123,6', '-49,-67', '-19,46', '-93,77', '-33,69'];
-const gnosisPlanets: string[] = [];
-const poktPlanets: string[] = [];
-const xayaPlanets: string[] = ['-17,1'];
-let planetsStrings = gnosisPlanets.concat(poktPlanets);
-if (all) {
-  planetsStrings = planetsStrings.concat(xayaPlanets);
+if (!blockNumber) {
+  console.error(`no blockNumber provided`);
+  process.exit(1);
 }
 
-const planets = planetsStrings.map((v) => {
-  const splitted = v.split(',');
-  return xyToLocation(parseInt(splitted[0]), parseInt(splitted[1]));
+if (!sponsor) {
+  console.error(`no sponsor provided`);
+  process.exit(1);
+}
+
+const planetsPerSponsors: {[sponsor: string]: {x: number; y: number; location: string}[]} = {
+  blockscout: [
+    {
+      x: 12,
+      y: 20,
+      location: '0x000000000000000000000000000000140000000000000000000000000000000c',
+    },
+    {
+      x: 11,
+      y: 18,
+      location: '0x000000000000000000000000000000120000000000000000000000000000000b',
+    },
+    {
+      x: 4,
+      y: -11,
+      location: '0xfffffffffffffffffffffffffffffff500000000000000000000000000000004',
+    },
+    {
+      x: 5,
+      y: -9,
+      location: '0xfffffffffffffffffffffffffffffff700000000000000000000000000000005',
+    },
+  ],
+};
+
+const planets = planetsPerSponsors[sponsor].map((v) => {
+  return v.location;
 });
 
 console.log({
   planets: planets.map((v) => `${locationToXY(v).x}, ${locationToXY(v).y}`),
+  planetIds: planets,
 });
 
 const queryString = `
@@ -53,6 +73,7 @@ query($planets: [ID!]! $blockNumber: Int!) {
 `;
 
 async function main() {
+  const theGraph = await getTHEGRAPH(hre);
   let rewardsAlreadyGiven: {[token: string]: {[address: string]: {given: {tx: string; planets: string[]}[]}}} = {};
 
   try {
@@ -72,7 +93,7 @@ async function main() {
       success: boolean;
     }[];
     // exitCompleteEvents: {owner: {id: string}; planet: {id: string}}[];
-    planets: {owner: {id: string}; id: string}[];
+    planets: {owner: {id: string} | null; id: string}[];
   };
 
   console.log(data);
@@ -86,23 +107,17 @@ async function main() {
 
   const exited = exittedComplete.concat(exitingDone);
 
-  const winners: {[id: string]: {planets: string[]; xdai: number; wchi: number}} = {};
+  const token = 'unit';
+  const amount = 1;
+
+  const winners: {[id: string]: {planets: string[]} & {[token: string]: number}} = {};
   const planetsCounted: {[id: string]: boolean} = {};
   for (const planetExited of exited) {
     if (!planetsCounted[planetExited.planet.id]) {
       winners[planetExited.owner.id] = winners[planetExited.owner.id] || {
         planets: [],
-        xdai: 0,
-        wchi: 0,
       };
       const planetString = `${locationToXY(planetExited.planet.id).x},${locationToXY(planetExited.planet.id).y}`;
-
-      let token: 'wchi' | 'xdai' = 'xdai';
-      let amount = 100;
-      if (xayaPlanets.indexOf(planetString) !== -1) {
-        token = 'wchi';
-        amount = 375;
-      }
 
       let alreadyCounted = false;
       if (rewardsAlreadyGiven[token] && rewardsAlreadyGiven[token][planetExited.owner.id]) {
@@ -114,6 +129,7 @@ async function main() {
       }
 
       if (!alreadyCounted) {
+        winners[planetExited.owner.id][token] = winners[planetExited.owner.id][token] || 0;
         winners[planetExited.owner.id][token] += amount;
         winners[planetExited.owner.id].planets.push(planetString);
       }
@@ -121,21 +137,13 @@ async function main() {
     }
   }
 
+  console.log(JSON.stringify({held}));
   for (const planetHeld of held) {
-    if (!planetsCounted[planetHeld.id]) {
+    if (!planetsCounted[planetHeld.id] && planetHeld.owner) {
       winners[planetHeld.owner.id] = winners[planetHeld.owner.id] || {
         planets: [],
-        xdai: 0,
-        wchi: 0,
       };
       const planetString = `${locationToXY(planetHeld.id).x},${locationToXY(planetHeld.id).y}`;
-
-      let token: 'wchi' | 'xdai' = 'xdai';
-      let amount = 100;
-      if (xayaPlanets.indexOf(planetString) !== -1) {
-        token = 'wchi';
-        amount = 375;
-      }
 
       let alreadyCounted = false;
       if (rewardsAlreadyGiven[token] && rewardsAlreadyGiven[token][planetHeld.owner.id]) {
@@ -147,6 +155,7 @@ async function main() {
       }
 
       if (!alreadyCounted) {
+        winners[planetHeld.owner.id][token] = winners[planetHeld.owner.id][token] || 0;
         winners[planetHeld.owner.id][token] += amount;
         winners[planetHeld.owner.id].planets.push(planetString);
       }

@@ -593,6 +593,9 @@ contract OuterSpaceFacetBase is
     function _addReward(uint256 location, address sponsor) internal {
         uint256 rewardId = _rewards[location];
         require(rewardId == 0, "REWARD_ALREADY_AT_THIS_LOCATION");
+        // TODO ?
+        // Planet storage planet = _getPlanet(location);
+        // require(planet.lastUpdated == 0, "PLANET_ALREADY_COLONIZED");
         rewardId = ++_prevRewardIds[sponsor];
         _rewards[location] = (uint256(uint160(sponsor)) << 96) + rewardId;
         emit RewardSetup(location, sponsor, rewardId);
