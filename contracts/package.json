@@ -96,6 +96,7 @@
     "verify": "node ./_scripts.js verify",
     "verify:gnosis-via-blockscout": "node ./_scripts.js verify --api-url https://gnosis.blockscout.com/api/",
     "verify:gnosis-via-gnosisscan": "node ./_scripts.js verify --api-url https://api.gnosisscan.io",
+    "verify:sepolia-via-blockscout": "node ./_scripts.js verify --api-url https://eth-sepolia.blockscout.com/api/",
     "export": "node ./_scripts.js export",
     "metadata": "node ./_scripts.js metadata",
     "hardhat": "hardhat",
