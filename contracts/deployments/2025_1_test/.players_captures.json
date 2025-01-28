@@ -1,0 +1,12 @@
+[
+  {
+    "playerAddress": "0xbe19b59e8c588d68f475a407c7ba5fe813aeb792",
+    "amountCapture": "8000000000000000000",
+    "numPlanetsCaptured": 1
+  },
+  {
+    "playerAddress": "0xab1346cf31b343ddfbe03effee19bab88c410514",
+    "amountCapture": "3700000000000000000",
+    "numPlanetsCaptured": 1
+  }
+]
