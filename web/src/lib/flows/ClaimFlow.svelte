@@ -16,9 +16,10 @@
   import EmbeddedMintFlow from './EmbeddedMintFlow.svelte';
   import {nativeTokenSymbol} from '$lib/config';
   import {initialContractsInfos} from '$lib/blockchain/contracts';
+  import MultiplePlanetClaimPanel from '$lib/components/planets/MultiplePlanetClaimPanel.svelte';
 
   $: coords = $claimFlow.data?.coords;
-  $: planetInfo = coords ? spaceInfo.getPlanetInfo(coords.x, coords.y) : undefined;
+  $: planetInfo = coords ? spaceInfo.getPlanetInfo(coords[0].x, coords[0].y) : undefined;
   $: planetState = planetInfo ? planets.planetStateFor(planetInfo) : undefined;
   $: stats = planetInfo ? planetInfo.stats : undefined;
   $: stake = stats && stats.stake / 10000;
@@ -78,6 +79,8 @@
   </Modal>
 {:else if $claimFlow.step === 'CONNECTING'}
   <!---->
+{:else if $claimFlow.step === 'ADD_MORE'}
+  <MultiplePlanetClaimPanel />
 {:else if $claimFlow.step === 'NOT_ENOUGH_NATIVE_TOKEN'}
   <Modal on:close={() => claimFlow.cancel()}>
     <div class="flex flex-col justify-center items-center">
@@ -156,6 +159,7 @@
           {stats.production / 60}
           spaceships per minutes.
         </p>
+        <Button class="mt-5" label="Add More Planet" on:click={() => claimFlow.askForMore()}>Add More</Button>
         <Button
           class="mt-5"
           label="Stake"
@@ -217,6 +221,7 @@
           {stats.production / 60}
           spaceships per minutes.
         </p>
+        <Button class="mt-5" label="Add More Planet" on:click={() => claimFlow.askForMore()}>Add More</Button>
         <Button
           class="mt-5"
           label="Stake"
@@ -257,6 +262,7 @@
           {stats.production / 60}
           spaceships per minutes.
         </p>
+        <Button class="mt-5" label="Add More Planet" on:click={() => claimFlow.askForMore()}>Add More</Button>
         <Button class="mt-5" label="Stake" on:click={() => claimFlow.confirm()}>Confirm</Button>
       </div>
     {/if}

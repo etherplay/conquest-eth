@@ -17,6 +17,7 @@
   import {matchConditions, pluginShowing, showPlanetButtons} from '$lib/plugins/currentPlugin';
   import {overlays} from '$lib/map/overlays';
   import sendFlow from '$lib/flows/send';
+  import claimFlow from '$lib/flows/claim';
   import {time} from '$lib/time';
 
   type Frame = {x: number; y: number; w: number; h: number};
@@ -256,6 +257,10 @@
       $sendFlow.data.to.x == planetInfo.location.x &&
       $sendFlow.data.to.y == planetInfo.location.y);
 
+  $: pickedByClaimFlow =
+    $claimFlow.step === 'ADD_MORE' &&
+    $claimFlow.data.coords.find((v) => v.x == planetInfo.location.x && v.y == planetInfo.location.y);
+
   $: showOwner =
     $overlays.planetOwners !== 'None' &&
     ($overlays.planetOwners === 'Everyone' ||
@@ -305,7 +310,30 @@
     </div>
   {/if}
 
-  {#if pickedBySendFlow}
+  {#if pickedByClaimFlow}
+    <div
+      style={`
+    z-index: 3;
+    position: absolute;
+    transform: translate(${x}px,${y}px) scale(${(blockieScale * 3) / multiplier}, ${(blockieScale * 3) / multiplier});
+    width: ${frame.w}px;
+    height: ${frame.h}px;
+  `}
+    >
+      <div
+        style={`
+          width: ${frame.w}px;
+          height: ${frame.h}px;
+          border: ${selectionBorder / 1.2}px solid green;
+          border-radius: 50%;
+          animation-name: event-scale-up-down;
+          animation-iteration-count: infinite;
+          animation-duration: 2s;
+          animation-timing-function: linear;
+        `}
+      />
+    </div>
+  {:else if pickedBySendFlow}
     <div
       style={`
     z-index: 3;

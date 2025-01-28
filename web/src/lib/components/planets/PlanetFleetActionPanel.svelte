@@ -27,6 +27,14 @@
     claimFlow.claim(coords);
   }
 
+  function addToCapture() {
+    claimFlow.addMore(coords);
+  }
+
+  function removeFromCpature() {
+    claimFlow.remove(coords);
+  }
+
   function sendTo() {
     sendFlow.sendTo(coords);
     close();
@@ -107,6 +115,9 @@
       !v.panelConditions ||
       matchConditions(v.panelConditions, {account: $wallet.address, planetState: $planetState, planetInfo})
   );
+
+  $: pickedByClaimFlow =
+    $claimFlow.step === 'ADD_MORE' && $claimFlow.data.coords.find((v) => v.x == coords.x && v.y == coords.y);
 </script>
 
 {#if $planetState}
@@ -175,6 +186,55 @@
         <PanelButton label="Cancel" class="m-2" on:click={cancelSimulation}>
           <div class="w-20">Cancel</div>
         </PanelButton>
+      {:else if $claimFlow.step === 'ADD_MORE'}
+        {#if !$planetState.owner}
+          {#if pickedByClaimFlow}
+            <PanelButton
+              label="Remove"
+              class="m-2"
+              color="text-yellow-400"
+              borderColor="border-yellow-400"
+              on:click={removeFromCpature}
+            >
+              <div class="w-20">Remove</div>
+            </PanelButton>
+          {:else}
+            <PanelButton
+              label="Add"
+              class="m-2"
+              color="text-yellow-400"
+              borderColor="border-yellow-400"
+              disabled={!$planetState.inReach}
+              on:click={addToCapture}
+            >
+              <div class="w-20">
+                Add
+                <span class="text-sm">
+                  {#if !$planetState.inReach}
+                    (unreachable)
+                    <Help class="inline w-4 h-4">
+                      The Reachable Universe expands as more planets get captured. Note though that you can still send
+                      attack unreachable planets. But these planets cannot produce spaceships until they get in range
+                      and you stake on it.
+                    </Help>
+                  {:else}
+                    <Help class="inline w-4 h-4">
+                      To claim a planet and make it produce spaceships for you, you have to deposit a certain number of
+                      <PlayCoin class="w-4 inline" />
+                      (Play token) on it. If you lose your planet, you lose the ability to withdraw them.
+                      <br />
+                      The capture will be resolved as if it was a 10,000 attack power with 100,000
+                      <!-- TODO config -->
+                      spaceships. The capture will only be succesful if the attack succeed
+                    </Help>
+                  {/if}
+                </span>
+              </div>
+            </PanelButton>
+          {/if}
+        {:else}
+          <!-- -->
+        {/if}
       {:else if !$planetState.owner}
         <PanelButton
           label="Stake"

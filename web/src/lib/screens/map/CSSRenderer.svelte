@@ -222,8 +222,7 @@ width:100%; height: 100%;
       {/if}
     {/if}
 
-    {#if $selection && $sendFlow}
-      {#if $sendFlow.step === 'PICK_ORIGIN'}
+    {#if $selection && $sendFlow}{#if $sendFlow.step === 'PICK_ORIGIN'}
         <VirtualFleetElement fleet={virtualFleetFrom($sendFlow.data, $selection)} />
       {:else if $sendFlow.step === 'PICK_DESTINATION'}
         <VirtualFleetElement fleet={virtualFleetTo($sendFlow.data, $selection)} />

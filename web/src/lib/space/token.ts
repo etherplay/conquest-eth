@@ -51,12 +51,14 @@ export class MyTokenStore implements Readable<MyToken> {
           (pendingAction.status === 'LOADING' && now() - pendingAction.action.timestamp < 60)
         ) {
           if (captureAction.planetCoords) {
-            const planetInfo = spaceInfo.getPlanetInfo(captureAction.planetCoords.x, captureAction.planetCoords.y);
-            const numTokens = BigNumber.from(planetInfo.stats.stake).mul('100000000000000');
-            if (freePlayTokenBalance.sub(freePlayTokenDelta).gte(numTokens)) {
-              freePlayTokenDelta = freePlayTokenDelta.add(numTokens);
-            } else {
-              playTokenDelta = playTokenDelta.add(numTokens);
+            const planetInfos = captureAction.planetCoords.map((v) => spaceInfo.getPlanetInfo(v.x, v.y));
+            for (const planetInfo of planetInfos) {
+              const numTokens = BigNumber.from(planetInfo.stats.stake).mul('100000000000000');
+              if (freePlayTokenBalance.sub(freePlayTokenDelta).gte(numTokens)) {
+                freePlayTokenDelta = freePlayTokenDelta.add(numTokens);
+              } else {
+                playTokenDelta = playTokenDelta.add(numTokens);
+              }
             }
           }
         }

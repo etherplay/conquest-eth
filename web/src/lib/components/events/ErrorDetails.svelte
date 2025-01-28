@@ -103,7 +103,8 @@
             <div class="py-4 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt class="text-sm font-medium text-gray-500">Planet</dt>
               <dd class="mt-1 text-sm text-gray-100 sm:mt-0 sm:col-span-2">
-                <Coord location={xyToLocation(error.action.planetCoords.x, error.action.planetCoords.y)} />
+                <!-- TODO  handle multiple coords -->
+                <Coord location={xyToLocation(error.action.planetCoords[0].x, error.action.planetCoords[0].y)} />
               </dd>
             </div>
           {:else if error.action.type === 'WITHDRAWAL'}

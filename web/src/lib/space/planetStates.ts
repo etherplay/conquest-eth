@@ -86,9 +86,11 @@ export class PlanetStates {
     this.pendingActionsPerPlanet = {};
     for (const pendingAction of update.pendingActions) {
       if (pendingAction.action.type === 'CAPTURE') {
-        const location = xyToLocation(pendingAction.action.planetCoords.x, pendingAction.action.planetCoords.y);
-        const currentlist = (this.pendingActionsPerPlanet[location] = this.pendingActionsPerPlanet[location] || []);
-        currentlist.push(pendingAction);
+        const locations = pendingAction.action.planetCoords.map((v) => xyToLocation(v.x, v.y));
+        for (const location of locations) {
+          const currentlist = (this.pendingActionsPerPlanet[location] = this.pendingActionsPerPlanet[location] || []);
+          currentlist.push(pendingAction);
+        }
       } else if (pendingAction.action.type === 'SEND') {
         const location = xyToLocation(pendingAction.action.from.x, pendingAction.action.from.y);
         const currentlist = (this.pendingActionsPerPlanet[location] = this.pendingActionsPerPlanet[location] || []);

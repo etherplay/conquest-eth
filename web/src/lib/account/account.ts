@@ -70,7 +70,7 @@ export type PendingWithdrawal = PendingActionBase & {
 
 export type PendingCapture = PendingActionBase & {
   type: 'CAPTURE';
-  planetCoords: PlanetCoords;
+  planetCoords: PlanetCoords[];
 };
 
 export type PendingAction = PendingSend | PendingExit | PendingCapture | PendingWithdrawal | PendingResolution;
@@ -167,13 +167,30 @@ class Account implements Readable<AccountState> {
     return !this.state.data?.agentServiceDefault || this.state.data?.agentServiceDefault?.activated;
   }
 
+  async recordMultipleCapture(
+    planetCoords: PlanetCoords[],
+    txHash: string,
+    timestamp: number,
+    nonce: number
+  ): Promise<void> {
+    this.check();
+    this.state.data.pendingActions[txHash] = {
+      type: 'CAPTURE',
+      timestamp,
+      nonce,
+      planetCoords: planetCoords,
+    };
+    await this.accountDB.save(this.state.data);
+    this._notify('recordCapture');
+  }
+
   async recordCapture(planetCoords: PlanetCoords, txHash: string, timestamp: number, nonce: number): Promise<void> {
     this.check();
     this.state.data.pendingActions[txHash] = {
       type: 'CAPTURE',
       timestamp,
       nonce,
-      planetCoords: {...planetCoords},
+      planetCoords: [{...planetCoords}],
     };
     await this.accountDB.save(this.state.data);
     this._notify('recordCapture');

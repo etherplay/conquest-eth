@@ -71,6 +71,24 @@ contract OuterSpaceStakingFacet is OuterSpaceFacetBase {
         _stakingToken.transferFrom(sender, address(this), tokenAmount);
     }
 
+    function acquireMultipleViaNativeTokenAndStakingToken(
+        uint256[] memory locations,
+        uint256 amountToMint,
+        uint256 tokenAmount
+    ) public payable {
+        // TODO permit
+        address sender = msg.sender;
+        uint256 total = 0;
+        for (uint256 i = 0; i < locations.length; i++) {
+            uint256 stake = uint256(_stake(_planetData(locations[i]))) * (DECIMALS_14);
+            _acquire(sender, stake, locations[i], false);
+            total += stake;
+        }
+        require(amountToMint + tokenAmount == total, "INVALID_AMOUNT");
+        _stakingToken.mint{value: msg.value}(address(this), amountToMint);
+        _stakingToken.transferFrom(sender, address(this), tokenAmount);
+    }
+
     // ---------------------------------------------------------------------------------------------------------------
     // EXIT / WITHDRAWALS
     // ---------------------------------------------------------------------------------------------------------------

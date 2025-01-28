@@ -6,19 +6,21 @@ import {defaultAbiCoder} from '@ethersproject/abi';
 import {TutorialSteps} from '$lib/account/constants';
 import {account} from '$lib/account/account';
 import {privateWallet} from '$lib/account/privateWallet';
-import {xyToLocation} from 'conquest-eth-common';
+import type {PlanetInfo} from 'conquest-eth-common';
 import {myTokens} from '$lib/space/token';
 import {get} from 'svelte/store';
 import {initialContractsInfos} from '$lib/blockchain/contracts';
 import {getGasPrice} from './gasPrice';
+import selection from '$lib/map/selection';
 
-type Data = {txHash?: string; coords: {x: number; y: number}};
+type Data = {txHash?: string; coords: {x: number; y: number}[]};
 export type ClaimFlow = {
   type: 'CLAIM';
   step:
     | 'IDLE'
     | 'CONNECTING'
     | 'CHOOSE_STAKE'
+    | 'ADD_MORE'
     | 'CREATING_TX'
     | 'WAITING_TX'
     | 'PROFILE_INFO'
@@ -61,8 +63,28 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
     this.setPartial({error: undefined});
   }
 
+  async askForMore() {
+    selection.unselect();
+    this.setPartial({step: 'ADD_MORE', cancelingConfirmation: false});
+  }
+
+  async addMore(coords: {x: number; y: number}) {
+    const newCoords = [...this.$store.data.coords, {...coords}];
+    this.setPartial({data: {coords: newCoords}});
+  }
+
+  remove(coords: {x: number; y: number}) {
+    const newCoords = this.$store.data.coords.filter((v) => v.x != coords.x || v.y != coords.y);
+    if (newCoords.length === 0) {
+      this._reset();
+    } else {
+      this.setPartial({data: {coords: newCoords}});
+    }
+  }
+
   async claim(coords: {x: number; y: number}): Promise<void> {
-    this.setPartial({data: {coords}, step: 'CONNECTING'});
+    this.setPartial({data: {coords: [{...coords}]}, step: 'CONNECTING'});
+
     await privateWallet.login();
     this.setPartial({step: 'CHOOSE_STAKE', cancelingConfirmation: false});
   }
@@ -77,10 +99,7 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
       maxFeePerGas = gasPrice.maxFeePerGas;
       maxPriorityFeePerGas = gasPrice.maxPriorityFeePerGas;
     } catch (e) {
-      this.setPartial({
-        step: 'CHOOSE_STAKE',
-        error: e,
-      });
+      this.backToWhereYouWere({error: e});
       return;
     }
 
@@ -95,7 +114,7 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
         }
       );
     } catch (err) {
-      this.setPartial({step: 'CHOOSE_STAKE', error: err});
+      this.backToWhereYouWere({error: err});
       throw err;
     }
 
@@ -103,7 +122,15 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
     try {
       await tx.wait();
     } finally {
-      this.setPartial({step: 'CHOOSE_STAKE'});
+      this.backToWhereYouWere();
+    }
+  }
+
+  backToWhereYouWere(object?: object) {
+    if (this.$store.data?.coords.length > 0) {
+      this.setPartial({step: 'ADD_MORE', ...object});
+    } else {
+      this.setPartial({step: 'CHOOSE_STAKE', ...object});
     }
   }
 
@@ -112,15 +139,13 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
     await privateWallet.login();
     const flow = this.setPartial({step: 'CREATING_TX'});
     if (!flow.data) {
-      this.setPartial({
-        step: 'CHOOSE_STAKE',
+      this.backToWhereYouWere({
         error: new Error(`no flow data`),
       });
       return;
     }
     if (!wallet.provider) {
-      this.setPartial({
-        step: 'CHOOSE_STAKE',
+      this.backToWhereYouWere({
         error: new Error(`no provider`),
       });
       return;
@@ -129,8 +154,7 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
     try {
       latestBlock = await wallet.provider.getBlock('latest');
     } catch (e) {
-      this.setPartial({
-        step: 'CHOOSE_STAKE',
+      this.backToWhereYouWere({
         error: e,
       });
       return;
@@ -143,8 +167,7 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
       maxFeePerGas = gasPrice.maxFeePerGas;
       maxPriorityFeePerGas = gasPrice.maxPriorityFeePerGas;
     } catch (e) {
-      this.setPartial({
-        step: 'CHOOSE_STAKE',
+      this.backToWhereYouWere({
         error: e,
       });
       return;
@@ -154,26 +177,29 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
     try {
       currentNativeBalance = await wallet.provider.getBalance(wallet.address);
     } catch (e) {
-      this.setPartial({
-        step: 'CHOOSE_STAKE',
+      this.backToWhereYouWere({
         error: e,
       });
       return;
     }
 
-    // console.log('HELLO');
-    const planetInfo = spaceInfo.getPlanetInfo(flow.data.coords.x, flow.data.coords.y);
-    if (!planetInfo) {
-      this.setPartial({
-        step: 'CHOOSE_STAKE',
-        error: new Error(`no planet at ${flow.data.coords.x}, ${flow.data.coords.y}`),
-      });
-      return;
+    const planetInfos: PlanetInfo[] = [];
+
+    for (const coords of flow.data.coords) {
+      // console.log('HELLO');
+      const planetInfo = spaceInfo.getPlanetInfo(coords.x, coords.y);
+      if (!planetInfo) {
+        this.backToWhereYouWere({
+          error: new Error(`no planet at ${coords.x}, ${coords.y}`),
+        });
+        return;
+      } else {
+        planetInfos.push(planetInfo);
+      }
     }
 
     if (!account.isReady()) {
-      this.setPartial({
-        step: 'CHOOSE_STAKE',
+      this.backToWhereYouWere({
         error: new Error(`account not ready`),
       });
       return;
@@ -192,15 +218,24 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
       }
     }
 
-    const locationId = xyToLocation(flow.data.coords.x, flow.data.coords.y);
-    let tokenAmount = spaceInfo.roundTo1Decimal
-      ? BigNumber.from(planetInfo.stats.stake).mul('100000000000000')
-      : BigNumber.from(planetInfo.stats.stake * 10000).mul('10000000000');
+    let tokenAmount: BigNumber = BigNumber.from(0);
+    const locationIds: string[] = [];
+    for (const planetInfo of planetInfos) {
+      const tokenAmountToAdd = spaceInfo.roundTo1Decimal
+        ? BigNumber.from(planetInfo.stats.stake).mul('100000000000000')
+        : BigNumber.from(planetInfo.stats.stake * 10000).mul('10000000000');
+
+      tokenAmount = tokenAmount.add(tokenAmountToAdd);
+      locationIds.push(planetInfo.location.id);
+    }
+
     let paymentTokenContract = wallet?.contracts.PlayToken;
     if (get(myTokens).freePlayTokenBalance.gte(tokenAmount)) {
       paymentTokenContract = wallet?.contracts.FreePlayToken;
     }
-    let callData = defaultAbiCoder.encode(['address', 'uint256'], [wallet.address, locationId]);
+    console.log(wallet.address, locationIds);
+    const callData = defaultAbiCoder.encode(['address', 'uint256[]'], [wallet.address, locationIds]);
+    console.log({callData});
 
     // TODO add multiple claim
     // tokenAmount = tokenAmount.add(BigNumber.from("1900000000000000000"));
@@ -221,8 +256,7 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
           callData
         );
       } catch (e) {
-        this.setPartial({
-          step: 'CHOOSE_STAKE',
+        this.backToWhereYouWere({
           error: e,
         });
         return;
@@ -265,7 +299,9 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
               });
             } else {
               console.error(`Error on transferAndCall:`, e);
-              this.setPartial({error: e, step: 'CHOOSE_STAKE'});
+              this.backToWhereYouWere({
+                error: e,
+              });
             }
           } else {
             throw e;
@@ -287,16 +323,15 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
       }
       let gasEstimation: BigNumber;
       try {
-        gasEstimation = await outerspaceContract.estimateGas.acquireViaNativeTokenAndStakingToken(
-          locationId,
+        gasEstimation = await outerspaceContract.estimateGas.acquireMultipleViaNativeTokenAndStakingToken(
+          locationIds,
           requireMint.amountToMint,
           requireMint.tokenAvailable,
           {value: nativeTokenAmount}
         );
       } catch (e) {
         console.error(e);
-        this.setPartial({
-          step: 'CHOOSE_STAKE',
+        this.backToWhereYouWere({
           error: e,
         });
         return;
@@ -315,8 +350,8 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
       this.setPartial({step: 'WAITING_TX'});
 
       try {
-        tx = await outerspaceContract.acquireViaNativeTokenAndStakingToken(
-          locationId,
+        tx = await outerspaceContract.acquireMultipleViaNativeTokenAndStakingToken(
+          locationIds,
           requireMint.amountToMint,
           requireMint.tokenAvailable,
           {
@@ -345,7 +380,9 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
               });
             } else {
               console.error(`Error on transferAndCall:`, e);
-              this.setPartial({error: e, step: 'CHOOSE_STAKE'});
+              this.backToWhereYouWere({
+                error: e,
+              });
             }
           } else {
             throw e;
@@ -356,7 +393,7 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
     }
 
     // TODO check ? check what ? (need to give better comments :D)
-    account.recordCapture(flow.data.coords, tx.hash, latestBlock.timestamp, tx.nonce);
+    account.recordMultipleCapture(flow.data.coords, tx.hash, latestBlock.timestamp, tx.nonce);
 
     if (!account.isWelcomingStepCompleted(TutorialSteps.SUGGESTION_PROFILE)) {
       this.setData({txHash: tx.hash}, {step: 'PROFILE_INFO'});
@@ -374,7 +411,9 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
   }
 
   continueAfterOnRamp() {
-    this.setPartial({step: 'CHOOSE_STAKE', cancelingConfirmation: false});
+    this.backToWhereYouWere({
+      cancelCancelation: false,
+    });
   }
 
   private _reset() {

@@ -83,7 +83,8 @@ export class ErrorsStore implements Readable<SpaceError[]> {
           }
         }
       } else if (pendingAction.action.type === 'CAPTURE') {
-        location = pendingAction.action.planetCoords;
+        // TODO  handle multiple coords
+        location = pendingAction.action.planetCoords[0];
       } else if (pendingAction.action.type === 'RESOLUTION') {
         location = pendingAction.action.to;
       } else if (pendingAction.action.type === 'EXIT') {

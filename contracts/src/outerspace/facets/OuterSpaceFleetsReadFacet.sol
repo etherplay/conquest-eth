@@ -23,7 +23,7 @@ contract OuterSpaceFleetsReadFacet is OuterSpaceFacetBase, IOuterSpaceFleetsRead
         )
     {
         launchTime = _fleets[fleetId].launchTime;
-        quantity = _fleets[fleetId].quantity;
+        quantity = _fleets[fleetId].quantity & 0x3FFFFFFF;
         owner = _fleets[fleetId].owner;
 
         uint256 timeSlot = launchTime / (_frontrunningDelay / 2);

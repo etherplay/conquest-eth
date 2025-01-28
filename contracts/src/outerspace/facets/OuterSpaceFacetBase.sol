@@ -810,9 +810,7 @@ contract OuterSpaceFacetBase is
 
         _setAccumulatedAttack(rState, toPlanetUpdate);
 
-        // TODO quantity should be kept ?
-        //  so Alliance Contract can act on that value ?, could use 1st bit indicator
-        _fleets[fleetId].quantity = 0;
+        _fleets[fleetId].quantity = (1 << 31) | _fleets[fleetId].quantity;
 
         // -----------------------------------------------------------------------------------------------------------
         // Events
@@ -1199,10 +1197,11 @@ contract OuterSpaceFacetBase is
         Fleet storage fleet,
         uint256 from
     ) internal view returns (ResolutionState memory rState) {
+        uint32 q = fleet.quantity >> 31 == 1 ? 0 : fleet.quantity;
         rState.fleetOwner = fleet.owner;
         rState.fleetLaunchTime = fleet.launchTime;
-        rState.originalQuantity = fleet.quantity;
-        rState.fleetQuantity = fleet.quantity;
+        rState.originalQuantity = q;
+        rState.fleetQuantity = q;
         rState.futureExtraProduction = fleet.futureExtraProduction;
         rState.fromData = _planetData(from);
         rState.attackPower = _attack(rState.fromData);
