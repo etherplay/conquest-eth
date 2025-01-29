@@ -14,7 +14,8 @@ import {
   RewardToWithdraw,
   PlanetReset,
   Initialized,
-  PlanetTransfer
+  PlanetTransfer,
+  FleetRevealed,
 } from '../generated/OuterSpace/OuterSpaceContract';
 import {
   Planet,
@@ -29,7 +30,8 @@ import {
   RewardToWithdrawEvent,
   Reward,
   PlanetStakeEvent,
-  PlanetTransferEvent
+  PlanetTransferEvent,
+  FleetRevealedEvent,
 } from '../generated/schema';
 import {log} from '@graphprotocol/graph-ts';
 
@@ -120,36 +122,16 @@ function getOrCreatePlanet(id: string): Planet {
   // log.error('(x,y): ({},{})', [xString, yString]);
   let centerZoneX = absX.plus(BigInt.fromI32(32)).div(BigInt.fromI32(64));
   let centerZoneXString = signX.equals(BigInt.fromI32(1))
-    ? centerZoneX
-        .toHex()
-        .slice(2)
-        .padStart(32, '0')
-    : flipHex(
-        '0x' +
-          centerZoneX
-            .minus(BigInt.fromI32(1))
-            .toHexString()
-            .slice(2)
-            .padStart(32, '0')
-      ).slice(2);
+    ? centerZoneX.toHex().slice(2).padStart(32, '0')
+    : flipHex('0x' + centerZoneX.minus(BigInt.fromI32(1)).toHexString().slice(2).padStart(32, '0')).slice(2);
 
   let y = c2(yString);
   let absY = y.abs();
   let signY = y.lt(BigInt.fromI32(-32)) ? BigInt.fromI32(-1) : BigInt.fromI32(1);
   let centerZoneY = absY.plus(BigInt.fromI32(32)).div(BigInt.fromI32(64));
   let centerZoneYString = signY.equals(BigInt.fromI32(1))
-    ? centerZoneY
-        .toHex()
-        .slice(2)
-        .padStart(32, '0')
-    : flipHex(
-        '0x' +
-          centerZoneY
-            .minus(BigInt.fromI32(1))
-            .toHex()
-            .slice(2)
-            .padStart(32, '0')
-      ).slice(2);
+    ? centerZoneY.toHex().slice(2).padStart(32, '0')
+    : flipHex('0x' + centerZoneY.minus(BigInt.fromI32(1)).toHex().slice(2).padStart(32, '0')).slice(2);
   entity.zone = '0x' + centerZoneYString + centerZoneXString;
 
   // TODO remove :
@@ -356,7 +338,10 @@ export function handleFleetArrived(event: FleetArrived): void {
   fleet.won = event.params.won;
   fleet.save();
 
+  let fleetReveal = FleetRevealedEvent.load(fleetId) as FleetRevealedEvent; // assert it is available by then
+
   let fleetArrivedEvent = new FleetArrivedEvent(toEventId(event));
+  fleetArrivedEvent.fleetReveal = fleetReveal.id;
   fleetArrivedEvent.blockNumber = event.block.number.toI32();
   fleetArrivedEvent.timestamp = event.block.timestamp;
   fleetArrivedEvent.transaction = transactionId;
@@ -578,6 +563,37 @@ export function handleExitComplete(event: ExitComplete): void {
   space.currentStake = space.currentStake.minus(planetEntity.stakeDeposited);
   space.numPlanetsStaked = space.numPlanetsStaked.minus(ONE);
   space.save();
+}
+
+export function handleFleetRevealed(event: FleetRevealed): void {
+  // Basic event
+  // TODO make it an even like theo other, hierarchical
+  let transactionId = updateChainAndReturnTransactionID(event);
+
+  let fleetSender = handleOwner(event.params.fleetSender);
+  let operator = handleOwner(event.params.operator);
+
+  let fromPlanetEntity = getOrCreatePlanet(toPlanetId(event.params.from));
+  fromPlanetEntity.save();
+  let toPlanetEntity = getOrCreatePlanet(toPlanetId(event.params.to));
+  toPlanetEntity.save();
+
+  let fleetRevealedEvent = new FleetRevealedEvent(toFleetId(event.params.fleetId));
+  fleetRevealedEvent.eventID = toEventId(event);
+  fleetRevealedEvent.blockNumber = event.block.number.toI32();
+  fleetRevealedEvent.timestamp = event.block.timestamp;
+  fleetRevealedEvent.transaction = transactionId;
+
+  fleetRevealedEvent.fleet = toFleetId(event.params.fleetId);
+  fleetRevealedEvent.arrivalTimeWanted = event.params.arrivalTimeWanted;
+  fleetRevealedEvent.fleetSender = fleetSender.id;
+  fleetRevealedEvent.from = fromPlanetEntity.id;
+  fleetRevealedEvent.gift = event.params.gift;
+  fleetRevealedEvent.operator = operator.id;
+  fleetRevealedEvent.secret = event.params.secret;
+  fleetRevealedEvent.specific = event.params.specific;
+  fleetRevealedEvent.to = toPlanetEntity.id;
+  fleetRevealedEvent.save();
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

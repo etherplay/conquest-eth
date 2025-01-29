@@ -243,10 +243,31 @@ type FleetArrivedEvent implements OwnerEvent & PlanetEvent & FleetEvent @entity 
   accumulatedAttackAdded: BigInt!
   numSpaceshipsAtArrival: BigInt!
 
+  fleetReveal: FleetRevealedEvent!
+
   # extra data
   from: Planet!
   quantity: BigInt!
 }
+
+# TODO: implements OwnerEvent & PlanetEvent & FleetEvent
+type FleetRevealedEvent @entity {
+  id: ID! # fleetID
+  eventID: ID! # <blockNumber>_logID
+  blockNumber: Int!
+  timestamp: BigInt!
+  transaction: Transaction!
+  fleet: Fleet!
+  from: Planet!
+  to: Planet!
+  arrivalTimeWanted: BigInt!
+  gift: Boolean!
+  specific: Bytes!
+  secret: Bytes!
+  fleetSender: Owner!
+  operator: Owner!
+}
+
 type PlanetTransferEvent implements OwnerEvent & PlanetEvent @entity {
   id: ID! # <blockNumber>_logID
   blockNumber: Int!
