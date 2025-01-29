@@ -165,8 +165,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   if (networkName === '2025_1') {
     genesisHash = '0x69AB0921CC2BCC5C203B2BCCC4B5CE33ACB9520A4776421236C81AD3DA565991';
 
-    bootstrapSessionEndTime = 1738152000; //  Wednesday, 29 January 2025 12:00:00
-    infinityStartTime = 1738153800; //  Wednesday, 29 January 2025 12:30:00
+    bootstrapSessionEndTime = 1741168800; // Wednesday, 5 March 2025 10:00:00
+    infinityStartTime = 1741255200; // Thursday, 6 March 2025 10:00:00
   }
 
   if (networkName === '2025_1_test') {
@@ -177,8 +177,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     resolveWindow /= 25;
     genesisHash = '0x2E8844C4BE4BB08968BF024167442FF346C1277CFA814ADCE21207B6A4BCD005';
 
-    bootstrapSessionEndTime = 1738749600; // Wednesday, 5 February 2025 10:00:00
-    infinityStartTime = 1738836000; //  Thursday, 6 February 2025 10:00:00
+    bootstrapSessionEndTime = 1738162800; // Wednesday, 29 January 2025 15:00:00
+    infinityStartTime = 1738164600; // Wednesday, 29 January 2025 15:30:00
   }
   // ----------------------------------------------------------------------------------------------
 

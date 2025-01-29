@@ -1,5 +1,5 @@
 {
-  "address": "0xE9a5d0cA12dE1cA72f1f0F575d384D92d47b1DfF",
+  "address": "0xa025F8b02BF853c2949e57a0AF706ef2345b7BBf",
   "abi": [
     {
       "inputs": [
@@ -730,19 +730,19 @@
       "type": "function"
     }
   ],
-  "transactionHash": "0x2e97c2fdf553a985339d44270a4447a57c4f18840fe166542dbac28239e5e1dd",
+  "transactionHash": "0xdf5f61feab023e91edb3b47d2a603eb8f53fc5eab3f60ac51d5f85432bbc4a39",
   "receipt": {
     "to": "0x4e59b44847b379578588920cA78FbF26c0B4956C",
     "from": "0xbE19B59E8C588d68f475A407C7BA5fE813AEb792",
     "contractAddress": null,
-    "transactionIndex": 5,
+    "transactionIndex": 2,
     "gasUsed": "323179",
     "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-    "blockHash": "0x6bf7c82ebc6ae528ee7250f9af86ce32cbf9aea9a0f54c0c95b8a38445e10a8a",
-    "transactionHash": "0x2e97c2fdf553a985339d44270a4447a57c4f18840fe166542dbac28239e5e1dd",
+    "blockHash": "0xfab924cb0724fc5f696a6384d678d763c237bc350f115eb1a309f62914e4e65a",
+    "transactionHash": "0xdf5f61feab023e91edb3b47d2a603eb8f53fc5eab3f60ac51d5f85432bbc4a39",
     "logs": [],
-    "blockNumber": 38287179,
-    "cumulativeGasUsed": "694047",
+    "blockNumber": 38289858,
+    "cumulativeGasUsed": "879398",
     "status": 1,
     "byzantium": true
   },
@@ -766,11 +766,11 @@
       "giftTaxPer10000": 2000,
       "stakeRange": "0x0064008200aa00c800f0010e012c014a014a017201900212029e032003a204b0",
       "stakeMultiplier10000th": 100,
-      "bootstrapSessionEndTime": 1738749600,
-      "infinityStartTime": 1738836000
+      "bootstrapSessionEndTime": 1738162800,
+      "infinityStartTime": 1738164600
     }
   ],
-  "numDeployments": 3,
+  "numDeployments": 4,
   "linkedData": {
     "genesisHash": "0x2E8844C4BE4BB08968BF024167442FF346C1277CFA814ADCE21207B6A4BCD005",
     "resolveWindow": 1728,
@@ -788,8 +788,8 @@
     "giftTaxPer10000": 2000,
     "stakeRange": "0x0064008200aa00c800f0010e012c014a014a017201900212029e032003a204b0",
     "stakeMultiplier10000th": 100,
-    "bootstrapSessionEndTime": 1738749600,
-    "infinityStartTime": 1738836000,
+    "bootstrapSessionEndTime": 1738162800,
+    "infinityStartTime": 1738164600,
     "deploymentTimestamp": 1738078599
   },
   "solcInputHash": "02282026b82788901280a3e7fe160df8",
