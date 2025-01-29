@@ -709,7 +709,9 @@ contract OuterSpaceFacetBase is
         // -----------------------------------------------------------------------------------------------------------
         uint256 timeSlot = block.timestamp / (_frontrunningDelay / 2);
         uint32 flying = _inFlight[from][timeSlot].flying;
-        flying = flying + quantity;
+        unchecked {
+            flying = flying + quantity;
+        }
         require(flying >= quantity, "ORBIT_OVERFLOW"); // unlikely to ever happen,
         // would need a huge amount of spaceships to be received and each in turn being sent
         // TOEXPLORE could also cap, that would result in some fleet being able to escape.
@@ -1404,7 +1406,9 @@ contract OuterSpaceFacetBase is
         uint256 numAttack = rState.fleetQuantity + rState.accumulatedAttackAdded;
         (uint32 attackerLoss, uint32 defenderLoss) = _computeFight(numAttack, numDefense, attack, defense);
         rState.defenderLoss = defenderLoss;
-        rState.attackerLoss = attackerLoss - rState.accumulatedAttackAdded;
+        rState.attackerLoss = rState.accumulatedAttackAdded > attackerLoss
+            ? 0
+            : attackerLoss - rState.accumulatedAttackAdded;
 
         // (attackerLoss: 0, defenderLoss: 0) could either mean attack was zero or defense was zero :
         if (rState.fleetQuantity > 0 && rState.defenderLoss == numDefense) {
