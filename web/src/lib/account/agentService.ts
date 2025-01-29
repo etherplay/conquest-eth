@@ -155,7 +155,7 @@ class AgentServiceStore extends AutoStartBaseStore<AgentServiceState> {
     console.log(`remoteAccount`, {balance, balanceRequired, amountReserved, totalMaxCost});
 
     return {
-      cost: balanceRequired > balance ? balanceRequired - balance : 0n,
+      valueRequiredToSend: balanceRequired > balance ? balanceRequired - balance : 0n,
       remoteAccount,
       submission,
     };

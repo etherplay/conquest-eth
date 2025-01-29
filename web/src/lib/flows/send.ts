@@ -16,6 +16,8 @@ import {formatError} from '$lib/utils';
 import {BigNumber} from '@ethersproject/bignumber';
 import {Contract} from '@ethersproject/contracts';
 import {getGasPrice} from './gasPrice';
+import {zeroAddress} from 'viem';
+import type {PartialSubmission} from '$lib/account/fuzd-client-types';
 
 export type VirtualFleet = {
   from: PlanetInfo;
@@ -448,7 +450,15 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
       operator,
     };
 
-    const {cost: resolutionCost, remoteAccount, submission} = await agentService.prepareSubmission(agentData);
+    let valueRequiredToSendForResolution: bigint = 0n;
+    let remoteAccount: `0x${string}` = zeroAddress;
+    let submission: PartialSubmission | undefined;
+    if (useAgentService) {
+      const preparation = await agentService.prepareSubmission(agentData);
+      valueRequiredToSendForResolution = preparation.valueRequiredToSend;
+      submission = preparation.submission;
+      remoteAccount = preparation.remoteAccount;
+    }
 
     const abi = flow.data.config?.abi;
     const args = flow.data.config?.args;
@@ -463,13 +473,13 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
           args[i] = pricePerUnit.mul(flow.data.fleetAmount);
         } else if (args[i] === '{numSpaceships*pricePerUnit+amountForPayee}') {
           // TODO dynamic value (not only '{numSpaceships*pricePerUnit}')
-          args[i] = pricePerUnit.mul(flow.data.fleetAmount).add(resolutionCost);
+          args[i] = pricePerUnit.mul(flow.data.fleetAmount).add(valueRequiredToSendForResolution);
         } else if (args[i] === '{fleetOwner}') {
           args[i] = fleetOwner;
         } else if (args[i] === '{payee}') {
           args[i] = remoteAccount;
         } else if (args[i] === '{amountForPayee}') {
-          args[i] = resolutionCost;
+          args[i] = valueRequiredToSendForResolution;
         }
       }
     }
@@ -479,7 +489,7 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
     if (msgValueString === '{numSpaceships*pricePerUnit}') {
       msgValue = pricePerUnit.mul(flow.data.fleetAmount);
     } else if (msgValueString === '{numSpaceships*pricePerUnit+amountForPayee}') {
-      msgValue = pricePerUnit.mul(flow.data.fleetAmount).add(resolutionCost);
+      msgValue = pricePerUnit.mul(flow.data.fleetAmount).add(valueRequiredToSendForResolution);
     } else if (msgValueString) {
       msgValue = BigNumber.from(msgValueString);
     }
@@ -507,7 +517,7 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
             },
             remoteAccount,
             {
-              value: resolutionCost,
+              value: valueRequiredToSendForResolution,
               nonce,
             }
           );
@@ -582,7 +592,7 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
           },
           remoteAccount,
           {
-            value: resolutionCost,
+            value: valueRequiredToSendForResolution,
             nonce,
             maxFeePerGas,
             maxPriorityFeePerGas,
@@ -714,6 +724,7 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
             operator: lastFleet.fleet.operator,
           };
           const submission = await agentService.createSubmission(agentData);
+
           const {queueID} = await agentService.submitReveal(submission, {
             broadcastTime: lastFleet.timestamp,
             from: lastFleet.walletAddress as `0x${string}`,

@@ -1,8 +1,10 @@
 <script lang="ts">
   import {account} from '$lib/account/account';
   import {agentService} from '$lib/account/agentService';
+  import {wallet} from '$lib/blockchain/wallet';
 
   import Button from '$lib/components/generic/PanelButton.svelte';
+  import {getGasPrice} from '$lib/flows/gasPrice';
 
   import type {Fleet} from '$lib/space/fleets';
 
@@ -33,6 +35,7 @@
       fleet.fleetSender,
       fleet.operator
     );
+
     const agentData = {
       fleetID: fleetId,
       txHash: fleet.sending.id,
@@ -51,7 +54,23 @@
       fleetSender: fleet.fleetSender,
       operator: fleet.operator,
     };
-    const submission = await agentService.createSubmission(agentData, {force: true});
+
+    const {
+      valueRequiredToSend: valueRequiredToSendForResolution,
+      remoteAccount,
+      submission,
+    } = await agentService.prepareSubmission(agentData);
+
+    if (valueRequiredToSendForResolution > 0n) {
+      const {maxFeePerGas, maxPriorityFeePerGas} = await getGasPrice(wallet.web3Provider);
+      const tx = await wallet.provider.getSigner().sendTransaction({
+        to: remoteAccount,
+        value: valueRequiredToSendForResolution,
+        maxFeePerGas: maxFeePerGas.toHexString(),
+        maxPriorityFeePerGas: maxPriorityFeePerGas.toHexString(),
+      });
+    }
+
     const {queueID} = await agentService.submitReveal(submission, {
       broadcastTime: fleet.sending.action.timestamp,
       from: fleet.walletAddress as `0x${string}`,
