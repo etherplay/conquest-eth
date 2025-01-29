@@ -11,10 +11,12 @@ interface IClaim {
 }
 
 contract Yakuza is UsingOwner {
+    event Subscribed(address subscriber, uint256 startTime, uint256 endTime, uint256 contribution);
+
     RewardsGenerator public generator;
     IOuterSpace public immutable outerSpace;
 
-    uint256 public immutable numSecondsPer1000ThOfATokens; // number of second for each 0.000001 tokens
+    uint256 public immutable numSecondsPer1000ThOfATokens;
     uint256 public immutable spaceshipsToKeepPer10000;
     uint256 public immutable minAverageStakePerPlanet;
     uint256 public immutable maxClaimDelay;
@@ -71,10 +73,15 @@ contract Yakuza is UsingOwner {
         uint256 averagePerPlanet = contribution / locations.length;
         require(averagePerPlanet >= minAverageStakePerPlanet, "PLANETS_TOO_SMALL");
         subscriptions[sender].amountGiven += contribution;
+        uint256 startTime = subscriptions[sender].startTime;
         if (block.timestamp > subscriptions[sender].endTime) {
-            subscriptions[sender].startTime = block.timestamp;
+            startTime = block.timestamp;
+            subscriptions[sender].startTime = startTime;
         }
-        subscriptions[sender].endTime += (numSecondsPer1000ThOfATokens * contribution) / 1e15;
+        uint256 endTime = subscriptions[sender].endTime;
+        endTime += (numSecondsPer1000ThOfATokens * contribution) / 1e15;
+        subscriptions[sender].endTime = endTime;
+        emit Subscribed(sender, startTime, endTime, contribution);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -97,10 +104,12 @@ contract Yakuza is UsingOwner {
 
         ImportingOuterSpaceTypes.FleetData memory fleet = outerSpace.getFleetData(fleetId, resolution.from);
 
+        require(fleet.owner != address(this), "FLEET_IS_YAKUZA");
+        require(fleet.defender == msg.sender, "FLEET_DID_NOT_TARGETED_YOU");
+
         // Fleet send before you subscribe do not count
         require(fleet.launchTime > subscriptions[msg.sender].startTime, "FLEET_NOT_COVERED");
 
-        // TODO config
         // There is a delay after which you cannot claim anymore
         require(block.timestamp < fleet.arrivalTime + maxClaimDelay, "TOO_LATE_TO_CLAIM");
 
@@ -118,7 +127,10 @@ contract Yakuza is UsingOwner {
         require(planet.numSpaceships > minimumCap, "NOT_ENOUGH_SPACESHIPS");
         require(amount < planet.numSpaceships - minimumCap, "ASKING_TOO_MUCH");
 
+        // Revenge can only be made on actual cpature of active planets
         require(fleet.planetActive && fleet.victory, "NOT_ACTIVE_VICTORY");
+
+        // Here we verify the validity of the fleet and its data
         require(
             uint256(
                 keccak256(
@@ -141,7 +153,9 @@ contract Yakuza is UsingOwner {
             "INVALID_FLEET_DATA_OR_SECRET"
         );
 
-        // basic send, Yakuza is going to take control of the planet
+        // then we do a basic send
+        // Yakuza is going to take control of the planet
+        // This also ensure this cannot be abused by losing planet in purpose
         outerSpace.send(from, amount, toHash);
     }
 
