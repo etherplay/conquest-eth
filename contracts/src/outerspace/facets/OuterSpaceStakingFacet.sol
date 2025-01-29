@@ -2,8 +2,9 @@
 pragma solidity 0.8.9;
 
 import "./OuterSpaceFacetBase.sol";
+import "../interfaces/IOuterSpaceStaking.sol";
 
-contract OuterSpaceStakingFacet is OuterSpaceFacetBase {
+contract OuterSpaceStakingFacet is OuterSpaceFacetBase, IOuterSpaceStaking {
     constructor(Config memory config) OuterSpaceFacetBase(config) {}
 
     // ---------------------------------------------------------------------------------------------------------------
@@ -67,8 +68,12 @@ contract OuterSpaceStakingFacet is OuterSpaceFacetBase {
         // TODO permit
         address sender = msg.sender;
         _acquire(sender, amountToMint + tokenAmount, location, false);
-        _stakingToken.mint{value: msg.value}(address(this), amountToMint);
-        _stakingToken.transferFrom(sender, address(this), tokenAmount);
+        if (amountToMint > 0) {
+            _stakingToken.mint{value: msg.value}(address(this), amountToMint);
+        }
+        if (tokenAmount > 0) {
+            _stakingToken.transferFrom(sender, address(this), tokenAmount);
+        }
     }
 
     function acquireMultipleViaNativeTokenAndStakingToken(

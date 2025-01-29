@@ -6,6 +6,8 @@ import "./IOuterSpaceFleetsRead.sol";
 import "./IOuterSpaceFleetsCommit.sol";
 import "./IOuterSpaceFleetsReveal.sol";
 import "./IOuterSpacePlanets.sol";
+import "./IOuterSpaceInformation.sol";
+import "./IOuterSpaceStaking.sol";
 
 // solhint-disable-next-line no-empty-blocks
 interface IOuterSpace is
@@ -13,7 +15,9 @@ interface IOuterSpace is
     IOuterSpaceFleetsRead,
     IOuterSpaceFleetsCommit,
     IOuterSpaceFleetsReveal,
-    IOuterSpacePlanets
+    IOuterSpacePlanets,
+    IOuterSpaceInformation,
+    IOuterSpaceStaking
 {
 
 }
