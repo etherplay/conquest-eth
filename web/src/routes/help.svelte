@@ -107,13 +107,20 @@
 <div class="w-full h-full bg-black">
   <NavButton label="Back To Game" href={`${base}/`}>Back To Game</NavButton>
 
-  <p>
-    Documentation can be found <a
-      href="https://knowledge.conquest.etherplay.io"
-      class="underline text-green-500"
-      target="_blank">here</a
-    >
-  </p>
+  <div class="p-3">
+    <h1 class="underline text-lg mb-6">Links</h1>
+    <ul class="list-disc">
+      <li>
+        - <a href="https://knowledge.conquest.etherplay.io" class="underline text-green-500" target="_blank"
+          >Player Manual</a
+        >
+      </li>
+
+      <li>
+        - <a href="https://community.etherplay.io" class="underline text-green-500" target="_blank">Community</a>
+      </li>
+    </ul>
+  </div>
   <!-- <div class="markdown text-white p-3">
     <h1 id="introduction">Introduction</h1>
     <p>conquest.eth is a game of strategy and diplomacy where players compete to conquer the universe.</p>
