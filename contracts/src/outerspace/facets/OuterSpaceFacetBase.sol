@@ -836,7 +836,7 @@ contract OuterSpaceFacetBase is
             fleetId,
             rState,
             ownerAtArrival,
-            resolution.to,
+            resolution,
             _arrivalData(rState, toPlanetUpdate, numSpaceshipsAtArrival)
         );
 
@@ -881,11 +881,30 @@ contract OuterSpaceFacetBase is
         uint256 fleetId,
         ResolutionState memory rState,
         address planetOwner,
-        uint256 to,
+        FleetResolution memory resolution,
         ArrivalData memory arrivalData
     ) internal {
         emit BlockTime(block.number, block.timestamp);
-        emit FleetArrived(fleetId, rState.fleetOwner, planetOwner, to, rState.gifting, rState.victory, arrivalData);
+        emit FleetRevealed(
+            fleetId,
+            resolution.from,
+            resolution.to,
+            resolution.arrivalTimeWanted,
+            resolution.gift,
+            resolution.specific,
+            resolution.secret,
+            resolution.fleetSender,
+            resolution.operator
+        );
+        emit FleetArrived(
+            fleetId,
+            rState.fleetOwner,
+            planetOwner,
+            resolution.to,
+            rState.gifting,
+            rState.victory,
+            arrivalData
+        );
     }
 
     function _requireCorrectDistance(
