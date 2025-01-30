@@ -9,7 +9,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const RewardsGenerator = await hre.deployments.get('RewardsGenerator');
 
   const config = {
-    numSecondsPer1000ThOfATokens: 216, // 12$ gives you 30 days
+    numSecondsPerTokens: 216000, // 12$ gives you 30 days
     spaceshipsToKeepPer10000: 2000, // 20% of cap to keep
     acquireNumSpaceships: OuterSpace.linkedData.acquireNumSpaceships,
     productionCapAsDuration: OuterSpace.linkedData.productionCapAsDuration,

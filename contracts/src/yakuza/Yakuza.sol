@@ -5,14 +5,19 @@ import "../conquest_token/RewardsGenerator.sol";
 import "../outerspace/interfaces/IOuterSpace.sol";
 import "../outerspace/types/ImportingOuterSpaceTypes.sol";
 import "hardhat-deploy/solc_0.8/proxy/Proxied.sol";
+import "../base/erc20/UsingERC20Base.sol";
+import "../base/erc20/WithPermitAndFixedDomain.sol";
 
 interface IClaim {
     function claim(address to) external;
 }
 
-contract Yakuza is Proxied {
+contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
+    // --------------------------------------------------------------------------------------------
+    // TYPES
+    // --------------------------------------------------------------------------------------------
     struct Config {
-        uint256 numSecondsPer1000ThOfATokens;
+        uint256 numSecondsPerTokens;
         uint256 spaceshipsToKeepPer10000;
         uint256 acquireNumSpaceships;
         uint256 productionCapAsDuration;
@@ -20,7 +25,11 @@ contract Yakuza is Proxied {
         uint256 minAverageStakePerPlanet;
         uint256 maxClaimDelay;
     }
+    // --------------------------------------------------------------------------------------------
 
+    // --------------------------------------------------------------------------------------------
+    // EVENTS
+    // --------------------------------------------------------------------------------------------
     event Subscribed(address indexed subscriber, uint256 startTime, uint256 endTime, uint256 contribution);
     event Claimed(
         address indexed sender,
@@ -31,34 +40,59 @@ contract Yakuza is Proxied {
     );
 
     event RewardReceiverSet(address newRewardReceiver);
+    // --------------------------------------------------------------------------------------------
 
+    // --------------------------------------------------------------------------------------------
+    // IMMUTABLES
+    // --------------------------------------------------------------------------------------------
     IOuterSpace public immutable outerSpace;
 
     uint256 internal immutable _acquireNumSpaceships;
     uint256 internal immutable _productionCapAsDuration;
     uint256 internal immutable _frontrunningDelay;
 
-    uint256 public immutable numSecondsPer1000ThOfATokens;
+    uint256 public immutable numSecondsPerTokens;
     uint256 public immutable spaceshipsToKeepPer10000;
     uint256 public immutable minAverageStakePerPlanet;
     uint256 public immutable maxClaimDelay;
+    // --------------------------------------------------------------------------------------------
 
+    // --------------------------------------------------------------------------------------------
+    // STATE VARIABLES
+    // --------------------------------------------------------------------------------------------
     address public rewardReceiver;
     RewardsGenerator public generator;
 
+    struct Subscription {
+        uint256 startTime;
+        uint256 endTime;
+    }
+    mapping(address => Subscription) public subscriptions;
+
+    struct Claim {
+        bool claimed;
+        uint248 amountLeft;
+    }
+    mapping(uint256 => Claim) public claims;
+
+    // --------------------------------------------------------------------------------------------
+
+    // --------------------------------------------------------------------------------------------
+    // CONSTRUCTOR
+    // --------------------------------------------------------------------------------------------
     constructor(
         address initialRewardReceiver,
         RewardsGenerator initialGenerator,
         IOuterSpace initialOuterSpace,
         Config memory config
-    ) {
+    ) WithPermitAndFixedDomain("1") {
         outerSpace = initialOuterSpace;
 
         _acquireNumSpaceships = config.acquireNumSpaceships;
         _productionCapAsDuration = config.productionCapAsDuration;
         _frontrunningDelay = config.frontrunningDelay;
 
-        numSecondsPer1000ThOfATokens = config.numSecondsPer1000ThOfATokens;
+        numSecondsPerTokens = config.numSecondsPerTokens;
         spaceshipsToKeepPer10000 = config.spaceshipsToKeepPer10000;
         maxClaimDelay = config.maxClaimDelay;
         minAverageStakePerPlanet = config.minAverageStakePerPlanet;
@@ -80,18 +114,18 @@ contract Yakuza is Proxied {
         generator = initialGenerator;
     }
 
-    struct Subscription {
-        uint256 amountGiven;
-        uint256 startTime;
-        uint256 endTime;
-    }
-    mapping(address => Subscription) public subscriptions;
+    // --------------------------------------------------------------------------------------------
 
-    struct Claim {
-        bool claimed;
-        uint248 amountLeft;
+    // --------------------------------------------------------------------------------------------
+    // ERC20
+    // --------------------------------------------------------------------------------------------
+    string public constant symbol = "YKZ1";
+
+    function name() public pure override returns (string memory) {
+        return "YAKUZA1";
     }
-    mapping(uint256 => Claim) public claims;
+
+    // --------------------------------------------------------------------------------------------
 
     // --------------------------------------------------------------------------------------------
     // Subscribe to Yakuza by giving some new planets
@@ -107,14 +141,14 @@ contract Yakuza is Proxied {
         uint256 contribution = amountToMint + tokenAmount;
         uint256 averagePerPlanet = contribution / locations.length;
         require(averagePerPlanet >= minAverageStakePerPlanet, "PLANETS_TOO_SMALL");
-        subscriptions[sender].amountGiven += contribution;
+        _mint(sender, contribution);
         uint256 startTime = subscriptions[sender].startTime;
         if (block.timestamp > subscriptions[sender].endTime) {
             startTime = block.timestamp;
             subscriptions[sender].startTime = startTime;
         }
         uint256 endTime = subscriptions[sender].endTime;
-        endTime += (numSecondsPer1000ThOfATokens * contribution) / 1e15;
+        endTime += (numSecondsPerTokens * contribution) / 1e18;
         subscriptions[sender].endTime = endTime;
         emit Subscribed(sender, startTime, endTime, contribution);
     }
