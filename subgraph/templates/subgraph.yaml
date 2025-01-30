@@ -54,7 +54,7 @@ dataSources:
           handler: handleInitialized
         - event: PlanetTransfer(indexed address,indexed address,indexed uint256,uint32,int40,uint32)
           handler: handlePlanetTransfer
-        - event: FleetRevealed(uint256,uint256,uint256,uint256,bool,address,bytes32,address,address)
+        - event: FleetRevealed(indexed uint256,indexed uint256,indexed uint256,uint256,bool,address,bytes32,address,address)
           handler: handleFleetRevealed
       file: ./src/outerspace.ts
   - kind: ethereum/contract

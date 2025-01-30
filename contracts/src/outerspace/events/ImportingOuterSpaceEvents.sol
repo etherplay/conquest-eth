@@ -25,9 +25,9 @@ interface ImportingOuterSpaceEvents {
     );
 
     event FleetRevealed(
-        uint256 fleetId,
-        uint256 from,
-        uint256 to,
+        uint256 indexed fleetId,
+        uint256 indexed from,
+        uint256 indexed to,
         uint256 arrivalTimeWanted,
         bool gift,
         address specific,
