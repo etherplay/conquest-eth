@@ -16,19 +16,21 @@ contract Yakuza is UsingOwner {
     RewardsGenerator public generator;
     IOuterSpace public immutable outerSpace;
 
+    uint256 internal immutable _acquireNumSpaceships;
+    uint256 internal immutable _productionCapAsDuration;
+    uint256 internal immutable _frontrunningDelay;
+
     uint256 public immutable numSecondsPer1000ThOfATokens;
     uint256 public immutable spaceshipsToKeepPer10000;
     uint256 public immutable minAverageStakePerPlanet;
     uint256 public immutable maxClaimDelay;
-
-    uint256 internal immutable _acquireNumSpaceships;
-    uint256 internal immutable _productionCapAsDuration;
 
     struct Config {
         uint256 numSecondsPer1000ThOfATokens;
         uint256 spaceshipsToKeepPer10000;
         uint256 acquireNumSpaceships;
         uint256 productionCapAsDuration;
+        uint256 fromtRunningDelay;
         uint256 minAverageStakePerPlanet;
         uint256 maxClaimDelay;
     }
@@ -41,10 +43,13 @@ contract Yakuza is UsingOwner {
     ) UsingOwner(initialOwner) {
         generator = initialGenerator;
         outerSpace = initialOuterSpace;
-        numSecondsPer1000ThOfATokens = config.numSecondsPer1000ThOfATokens;
-        spaceshipsToKeepPer10000 = config.spaceshipsToKeepPer10000;
+
         _acquireNumSpaceships = config.acquireNumSpaceships;
         _productionCapAsDuration = config.productionCapAsDuration;
+        _frontrunningDelay = config.fromtRunningDelay;
+
+        numSecondsPer1000ThOfATokens = config.numSecondsPer1000ThOfATokens;
+        spaceshipsToKeepPer10000 = config.spaceshipsToKeepPer10000;
         maxClaimDelay = config.maxClaimDelay;
         minAverageStakePerPlanet = config.minAverageStakePerPlanet;
     }
@@ -56,7 +61,11 @@ contract Yakuza is UsingOwner {
     }
     mapping(address => Subscription) public subscriptions;
 
-    mapping(uint256 => bool) public claimed;
+    struct Claim {
+        bool claimed;
+        uint248 amountLeft;
+    }
+    mapping(uint256 => Claim) public claims;
 
     // --------------------------------------------------------------------------------------------
     // Subscribe to Yakuza by giving some new planets
@@ -94,10 +103,37 @@ contract Yakuza is UsingOwner {
         uint32 amount,
         uint256 from,
         bytes32 toHash
-    ) external payable {
+    ) external {
+        _claimAttack(fleetId, resolution, amount, from, toHash);
+    }
+
+    function claimCounterAttack(
+        uint256 fleetId,
+        ImportingOuterSpaceTypes.FleetResolution calldata resolution,
+        uint32 amount,
+        uint256 from,
+        bytes32 toHash,
+        uint256 arrivalTimeWanted
+    ) external {
+        // we enforce sending back, which make such fleet visible to anyone
+        bytes32 expectedToHash = keccak256(
+            abi.encodePacked(bytes32(0x0), resolution.from, false, address(0), arrivalTimeWanted)
+        );
+
+        require(expectedToHash == toHash, "INVALID_TO_HASH");
+
+        _claimAttack(fleetId, resolution, amount, from, toHash);
+    }
+
+    function _claimAttack(
+        uint256 fleetId,
+        ImportingOuterSpaceTypes.FleetResolution calldata resolution,
+        uint32 amount,
+        uint256 from,
+        bytes32 toHash
+    ) internal {
         // You cannot claim the same winning fleet twice
-        require(!claimed[fleetId], "ALREADY_CLAIMED");
-        claimed[fleetId] = true;
+        require(!claims[fleetId].claimed, "ALREADY_CLAIMED");
 
         // you have to be subscribed
         require(block.timestamp < subscriptions[msg.sender].endTime, "SUBSCRIPTION_EXPIRED");
@@ -107,8 +143,8 @@ contract Yakuza is UsingOwner {
         require(fleet.owner != address(this), "FLEET_IS_YAKUZA");
         require(fleet.defender == msg.sender, "FLEET_DID_NOT_TARGETED_YOU");
 
-        // Fleet send before you subscribe do not count
-        require(fleet.launchTime > subscriptions[msg.sender].startTime, "FLEET_NOT_COVERED");
+        // Fleet arrived before you subscribe (minus _frontrunningDelay)
+        require(fleet.arrivalTime - _frontrunningDelay > subscriptions[msg.sender].startTime, "FLEET_NOT_COVERED");
 
         // There is a delay after which you cannot claim anymore
         require(block.timestamp < fleet.arrivalTime + maxClaimDelay, "TOO_LATE_TO_CLAIM");
@@ -117,18 +153,35 @@ contract Yakuza is UsingOwner {
         require(fleet.quantity > 0, "NO_FLEET");
 
         (
-            ImportingOuterSpaceTypes.ExternalPlanet memory planet,
-            ImportingOuterSpaceTypes.PlanetStats memory stats
+            ImportingOuterSpaceTypes.ExternalPlanet memory yakuzaPlanet,
+            ImportingOuterSpaceTypes.PlanetStats memory statsForYakuzaPlanet
         ) = outerSpace.getPlanet(from);
-        uint256 cap = _capWhenActive(stats.production);
-        uint256 minimumCap = (cap * spaceshipsToKeepPer10000) / 10000;
+        uint256 yakuzaCap = _capWhenActive(statsForYakuzaPlanet.production);
+        uint256 minimumSpaceshipsToLeave = (yakuzaCap * spaceshipsToKeepPer10000) / 10000;
 
         // There is a minimum number of spaceships Yakuza want to keep on each planet
-        require(planet.numSpaceships > minimumCap, "NOT_ENOUGH_SPACESHIPS");
-        require(amount < planet.numSpaceships - minimumCap, "ASKING_TOO_MUCH");
+        require(yakuzaPlanet.numSpaceships > minimumSpaceshipsToLeave, "NOT_ENOUGH_SPACESHIPS");
+        require(amount < yakuzaPlanet.numSpaceships - minimumSpaceshipsToLeave, "ASKING_TOO_MUCH");
 
         // Revenge can only be made on actual cpature of active planets
         require(fleet.planetActive && fleet.victory, "NOT_ACTIVE_VICTORY");
+
+        // we give you revenge enough to capture it back
+        uint256 amountLeft = claims[fleetId].amountLeft;
+        if (amountLeft == 0) {
+            // TODO optimize re-calculate here with genesisHash
+            (, ImportingOuterSpaceTypes.PlanetStats memory statsForAttackedPlanet) = outerSpace.getPlanet(
+                resolution.to
+            );
+            uint256 attackedPlanetCap = _capWhenActive(statsForAttackedPlanet.production);
+            amountLeft = ((attackedPlanetCap * statsForAttackedPlanet.defense) / statsForYakuzaPlanet.attack) + 1;
+        }
+        if (amount >= amountLeft) {
+            claims[fleetId].amountLeft = 0;
+            claims[fleetId].claimed = true;
+        } else {
+            claims[fleetId].amountLeft = uint248(amountLeft - amount);
+        }
 
         // Here we verify the validity of the fleet and its data
         require(

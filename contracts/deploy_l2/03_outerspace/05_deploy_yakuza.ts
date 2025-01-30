@@ -13,13 +13,15 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     spaceshipsToKeepPer10000: 2000, // 20% of cap to keep
     acquireNumSpaceships: OuterSpace.linkedData.acquireNumSpaceships,
     productionCapAsDuration: OuterSpace.linkedData.productionCapAsDuration,
-    minAverageStakePerPlanet: parseEther('5'), // 5 tokens per planet on average minimum, do mot accept low planet unless bigger are given too
+    frontrunningDelay: OuterSpace.linkedData.frontrunningDelay,
+    minAverageStakePerPlanet: parseEther('5').toString(), // 5 tokens per planet on average minimum, do mot accept low planet unless bigger are given too
     maxClaimDelay: 2 * 24 * 60 * 60, // 2 days
   };
   await deploy('Yakuza', {
     from: deployer,
     skipIfAlreadyDeployed: true,
     args: [deployer, RewardsGenerator.address, OuterSpace.address, config],
+    linkedData: config,
     log: true,
     autoMine: true,
   });
