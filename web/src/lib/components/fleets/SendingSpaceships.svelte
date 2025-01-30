@@ -129,6 +129,8 @@
     if (fleetAmount > maxSpaceships) {
       fleetAmount = maxSpaceships;
     }
+
+    console.log({maxSpaceships, numSpaceshipsToKeep: $sendFlow.data?.config?.numSpaceshipsToKeep});
   }
 
   $: agentServiceAccount = $agentService.account;

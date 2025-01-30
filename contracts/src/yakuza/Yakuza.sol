@@ -7,12 +7,15 @@ import "../outerspace/types/ImportingOuterSpaceTypes.sol";
 import "hardhat-deploy/solc_0.8/proxy/Proxied.sol";
 import "../base/erc20/UsingERC20Base.sol";
 import "../base/erc20/WithPermitAndFixedDomain.sol";
+import "../libraries/Extraction.sol";
 
 interface IClaim {
     function claim(address to) external;
 }
 
 contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
+    using Extraction for bytes32;
+
     // --------------------------------------------------------------------------------------------
     // TYPES
     // --------------------------------------------------------------------------------------------
@@ -24,14 +27,15 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         uint256 frontrunningDelay;
         uint256 minAverageStakePerPlanet;
         uint256 maxClaimDelay;
+        bytes32 genesis;
     }
     // --------------------------------------------------------------------------------------------
 
     // --------------------------------------------------------------------------------------------
     // EVENTS
     // --------------------------------------------------------------------------------------------
-    event Subscribed(address indexed subscriber, uint256 startTime, uint256 endTime, uint256 contribution);
-    event Claimed(
+    event YakuzaSubscribed(address indexed subscriber, uint256 startTime, uint256 endTime, uint256 contribution);
+    event YakuzaClaimed(
         address indexed sender,
         uint256 indexed fleetId,
         uint256 indexed attackedPlanet,
@@ -47,6 +51,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     // --------------------------------------------------------------------------------------------
     IOuterSpace public immutable outerSpace;
 
+    bytes32 internal immutable _genesis;
     uint256 internal immutable _acquireNumSpaceships;
     uint256 internal immutable _productionCapAsDuration;
     uint256 internal immutable _frontrunningDelay;
@@ -88,6 +93,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     ) WithPermitAndFixedDomain("1") {
         outerSpace = initialOuterSpace;
 
+        _genesis = config.genesis;
         _acquireNumSpaceships = config.acquireNumSpaceships;
         _productionCapAsDuration = config.productionCapAsDuration;
         _frontrunningDelay = config.frontrunningDelay;
@@ -143,14 +149,17 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         require(averagePerPlanet >= minAverageStakePerPlanet, "PLANETS_TOO_SMALL");
         _mint(sender, contribution);
         uint256 startTime = subscriptions[sender].startTime;
-        if (block.timestamp > subscriptions[sender].endTime) {
+        uint256 endTime = subscriptions[sender].endTime;
+        if (block.timestamp > endTime) {
             startTime = block.timestamp;
             subscriptions[sender].startTime = startTime;
+            endTime = startTime + (numSecondsPerTokens * contribution) / 1e18;
+        } else {
+            endTime = endTime + (numSecondsPerTokens * contribution) / 1e18;
         }
-        uint256 endTime = subscriptions[sender].endTime;
-        endTime += (numSecondsPerTokens * contribution) / 1e18;
+
         subscriptions[sender].endTime = endTime;
-        emit Subscribed(sender, startTime, endTime, contribution);
+        emit YakuzaSubscribed(sender, startTime, endTime, contribution);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -177,11 +186,18 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         uint32 amount,
         uint256 from,
         bytes32 toHash,
-        uint256 arrivalTimeWanted
-    ) external {
+        uint256 arrivalTimeWanted,
+        bytes32 secret,
+        address payable payee
+    ) external payable {
+        if (msg.value > 0) {
+            require(payee != address(0), "NO_PAYEE");
+            payee.transfer(msg.value);
+        }
+
         // we enforce sending back, which make such fleet visible to anyone
         bytes32 expectedToHash = keccak256(
-            abi.encodePacked(bytes32(0x0), resolution.from, false, address(0), arrivalTimeWanted)
+            abi.encodePacked(secret, resolution.to, false, address(0), arrivalTimeWanted)
         );
 
         require(expectedToHash == toHash, "INVALID_TO_HASH");
@@ -217,16 +233,14 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         // the fleet need to exist
         require(fleet.quantity > 0, "NO_FLEET");
 
-        (
-            ImportingOuterSpaceTypes.ExternalPlanet memory yakuzaPlanet,
-            ImportingOuterSpaceTypes.PlanetStats memory statsForYakuzaPlanet
-        ) = outerSpace.getPlanet(from);
+        ImportingOuterSpaceTypes.ExternalPlanet memory yakuzaPlanet = outerSpace.getUpdatedPlanetState(from);
+        Stats memory statsForYakuzaPlanet = _getStats(from);
         uint256 yakuzaCap = _capWhenActive(statsForYakuzaPlanet.production);
         uint256 minimumSpaceshipsToLeave = (yakuzaCap * spaceshipsToKeepPer10000) / 10000;
 
         // There is a minimum number of spaceships Yakuza want to keep on each planet
         require(yakuzaPlanet.numSpaceships > minimumSpaceshipsToLeave, "NOT_ENOUGH_SPACESHIPS");
-        require(amount < yakuzaPlanet.numSpaceships - minimumSpaceshipsToLeave, "ASKING_TOO_MUCH");
+        require(amount <= yakuzaPlanet.numSpaceships - minimumSpaceshipsToLeave, "NEED_TO_LEAVE_ENOUGH_DEFENSE");
 
         // Revenge can only be made on actual cpature of active planets
         require(fleet.planetActive && fleet.victory, "NOT_ACTIVE_VICTORY");
@@ -235,20 +249,17 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         uint256 amountLeft = claims[fleetId].amountLeft;
         if (amountLeft == 0) {
             // TODO optimize re-calculate here with genesisHash
-            (, ImportingOuterSpaceTypes.PlanetStats memory statsForAttackedPlanet) = outerSpace.getPlanet(
-                resolution.to
-            );
+            Stats memory statsForAttackedPlanet = _getStats(resolution.to);
             uint256 attackedPlanetCap = _capWhenActive(statsForAttackedPlanet.production);
             amountLeft = ((attackedPlanetCap * statsForAttackedPlanet.defense) / statsForYakuzaPlanet.attack) + 1;
         }
         if (amount >= amountLeft) {
-            claims[fleetId].amountLeft = 0;
+            amountLeft = 0;
             claims[fleetId].claimed = true;
         } else {
-            claims[fleetId].amountLeft = uint248(amountLeft - amount);
+            amountLeft = uint248(amountLeft - amount);
         }
-
-        emit Claimed(sender, fleetId, resolution.to, amount, amountLeft);
+        claims[fleetId].amountLeft = uint248(amountLeft);
 
         // Here we verify the validity of the fleet and its data
         require(
@@ -277,6 +288,10 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         // Yakuza is going to take control of the planet
         // This also ensure this cannot be abused by losing planet in purpose
         outerSpace.send(from, amount, toHash);
+
+        // TODO
+        uint256 fleetIdSent = uint256(keccak256(abi.encodePacked(toHash, from, address(this), address(this))));
+        emit YakuzaClaimed(sender, fleetId, resolution.to, amount, amountLeft);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -325,5 +340,38 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
 
     function _capWhenActive(uint16 production) internal view returns (uint256) {
         return _acquireNumSpaceships + (uint256(production) * _productionCapAsDuration) / 1 hours;
+    }
+
+    struct Stats {
+        uint16 production;
+        uint16 attack;
+        uint16 defense;
+    }
+
+    function _getStats(uint256 location) internal view returns (Stats memory stats) {
+        bytes32 data = _planetData(location);
+        stats.production = _production(data);
+        stats.attack = _attack(data);
+        stats.defense = _defense(data);
+    }
+
+    function _planetData(uint256 location) internal view returns (bytes32) {
+        return keccak256(abi.encodePacked(_genesis, location));
+    }
+
+    function _exists(bytes32 data) internal pure returns (bool) {
+        return data.value8Mod(52, 16) == 1;
+    }
+
+    function _production(bytes32 data) internal pure returns (uint16) {
+        return data.normal16(12, 0x0708083409600a8c0bb80ce40e100e100e100e101068151819c81e7823282ee0); // per hour
+    }
+
+    function _attack(bytes32 data) internal pure returns (uint16) {
+        return 4000 + data.normal8(20) * 400; // 4,000 - 7,000 - 10,000
+    }
+
+    function _defense(bytes32 data) internal pure returns (uint16) {
+        return 4000 + data.normal8(28) * 400; // 4,000 - 7,000 - 10,000
     }
 }

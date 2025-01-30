@@ -17,6 +17,7 @@
   import {nativeTokenSymbol} from '$lib/config';
   import {initialContractsInfos} from '$lib/blockchain/contracts';
   import MultiplePlanetClaimPanel from '$lib/components/planets/MultiplePlanetClaimPanel.svelte';
+  import Help from '$lib/components/utils/Help.svelte';
 
   $: coords = $claimFlow.data?.coords;
   $: planetInfo = coords ? spaceInfo.getPlanetInfo(coords[0].x, coords[0].y) : undefined;
@@ -52,6 +53,8 @@
   //     mintFlow.setAmount(value);
   //   }
   // }
+
+  $: giveToYakuza = $claimFlow.yakuza;
 </script>
 
 {#if $mintFlow.step !== 'IDLE' && $mintFlow.step !== 'SUCCESS'}
@@ -124,6 +127,45 @@
   <Modal on:close={() => claimFlow.cancel()}>
     {#if !$myTokens.playTokenBalance}
       Please wait...
+    {:else if giveToYakuza}
+      <div class="text-center">
+        <h2 class="text-red-500">
+          Give the planet <span class="text-green-500">"{stats.name}"</span> (worth ${nativeTokenAmountFor(cost)}) to
+          Yakuza in exchange for
+          {timeToText(
+            cost
+              .mul(initialContractsInfos.contracts.Yakuza.linkedData.numSecondsPerTokens)
+              .mul('100000000000000')
+              .div('1000000000000000000')
+              .toNumber(),
+            {verbose: true}
+          )} of protection
+        </h2>
+        <p class="text-gray-300 mt-2 text-sm">
+          You'll be able to claim revenge when other players capture any of your planet as long as the subscription does
+          not expire
+        </p>
+
+        <Button class="mt-5" label="Add More Planet" on:click={() => claimFlow.askForMore()}>Add More</Button>
+        <Button
+          class="mt-5"
+          label="Stake"
+          on:click={() =>
+            claimFlow.confirm({
+              amountToMint: cost.mul('100000000000000'),
+              tokenAvailable: BigNumber.from(0),
+            })}>Confirm</Button
+        >
+
+        <label class="flex items-center mt-2">
+          <input type="checkbox" class="form-checkbox" bind:checked={$claimFlow.yakuza} />
+
+          <span class="ml-2 text-red-500"
+            >Subscribe to Yakuza
+            <Help class="w-4">Yakuza will protect you .</Help></span
+          >
+        </label>
+      </div>
     {:else if $myTokens.playTokenBalance.eq(0) && $myTokens.freePlayTokenBalance.eq(0)}
       <!-- You do not have any
       <PlayCoin class="inline w-4" />. You need
@@ -167,6 +209,15 @@
             claimFlow.confirm({amountToMint: cost.mul('100000000000000'), tokenAvailable: BigNumber.from(0)})}
           >Confirm</Button
         >
+
+        <label class="flex items-center mt-2">
+          <input type="checkbox" class="form-checkbox" bind:checked={$claimFlow.yakuza} />
+
+          <span class="ml-2 text-red-500"
+            >Subscribe to Yakuza
+            <Help class="w-4">Yakuza will protect you .</Help></span
+          >
+        </label>
       </div>
     {:else if $myTokens.freePlayTokenBalance.lt(cost.mul('100000000000000')) && $myTokens.playTokenBalance.lt(cost.mul('100000000000000'))}
       <!-- Not enough
@@ -231,6 +282,15 @@
               tokenAvailable: $myTokens.playTokenBalance,
             })}>Confirm</Button
         >
+
+        <label class="flex items-center mt-2">
+          <input type="checkbox" class="form-checkbox" bind:checked={$claimFlow.yakuza} />
+
+          <span class="ml-2 text-red-500"
+            >Subscribe to Yakuza
+            <Help class="w-4">Yakuza will protect you .</Help></span
+          >
+        </label>
       </div>
     {:else}
       <div class="text-center">
@@ -264,6 +324,15 @@
         </p>
         <Button class="mt-5" label="Add More Planet" on:click={() => claimFlow.askForMore()}>Add More</Button>
         <Button class="mt-5" label="Stake" on:click={() => claimFlow.confirm()}>Confirm</Button>
+
+        <label class="flex items-center mt-2">
+          <input type="checkbox" class="form-checkbox" bind:checked={$claimFlow.yakuza} />
+
+          <span class="ml-2 text-red-500"
+            >Subscribe to Yakuza
+            <Help class="w-4">Yakuza will protect you .</Help></span
+          >
+        </label>
       </div>
     {/if}
   </Modal>

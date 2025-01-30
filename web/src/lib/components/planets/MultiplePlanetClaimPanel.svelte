@@ -7,6 +7,7 @@
   import PlayCoin from '../utils/PlayCoin.svelte';
   import {timeToText} from '$lib/utils';
   import {myTokens} from '$lib/space/token';
+  import Help from '../utils/Help.svelte';
 
   $: coords = $claimFlow.data?.coords;
   $: planetInfos = coords ? coords.map((v) => spaceInfo.getPlanetInfo(v.x, v.y)) : undefined;
@@ -53,38 +54,56 @@
   class="z-10 absolute right-0 top-14 inline-block w-36 md:w-48 bg-gray-900 bg-opacity-80 text-cyan-300 border-2 border-cyan-300 m-4 text-sm"
 >
   <div class="flex p-3 flex-col items-center text-center">
-    <h2>
-      Stake
-      {#if paymentMethod === 'nativeOnly'}
-        (${nativeTokenAmountFor(cost)})
-      {:else if paymentMethod === 'nativeAndToken'}
-        <span class="text-yellow-500"
-          >{$myTokens.playTokenBalance.div('100000000000000').toNumber() / 10000}
-          <PlayCoin class="inline w-4" /></span
-        >
-        + ${nativeTokenAmountFor(cost.mul('100000000000000').sub($myTokens.playTokenBalance).div('100000000000000'))}
-      {:else if $myTokens.freePlayTokenBalance.lt(cost.mul('100000000000000'))}
-        <span class="text-yellow-500"
+    {#if $claimFlow.yakuza}
+      <h2 class="text-red-500">
+        Give the selected planets (worth ${nativeTokenAmountFor(cost)}) to Yakuza in exchange for
+        {timeToText(
+          cost
+            .mul(initialContractsInfos.contracts.Yakuza.linkedData.numSecondsPerTokens)
+            .mul('100000000000000')
+            .div('1000000000000000000')
+            .toNumber(),
+          {verbose: true}
+        )} of protection
+      </h2>
+      <p class="text-gray-300 mt-2 text-sm">
+        You'll be able to claim revenge when other players capture any of your planet as long as the subscription does
+        not expire
+      </p>
+    {:else}
+      <h2>
+        Stake
+        {#if paymentMethod === 'nativeOnly'}
+          (${nativeTokenAmountFor(cost)})
+        {:else if paymentMethod === 'nativeAndToken'}
+          <span class="text-yellow-500"
+            >{$myTokens.playTokenBalance.div('100000000000000').toNumber() / 10000}
+            <PlayCoin class="inline w-4" /></span
+          >
+          + ${nativeTokenAmountFor(cost.mul('100000000000000').sub($myTokens.playTokenBalance).div('100000000000000'))}
+        {:else if $myTokens.freePlayTokenBalance.lt(cost.mul('100000000000000'))}
+          <span class="text-yellow-500"
+            >{totalStake / 10000}
+            <PlayCoin class="inline w-4" /></span
+          >
+        {:else}
+          <span class="text-green-500"
+            >{totalStake / 10000}
+            <PlayCoin class="inline w-4" free={true} /></span
+          >
+        {/if}
+        to activate the selected planets
+      </h2>
+      <p class="text-gray-300 mt-2 text-sm">
+        You'll be able to get the <span class="text-yellow-500"
           >{totalStake / 10000}
-          <PlayCoin class="inline w-4" /></span
-        >
-      {:else}
-        <span class="text-green-500"
-          >{totalStake / 10000}
-          <PlayCoin class="inline w-4" free={true} /></span
-        >
-      {/if}
-      to activate the selected planets
-    </h2>
-    <p class="text-gray-300 mt-2 text-sm">
-      You'll be able to get the <span class="text-yellow-500"
-        >{totalStake / 10000}
-        <PlayCoin class="inline w-4" />
-      </span>
-      stake <span class="text-sm">(convertible to ${nativeTokenAmountFor(cost)})</span> back if you manage to exit the
-      planet safely (this takes
-      {timeToText(spaceInfo.exitDuration, {verbose: true})}).
-    </p>
+          <PlayCoin class="inline w-4" />
+        </span>
+        stake <span class="text-sm">(convertible to ${nativeTokenAmountFor(cost)})</span> back if you manage to exit the
+        planet safely (this takes
+        {timeToText(spaceInfo.exitDuration, {verbose: true})}).
+      </p>
+    {/if}
   </div>
   <div class="flex p-3 flex-col items-center">
     <PanelButton label="Cancel" class="m-2" on:click={confirm}>
@@ -95,4 +114,13 @@
       <div class="w-20">Cancel</div>
     </PanelButton>
   </div>
+
+  <label class="flex items-center m-2">
+    <input type="checkbox" class="form-checkbox" bind:checked={$claimFlow.yakuza} />
+
+    <span class="ml-2 text-red-500"
+      >Subscribe to Yakuza
+      <Help class="w-4">Yakuza will protect you .</Help></span
+    >
+  </label>
 </div>

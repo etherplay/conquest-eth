@@ -9,11 +9,13 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const RewardsGenerator = await hre.deployments.get('RewardsGenerator');
 
   const config = {
-    numSecondsPerTokens: 216000, // 12$ gives you 30 days
-    spaceshipsToKeepPer10000: 2000, // 20% of cap to keep
+    genesis: OuterSpace.linkedData.genesisHash,
     acquireNumSpaceships: OuterSpace.linkedData.acquireNumSpaceships,
     productionCapAsDuration: OuterSpace.linkedData.productionCapAsDuration,
     frontrunningDelay: OuterSpace.linkedData.frontrunningDelay,
+
+    numSecondsPerTokens: 216000, // 12$ gives you 30 days
+    spaceshipsToKeepPer10000: 2000, // 20% of cap to keep
     minAverageStakePerPlanet: parseEther('5').toString(), // 5 tokens per planet on average minimum, do mot accept low planet unless bigger are given too
     maxClaimDelay: 2 * 24 * 60 * 60, // 2 days
   };

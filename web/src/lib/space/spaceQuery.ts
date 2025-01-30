@@ -129,7 +129,7 @@ export class SpaceQueryStore implements QueryStore<SpaceState> {
   constructor(endpoint: EndPoint) {
     this.queryStore = new HookedQueryStore( // TODO full list
       endpoint,
-      `query($first: Int! $lastId: ID! $owner: String $fromTime: Int! $exitTimeEnd: Int!) {
+      `query($first: Int! $lastId: ID! $owner: String $owners: [String] $fromTime: Int! $exitTimeEnd: Int!) {
   nullplanets: planets(first: 1000 where: {owner: null}) {
     id
     numSpaceships
@@ -220,7 +220,7 @@ export class SpaceQueryStore implements QueryStore<SpaceState> {
     complete
     success
   }
-  fleetsArrivedFromYou: fleetArrivedEvents(where: {sender: $owner timestamp_gt: $fromTime} orderBy: timestamp, orderDirection: desc) {
+  fleetsArrivedFromYou: fleetArrivedEvents(where: {sender_in: $owners timestamp_gt: $fromTime} orderBy: timestamp, orderDirection: desc) {
     id
     blockNumber
     timestamp
@@ -376,6 +376,10 @@ export class SpaceQueryStore implements QueryStore<SpaceState> {
     // console.log({$account});
     if (this.queryStore.runtimeVariables.owner !== accountAddress) {
       this.queryStore.runtimeVariables.owner = accountAddress;
+      this.queryStore.runtimeVariables.owners = [
+        accountAddress,
+        initialContractsInfos.contracts.Yakuza.address.toLowerCase(),
+      ] as unknown as string;
       this.store.update((v) => {
         if (v.data) {
           v.data.loading = true;

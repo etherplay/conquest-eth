@@ -19,6 +19,7 @@
   import sendFlow from '$lib/flows/send';
   import claimFlow from '$lib/flows/claim';
   import {time} from '$lib/time';
+  import {yakuzaQuery} from '$lib/default-plugins/yakuza/yakuzaQuery';
 
   type Frame = {x: number; y: number; w: number; h: number};
 
@@ -249,6 +250,9 @@
           matchConditions(v.mapConditions, {account: $wallet.address, planetState: $planetState, planetInfo})
       );
 
+  $: yakuzaClain =
+    $yakuzaQuery.data?.state && $yakuzaQuery.data.state.fleets.find((v) => v.to === planetInfo.location.id);
+
   $: pickedBySendFlow =
     ($sendFlow.step === 'PICK_DESTINATION' &&
       $sendFlow.data.from.x == planetInfo.location.x &&
@@ -408,7 +412,7 @@
     </div>
   {/if}
 
-  {#if $planetState && $planetState.exiting}
+  {#if $planetState && $planetState.exiting && typeof $planetState.exitTimeLeft === 'number'}
     <div
       style={`
         z-index: 5;
@@ -510,6 +514,28 @@
       </svg>
     </div>
   {/each}
+
+  {#if yakuzaClain}
+    <div
+      style={`
+    z-index: 5;
+    position: absolute;
+    transform: translate(${x}px,${y}px) scale(${blockieScale * 2}, ${blockieScale * 2});
+    width: ${frame.w}px;
+    height: ${frame.h}px;
+  `}
+    >
+      <svg viewBox="0 0 36 36">
+        <path
+          style="fill: none; stroke-width: 2.8; stroke-linecap: round; stroke: #FB48C4;"
+          stroke-dasharray={`100 100`}
+          d="M18 2.0845
+        a 15.9155 15.9155 0 0 1 0 31.831
+        a 15.9155 15.9155 0 0 1 0 -31.831"
+        />
+      </svg>
+    </div>
+  {/if}
 
   {#if showOwner && owner}
     {#if blockieScale <= scale}

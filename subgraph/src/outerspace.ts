@@ -1,7 +1,7 @@
 /* eslint-disable */
-import {store, BigInt, Bytes} from '@graphprotocol/graph-ts';
-import {flipHex, c2, ZERO, ONE, toPlanetId, toOwnerId, toFleetId, toEventId, toRewardId, ZERO_ADDRESS} from './utils';
-import {handleOwner, handleOwnerViaId, handleSpace, updateChainAndReturnTransactionID} from './shared';
+import {BigInt, Bytes} from '@graphprotocol/graph-ts';
+import {ZERO, ONE, toPlanetId, toFleetId, toEventId, toRewardId} from './utils';
+import {handleOwner, handleSpace, updateChainAndReturnTransactionID, getOrCreatePlanet} from './shared';
 import {
   PlanetStake,
   FleetSent,
@@ -91,66 +91,6 @@ function handleSpaceChanges(planet: Planet): void {
     }
   }
   space.save();
-}
-
-function getOrCreatePlanet(id: string): Planet {
-  let entity = Planet.load(id);
-  if (entity != null) {
-    return entity as Planet;
-  }
-  entity = new Planet(id);
-  entity.firstAcquired = ZERO;
-  entity.active = false;
-  entity.numSpaceships = ZERO;
-  entity.travelingUpkeep = ZERO; // TODO ?
-  entity.overflow = ZERO;
-  entity.lastUpdated = ZERO;
-  entity.exitTime = ZERO;
-  entity.lastAcquired = ZERO;
-  entity.reward = ZERO;
-  entity.rewardGiver = '';
-  entity.stakeDeposited = ZERO;
-  entity.owner = '';
-  entity.flagTime = ZERO;
-
-  let yString = id.slice(0, 34);
-  let xString = '0x' + id.slice(34);
-
-  let x = c2(xString);
-  let absX = x.abs();
-  let signX = x.lt(BigInt.fromI32(-32)) ? BigInt.fromI32(-1) : BigInt.fromI32(1);
-  // log.error('(x,y): ({},{})', [xString, yString]);
-  let centerZoneX = absX.plus(BigInt.fromI32(32)).div(BigInt.fromI32(64));
-  let centerZoneXString = signX.equals(BigInt.fromI32(1))
-    ? centerZoneX.toHex().slice(2).padStart(32, '0')
-    : flipHex('0x' + centerZoneX.minus(BigInt.fromI32(1)).toHexString().slice(2).padStart(32, '0')).slice(2);
-
-  let y = c2(yString);
-  let absY = y.abs();
-  let signY = y.lt(BigInt.fromI32(-32)) ? BigInt.fromI32(-1) : BigInt.fromI32(1);
-  let centerZoneY = absY.plus(BigInt.fromI32(32)).div(BigInt.fromI32(64));
-  let centerZoneYString = signY.equals(BigInt.fromI32(1))
-    ? centerZoneY.toHex().slice(2).padStart(32, '0')
-    : flipHex('0x' + centerZoneY.minus(BigInt.fromI32(1)).toHex().slice(2).padStart(32, '0')).slice(2);
-  entity.zone = '0x' + centerZoneYString + centerZoneXString;
-
-  // TODO remove :
-  entity.x = x;
-  entity.y = y;
-  entity.zoneX = signX.equals(BigInt.fromI32(1)) ? centerZoneX : centerZoneX.neg();
-  entity.zoneY = signY.equals(BigInt.fromI32(1)) ? centerZoneY : centerZoneY.neg();
-
-  // log.error('zone: {}', [entity.zone]);
-
-  // entity.zone =
-  //   BigInt.fromI32(-2).toHex() +
-  //   '|||' +
-  //   BigInt.fromI32(-1).toHex() +
-  //   '|||' +
-  //   '0x' +
-  //   centerZoneX.toHexString().slice(2).padStart(32, '0') +
-  //   centerZoneY.toHexString().slice(2).padStart(32, '0');
-  return entity as Planet;
 }
 
 export function handleInitialized(event: Initialized): void {
@@ -258,6 +198,7 @@ export function handleFleetSent(event: FleetSent): void {
   fleetEntity.quantity = event.params.quantity;
   fleetEntity.resolved = false;
   fleetEntity.sendTransaction = transactionId;
+
   fleetEntity.save();
   let fleetSentEvent = new FleetSentEvent(toEventId(event));
   fleetSentEvent.blockNumber = event.block.number.toI32();
@@ -326,17 +267,6 @@ export function handleFleetArrived(event: FleetArrived): void {
   planetEntity.save();
 
   let fleet = Fleet.load(fleetId) as Fleet; // assert it is available by then
-  fleet.resolved = true;
-  fleet.resolveTransaction = transactionId;
-  fleet.to = planetEntity.id;
-  fleet.destinationOwner = destinationOwner.id;
-  fleet.gift = event.params.gift;
-  fleet.fleetLoss = event.params.data.fleetLoss;
-  fleet.planetLoss = event.params.data.planetLoss;
-  fleet.inFlightFleetLoss = event.params.data.inFlightFleetLoss;
-  fleet.inFlightPlanetLoss = event.params.data.inFlightPlanetLoss;
-  fleet.won = event.params.won;
-  fleet.save();
 
   let fleetReveal = FleetRevealedEvent.load(fleetId) as FleetRevealedEvent; // assert it is available by then
 
@@ -368,10 +298,26 @@ export function handleFleetArrived(event: FleetArrived): void {
   fleetArrivedEvent.accumulatedDefenseAdded = event.params.data.accumulatedDefenseAdded;
   fleetArrivedEvent.accumulatedAttackAdded = event.params.data.accumulatedAttackAdded;
 
+  fleetArrivedEvent.yakuzaClaimed = false;
+  fleetArrivedEvent.yakuzaClaimAmountLeft = ZERO;
+
   // extra data
   fleetArrivedEvent.from = fleetEntity.from;
   fleetArrivedEvent.quantity = fleetEntity.quantity;
   fleetArrivedEvent.save();
+
+  fleet.resolved = true;
+  fleet.resolveTransaction = transactionId;
+  fleet.to = planetEntity.id;
+  fleet.destinationOwner = destinationOwner.id;
+  fleet.gift = event.params.gift;
+  fleet.fleetLoss = event.params.data.fleetLoss;
+  fleet.planetLoss = event.params.data.planetLoss;
+  fleet.inFlightFleetLoss = event.params.data.inFlightFleetLoss;
+  fleet.inFlightPlanetLoss = event.params.data.inFlightPlanetLoss;
+  fleet.won = event.params.won;
+  fleet.arrivalEvent = toEventId(event);
+  fleet.save();
 
   let space = handleSpace();
   // space.resolving_gas = space.resolving_gas.plus(event.transaction.gasLimit);//gasLimit is not gasUsed

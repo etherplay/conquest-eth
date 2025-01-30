@@ -30,6 +30,7 @@ export type ClaimFlow = {
     | 'CHECKING_ALLOWANCE'
     | 'NOT_ENOUGH_NATIVE_TOKEN';
   cancelingConfirmation?: boolean;
+  yakuza?: boolean;
   data?: Data;
   error?: {message?: string}; // TODO other places: add message as optional field
 };
@@ -83,7 +84,7 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
   }
 
   async claim(coords: {x: number; y: number}): Promise<void> {
-    this.setPartial({data: {coords: [{...coords}]}, step: 'CONNECTING'});
+    this.setPartial({data: {coords: [{...coords}]}, step: 'CONNECTING', yakuza: false});
 
     await privateWallet.login();
     this.setPartial({step: 'CHOOSE_STAKE', cancelingConfirmation: false});
@@ -247,7 +248,88 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
 
     let tx: {hash: string; nonce?: number};
 
-    if (!requireMint) {
+    if (flow.yakuza) {
+      const yakuzaContract = wallet?.contracts.Yakuza;
+      const nativeTokenAmount = requireMint.amountToMint
+        .mul('1000000000000000000')
+        .div(initialContractsInfos.contracts.PlayToken.linkedData.numTokensPerNativeTokenAt18Decimals);
+
+      if (currentNativeBalance.lt(nativeTokenAmount)) {
+        this.setPartial({
+          step: 'NOT_ENOUGH_NATIVE_TOKEN',
+        });
+        return;
+      }
+      let gasEstimation: BigNumber;
+      try {
+        gasEstimation = await yakuzaContract.estimateGas.subscribeViaNativeTokenAndStakingToken(
+          locationIds,
+          requireMint.amountToMint,
+          requireMint.tokenAvailable,
+          {value: nativeTokenAmount}
+        );
+      } catch (e) {
+        console.error(e);
+        this.backToWhereYouWere({
+          error: e,
+        });
+        return;
+      }
+      const gasLimit = gasEstimation.add(100000);
+
+      const valueNeeded = gasLimit.mul(maxFeePerGas);
+
+      if (currentNativeBalance.lt(valueNeeded)) {
+        this.setPartial({
+          step: 'NOT_ENOUGH_NATIVE_TOKEN',
+        });
+        return;
+      }
+
+      this.setPartial({step: 'WAITING_TX'});
+
+      try {
+        tx = await yakuzaContract.subscribeViaNativeTokenAndStakingToken(
+          locationIds,
+          requireMint.amountToMint,
+          requireMint.tokenAvailable,
+          {
+            gasLimit,
+            value: nativeTokenAmount,
+            maxFeePerGas,
+            maxPriorityFeePerGas,
+          }
+        );
+      } catch (e) {
+        if (e.transactionHash) {
+          tx = {hash: e.transactionHash};
+          try {
+            const tResponse = await wallet.provider.getTransaction(e.transactionHash);
+            tx = tResponse;
+          } catch (e) {
+            console.log(`could not fetch tx, to get the nonce`);
+          }
+        }
+        if (!tx || !tx.hash) {
+          if (this.$store.step === 'WAITING_TX') {
+            if (e.message && e.message.indexOf('User denied') >= 0) {
+              this.setPartial({
+                step: 'IDLE',
+                error: undefined,
+              });
+            } else {
+              console.error(`Error on transferAndCall:`, e);
+              this.backToWhereYouWere({
+                error: e,
+              });
+            }
+          } else {
+            throw e;
+          }
+          return;
+        }
+      }
+    } else if (!requireMint) {
       let gasEstimation: BigNumber;
       try {
         gasEstimation = await paymentTokenContract.estimateGas.transferAndCall(

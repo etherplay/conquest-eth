@@ -156,6 +156,8 @@ type Fleet @entity {
   inFlightPlanetLoss: BigInt
   won: Boolean
   events: [FleetEvent!] @derivedFrom(field: "fleet")
+
+  arrivalEvent: FleetArrivedEvent
 }
 
 type Transaction @entity {
@@ -248,6 +250,10 @@ type FleetArrivedEvent implements OwnerEvent & PlanetEvent & FleetEvent @entity 
   # extra data
   from: Planet!
   quantity: BigInt!
+
+  # PLUGINS
+  yakuzaClaimed: Boolean!
+  yakuzaClaimAmountLeft: BigInt!
 }
 
 # TODO: implements OwnerEvent & PlanetEvent & FleetEvent
@@ -377,6 +383,27 @@ type SpaceshipSale @entity {
   timestamp: BigInt!
   spaceshipsToKeep: BigInt!
   spaceshipsLeftToSell: BigInt!
+}
+
+#######################################################################################
+
+#######################################################################################
+# Yakuza
+#######################################################################################
+
+type YakuzaClaim @entity {
+  id: ID! # fleetId
+  owner: Owner!
+  attackedPlanet: Planet!
+  amountLeft: BigInt!
+}
+
+type YakuzaSubscription @entity {
+  id: ID!
+  owner: Owner!
+  startTime: BigInt!
+  endTime: BigInt!
+  totalContribution: BigInt!
 }
 
 #######################################################################################

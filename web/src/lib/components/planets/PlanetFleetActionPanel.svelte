@@ -15,6 +15,7 @@
   import {account} from '$lib/account/account';
   import {privateWallet} from '$lib/account/privateWallet';
   import {matchConditions, pluginShowing, showPlanetButtons} from '$lib/plugins/currentPlugin';
+  import {yakuzaQuery} from '$lib/default-plugins/yakuza/yakuzaQuery';
 
   export let coords: {x: number; y: number};
   export let close: () => void;
@@ -22,6 +23,10 @@
   $: planetInfo = spaceInfo.getPlanetInfo(coords.x, coords.y);
 
   $: planetState = planets.planetStateFor(planetInfo);
+
+  $: yakuzaClaim = $yakuzaQuery.data?.state
+    ? $yakuzaQuery.data.state.fleets.find((v) => v.to === planetInfo.location.id)
+    : null;
 
   function capture() {
     claimFlow.claim(coords);
@@ -93,6 +98,11 @@
     pluginShowing.showPlanet(src, planetState, planetInfo);
   }
 
+  function revenge() {
+    sendFlow.revenge(coords, yakuzaClaim);
+    close();
+  }
+
   $: walletIsOwner = $wallet.address && $wallet.address?.toLowerCase() === $planetState?.owner?.toLowerCase();
   $: textColor =
     $planetState && $planetState.owner ? (walletIsOwner ? 'text-green-500' : 'text-red-500') : 'text-gray-100';
@@ -143,6 +153,15 @@
             </div>
           </PanelButton>
         {/each}
+        {#if yakuzaClaim}
+          <PanelButton
+            color="text-pink-400"
+            label="REVENGE"
+            class="m-2"
+            borderColor="border-pink-600"
+            on:click={() => revenge()}><div class="w-20">REVENGE</div></PanelButton
+          >
+        {/if}
       {/if}
       {#if (!$planetState.owner || $planetState.owner === '0x0000000000000000000000000000000000000000') && $planetState.capturing}
         <p>Capturing....</p>
