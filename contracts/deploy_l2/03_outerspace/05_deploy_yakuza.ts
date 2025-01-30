@@ -17,10 +17,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     minAverageStakePerPlanet: parseEther('5').toString(), // 5 tokens per planet on average minimum, do mot accept low planet unless bigger are given too
     maxClaimDelay: 2 * 24 * 60 * 60, // 2 days
   };
+
+  console.log(config);
   await deploy('Yakuza', {
     from: deployer,
-    skipIfAlreadyDeployed: true,
     args: [deployer, RewardsGenerator.address, OuterSpace.address, config],
+    proxy: hre.network.name !== 'mainnet' ? 'postUpgrade' : undefined, // TODO l2 network mainnet
     linkedData: config,
     log: true,
     autoMine: true,

@@ -1,19 +1,29 @@
 // SPDX-License-Identifier: AGPL-3.0
 pragma solidity 0.8.9;
 
-import "../base/utils/UsingOwner.sol";
 import "../conquest_token/RewardsGenerator.sol";
 import "../outerspace/interfaces/IOuterSpace.sol";
 import "../outerspace/types/ImportingOuterSpaceTypes.sol";
+import "hardhat-deploy/solc_0.8/proxy/Proxied.sol";
 
 interface IClaim {
     function claim(address to) external;
 }
 
-contract Yakuza is UsingOwner {
-    event Subscribed(address subscriber, uint256 startTime, uint256 endTime, uint256 contribution);
+contract Yakuza is Proxied {
+    struct Config {
+        uint256 numSecondsPer1000ThOfATokens;
+        uint256 spaceshipsToKeepPer10000;
+        uint256 acquireNumSpaceships;
+        uint256 productionCapAsDuration;
+        uint256 frontrunningDelay;
+        uint256 minAverageStakePerPlanet;
+        uint256 maxClaimDelay;
+    }
 
-    RewardsGenerator public generator;
+    event Subscribed(address subscriber, uint256 startTime, uint256 endTime, uint256 contribution);
+    event RewardReceiverSet(address newRewardReceiver);
+
     IOuterSpace public immutable outerSpace;
 
     uint256 internal immutable _acquireNumSpaceships;
@@ -25,33 +35,41 @@ contract Yakuza is UsingOwner {
     uint256 public immutable minAverageStakePerPlanet;
     uint256 public immutable maxClaimDelay;
 
-    struct Config {
-        uint256 numSecondsPer1000ThOfATokens;
-        uint256 spaceshipsToKeepPer10000;
-        uint256 acquireNumSpaceships;
-        uint256 productionCapAsDuration;
-        uint256 fromtRunningDelay;
-        uint256 minAverageStakePerPlanet;
-        uint256 maxClaimDelay;
-    }
+    address public rewardReceiver;
+    RewardsGenerator public generator;
 
     constructor(
-        address initialOwner,
+        address initialRewardReceiver,
         RewardsGenerator initialGenerator,
         IOuterSpace initialOuterSpace,
         Config memory config
-    ) UsingOwner(initialOwner) {
-        generator = initialGenerator;
+    ) {
         outerSpace = initialOuterSpace;
 
         _acquireNumSpaceships = config.acquireNumSpaceships;
         _productionCapAsDuration = config.productionCapAsDuration;
-        _frontrunningDelay = config.fromtRunningDelay;
+        _frontrunningDelay = config.frontrunningDelay;
 
         numSecondsPer1000ThOfATokens = config.numSecondsPer1000ThOfATokens;
         spaceshipsToKeepPer10000 = config.spaceshipsToKeepPer10000;
         maxClaimDelay = config.maxClaimDelay;
         minAverageStakePerPlanet = config.minAverageStakePerPlanet;
+
+        _postUpgrade(initialRewardReceiver, initialGenerator);
+    }
+
+    function postUpgrade(
+        address initialRewardReceiver,
+        RewardsGenerator initialGenerator,
+        IOuterSpace,
+        Config calldata
+    ) external onlyProxyAdmin {
+        _postUpgrade(initialRewardReceiver, initialGenerator);
+    }
+
+    function _postUpgrade(address initialRewardReceiver, RewardsGenerator initialGenerator) internal {
+        rewardReceiver = initialRewardReceiver;
+        generator = initialGenerator;
     }
 
     struct Subscription {
@@ -215,22 +233,38 @@ contract Yakuza is UsingOwner {
     // --------------------------------------------------------------------------------------------
 
     // --------------------------------------------------------------------------------------------
+    // Reward Receiver
+    // --------------------------------------------------------------------------------------------
+
+    function setRewardReceiver(address newRewardReceiver) external {
+        require(msg.sender == rewardReceiver, "NOT_ALLOWED");
+        rewardReceiver = newRewardReceiver;
+        emit RewardReceiverSet(newRewardReceiver);
+    }
+
+    // --------------------------------------------------------------------------------------------
+
+    // --------------------------------------------------------------------------------------------
     // REWARDS FOR OWNER
     // --------------------------------------------------------------------------------------------
-    function claimSharedPoolRewards(address to) external onlyOwner {
+    function claimSharedPoolRewards(address to) external {
+        require(msg.sender == rewardReceiver, "NOT_ALLOWED");
         generator.claimSharedPoolRewards(to);
     }
 
-    function claimFixedRewards(address to) external onlyOwner {
+    function claimFixedRewards(address to) external {
+        require(msg.sender == rewardReceiver, "NOT_ALLOWED");
         generator.claimFixedRewards(to);
     }
 
     // support upgrade of generator if any
-    function claim(address to) external onlyOwner {
+    function claim(address to) external {
+        require(msg.sender == rewardReceiver, "NOT_ALLOWED");
         IClaim(address(generator)).claim(to);
     }
 
-    function changegGenerator(RewardsGenerator newGenerator) external onlyOwner {
+    function changegGenerator(RewardsGenerator newGenerator) external {
+        require(msg.sender == rewardReceiver, "NOT_ALLOWED");
         generator = newGenerator;
     }
 
