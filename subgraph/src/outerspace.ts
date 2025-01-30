@@ -300,6 +300,7 @@ export function handleFleetArrived(event: FleetArrived): void {
 
   fleetArrivedEvent.yakuzaClaimed = false;
   fleetArrivedEvent.yakuzaClaimAmountLeft = ZERO;
+  fleetArrivedEvent.yakuzaOnBehalf = fleet.yakuzaOnBehalf;
 
   // extra data
   fleetArrivedEvent.from = fleetEntity.from;

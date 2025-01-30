@@ -39,6 +39,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         address indexed sender,
         uint256 indexed fleetId,
         uint256 indexed attackedPlanet,
+        uint256 fleetSentId,
         uint256 amount,
         uint256 amountLeft
     );
@@ -289,9 +290,8 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         // This also ensure this cannot be abused by losing planet in purpose
         outerSpace.send(from, amount, toHash);
 
-        // TODO
-        uint256 fleetIdSent = uint256(keccak256(abi.encodePacked(toHash, from, address(this), address(this))));
-        emit YakuzaClaimed(sender, fleetId, resolution.to, amount, amountLeft);
+        uint256 fleetSentId = uint256(keccak256(abi.encodePacked(toHash, from, address(this), address(this))));
+        emit YakuzaClaimed(sender, fleetId, resolution.to, fleetSentId, amount, amountLeft);
     }
 
     // --------------------------------------------------------------------------------------------

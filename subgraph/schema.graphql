@@ -158,6 +158,9 @@ type Fleet @entity {
   events: [FleetEvent!] @derivedFrom(field: "fleet")
 
   arrivalEvent: FleetArrivedEvent
+
+  # PLUGINS
+  yakuzaOnBehalf: Owner
 }
 
 type Transaction @entity {
@@ -254,6 +257,7 @@ type FleetArrivedEvent implements OwnerEvent & PlanetEvent & FleetEvent @entity 
   # PLUGINS
   yakuzaClaimed: Boolean!
   yakuzaClaimAmountLeft: BigInt!
+  yakuzaOnBehalf: Owner
 }
 
 # TODO: implements OwnerEvent & PlanetEvent & FleetEvent

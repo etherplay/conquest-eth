@@ -34,6 +34,11 @@ export function handleYakuzaClaimed(event: YakuzaClaimed): void {
   let fleetId = toFleetId(event.params.fleetId);
 
   let fleet = Fleet.load(fleetId) as Fleet; // assert it is there
+
+  let sentFleet = Fleet.load(toFleetId(event.params.fleetSentId)) as Fleet; // assert it is there
+  sentFleet.yakuzaOnBehalf = owner.id;
+  sentFleet.save();
+
   let fleetArrivedEvent = FleetArrivedEvent.load(fleet.arrivalEvent as string) as FleetArrivedEvent; // assert it is there
 
   let planet = getOrCreatePlanet(toPlanetId(event.params.attackedPlanet));

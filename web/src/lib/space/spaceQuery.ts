@@ -78,6 +78,7 @@ export type SpaceQueryResult = {
       hash: string;
     };
   };
+  fleetsArrivedFromYakuzaOnYourBehalf?: FleetArrivedEvent[]; // TODO
   fleetsArrivedFromYou?: FleetArrivedEvent[]; // TODO
   fleetsArrivedToYou?: FleetArrivedEvent[]; // TODO
   fleetsArrivedAsYou?: FleetArrivedEvent[]; // TODO
@@ -129,7 +130,7 @@ export class SpaceQueryStore implements QueryStore<SpaceState> {
   constructor(endpoint: EndPoint) {
     this.queryStore = new HookedQueryStore( // TODO full list
       endpoint,
-      `query($first: Int! $lastId: ID! $owner: String $owners: [String] $fromTime: Int! $exitTimeEnd: Int!) {
+      `query($first: Int! $lastId: ID! $owner: String $yakuza: String $fromTime: Int! $exitTimeEnd: Int!) {
   nullplanets: planets(first: 1000 where: {owner: null}) {
     id
     numSpaceships
@@ -220,7 +221,36 @@ export class SpaceQueryStore implements QueryStore<SpaceState> {
     complete
     success
   }
-  fleetsArrivedFromYou: fleetArrivedEvents(where: {sender_in: $owners timestamp_gt: $fromTime} orderBy: timestamp, orderDirection: desc) {
+  fleetsArrivedFromYou: fleetArrivedEvents(where: {sender: $owner timestamp_gt: $fromTime} orderBy: timestamp, orderDirection: desc) {
+    id
+    blockNumber
+    timestamp
+    transaction {id}
+    owner {id}
+    planet {id}
+    sender {id}
+    operator
+    fleet {id}
+    destinationOwner {id}
+    taxLoss
+    planetActive
+    numSpaceshipsAtArrival
+    gift
+    fleetLoss
+    planetLoss
+    inFlightFleetLoss
+    inFlightPlanetLoss
+    won
+    newNumspaceships
+    newTravelingUpkeep
+    newOverflow
+    accumulatedDefenseAdded
+    accumulatedAttackAdded
+    from {id}
+    quantity
+  }
+
+  fleetsArrivedFromYakuzaOnYourBehalf: fleetArrivedEvents(where: {sender: $yakuza yakuzaOnBehalf: $owner timestamp_gt: $fromTime} orderBy: timestamp, orderDirection: desc) {
     id
     blockNumber
     timestamp
@@ -355,6 +385,7 @@ export class SpaceQueryStore implements QueryStore<SpaceState> {
     this.stopAccountSubscription = account.subscribe(async ($account) => {
       await this._handleAccountChange($account);
     });
+    this.queryStore.runtimeVariables.yakuza = initialContractsInfos.contracts.Yakuza.address.toLowerCase();
     this.unsubscribeFromQuery = this.queryStore.subscribe(this.update.bind(this));
 
     return this.stop.bind(this);
@@ -376,10 +407,7 @@ export class SpaceQueryStore implements QueryStore<SpaceState> {
     // console.log({$account});
     if (this.queryStore.runtimeVariables.owner !== accountAddress) {
       this.queryStore.runtimeVariables.owner = accountAddress;
-      this.queryStore.runtimeVariables.owners = [
-        accountAddress,
-        initialContractsInfos.contracts.Yakuza.address.toLowerCase(),
-      ] as unknown as string;
+
       this.store.update((v) => {
         if (v.data) {
           v.data.loading = true;
@@ -515,7 +543,9 @@ export class SpaceQueryStore implements QueryStore<SpaceState> {
           }
         : undefined,
       _meta: data._meta,
-      fleetsArrivedFromYou: !data.fleetsArrivedFromYou ? [] : data.fleetsArrivedFromYou.map(parseFleetArrived),
+      fleetsArrivedFromYou: (!data.fleetsArrivedFromYou ? [] : data.fleetsArrivedFromYou.map(parseFleetArrived)).concat(
+        !data.fleetsArrivedFromYakuzaOnYourBehalf ? [] : data.fleetsArrivedFromYakuzaOnYourBehalf.map(parseFleetArrived)
+      ),
       fleetsArrivedToYou: !data.fleetsArrivedToYou ? [] : data.fleetsArrivedToYou.map(parseFleetArrived),
       fleetsArrivedAsYou: !data.fleetsArrivedAsYou ? [] : data.fleetsArrivedAsYou.map(parseFleetArrived),
       fleetsSentExternally: !data.fleetsSentExternally ? [] : data.fleetsSentExternally.map(parseFleetSentEvent),
