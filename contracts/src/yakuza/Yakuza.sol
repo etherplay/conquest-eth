@@ -21,7 +21,15 @@ contract Yakuza is Proxied {
         uint256 maxClaimDelay;
     }
 
-    event Subscribed(address subscriber, uint256 startTime, uint256 endTime, uint256 contribution);
+    event Subscribed(address indexed subscriber, uint256 startTime, uint256 endTime, uint256 contribution);
+    event Claimed(
+        address indexed sender,
+        uint256 indexed fleetId,
+        uint256 indexed attackedPlanet,
+        uint256 amount,
+        uint256 amountLeft
+    );
+
     event RewardReceiverSet(address newRewardReceiver);
 
     IOuterSpace public immutable outerSpace;
@@ -115,15 +123,19 @@ contract Yakuza is Proxied {
     // Claim attack by providing the details of the fleet that captured your planet
     // --------------------------------------------------------------------------------------------
 
-    function claimAttack(
-        uint256 fleetId,
-        ImportingOuterSpaceTypes.FleetResolution calldata resolution,
-        uint32 amount,
-        uint256 from,
-        bytes32 toHash
-    ) external {
-        _claimAttack(fleetId, resolution, amount, from, toHash);
-    }
+    // THis would allow any attack, but this would also allow gifting and more
+    // so it would easy to trigger claims and get more than you spent
+    // Unless we modifiy the logic to ensure you only get what you lost in the claimed attack
+    // But this in turn would reduce the utility / power of Yakuza
+    // function claimAttack(
+    //     uint256 fleetId,
+    //     ImportingOuterSpaceTypes.FleetResolution calldata resolution,
+    //     uint32 amount,
+    //     uint256 from,
+    //     bytes32 toHash
+    // ) external {
+    //     _claimAttack(fleetId, resolution, amount, from, toHash);
+    // }
 
     function claimCounterAttack(
         uint256 fleetId,
@@ -150,19 +162,20 @@ contract Yakuza is Proxied {
         uint256 from,
         bytes32 toHash
     ) internal {
+        address sender = msg.sender;
         // You cannot claim the same winning fleet twice
         require(!claims[fleetId].claimed, "ALREADY_CLAIMED");
 
         // you have to be subscribed
-        require(block.timestamp < subscriptions[msg.sender].endTime, "SUBSCRIPTION_EXPIRED");
+        require(block.timestamp < subscriptions[sender].endTime, "SUBSCRIPTION_EXPIRED");
 
         ImportingOuterSpaceTypes.FleetData memory fleet = outerSpace.getFleetData(fleetId, resolution.from);
 
         require(fleet.owner != address(this), "FLEET_IS_YAKUZA");
-        require(fleet.defender == msg.sender, "FLEET_DID_NOT_TARGETED_YOU");
+        require(fleet.defender == sender, "FLEET_DID_NOT_TARGETED_YOU");
 
         // Fleet arrived before you subscribe (minus _frontrunningDelay)
-        require(fleet.arrivalTime - _frontrunningDelay > subscriptions[msg.sender].startTime, "FLEET_NOT_COVERED");
+        require(fleet.arrivalTime - _frontrunningDelay > subscriptions[sender].startTime, "FLEET_NOT_COVERED");
 
         // There is a delay after which you cannot claim anymore
         require(block.timestamp < fleet.arrivalTime + maxClaimDelay, "TOO_LATE_TO_CLAIM");
@@ -200,6 +213,8 @@ contract Yakuza is Proxied {
         } else {
             claims[fleetId].amountLeft = uint248(amountLeft - amount);
         }
+
+        emit Claimed(sender, fleetId, resolution.to, amount, amountLeft);
 
         // Here we verify the validity of the fleet and its data
         require(
