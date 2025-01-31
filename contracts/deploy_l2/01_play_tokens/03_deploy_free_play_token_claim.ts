@@ -4,7 +4,7 @@ import {deployments} from 'hardhat';
 
 const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const {deployer} = await hre.getNamedAccounts();
-  const {deploy, execute} = hre.deployments;
+  const {deploy, execute, read} = hre.deployments;
 
   const PlayToken = await deployments.get('PlayToken');
   const FreePlayToken = await deployments.get('FreePlayToken');
@@ -18,17 +18,20 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     autoMine: true,
   });
 
-  await execute(
-    'FreePlayToken',
-    {
-      from: deployer,
-      log: true,
-      autoMine: true,
-    },
-    'setMinter',
-    FreePlayTokenClaim.address,
-    true
-  );
+  const isMinter = await read('FreePlayToken', 'minters', FreePlayTokenClaim.address);
+  if (!isMinter) {
+    await execute(
+      'FreePlayToken',
+      {
+        from: deployer,
+        log: true,
+        autoMine: true,
+      },
+      'setMinter',
+      FreePlayTokenClaim.address,
+      true
+    );
+  }
 };
 export default func;
 func.tags = ['FreePlayTokenClaim', 'FreePlayTokenClaim_deploy'];

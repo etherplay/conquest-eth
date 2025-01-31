@@ -12,6 +12,7 @@ import {get} from 'svelte/store';
 import {initialContractsInfos} from '$lib/blockchain/contracts';
 import {getGasPrice} from './gasPrice';
 import selection from '$lib/map/selection';
+import {conversations} from '$lib/missiv';
 
 type Data = {txHash?: string; coords: {x: number; y: number}[]};
 export type ClaimFlow = {
@@ -533,7 +534,13 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
     // TODO check ? check what ? (need to give better comments :D)
     account.recordMultipleCapture(flow.data.coords, tx.hash, latestBlock.timestamp, tx.nonce);
 
-    if (!account.isWelcomingStepCompleted(TutorialSteps.SUGGESTION_PROFILE)) {
+    let tutorial_profile_shown = account.isWelcomingStepCompleted(TutorialSteps.SUGGESTION_PROFILE);
+    const profile = get(conversations);
+    if (!tutorial_profile_shown && profile.registered.state === 'ready' && profile.registered.user?.domainDescription) {
+      this.acknowledgeProfileSuggestion();
+      tutorial_profile_shown = true;
+    }
+    if (!tutorial_profile_shown) {
       this.setData({txHash: tx.hash}, {step: 'PROFILE_INFO'});
     } else {
       this.setData({txHash: tx.hash}, {step: 'SUCCESS'});

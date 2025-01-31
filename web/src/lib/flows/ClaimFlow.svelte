@@ -403,5 +403,8 @@
     <p class="text-center mt-3">
       <NavButton label="profile" href={`${base}/settings`}>Setup Profile</NavButton>
     </p>
+    <p class="text-center mt-3">
+      <NavButton label="profile" on:click={() => claimFlow.acknowledgeProfileSuggestion()}>Skip</NavButton>
+    </p>
   </Modal>
 {/if}
