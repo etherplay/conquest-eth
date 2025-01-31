@@ -20,6 +20,9 @@ export function handleYakuzaSubscribed(event: YakuzaSubscribed): void {
     existingSubscription.startTime = ZERO;
     existingSubscription.owner = subscriber.id;
     existingSubscription.totalContribution = ZERO;
+
+    subscriber.yakuzaSubscription = existingSubscription.id;
+    subscriber.save();
   }
 
   existingSubscription.endTime = event.params.endTime;

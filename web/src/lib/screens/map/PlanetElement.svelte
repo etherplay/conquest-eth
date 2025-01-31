@@ -253,6 +253,8 @@
   $: yakuzaClain =
     $yakuzaQuery.data?.state && $yakuzaQuery.data.state.fleets.find((v) => v.to === planetInfo.location.id);
 
+  $: isYakuzaSubscriber = $planetState && $planetState.ownerYakuzaSubscriptionEndTime > $time;
+
   $: pickedBySendFlow =
     ($sendFlow.step === 'PICK_DESTINATION' &&
       $sendFlow.data.from.x == planetInfo.location.x &&
@@ -539,8 +541,9 @@
 
   {#if showOwner && owner}
     {#if blockieScale <= scale}
-      <SharedBlockie
-        style={`
+      <div class={isYakuzaSubscriber ? 'outline-pink-500' : ''}>
+        <SharedBlockie
+          style={`
           pointer-events: none;
           z-index: 2;
           position: absolute;
@@ -551,9 +554,15 @@
             scale(${blockieScale}, ${blockieScale});
           width: ${frame.w + 0.5 / scale}px; height: ${frame.h + 0.5 / scale}px;
           border: ${active ? 'solid ' + 0.25 / scale + 'px' : 'dashed ' + 0.12 / scale + 'px'}  ${borderColor};
+          ${
+            isYakuzaSubscriber
+              ? `outline: ${active ? 'solid ' + 0.25 / scale + 'px' : 'dashed ' + 0.12 / scale + 'px'}  #FB48C4;`
+              : ''
+          }
         `}
-        address={owner}
-      />
+          address={owner}
+        />
+      </div>
     {:else}
       <SharedBlockie
         style={`

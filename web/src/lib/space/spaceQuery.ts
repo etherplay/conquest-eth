@@ -35,7 +35,13 @@ const timeRange = deletionDelay;
 
 export type PlanetQueryState = {
   id: string;
-  owner: {id: string};
+  owner: {
+    id: string;
+    yakuzaSubscription: {
+      startTime: string;
+      endTime: string;
+    };
+  };
   numSpaceships: string;
   flagTime: string;
   travelingUpkeep: string;
@@ -49,6 +55,7 @@ export type PlanetQueryState = {
 export type PlanetContractState = {
   id: string;
   owner: string;
+  subscribedToYakuzaUntil: number;
   numSpaceships: number;
   flagTime: number;
   travelingUpkeep: number;
@@ -146,6 +153,10 @@ export class SpaceQueryStore implements QueryStore<SpaceState> {
     id
     owner {
       id
+      yakuzaSubscription {
+        startTime
+        endTime
+      }
     }
     numSpaceships
     flagTime
@@ -185,6 +196,10 @@ export class SpaceQueryStore implements QueryStore<SpaceState> {
     id
     owner {
       id
+      yakuzaSubscription {
+        startTime
+        endTime
+      }
     }
     numSpaceships
     flagTime
@@ -517,6 +532,11 @@ export class SpaceQueryStore implements QueryStore<SpaceState> {
         return {
           id: v.id,
           owner: v.owner ? v.owner.id : undefined,
+          subscribedToYakuzaUntil: v.owner
+            ? v.owner.yakuzaSubscription
+              ? Number(v.owner.yakuzaSubscription.endTime)
+              : 0
+            : 0,
           numSpaceships: parseInt(v.numSpaceships),
           flagTime: parseInt(v.flagTime),
           travelingUpkeep: parseInt(v.travelingUpkeep),

@@ -41,6 +41,9 @@ type Owner @entity {
 
   # exit_attempt_gas: BigInt! //https://github.com/graphprotocol/graph-node/issues/2619
   exit_attempt_num: BigInt!
+
+  # PLUGINS
+  yakuzaSubscription: YakuzaSubscription
 }
 
 type Reward @entity {
