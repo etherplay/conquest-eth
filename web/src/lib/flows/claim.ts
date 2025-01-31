@@ -127,6 +127,43 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
     }
   }
 
+  async allowYakuzaToTransferToken(): Promise<void> {
+    this.setPartial({step: 'SETTING_ALLOWANCE'});
+
+    let maxFeePerGas: BigNumber;
+    let maxPriorityFeePerGas;
+    try {
+      const gasPrice = await getGasPrice(wallet.web3Provider);
+      maxFeePerGas = gasPrice.maxFeePerGas;
+      maxPriorityFeePerGas = gasPrice.maxPriorityFeePerGas;
+    } catch (e) {
+      this.backToWhereYouWere({error: e});
+      return;
+    }
+
+    let tx;
+    try {
+      tx = await wallet!.contracts.PlayToken.approve(
+        wallet!.contracts.Yakuza.address,
+        BigNumber.from('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF'),
+        {
+          maxFeePerGas,
+          maxPriorityFeePerGas,
+        }
+      );
+    } catch (err) {
+      this.backToWhereYouWere({error: err});
+      throw err;
+    }
+
+    this.setPartial({step: 'CHECKING_ALLOWANCE'});
+    try {
+      await tx.wait();
+    } finally {
+      this.backToWhereYouWere();
+    }
+  }
+
   backToWhereYouWere(object?: object) {
     if (this.$store.data?.coords.length > 0) {
       this.setPartial({step: 'ADD_MORE', ...object});
@@ -135,7 +172,11 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
     }
   }
 
-  async confirm(requireMint?: {amountToMint: BigNumber; tokenAvailable: BigNumber}): Promise<void> {
+  async confirm(requireMint?: {
+    amountToMint: BigNumber;
+    tokenAvailable: BigNumber;
+    yakuzaTokenAvailable?: BigNumber;
+  }): Promise<void> {
     // await privateWallet.execute(async () => {
     await privateWallet.login();
     const flow = this.setPartial({step: 'CREATING_TX'});
@@ -207,15 +248,25 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
     }
 
     if (requireMint && requireMint.tokenAvailable.gt(0)) {
-      const allowance = await wallet!.contracts.PlayToken.allowance(
-        wallet.address,
-        wallet!.contracts.OuterSpace.address
-      );
-      if (allowance.lt(requireMint.tokenAvailable)) {
-        this.setPartial({
-          step: 'REQUIRE_ALLOWANCE',
-        });
-        return;
+      if (flow.yakuza) {
+        const allowance = await wallet!.contracts.PlayToken.allowance(wallet.address, wallet!.contracts.Yakuza.address);
+        if (allowance.lt(requireMint.tokenAvailable)) {
+          this.setPartial({
+            step: 'REQUIRE_ALLOWANCE',
+          });
+          return;
+        }
+      } else {
+        const allowance = await wallet!.contracts.PlayToken.allowance(
+          wallet.address,
+          wallet!.contracts.OuterSpace.address
+        );
+        if (allowance.lt(requireMint.tokenAvailable)) {
+          this.setPartial({
+            step: 'REQUIRE_ALLOWANCE',
+          });
+          return;
+        }
       }
     }
 
@@ -249,6 +300,7 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
     let tx: {hash: string; nonce?: number};
 
     if (flow.yakuza) {
+      // TODO bug
       const yakuzaContract = wallet?.contracts.Yakuza;
       const nativeTokenAmount = requireMint.amountToMint
         .mul('1000000000000000000')
@@ -260,12 +312,15 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
         });
         return;
       }
+
+      let amountFromYakuza = requireMint.yakuzaTokenAvailable ? requireMint.yakuzaTokenAvailable : BigNumber.from(0);
       let gasEstimation: BigNumber;
       try {
-        gasEstimation = await yakuzaContract.estimateGas.subscribeViaNativeTokenAndStakingToken(
+        gasEstimation = await yakuzaContract.estimateGas.subscribeViaStaking(
           locationIds,
           requireMint.amountToMint,
           requireMint.tokenAvailable,
+          amountFromYakuza,
           {value: nativeTokenAmount}
         );
       } catch (e) {
@@ -289,10 +344,11 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
       this.setPartial({step: 'WAITING_TX'});
 
       try {
-        tx = await yakuzaContract.subscribeViaNativeTokenAndStakingToken(
+        tx = await yakuzaContract.subscribeViaStaking(
           locationIds,
           requireMint.amountToMint,
           requireMint.tokenAvailable,
+          amountFromYakuza,
           {
             gasLimit,
             value: nativeTokenAmount,

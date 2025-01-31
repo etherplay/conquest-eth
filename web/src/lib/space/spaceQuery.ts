@@ -77,6 +77,9 @@ export type SpaceQueryResult = {
     freePlayTokenClaimBalance: string;
     tokenToWithdraw: string;
   };
+  yakuza?: {
+    playTokenBalance: string;
+  };
   space?: {minX: string; maxX: string; minY: string; maxY: string; address: string};
   chain?: {blockHash: string; blockNumber: string};
   _meta: {
@@ -105,6 +108,9 @@ export type SpaceState = {
     freePlayTokenBalance: BigNumber;
     freePlayTokenClaimBalance: BigNumber;
     tokenToWithdraw: BigNumber;
+  };
+  yakuza?: {
+    playTokenBalance: BigNumber;
   };
   planets: PlanetContractState[];
   loading: boolean;
@@ -191,6 +197,9 @@ export class SpaceQueryStore implements QueryStore<SpaceState> {
     freePlayTokenBalance
     freePlayTokenClaimBalance
     tokenToWithdraw
+  }
+  yakuza: owner(id: $yakuza) {
+    playTokenBalance
   }
   myplanets: planets(first: 1000 where: {owner: $owner}) {
     id
@@ -476,6 +485,15 @@ export class SpaceQueryStore implements QueryStore<SpaceState> {
               tokenToWithdraw: BigNumber.from(0),
             }
           : undefined,
+        yakuza: data.yakuza
+          ? {
+              playTokenBalance: BigNumber.from(data.yakuza.playTokenBalance),
+            }
+          : this.queryStore.runtimeVariables.yakuza
+          ? {
+              playTokenBalance: BigNumber.from(0),
+            }
+          : undefined,
         planets: [],
         space: data.space
           ? {
@@ -528,6 +546,15 @@ export class SpaceQueryStore implements QueryStore<SpaceState> {
             freePlayTokenBalance: BigNumber.from(0),
             freePlayTokenClaimBalance: BigNumber.from(0),
             tokenToWithdraw: BigNumber.from(0),
+          }
+        : undefined,
+      yakuza: data.yakuza
+        ? {
+            playTokenBalance: BigNumber.from(data.yakuza.playTokenBalance),
+          }
+        : this.queryStore.runtimeVariables.yakuza
+        ? {
+            playTokenBalance: BigNumber.from(0),
           }
         : undefined,
       planets: planets.map((v) => {

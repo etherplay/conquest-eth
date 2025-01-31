@@ -2,6 +2,7 @@
 pragma solidity 0.8.9;
 
 import "../conquest_token/RewardsGenerator.sol";
+import "../conquest_token/PlayToken.sol";
 import "../outerspace/interfaces/IOuterSpace.sol";
 import "../outerspace/types/ImportingOuterSpaceTypes.sol";
 import "hardhat-deploy/solc_0.8/proxy/Proxied.sol";
@@ -27,6 +28,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         uint256 frontrunningDelay;
         uint256 minAverageStakePerPlanet;
         uint256 maxClaimDelay;
+        uint256 minimumSubscriptionWhenStaking;
         bytes32 genesis;
     }
     // --------------------------------------------------------------------------------------------
@@ -51,6 +53,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     // IMMUTABLES
     // --------------------------------------------------------------------------------------------
     IOuterSpace public immutable outerSpace;
+    PlayToken public immutable playToken;
 
     bytes32 internal immutable _genesis;
     uint256 internal immutable _acquireNumSpaceships;
@@ -61,6 +64,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     uint256 public immutable spaceshipsToKeepPer10000;
     uint256 public immutable minAverageStakePerPlanet;
     uint256 public immutable maxClaimDelay;
+    uint256 public immutable minimumSubscriptionWhenStaking;
     // --------------------------------------------------------------------------------------------
 
     // --------------------------------------------------------------------------------------------
@@ -90,9 +94,11 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         address initialRewardReceiver,
         RewardsGenerator initialGenerator,
         IOuterSpace initialOuterSpace,
+        PlayToken initialPlayToken,
         Config memory config
     ) WithPermitAndFixedDomain("1") {
         outerSpace = initialOuterSpace;
+        playToken = initialPlayToken;
 
         _genesis = config.genesis;
         _acquireNumSpaceships = config.acquireNumSpaceships;
@@ -103,6 +109,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         spaceshipsToKeepPer10000 = config.spaceshipsToKeepPer10000;
         maxClaimDelay = config.maxClaimDelay;
         minAverageStakePerPlanet = config.minAverageStakePerPlanet;
+        minimumSubscriptionWhenStaking = config.minimumSubscriptionWhenStaking;
 
         _postUpgrade(initialRewardReceiver, initialGenerator);
     }
@@ -111,6 +118,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         address initialRewardReceiver,
         RewardsGenerator initialGenerator,
         IOuterSpace,
+        PlayToken,
         Config calldata
     ) external onlyProxyAdmin {
         _postUpgrade(initialRewardReceiver, initialGenerator);
@@ -135,32 +143,61 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     // --------------------------------------------------------------------------------------------
 
     // --------------------------------------------------------------------------------------------
-    // Subscribe to Yakuza by giving some new planets
+    // Subscribe to Yakuza
     // --------------------------------------------------------------------------------------------
 
-    function subscribeViaNativeTokenAndStakingToken(
+    function subscribeWithoutStaking(uint256 amountToMint, uint256 tokenAmount) external payable {
+        address sender = msg.sender;
+        if (tokenAmount > 0) {
+            playToken.transferFrom(sender, address(this), tokenAmount);
+        }
+        playToken.mint{value: msg.value}(address(this), amountToMint);
+        _recordContribution(sender, amountToMint + tokenAmount);
+    }
+
+    function subscribeViaStaking(
         uint256[] memory locations,
         uint256 amountToMint,
-        uint256 tokenAmount
+        uint256 tokenAmount,
+        uint256 amountFromYakuza
     ) external payable {
         address sender = msg.sender;
-        outerSpace.acquireMultipleViaNativeTokenAndStakingToken{value: msg.value}(locations, amountToMint, tokenAmount);
+
+        // TODO Config
+        require(tokenAmount + amountToMint > minimumSubscriptionWhenStaking, "MINIMUM_SUBSCRIPTION_REQUIRED");
+
+        if (tokenAmount > 0) {
+            playToken.transferFrom(sender, address(this), tokenAmount);
+        }
+
+        if (tokenAmount + amountFromYakuza > 0) {
+            playToken.approve(address(outerSpace), tokenAmount + amountFromYakuza);
+        }
+        outerSpace.acquireMultipleViaNativeTokenAndStakingToken{value: msg.value}(
+            locations,
+            amountToMint,
+            tokenAmount + amountFromYakuza
+        );
         uint256 contribution = amountToMint + tokenAmount;
-        uint256 averagePerPlanet = contribution / locations.length;
+        uint256 averagePerPlanet = (amountToMint + tokenAmount + amountFromYakuza) / locations.length;
         require(averagePerPlanet >= minAverageStakePerPlanet, "PLANETS_TOO_SMALL");
-        _mint(sender, contribution);
-        uint256 startTime = subscriptions[sender].startTime;
-        uint256 endTime = subscriptions[sender].endTime;
+        _recordContribution(sender, contribution);
+    }
+
+    function _recordContribution(address subscriber, uint256 contribution) internal {
+        _mint(subscriber, contribution);
+        uint256 startTime = subscriptions[subscriber].startTime;
+        uint256 endTime = subscriptions[subscriber].endTime;
         if (block.timestamp > endTime) {
             startTime = block.timestamp;
-            subscriptions[sender].startTime = startTime;
+            subscriptions[subscriber].startTime = startTime;
             endTime = startTime + (numSecondsPerTokens * contribution) / 1e18;
         } else {
             endTime = endTime + (numSecondsPerTokens * contribution) / 1e18;
         }
 
-        subscriptions[sender].endTime = endTime;
-        emit YakuzaSubscribed(sender, startTime, endTime, contribution);
+        subscriptions[subscriber].endTime = endTime;
+        emit YakuzaSubscribed(subscriber, startTime, endTime, contribution);
     }
 
     // --------------------------------------------------------------------------------------------
@@ -223,7 +260,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         ImportingOuterSpaceTypes.FleetData memory fleet = outerSpace.getFleetData(fleetId, resolution.from);
 
         require(fleet.owner != address(this), "FLEET_IS_YAKUZA");
-        require(fleet.defender == sender, "FLEET_DID_NOT_TARGETED_YOU");
+        require(fleet.defender == sender || fleet.defender == address(this), "DID_NOT_TARGETED_YOU_NOR_YAKUZA");
 
         // Fleet arrived before you subscribe (minus _frontrunningDelay)
         require(fleet.arrivalTime - _frontrunningDelay > subscriptions[sender].startTime, "FLEET_NOT_COVERED");

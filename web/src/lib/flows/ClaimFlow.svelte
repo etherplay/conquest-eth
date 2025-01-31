@@ -18,6 +18,7 @@
   import {initialContractsInfos} from '$lib/blockchain/contracts';
   import MultiplePlanetClaimPanel from '$lib/components/planets/MultiplePlanetClaimPanel.svelte';
   import Help from '$lib/components/utils/Help.svelte';
+  import {spaceQuery} from '$lib/space/spaceQuery';
 
   $: coords = $claimFlow.data?.coords;
   $: planetInfo = coords ? spaceInfo.getPlanetInfo(coords[0].x, coords[0].y) : undefined;
@@ -118,8 +119,11 @@
 {:else if $claimFlow.step === 'REQUIRE_ALLOWANCE'}
   <Modal on:close={() => claimFlow.cancel()}
     >You ll need to allow Conquest to transfer your token
-
-    <Button class="mt-5" label="Allow" on:click={() => claimFlow.allowConquestToTransferToken()}>Allow</Button>
+    {#if $claimFlow.yakuza}
+      <Button class="mt-5" label="Allow" on:click={() => claimFlow.allowYakuzaToTransferToken()}>Allow Yakuza</Button>
+    {:else}
+      <Button class="mt-5" label="Allow" on:click={() => claimFlow.allowConquestToTransferToken()}>Allow</Button>
+    {/if}
   </Modal>
 {:else if $claimFlow.step === 'SETTING_ALLOWANCE'}
   <Modal on:close={() => claimFlow.cancel()}>Please confirm...</Modal>
@@ -134,14 +138,7 @@
         <h2 class="text-red-500">
           Give the planet <span class="text-green-500">"{stats.name}"</span> (worth ${nativeTokenAmountFor(cost)}) to
           Yakuza in exchange for
-          {timeToText(
-            cost
-              .mul(YakuzaContract.linkedData.numSecondsPerTokens)
-              .mul('100000000000000')
-              .div('1000000000000000000')
-              .toNumber(),
-            {verbose: true}
-          )} of protection
+          {timeToText(cost.mul(YakuzaContract.linkedData.numSecondsPerTokens).toNumber(), {verbose: true})} of protection
         </h2>
         <p class="text-gray-300 mt-2 text-sm">
           You'll be able to claim revenge when other players capture any of your planet as long as the subscription does
@@ -152,19 +149,47 @@
         <Button
           class="mt-5"
           label="Stake"
-          on:click={() =>
+          on:click={() => {
+            let yakuzaTokenAvailable = BigNumber.from(0);
+            let amountToMint = cost.mul('100000000000000');
+
+            if ($claimFlow.yakuza) {
+              const yakuzaBalance = $spaceQuery.data?.yakuza?.playTokenBalance;
+              if (yakuzaBalance) {
+                if (yakuzaBalance.gt(amountToMint)) {
+                  yakuzaTokenAvailable = amountToMint;
+                  amountToMint = BigNumber.from(0);
+                } else {
+                  yakuzaTokenAvailable = yakuzaBalance;
+                  amountToMint = amountToMint.sub(yakuzaBalance);
+                }
+              }
+            }
+            let tokenAvailable = BigNumber.from(0);
+            if ($myTokens.playTokenBalance.gt(amountToMint)) {
+              tokenAvailable = amountToMint;
+              amountToMint = BigNumber.from(0);
+            } else {
+              amountToMint = amountToMint.sub($myTokens.playTokenBalance);
+              tokenAvailable = $myTokens.playTokenBalance;
+            }
+
             claimFlow.confirm({
-              amountToMint: cost.mul('100000000000000'),
-              tokenAvailable: BigNumber.from(0),
-            })}>Confirm</Button
+              amountToMint,
+              tokenAvailable,
+              yakuzaTokenAvailable,
+            });
+          }}>Confirm</Button
         >
         {#if YakuzaContract}
           <label class="flex items-center mt-2">
             <input type="checkbox" class="form-checkbox" bind:checked={$claimFlow.yakuza} />
 
             <span class="ml-2 text-red-500"
-              >Subscribe to Yakuza
-              <Help class="w-4">Yakuza will protect you .</Help></span
+              >Stake for Yakuza
+              <Help class="w-4"
+                >You can stake planet for Yakuza, any payment you do count toward your subscription.
+              </Help></span
             >
           </label>
         {/if}
@@ -218,8 +243,10 @@
             <input type="checkbox" class="form-checkbox" bind:checked={$claimFlow.yakuza} />
 
             <span class="ml-2 text-red-500"
-              >Subscribe to Yakuza
-              <Help class="w-4">Yakuza will protect you .</Help></span
+              >Stake for Yakuza
+              <Help class="w-4"
+                >You can stake planet for Yakuza, any payment you do count toward your subscription.
+              </Help></span
             >
           </label>
         {/if}
@@ -293,8 +320,10 @@
             <input type="checkbox" class="form-checkbox" bind:checked={$claimFlow.yakuza} />
 
             <span class="ml-2 text-red-500"
-              >Subscribe to Yakuza
-              <Help class="w-4">Yakuza will protect you .</Help></span
+              >Stake for Yakuza
+              <Help class="w-4"
+                >You can stake planet for Yakuza, any payment you do count toward your subscription.
+              </Help></span
             >
           </label>
         {/if}
@@ -337,8 +366,10 @@
             <input type="checkbox" class="form-checkbox" bind:checked={$claimFlow.yakuza} />
 
             <span class="ml-2 text-red-500"
-              >Subscribe to Yakuza
-              <Help class="w-4">Yakuza will protect you .</Help></span
+              >Stake for Yakuza
+              <Help class="w-4"
+                >You can stake planet for Yakuza, any payment you do count toward your subscription.
+              </Help></span
             >
           </label>
         {/if}
