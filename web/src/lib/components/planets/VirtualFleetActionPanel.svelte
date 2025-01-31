@@ -51,8 +51,10 @@
   $: walletIsChosenOwner =
     $wallet.address && $wallet.address?.toLowerCase() === $planetChosenState?.owner?.toLowerCase();
 
+  $: YakuzaContract = (initialContractsInfos as any).contracts.Yakuza;
+
   $: planetIsYakuza =
-    $planetChosenState?.owner?.toLowerCase() === initialContractsInfos.contracts.Yakuza.address.toLowerCase();
+    YakuzaContract && $planetChosenState?.owner?.toLowerCase() === YakuzaContract.address.toLowerCase();
 
   // $: destinationPlanetInfo =
   //   $sendFlow.data?.to && spaceInfo.getPlanetInfo($sendFlow.data?.to.x as number, $sendFlow.data?.to.y as number);

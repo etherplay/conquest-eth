@@ -188,7 +188,7 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
 
   async revenge(to: {x: number; y: number}, yakuzaClaim: YakuzaClaimFleet): Promise<void> {
     await privateWallet.login();
-    const YakuzaContract = initialContractsInfos.contracts.Yakuza;
+    const YakuzaContract = (initialContractsInfos as any).contracts.Yakuza;
 
     this.setData(
       {
@@ -255,7 +255,8 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
         config: {
           numSpaceshipsToKeep:
             Math.floor(
-              (fromPlanetInfo.stats.cap * initialContractsInfos.contracts.Yakuza.linkedData.spaceshipsToKeepPer10000) /
+              (fromPlanetInfo.stats.cap *
+                (initialContractsInfos as any).contracts.Yakuza.linkedData.spaceshipsToKeepPer10000) /
                 10000
             ) + 1,
         },

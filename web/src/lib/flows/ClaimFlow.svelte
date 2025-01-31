@@ -54,6 +54,8 @@
   //   }
   // }
 
+  $: YakuzaContract = (initialContractsInfos as any).contracts.Yakuza;
+
   $: giveToYakuza = $claimFlow.yakuza;
 </script>
 
@@ -127,14 +129,14 @@
   <Modal on:close={() => claimFlow.cancel()}>
     {#if !$myTokens.playTokenBalance}
       Please wait...
-    {:else if giveToYakuza}
+    {:else if giveToYakuza && YakuzaContract}
       <div class="text-center">
         <h2 class="text-red-500">
           Give the planet <span class="text-green-500">"{stats.name}"</span> (worth ${nativeTokenAmountFor(cost)}) to
           Yakuza in exchange for
           {timeToText(
             cost
-              .mul(initialContractsInfos.contracts.Yakuza.linkedData.numSecondsPerTokens)
+              .mul(YakuzaContract.linkedData.numSecondsPerTokens)
               .mul('100000000000000')
               .div('1000000000000000000')
               .toNumber(),
@@ -156,15 +158,16 @@
               tokenAvailable: BigNumber.from(0),
             })}>Confirm</Button
         >
+        {#if YakuzaContract}
+          <label class="flex items-center mt-2">
+            <input type="checkbox" class="form-checkbox" bind:checked={$claimFlow.yakuza} />
 
-        <label class="flex items-center mt-2">
-          <input type="checkbox" class="form-checkbox" bind:checked={$claimFlow.yakuza} />
-
-          <span class="ml-2 text-red-500"
-            >Subscribe to Yakuza
-            <Help class="w-4">Yakuza will protect you .</Help></span
-          >
-        </label>
+            <span class="ml-2 text-red-500"
+              >Subscribe to Yakuza
+              <Help class="w-4">Yakuza will protect you .</Help></span
+            >
+          </label>
+        {/if}
       </div>
     {:else if $myTokens.playTokenBalance.eq(0) && $myTokens.freePlayTokenBalance.eq(0)}
       <!-- You do not have any
@@ -210,14 +213,16 @@
           >Confirm</Button
         >
 
-        <label class="flex items-center mt-2">
-          <input type="checkbox" class="form-checkbox" bind:checked={$claimFlow.yakuza} />
+        {#if YakuzaContract}
+          <label class="flex items-center mt-2">
+            <input type="checkbox" class="form-checkbox" bind:checked={$claimFlow.yakuza} />
 
-          <span class="ml-2 text-red-500"
-            >Subscribe to Yakuza
-            <Help class="w-4">Yakuza will protect you .</Help></span
-          >
-        </label>
+            <span class="ml-2 text-red-500"
+              >Subscribe to Yakuza
+              <Help class="w-4">Yakuza will protect you .</Help></span
+            >
+          </label>
+        {/if}
       </div>
     {:else if $myTokens.freePlayTokenBalance.lt(cost.mul('100000000000000')) && $myTokens.playTokenBalance.lt(cost.mul('100000000000000'))}
       <!-- Not enough
@@ -283,14 +288,16 @@
             })}>Confirm</Button
         >
 
-        <label class="flex items-center mt-2">
-          <input type="checkbox" class="form-checkbox" bind:checked={$claimFlow.yakuza} />
+        {#if YakuzaContract}
+          <label class="flex items-center mt-2">
+            <input type="checkbox" class="form-checkbox" bind:checked={$claimFlow.yakuza} />
 
-          <span class="ml-2 text-red-500"
-            >Subscribe to Yakuza
-            <Help class="w-4">Yakuza will protect you .</Help></span
-          >
-        </label>
+            <span class="ml-2 text-red-500"
+              >Subscribe to Yakuza
+              <Help class="w-4">Yakuza will protect you .</Help></span
+            >
+          </label>
+        {/if}
       </div>
     {:else}
       <div class="text-center">
@@ -325,14 +332,16 @@
         <Button class="mt-5" label="Add More Planet" on:click={() => claimFlow.askForMore()}>Add More</Button>
         <Button class="mt-5" label="Stake" on:click={() => claimFlow.confirm()}>Confirm</Button>
 
-        <label class="flex items-center mt-2">
-          <input type="checkbox" class="form-checkbox" bind:checked={$claimFlow.yakuza} />
+        {#if YakuzaContract}
+          <label class="flex items-center mt-2">
+            <input type="checkbox" class="form-checkbox" bind:checked={$claimFlow.yakuza} />
 
-          <span class="ml-2 text-red-500"
-            >Subscribe to Yakuza
-            <Help class="w-4">Yakuza will protect you .</Help></span
-          >
-        </label>
+            <span class="ml-2 text-red-500"
+              >Subscribe to Yakuza
+              <Help class="w-4">Yakuza will protect you .</Help></span
+            >
+          </label>
+        {/if}
       </div>
     {/if}
   </Modal>

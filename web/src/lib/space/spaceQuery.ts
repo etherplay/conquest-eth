@@ -400,7 +400,9 @@ export class SpaceQueryStore implements QueryStore<SpaceState> {
     this.stopAccountSubscription = account.subscribe(async ($account) => {
       await this._handleAccountChange($account);
     });
-    this.queryStore.runtimeVariables.yakuza = initialContractsInfos.contracts.Yakuza.address.toLowerCase();
+    this.queryStore.runtimeVariables.yakuza =
+      (initialContractsInfos as any).contracts.Yakuza?.address.toLowerCase() ||
+      '0x0000000000000000000000000000000000000000';
     this.unsubscribeFromQuery = this.queryStore.subscribe(this.update.bind(this));
 
     return this.stop.bind(this);

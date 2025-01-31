@@ -48,18 +48,20 @@
       claimFlow.confirm();
     }
   }
+
+  $: YakuzaContract = (initialContractsInfos as any).contracts.Yakuza;
 </script>
 
 <div
   class="z-10 absolute right-0 top-14 inline-block w-36 md:w-48 bg-gray-900 bg-opacity-80 text-cyan-300 border-2 border-cyan-300 m-4 text-sm"
 >
   <div class="flex p-3 flex-col items-center text-center">
-    {#if $claimFlow.yakuza}
+    {#if $claimFlow.yakuza && YakuzaContract}
       <h2 class="text-red-500">
         Give the selected planets (worth ${nativeTokenAmountFor(cost)}) to Yakuza in exchange for
         {timeToText(
           cost
-            .mul(initialContractsInfos.contracts.Yakuza.linkedData.numSecondsPerTokens)
+            .mul(YakuzaContract.linkedData.numSecondsPerTokens)
             .mul('100000000000000')
             .div('1000000000000000000')
             .toNumber(),
@@ -115,12 +117,14 @@
     </PanelButton>
   </div>
 
-  <label class="flex items-center m-2">
-    <input type="checkbox" class="form-checkbox" bind:checked={$claimFlow.yakuza} />
+  {#if YakuzaContract}
+    <label class="flex items-center m-2">
+      <input type="checkbox" class="form-checkbox" bind:checked={$claimFlow.yakuza} />
 
-    <span class="ml-2 text-red-500"
-      >Subscribe to Yakuza
-      <Help class="w-4">Yakuza will protect you .</Help></span
-    >
-  </label>
+      <span class="ml-2 text-red-500"
+        >Subscribe to Yakuza
+        <Help class="w-4">Yakuza will protect you .</Help></span
+      >
+    </label>
+  {/if}
 </div>

@@ -124,7 +124,7 @@ export class YakuzaQueryStore implements QueryStore<YakuzaState> {
 
   getTime(): number {
     const timestamp = now();
-    return timestamp - initialContractsInfos.contracts.Yakuza.linkedData.maxClaimDelay;
+    return timestamp - (initialContractsInfos as any).contracts.Yakuza?.linkedData.maxClaimDelay || 0;
   }
 
   onTime(): void {
@@ -152,16 +152,27 @@ export class YakuzaQueryStore implements QueryStore<YakuzaState> {
     const accountAddress = $account.ownerAddress?.toLowerCase();
     if (this.queryStore.runtimeVariables.myself !== accountAddress) {
       this.queryStore.runtimeVariables.myself = accountAddress;
-      this.queryStore.runtimeVariables.myselfOrYakuza = [
-        accountAddress,
-        initialContractsInfos.contracts.Yakuza.address.toLowerCase(),
-      ] as unknown as string;
+      if ((initialContractsInfos as any).contracts.Yakuza) {
+        this.queryStore.runtimeVariables.myselfOrYakuza = [
+          accountAddress,
+          (initialContractsInfos as any).contracts.Yakuza.address.toLowerCase(),
+        ] as unknown as string;
+      } else {
+        this.queryStore.runtimeVariables.myselfOrYakuza = [accountAddress] as unknown as string;
+      }
+
       if (!this.queryStore.runtimeVariables.myself) {
         this.queryStore.runtimeVariables.myself = '0x0000000000000000000000000000000000000000';
-        this.queryStore.runtimeVariables.myselfOrYakuza = [
-          '0x0000000000000000000000000000000000000000',
-          initialContractsInfos.contracts.Yakuza.address.toLowerCase(),
-        ] as unknown as string;
+        if ((initialContractsInfos as any).contracts.Yakuza) {
+          this.queryStore.runtimeVariables.myselfOrYakuza = [
+            '0x0000000000000000000000000000000000000000',
+            (initialContractsInfos as any).contracts.Yakuza.address.toLowerCase(),
+          ] as unknown as string;
+        } else {
+          this.queryStore.runtimeVariables.myselfOrYakuza = [
+            '0x0000000000000000000000000000000000000000',
+          ] as unknown as string;
+        }
       }
       this.store.update((v) => {
         if (v.data) {

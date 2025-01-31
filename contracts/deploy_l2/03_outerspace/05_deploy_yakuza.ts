@@ -33,3 +33,6 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 export default func;
 func.tags = ['Yakuza', 'Yakuza_deploy'];
 func.dependencies = ['RewardsGenerator_deploy'];
+// func.skip = async (hre) => {
+//   return true;
+// };

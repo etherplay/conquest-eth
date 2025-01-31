@@ -250,7 +250,7 @@
           matchConditions(v.mapConditions, {account: $wallet.address, planetState: $planetState, planetInfo})
       );
 
-  $: yakuzaClain =
+  $: yakuzaClaim =
     $yakuzaQuery.data?.state && $yakuzaQuery.data.state.fleets.find((v) => v.to === planetInfo.location.id);
 
   $: isYakuzaSubscriber = $planetState && $planetState.ownerYakuzaSubscriptionEndTime > $time;
@@ -517,7 +517,7 @@
     </div>
   {/each}
 
-  {#if yakuzaClain}
+  {#if yakuzaClaim}
     <div
       style={`
     z-index: 5;
@@ -541,7 +541,7 @@
 
   {#if showOwner && owner}
     {#if blockieScale <= scale}
-      <div class={isYakuzaSubscriber ? 'outline-pink-500' : ''}>
+      <div>
         <SharedBlockie
           style={`
           pointer-events: none;
@@ -555,7 +555,7 @@
           width: ${frame.w + 0.5 / scale}px; height: ${frame.h + 0.5 / scale}px;
           border: ${active ? 'solid ' + 0.25 / scale + 'px' : 'dashed ' + 0.12 / scale + 'px'}  ${borderColor};
           ${
-            isYakuzaSubscriber
+            isYakuzaSubscriber && !playerIsOwner
               ? `outline: ${active ? 'solid ' + 0.25 / scale + 'px' : 'dashed ' + 0.12 / scale + 'px'}  #FB48C4;`
               : ''
           }
