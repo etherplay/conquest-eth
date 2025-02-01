@@ -211,32 +211,50 @@
       > game of diplomacy.
     </p>
     <p class="mt-3">
-      To participate you'll have to first acquire planets by depositing a stake in form of
+      To participate you'll have to first acquire <span class="text-green-500">planets</span>
+      <Help class="inline w-4"
+        >Planets are at the core of the game. Every action you perform in the game start from them. They each have
+        different stats (production, attack, defense, speed,...) and require different amount of stake.</Help
+      > by depositing a stake in form of
       <PlayCoin class="inline w-4" />
-      (Play tokens). You do not not need to mint these token as they are minted automatically from {nativeTokenSymbol},
-      the currency used by the network the game runs on.
+      (<span class="text-green-500">Play tokens</span>
+      <Help class="inline w-4">Play tokens are always redeamable back to {nativeTokenSymbol}</Help>). You do not not
+      need to acquire these token first though as they are minted automatically from
+      <span class="text-green-500">{nativeTokenSymbol}</span>
+      <Help class="inline w-4"
+        >{nativeTokenSymbol} is the currency used to pay the fees on the network to ensure its continuous existence. You
+        need it to play the game.</Help
+      >, the currency used by the network the game runs on.
     </p>
     <p class="mt-3">
-      These planets will then produce spaceships that you can use to attack other planets. You'll also have to make sure
-      you have enough spaceships to protect your planets. It is a good idea to reach out to other player and plan
-      strategies together.
+      The planets you acquire this way will then produce <span class="text-green-500">spaceships</span>
+      <Help class="inline w-4"
+        >Spaceships are the only resource of the game. They are used both for attack and defense. As such be careful
+        when sending them for attack, as it will most likely make your planet more vulnerable for some time.</Help
+      > that you can use to attack other planets. You'll also have to make sure you have enough spaceships to protect your
+      planets. It is a good idea to reach out to other player and plan strategies together.
     </p>
     <p class="mt-3">
       At any time (whether you acquired the planet via staking or via attack), you can exit the planet. This take
       {timeToText(spaceInfo.exitDuration, {verbose: true})}
-      during which you cannot use it but at the end of which you ll get the deposit, ready to be withdrawn.
+      during which you cannot use it but at the end of which you ll get the deposit back, ready to be
+      <span class="text-green-500">withdraw</span>
+      <Help class="inline w-4"
+        >Once the exit is complete, the <PlayCoin class="inline w-4" /> deposit is available to you, but you'll need to male
+        a withdrawal operation to get it in your wallet.</Help
+      >.
     </p>
     <p class="mt-3 text-orange-400">
       Be careful, even though your planet will continue to produce spaceships, you can lose it while waiting for the
       exit period to end.
     </p>
     <p class="mt-5 text-lg text-green-400">
-      And don't forget to check our <a
+      Check our <a
         target="_blank"
         rel="noreferrer,noopener"
         class="text-yellow-500 underline"
         href="https://knowledge.conquest.game">player manual</a
-      >
+      > for more details.
     </p>
   </Banner>
 {:else if $selection}
