@@ -232,9 +232,9 @@
                   {#if !$planetState.inReach}
                     (unreachable)
                     <Help class="inline w-4 h-4">
-                      The Reachable Universe expands as more planets get captured. Note though that you can still send
-                      attack unreachable planets. But these planets cannot produce spaceships until they get in range
-                      and you stake on it.
+                      The Reachable Universe expands as more planets get captured. Note though that you can still attack
+                      unreachable planets. But these planets cannot produce spaceships until they get in range and you
+                      stake on it.
                     </Help>
                   {:else}
                     <Help class="inline w-4 h-4">
@@ -269,9 +269,9 @@
               {#if !$planetState.inReach}
                 (unreachable)
                 <Help class="inline w-4 h-4">
-                  The Reachable Universe expands as more planets get captured. Note though that you can still send
-                  attack unreachable planets. But these planets cannot produce spaceships until they get in range and
-                  you stake on it.
+                  The Reachable Universe expands as more planets get captured. Note though that you can still attack
+                  unreachable planets. But these planets cannot produce spaceships until they get in range and you stake
+                  on it.
                 </Help>
               {:else}
                 <Help class="inline w-4 h-4">
@@ -331,9 +331,9 @@
               <span class="text-sm">
                 {!$planetState.inReach ? ' (unreachable)' : ''}
                 <Help class="inline w-4 h-4">
-                  The Reachable Universe expands as more planets get captured. Note though that you can still send
-                  attack unreachable planets. But these planets cannot produce spaceships until they get in range and
-                  you stake on it.
+                  The Reachable Universe expands as more planets get captured. Note though that you can still attack
+                  unreachable planets. But these planets cannot produce spaceships until they get in range and you stake
+                  on it.
                 </Help></span
               >
             </div>

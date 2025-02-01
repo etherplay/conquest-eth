@@ -10,6 +10,7 @@
   import {url} from '$lib/utils/url';
   import {account} from '$lib/account/account';
   import {nativeTokenSymbol, params, version} from '$lib/config';
+  import {initialContractsInfos} from '$lib/blockchain/contracts';
 
   async function connect() {
     try {
@@ -26,6 +27,8 @@
   let menu = false;
 
   let showErrorButton = params['errorButton'];
+
+  $: YakuzaContract = (initialContractsInfos as any).contracts.Yakuza;
 </script>
 
 <svelte:window on:click={() => (menu = false)} />
@@ -109,6 +112,47 @@
     <div
       class="absolute z-20 right-0 top-14 border-cyan-500 border-2 p-5 bg-opacity-80 bg-black flex mr-2 flex-col items-center"
     >
+      <NavButton class="m-1" label="help" href={url('logs/')}>
+        Logs
+        <Help class="w-4 h-4">See Global Logs</Help>
+      </NavButton>
+      <!-- <NavButton
+        borderColor="border-yellow-600"
+        textColor="text-yellow-300"
+        class="m-1"
+        label="highscores"
+        href={url('highscores/')}
+      >
+        Highscores
+        <Help class="w-4 h-4">See Highscores for current alpha</Help>
+      </NavButton> -->
+      <NavButton class="m-1" label="help" href={url('alliances/')}>
+        Alliances
+        <Help class="w-4 h-4">See All Public Alliances</Help>
+      </NavButton>
+
+      <NavButton class="m-1" label="agent-service" href={url('agent-service/')}>
+        <!-- blank={true} -->
+        Agent Service
+        <Help class="w-4 h-4">The agent can help you ensure you resolve your fleets in time.</Help>
+      </NavButton>
+      {#if YakuzaContract}
+        <NavButton
+          borderColor="border-red-600"
+          textColor="text-red-300"
+          class="m-1"
+          label="yakuza"
+          href={url('yakuza/')}
+        >
+          Yakuza
+          <Help class="w-4 h-4">See Yakuza subscription</Help>
+        </NavButton>
+      {/if}
+      <NavButton class="m-1" label="settings" href={url('settings/')}>
+        Profile
+        <Help class="w-4 h-4">You can setup your profile so that other player can contact you.</Help>
+      </NavButton>
+
       <NavButton class="m-1" label="withdrawals" href={url('withdrawals/')}>
         Withdrawals
         <Help class="w-4 h-4">
@@ -117,41 +161,6 @@
           you earned after exiting your planets.
         </Help>
       </NavButton>
-      <NavButton class="m-1" label="agent-service" href={url('agent-service/')}>
-        <!-- blank={true} -->
-        Agent Service
-        <Help class="w-4 h-4">The agent can help you ensure you resolve your fleets in time.</Help>
-      </NavButton>
-      <NavButton class="m-1" label="help" href={url('logs/')}>
-        Logs
-        <Help class="w-4 h-4">See Global Logs</Help>
-      </NavButton>
-      <NavButton
-        borderColor="border-yellow-600"
-        textColor="text-yellow-300"
-        class="m-1"
-        label="help"
-        href={url('highscores/')}
-      >
-        Highscores
-        <Help class="w-4 h-4">See Highscores for current alpha</Help>
-      </NavButton>
-      <NavButton class="m-1" label="help" href={url('alliances/')}>
-        Alliances
-        <Help class="w-4 h-4">See All Public Alliances</Help>
-      </NavButton>
-      <NavButton class="m-1" label="help" href={url('help/')}>
-        Help
-        <Help class="w-4 h-4">See some Help on the game.</Help>
-      </NavButton>
-      <NavButton class="m-1" label="settings" href={url('settings/')}>
-        Profile
-        <Help class="w-4 h-4">You can setup your profile so that other player can contact you.</Help>
-      </NavButton>
-      <NavButton class="m-1" label="settings" href={url('plugins/')}>
-        Plugins
-        <Help class="w-4 h-4">Manage Plugins</Help>
-      </NavButton>
       <NavButton class="m-1" label="cashout" href={url('cashout/')}>
         Cash Out
         <Help class="w-4 h-4">
@@ -159,10 +168,18 @@
           <PlayCoin class="w-4 h-4 inline" /> out into {nativeTokenSymbol}
         </Help>
       </NavButton>
-      <NavButton class="m-1" label="stats" href={url('stats/')}>
+      <NavButton class="m-1" label="settings" href={url('plugins/')}>
+        Plugins
+        <Help class="w-4 h-4">Manage Plugins</Help>
+      </NavButton>
+      <NavButton class="m-1" label="help" href={url('help/')}>
+        Help
+        <Help class="w-4 h-4">See some Help on the game.</Help>
+      </NavButton>
+      <!-- <NavButton class="m-1" label="stats" href={url('stats/')}>
         Stats
         <Help class="w-4 h-4">Show Stats</Help>
-      </NavButton>
+      </NavButton> -->
       {#if showErrorButton}
         <NavButton class="m-1" label="settings" on:click={() => account.generateError()}>
           Error
