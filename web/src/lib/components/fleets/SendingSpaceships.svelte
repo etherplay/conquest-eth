@@ -129,6 +129,8 @@
     if (fleetAmount > maxSpaceships) {
       fleetAmount = maxSpaceships;
     }
+
+    console.log({maxSpaceships, numSpaceshipsToKeep: $sendFlow.data?.config?.numSpaceshipsToKeep});
   }
 
   $: agentServiceAccount = $agentService.account;
@@ -514,19 +516,24 @@
             <div class="flex flex-row  justify-center mt-2 text-xs text-gray-500">
               <span>Predicted outcome at time of arrival</span>
             </div>
+            {#if endOfSessionWarning === 'exitonly'}
+              <span class="text-red-400">Cannot send spaceships, can only exit.</span>
+            {:else if endOfSessionWarning === 'impossible'}
+              <span class="text-red-400">Will not arrive before the end of session</span>
+            {:else if endOfSessionWarning === 'warning'}
+              <span class="text-orange-400">Might not arrive before the end of session (resolution risk)</span>
+            {/if}
             <div class="flex flex-row justify-center">
-              {#if endOfSessionWarning === 'exitonly'}
-                <span class="text-red-400">Cannot send spaceships, can only exit.</span>
-              {:else if endOfSessionWarning === 'impossible'}
-                <span class="text-red-400">Will not arrive before the end of session</span>
-              {:else if endOfSessionWarning === 'warning'}
-                <span class="text-orange-400">Might not arrive before the end of session (30 min risk)</span>
-              {:else if prediction?.outcome.min.captured}
-                <span class="text-green-600">{prediction?.outcome.min.numSpaceshipsLeft} (captured)</span>
-              {:else if prediction?.outcome.nativeResist}
-                <span class="text-red-400">{prediction?.outcome.min.numSpaceshipsLeft} (native population resists)</span
-                >
-              {:else}<span class="text-red-400">{prediction?.outcome.min.numSpaceshipsLeft} (attack failed)</span>{/if}
+              {#if endOfSessionWarning !== 'exitonly' && endOfSessionWarning !== 'impossible'}
+                {#if prediction?.outcome.min.captured}
+                  <span class="text-green-600">{prediction?.outcome.min.numSpaceshipsLeft} (captured)</span>
+                {:else if prediction?.outcome.nativeResist}
+                  <span class="text-red-400"
+                    >{prediction?.outcome.min.numSpaceshipsLeft} (native population resists)</span
+                  >
+                {:else}<span class="text-red-400">{prediction?.outcome.min.numSpaceshipsLeft} (attack failed)</span
+                  >{/if}
+              {/if}
             </div>
             {#if prediction?.outcome.min.captured && prediction?.outcome.timeUntilFails > 0}
               <div class="flex flex-row justify-center">
@@ -564,7 +571,7 @@
               {#if endOfSessionWarning === 'impossible'}
                 <span class="text-red-400">Will not arrive before the end of session</span>
               {:else if endOfSessionWarning === 'warning'}
-                <span class="text-orange-400">Might not arrive before the end of session (30 min risk)</span>
+                <span class="text-orange-400">Might not arrive before the end of session (resolution risk)</span>
               {/if}
             </div>
           {/if}

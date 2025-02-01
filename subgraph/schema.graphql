@@ -41,6 +41,9 @@ type Owner @entity {
 
   # exit_attempt_gas: BigInt! //https://github.com/graphprotocol/graph-node/issues/2619
   exit_attempt_num: BigInt!
+
+  # PLUGINS
+  yakuzaSubscription: YakuzaSubscription
 }
 
 type Reward @entity {
@@ -156,6 +159,11 @@ type Fleet @entity {
   inFlightPlanetLoss: BigInt
   won: Boolean
   events: [FleetEvent!] @derivedFrom(field: "fleet")
+
+  arrivalEvent: FleetArrivedEvent
+
+  # PLUGINS
+  yakuzaOnBehalf: Owner
 }
 
 type Transaction @entity {
@@ -243,10 +251,36 @@ type FleetArrivedEvent implements OwnerEvent & PlanetEvent & FleetEvent @entity 
   accumulatedAttackAdded: BigInt!
   numSpaceshipsAtArrival: BigInt!
 
+  fleetReveal: FleetRevealedEvent!
+
   # extra data
   from: Planet!
   quantity: BigInt!
+
+  # PLUGINS
+  yakuzaClaimed: Boolean!
+  yakuzaClaimAmountLeft: BigInt!
+  yakuzaOnBehalf: Owner
 }
+
+# TODO: implements OwnerEvent & PlanetEvent & FleetEvent
+type FleetRevealedEvent @entity {
+  id: ID! # fleetID
+  eventID: ID! # <blockNumber>_logID
+  blockNumber: Int!
+  timestamp: BigInt!
+  transaction: Transaction!
+  fleet: Fleet!
+  from: Planet!
+  to: Planet!
+  arrivalTimeWanted: BigInt!
+  gift: Boolean!
+  specific: Bytes!
+  secret: Bytes!
+  fleetSender: Owner!
+  operator: Owner!
+}
+
 type PlanetTransferEvent implements OwnerEvent & PlanetEvent @entity {
   id: ID! # <blockNumber>_logID
   blockNumber: Int!
@@ -356,6 +390,27 @@ type SpaceshipSale @entity {
   timestamp: BigInt!
   spaceshipsToKeep: BigInt!
   spaceshipsLeftToSell: BigInt!
+}
+
+#######################################################################################
+
+#######################################################################################
+# Yakuza
+#######################################################################################
+
+type YakuzaClaim @entity {
+  id: ID! # fleetId
+  owner: Owner!
+  attackedPlanet: Planet!
+  amountLeft: BigInt!
+}
+
+type YakuzaSubscription @entity {
+  id: ID!
+  owner: Owner!
+  startTime: BigInt!
+  endTime: BigInt!
+  totalContribution: BigInt!
 }
 
 #######################################################################################

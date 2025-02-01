@@ -24,6 +24,18 @@ interface ImportingOuterSpaceEvents {
         uint32 newOverflow
     );
 
+    event FleetRevealed(
+        uint256 indexed fleetId,
+        uint256 indexed from,
+        uint256 indexed to,
+        uint256 arrivalTimeWanted,
+        bool gift,
+        address specific,
+        bytes32 secret,
+        address fleetSender,
+        address operator
+    );
+
     struct ArrivalData {
         uint32 newNumspaceships;
         int40 newTravelingUpkeep;

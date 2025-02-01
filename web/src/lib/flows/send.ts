@@ -2,7 +2,7 @@ import {wallet} from '$lib/blockchain/wallet';
 import {privateWallet} from '$lib/account/privateWallet';
 import {account} from '$lib/account/account';
 import type {PlanetInfo} from 'conquest-eth-common';
-import {xyToLocation} from 'conquest-eth-common';
+import {locationToXY, xyToLocation} from 'conquest-eth-common';
 import {spaceInfo} from '$lib/space/spaceInfo';
 import {BaseStoreWithData} from '$lib/utils/stores/base';
 import {correctTime, isCorrected} from '$lib/time';
@@ -18,6 +18,8 @@ import {Contract} from '@ethersproject/contracts';
 import {getGasPrice} from './gasPrice';
 import {zeroAddress} from 'viem';
 import type {PartialSubmission} from '$lib/account/fuzd-client-types';
+import type {YakuzaClaimFleet} from '$lib/default-plugins/yakuza/yakuzaQuery';
+import {initialContractsInfos} from '$lib/blockchain/contracts';
 
 export type VirtualFleet = {
   from: PlanetInfo;
@@ -62,6 +64,8 @@ type SendConfig = {
   fleetSender?: string;
   msgValue?: string;
   arrivalTimeWanted?: number;
+  specific?: string;
+  gift?: boolean;
   // TODO fix numSPaceships option ?
   //  or we could have a callback function, msg type to send to iframe to get the price for every change of amount
 };
@@ -107,6 +111,7 @@ export type SendFlow = {
   data?: Data;
   error?: {message?: string; type?: string};
   lastFleet?: LastFleet;
+  yakuzaClaim?: YakuzaClaimFleet;
 };
 
 export function virtualFleetFrom(sendFlowData: Data, pos: {x: number; y: number}): VirtualFleet {
@@ -156,19 +161,70 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
       if (config) {
         this.setData(
           {from, config},
-          {step: 'PICK_DESTINATION', pastStep: 'PICK_DESTINATION', cancelingConfirmation: undefined}
+          {
+            step: 'PICK_DESTINATION',
+            pastStep: 'PICK_DESTINATION',
+            cancelingConfirmation: undefined,
+            yakuzaClaim: undefined,
+          }
         );
       } else {
         this.setData(
           {from},
-          {step: 'PICK_DESTINATION', pastStep: 'PICK_DESTINATION', cancelingConfirmation: undefined}
+          {
+            step: 'PICK_DESTINATION',
+            pastStep: 'PICK_DESTINATION',
+            cancelingConfirmation: undefined,
+            yakuzaClaim: undefined,
+          }
         );
       }
     }
   }
 
   async sendToInactivePlanet(to: {x: number; y: number}): Promise<void> {
-    this.setData({to}, {step: 'INACTIVE_PLANET', cancelingConfirmation: undefined});
+    this.setData({to}, {step: 'INACTIVE_PLANET', cancelingConfirmation: undefined, yakuzaClaim: undefined});
+  }
+
+  async revenge(to: {x: number; y: number}, yakuzaClaim: YakuzaClaimFleet): Promise<void> {
+    await privateWallet.login();
+    const YakuzaContract = (initialContractsInfos as any).contracts.Yakuza;
+
+    this.setData(
+      {
+        to,
+        config: {
+          abi: YakuzaContract.abi.find((v) => v.name === 'claimCounterAttack'),
+          args: [
+            yakuzaClaim.id,
+            {
+              from: yakuzaClaim.from,
+              to: yakuzaClaim.to,
+              distance: 0,
+              arrivalTimeWanted: yakuzaClaim.arrivalTimeWanted,
+              gift: yakuzaClaim.gift,
+              specific: yakuzaClaim.specific,
+              secret: yakuzaClaim.secret,
+              fleetSender: yakuzaClaim.fleetSender,
+              operator: yakuzaClaim.operator,
+            },
+            '{numSpaceships}',
+            '{from}',
+            '{toHash}',
+            '{arrivalTimeWanted}',
+            '{secret}',
+            '{payee}',
+          ],
+          contractAddress: YakuzaContract.address,
+          msgValue: '{amountForPayee}',
+          fleetOwner: YakuzaContract.address,
+          fleetSender: YakuzaContract.address,
+          specific: '0x0000000000000000000000000000000000000000',
+          gift: false,
+        },
+      },
+      {step: 'PICK_ORIGIN', pastStep: 'PICK_ORIGIN', cancelingConfirmation: undefined, yakuzaClaim}
+    );
   }
 
   async sendTo(to: {x: number; y: number}): Promise<void> {
@@ -192,6 +248,21 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
     if (this.$store.step !== 'PICK_ORIGIN') {
       throw new Error(`Need to be in step PICK_ORIGIN`);
     }
+
+    if (this.$store.yakuzaClaim) {
+      const fromPlanetInfo = spaceInfo.getPlanetInfo(from.x, from.y);
+      this.setData({
+        config: {
+          numSpaceshipsToKeep:
+            Math.floor(
+              (fromPlanetInfo.stats.cap *
+                (initialContractsInfos as any).contracts.Yakuza.linkedData.spaceshipsToKeepPer10000) /
+                10000
+            ) + 1,
+        },
+      });
+    }
+
     if (config) {
       this.setData({from, config});
     } else {
@@ -288,6 +359,17 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
       throw new Error(`no data for send flow`);
     }
 
+    if (typeof flow.data?.config?.gift !== 'undefined') {
+      if (flow.data?.config?.gift !== gift) {
+        const message = gift ? 'Gifting not allowed' : 'Attacking not allowed';
+        this.setPartial({
+          step: 'CHOOSE_FLEET_AMOUNT',
+          error: {message},
+        });
+        throw new Error(message);
+      }
+    }
+
     const from = flow.data.from;
     const to = flow.data.to;
     const fromPlanetInfo = spaceInfo.getPlanetInfo(from.x, from.y);
@@ -369,8 +451,12 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
         );
       }
     }
+
+    if (flow.data?.config?.specific) {
+      specific = flow.data?.config?.specific;
+    }
     // TODO && destinationOwner !== '0x0000000000000000000000000000000000000000' ?
-    if (destinationOwner && !gift && destinationOwner.address === walletAddress) {
+    else if (destinationOwner && !gift && destinationOwner.address === walletAddress) {
       specific = '0x0000000000000000000000000000000000000000'; //anyone
     } else if (destinationOwner && !gift && potentialAlliances.length > 0) {
       specific = destinationOwner.address; // specific to this particular enemy
@@ -465,6 +551,7 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
     if (args) {
       for (let i = 0; i < args.length; i++) {
         if (args[i] === '{numSpaceships}') {
+          console.log({amount: flow.data.fleetAmount});
           args[i] = flow.data.fleetAmount;
         } else if (args[i] === '{toHash}') {
           args[i] = toHash;
@@ -476,10 +563,16 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
           args[i] = pricePerUnit.mul(flow.data.fleetAmount).add(valueRequiredToSendForResolution);
         } else if (args[i] === '{fleetOwner}') {
           args[i] = fleetOwner;
+        } else if (args[i] === '{from}') {
+          args[i] = xyToLocation(from.x, from.y);
+        } else if (args[i] === '{arrivalTimeWanted}') {
+          args[i] = arrivalTimeWanted;
         } else if (args[i] === '{payee}') {
           args[i] = remoteAccount;
         } else if (args[i] === '{amountForPayee}') {
           args[i] = valueRequiredToSendForResolution;
+        } else if (args[i] === '{secret}') {
+          args[i] = secretHash;
         }
       }
     }
@@ -490,6 +583,8 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
       msgValue = pricePerUnit.mul(flow.data.fleetAmount);
     } else if (msgValueString === '{numSpaceships*pricePerUnit+amountForPayee}') {
       msgValue = pricePerUnit.mul(flow.data.fleetAmount).add(valueRequiredToSendForResolution);
+    } else if (msgValueString === '{amountForPayee}') {
+      msgValue = BigNumber.from(valueRequiredToSendForResolution);
     } else if (msgValueString) {
       msgValue = BigNumber.from(msgValueString);
     }

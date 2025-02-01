@@ -580,6 +580,7 @@ export class SpaceInfo {
       rewardGiver: currentPlanetState.rewardGiver,
       requireClaimAcknowledgement: currentPlanetState.requireClaimAcknowledgement,
       metadata: currentPlanetState.metadata,
+      ownerYakuzaSubscriptionEndTime: currentPlanetState.ownerYakuzaSubscriptionEndTime,
     };
 
     this.computePlanetUpdateForTimeElapsed(newPlanetState, planetInfo, newPlanetState.lastUpdatedSaved + duration);

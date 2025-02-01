@@ -19,6 +19,7 @@
   import sendFlow from '$lib/flows/send';
   import claimFlow from '$lib/flows/claim';
   import {time} from '$lib/time';
+  import {yakuzaQuery} from '$lib/default-plugins/yakuza/yakuzaQuery';
 
   type Frame = {x: number; y: number; w: number; h: number};
 
@@ -86,9 +87,11 @@
     } else if ($planetState?.rewardGiver === '0x4444444444444444444444444444444444444444') {
       frameType = 'Blockscout_sun.png';
     } else if ($planetState?.rewardGiver === '0x5555555555555555555555555555555555555555') {
-      frameType = 'gg_logo.png';
+      frameType = 'gg_sun_green.png';
     } else if ($planetState?.rewardGiver === '0x6666666666666666666666666666666666666666') {
       frameType = 'cafecosmos_planet.png';
+    } else if ($planetState?.rewardGiver === '0x7777777777777777777777777777777777777777') {
+      frameType = 'InfiniteSeas_sun.png';
     }
 
     frameInfo = (planetsFrame.frames as any)[frameType] as {frame: Frame};
@@ -249,6 +252,11 @@
           matchConditions(v.mapConditions, {account: $wallet.address, planetState: $planetState, planetInfo})
       );
 
+  $: yakuzaClaim =
+    $yakuzaQuery.data?.state && $yakuzaQuery.data.state.fleets.find((v) => v.to === planetInfo.location.id);
+
+  $: isYakuzaSubscriber = $planetState && $planetState.ownerYakuzaSubscriptionEndTime > $time;
+
   $: pickedBySendFlow =
     ($sendFlow.step === 'PICK_DESTINATION' &&
       $sendFlow.data.from.x == planetInfo.location.x &&
@@ -408,7 +416,7 @@
     </div>
   {/if}
 
-  {#if $planetState && $planetState.exiting}
+  {#if $planetState && $planetState.exiting && typeof $planetState.exitTimeLeft === 'number'}
     <div
       style={`
         z-index: 5;
@@ -511,10 +519,33 @@
     </div>
   {/each}
 
+  {#if yakuzaClaim}
+    <div
+      style={`
+    z-index: 5;
+    position: absolute;
+    transform: translate(${x}px,${y}px) scale(${blockieScale * 2}, ${blockieScale * 2});
+    width: ${frame.w}px;
+    height: ${frame.h}px;
+  `}
+    >
+      <svg viewBox="0 0 36 36">
+        <path
+          style="fill: none; stroke-width: 2.8; stroke-linecap: round; stroke: #FB48C4;"
+          stroke-dasharray={`100 100`}
+          d="M18 2.0845
+        a 15.9155 15.9155 0 0 1 0 31.831
+        a 15.9155 15.9155 0 0 1 0 -31.831"
+        />
+      </svg>
+    </div>
+  {/if}
+
   {#if showOwner && owner}
     {#if blockieScale <= scale}
-      <SharedBlockie
-        style={`
+      <div>
+        <SharedBlockie
+          style={`
           pointer-events: none;
           z-index: 2;
           position: absolute;
@@ -525,9 +556,15 @@
             scale(${blockieScale}, ${blockieScale});
           width: ${frame.w + 0.5 / scale}px; height: ${frame.h + 0.5 / scale}px;
           border: ${active ? 'solid ' + 0.25 / scale + 'px' : 'dashed ' + 0.12 / scale + 'px'}  ${borderColor};
+          ${
+            isYakuzaSubscriber && !playerIsOwner
+              ? `outline: ${active ? 'solid ' + 0.25 / scale + 'px' : 'dashed ' + 0.12 / scale + 'px'}  #FB48C4;`
+              : ''
+          }
         `}
-        address={owner}
-      />
+          address={owner}
+        />
+      </div>
     {:else}
       <SharedBlockie
         style={`

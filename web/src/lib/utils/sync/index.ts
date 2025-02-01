@@ -129,12 +129,17 @@ export class AccountDB<T extends Record<string, unknown>> implements Readable<Sy
       console.error(e);
       error = e;
     }
+    let alreadyFetched = this.state.remoteFetchedAtLeastOnce;
+    if (!error) {
+      this.state.remoteFetchedAtLeastOnce = true;
+    }
+    let notified = false;
 
     if (!error && remoteData) {
       const {newData, newDataOnLocal, newDataOnRemote} = this.merge(this.state.data, remoteData);
       if (newDataOnRemote) {
         this.state.data = newData;
-        const notified = await this._syncLocal();
+        notified = await this._syncLocal();
         if (!notified) {
           this._notify('_syncRemote, _syncLocal');
         }
@@ -142,7 +147,10 @@ export class AccountDB<T extends Record<string, unknown>> implements Readable<Sy
       if (newDataOnLocal) {
         this._postToRemote(this.state.data, counter);
       }
-      this.state.remoteFetchedAtLeastOnce = true;
+    }
+
+    if (!notified && !alreadyFetched && this.state.remoteFetchedAtLeastOnce) {
+      this._notify('remoteFetchedAtLeastOnce');
     }
 
     // this.state.syncing = false;

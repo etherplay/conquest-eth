@@ -210,6 +210,7 @@
             </struct>
             <key type="filename">Blockscout_sun.png</key>
             <key type="filename">Gnosis_sun.png</key>
+            <key type="filename">InfiniteSeas_sun.png</key>
             <key type="filename">Soccerverse_sun.png</key>
             <key type="filename">Xaya_sun.png</key>
             <key type="filename">gg_sun_gray.png</key>
@@ -358,6 +359,7 @@
                     <filename>gg_logo.png</filename>
                     <filename>gg_sun_gray.png</filename>
                     <filename>gg_sun_green.png</filename>
+                    <filename>InfiniteSeas_sun.png</filename>
                 </array>
             </struct>
         </map>

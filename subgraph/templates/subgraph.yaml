@@ -54,6 +54,8 @@ dataSources:
           handler: handleInitialized
         - event: PlanetTransfer(indexed address,indexed address,indexed uint256,uint32,int40,uint32)
           handler: handlePlanetTransfer
+        - event: FleetRevealed(indexed uint256,indexed uint256,indexed uint256,uint256,bool,address,bytes32,address,address)
+          handler: handleFleetRevealed
       file: ./src/outerspace.ts
   - kind: ethereum/contract
     name: PlayToken
@@ -209,3 +211,30 @@ dataSources:
         - event: ExitComplete(indexed address,indexed uint256,uint256)
           handler: handleExitComplete
       file: ./src/plugins/basic-spaceships-marketplace.ts
+  - kind: ethereum/contract
+    name: Yakuza
+    network: {{chainName}}
+    source:
+      address: '{{contracts.Yakuza.address}}'
+      abi: YakuzaContract
+      startBlock: {{contracts.Yakuza.receipt.blockNumber}}
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - YakuzaClaim
+        - YakuzaSubscription
+        - Fleet
+        - FleetArrivedEvent
+        - Owner
+        - Planet
+      abis:
+        - name: YakuzaContract
+          file: ./abis/Yakuza.json
+      eventHandlers:
+        - event: YakuzaSubscribed(indexed address,uint256,uint256,uint256)
+          handler: handleYakuzaSubscribed
+        - event: YakuzaClaimed(indexed address,indexed uint256,indexed uint256,uint256,uint256,uint256)
+          handler: handleYakuzaClaimed
+      file: ./src/plugins/yakuza.ts

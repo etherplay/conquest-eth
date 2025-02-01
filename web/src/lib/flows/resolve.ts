@@ -213,6 +213,7 @@ class ResolveFlowStore extends BaseStore<ResolveFlow> {
       resolutionData = await getResolutionData(fleet, {id: fleetData.fleetId, secret: fleetData.secretHash}, {force});
     } catch (e) {
       this.setPartial({error: e, step: this.$store.pastStep || 'IDLE'});
+      return;
     }
 
     const {secretHash, distance, gasLimit} = resolutionData;

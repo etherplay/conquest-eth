@@ -154,6 +154,7 @@ export class PlanetStates {
 
     const planetState = {
       owner: undefined,
+      ownerYakuzaSubscriptionEndTime: 0,
       lastUpdatedSaved: 0,
       startExitTime: 0,
       active: false,
@@ -185,6 +186,7 @@ export class PlanetStates {
         !contractState.active &&
         (contractState.owner === '0x0000000000000000000000000000000000000000' || contractState.numSpaceships == 0);
       planetState.lastUpdatedSaved = contractState.lastUpdated;
+      planetState.ownerYakuzaSubscriptionEndTime = contractState.subscribedToYakuzaUntil;
       planetState.startExitTime = contractState.exitTime;
       planetState.owner = contractState.owner;
       planetState.flagTime = contractState.flagTime;
