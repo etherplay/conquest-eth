@@ -11,7 +11,7 @@
   <div class="fixed z-40 inset-0 overflow-y-auto bg-black">
     <div class="relative bg-gray-900 border-2 border-cyan-300 top-1 mx-1">
       <div class="max-w-screen-xl mx-auto py-3 px-3 sm:px-6 lg:px-8">
-        <div class="sm:text-center sm:px-16 text-cyan-300 text-center">Welcome to conquest.eth</div>
+        <div class="sm:text-center sm:px-16 text-cyan-300 text-center">Welcome to Conquest.eth</div>
         <div class="absolute inset-y-0 right-0 pt-1 pr-1 flex items-start sm:pt-1 sm:pr-2 sm:items-start" />
       </div>
     </div>

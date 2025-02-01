@@ -43,6 +43,8 @@
   import {xyToLocation} from 'conquest-eth-common';
   import {overlays} from '$lib/map/overlays';
   import {conversations} from '$lib/missiv';
+  import Help from '$lib/components/utils/Help.svelte';
+  import {nativeTokenSymbol} from '$lib/config';
 
   // import {timeToText} from '$lib/utils';
   // import {spaceInfo} from '$lib/space/spaceInfo';
@@ -178,9 +180,10 @@
   <Banner on:mounted={() => selection.unselect()} disableClose={true}>
     <p>
       Welcome to
-      <span class="text-cyan-600">conquest.eth</span>
-      a game of strategy and diplomacy running on
-      <a href="https://ethereum.org" target="_blank" class="text-cyan-100">ethereum</a>.
+      <span class="text-cyan-600">Conquest.eth</span>
+      a <span class="text-cyan-100">persistent</span>
+      <Help class="inline w-4" /> and <span class="text-cyan-100">permissionless</span>
+      <Help class="inline w-4" /> game of diplomacy.
     </p>
     <p class="mt-3">
       The alpha starts in {time2text(1638871200 - $time)}. There will be <span class="text-yellow-500">5000$</span>
@@ -196,14 +199,22 @@
   <Banner on:mounted={() => selection.unselect()} on:close={() => account.recordWelcomingStep(TutorialSteps.WELCOME)}>
     <p>
       Welcome to
-      <span class="text-cyan-600">conquest.eth</span>
-      a game of strategy and diplomacy running on
-      <a href="https://ethereum.org" target="_blank" class="text-cyan-100">ethereum</a>.
+      <span class="text-cyan-600">Conquest.eth</span>
+      a <span class="text-green-500">persistent</span>
+      <Help class="inline w-4"
+        >The game has no end. It will run as long as the decentralised network of computers it runs on continue to
+        exists.</Help
+      > and <span class="text-green-500">permissionless</span>
+      <Help class="inline w-4"
+        >The game do not run on any server. It runs a decentralised network and all its logic is imprinted on the
+        network with no-one able to change its rules or prevent anyone from participating.</Help
+      > game of diplomacy.
     </p>
     <p class="mt-3">
       To participate you'll have to first acquire planets by depositing a stake in form of
       <PlayCoin class="inline w-4" />
-      (Play tokens).
+      (Play tokens). You do not not need to mint these token as they are minted automatically from {nativeTokenSymbol},
+      the currency used by the network the game runs on.
     </p>
     <p class="mt-3">
       These planets will then produce spaceships that you can use to attack other planets. You'll also have to make sure
@@ -215,9 +226,17 @@
       {timeToText(spaceInfo.exitDuration, {verbose: true})}
       during which you cannot use it but at the end of which you ll get the deposit, ready to be withdrawn.
     </p>
-    <p class="mt-3">
+    <p class="mt-3 text-orange-400">
       Be careful, even though your planet will continue to produce spaceships, you can lose it while waiting for the
       exit period to end.
+    </p>
+    <p class="mt-5 text-lg text-green-400">
+      And don't forget to check our <a
+        target="_blank"
+        rel="noreferrer,noopener"
+        class="text-yellow-500 underline"
+        href="https://knowledge.conquest.game">player manual</a
+      >
     </p>
   </Banner>
 {:else if $selection}
