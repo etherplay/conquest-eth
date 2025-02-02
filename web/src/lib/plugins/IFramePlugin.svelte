@@ -78,7 +78,7 @@
             abi,
             contractAddress,
             numSpaceshipsToKeep,
-            numSpaceshipsAvailable,
+            numSpaceshipsAvailable: {fixed: numSpaceshipsAvailable},
             numSpaceships,
             pricePerUnit,
             args,

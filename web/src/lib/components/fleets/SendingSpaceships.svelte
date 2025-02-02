@@ -90,6 +90,13 @@
     !$sendFlow.data?.config?.abi ||
     ($sendFlow.data?.config?.args && $sendFlow.data?.config?.args.includes('{fleetOwner}'));
 
+  $: numSpaceshipsAvailable = $sendFlow.data?.config?.numSpaceshipsAvailable
+    ? 'fixed' in $sendFlow.data?.config?.numSpaceshipsAvailable
+      ? $sendFlow.data?.config?.numSpaceshipsAvailable.fixed
+      : fromPlanetInfo
+      ? $sendFlow.data?.config?.numSpaceshipsAvailable.func(fromPlanetInfo)
+      : undefined
+    : undefined;
   // TODO maxSpaceshipsLoaded and invalid message if maxSpaceships == 0
   let fleetAmountSet = false;
   let fleetAmount = 1;
@@ -117,8 +124,8 @@
       maxSpaceships -= decrease;
     }
 
-    if ($sendFlow.data?.config?.numSpaceshipsAvailable) {
-      maxSpaceships = Math.min(maxSpaceships, $sendFlow.data?.config?.numSpaceshipsAvailable);
+    if (numSpaceshipsAvailable) {
+      maxSpaceships = Math.min(maxSpaceships, numSpaceshipsAvailable);
     }
     if (maxSpaceships > 0 && !fleetAmountSet) {
       // TODO loading
@@ -378,6 +385,16 @@
     <div class="text-center">
       <p class="font-bold">How many spaceships?</p>
     </div>
+
+    {#if numSpaceshipsAvailable && maxSpaceships == numSpaceshipsAvailable}
+      <p class="text-center text-xs text-yellow-500">
+        Can only send up to {numSpaceshipsAvailable} spaceships max
+      </p>
+    {:else if $sendFlow.data?.config?.numSpaceshipsToKeep}
+      <p class="text-center text-xs text-yellow-500">
+        Required to keep {$sendFlow.data?.config?.numSpaceshipsToKeep} on the planet
+      </p>
+    {/if}
     <div class="my-2 bg-cyan-300 border-cyan-300 w-full h-1" />
 
     <div>

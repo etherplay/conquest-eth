@@ -55,7 +55,7 @@ export type LastFleet = {
 type SendConfig = {
   fleetOwner?: string;
   numSpaceshipsToKeep?: number;
-  numSpaceshipsAvailable?: number;
+  numSpaceshipsAvailable?: {fixed: number} | {func: (fromPlanetInfo: PlanetInfo) => number};
   abi?: any;
   contractAddress?: string;
   numSpaceships?: number;
@@ -190,6 +190,7 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
     await privateWallet.login();
     const YakuzaContract = (initialContractsInfos as any).contracts.Yakuza;
 
+    const toPlanetInfo = spaceInfo.getPlanetInfo(to.x, to.y);
     this.setData(
       {
         to,
@@ -215,6 +216,14 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
             '{secret}',
             '{payee}',
           ],
+
+          numSpaceshipsAvailable:
+            yakuzaClaim.yakuzaClaimAmountLeft > 0n
+              ? {fixed: Number(yakuzaClaim.yakuzaClaimAmountLeft)}
+              : {
+                  func: (fromPlanetInfo: PlanetInfo) =>
+                    Math.floor((toPlanetInfo.stats.cap * toPlanetInfo.stats.defense) / fromPlanetInfo.stats.attack) + 1,
+                },
           contractAddress: YakuzaContract.address,
           msgValue: '{amountForPayee}',
           fleetOwner: YakuzaContract.address,

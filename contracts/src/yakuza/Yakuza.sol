@@ -281,6 +281,8 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
             uint256 attackedPlanetCap = _capWhenActive(statsForAttackedPlanet.production);
             amountLeft = ((attackedPlanetCap * statsForAttackedPlanet.defense) / statsForYakuzaPlanet.attack) + 1;
         }
+        require(amount <= amountLeft, "TOO_MANY_SPACESHIPS_CLAIMED");
+
         if (amount >= amountLeft) {
             amountLeft = 0;
             claims[fleetId].claimed = true;

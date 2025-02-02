@@ -109,7 +109,7 @@
       pricePerUnit: sale.pricePerUnit.toString(),
       contractAddress: $contractsInfos.contracts.BasicSpaceshipMarket.address,
       numSpaceshipsToKeep: sale.spaceshipsToKeep,
-      numSpaceshipsAvailable: sale.spaceshipsLeftToSell,
+      numSpaceshipsAvailable: {fixed: sale.spaceshipsLeftToSell},
       args: [location, '{numSpaceships}', fleetSender, '{toHash}', '{payee}', '{amountForPayee}'],
       fleetSender,
       msgValue: '{numSpaceships*pricePerUnit+amountForPayee}',
