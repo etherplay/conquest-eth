@@ -12,6 +12,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const FreePlayTokenClaim = await deploy('FreePlayTokenClaim', {
     from: deployer,
     contract: 'FreePlayTokenClaim',
+    skipIfAlreadyDeployed: true,
     args: [deployer, PlayToken.address, FreePlayToken.address],
     // proxy: hre.network.name !== 'mainnet' ? 'postUpgrade' : undefined, // TODO l2 network mainnet
     log: true,

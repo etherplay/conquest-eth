@@ -99,6 +99,22 @@ contract FreePlayTokenClaim is IERC20, UsingOwner {
         _freePlayToken.mint(address(this), to, amount);
     }
 
+    function withdrawAllUnderlyingToken(address[] calldata froms, address to) external {
+        require(msg.sender == owner, "NOT_AUTHORIZED");
+
+        uint256 total = 0;
+        for (uint256 i = 0; i < froms.length; i++) {
+            address from = froms[i];
+            uint256 amount = _balances[from];
+            // we reduce the balance (+ total supply)
+            _balances[from] = 0;
+            total += amount;
+            emit Transfer(from, address(0), amount);
+        }
+        _totalSupply = _totalSupply - total;
+        _underlyingToken.transfer(to, total);
+    }
+
     function withdrawUnderlyingToken(address from, address to, uint256 amount) external {
         require(msg.sender == owner, "NOT_AUTHORIZED");
         require(_balances[from] >= amount, "INSUFFICIENT_BALANCE");
