@@ -671,6 +671,19 @@
     },
     {
       "inputs": [],
+      "name": "minimumSubscriptionWhenNotStaking",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "minimumSubscriptionWhenStaking",
       "outputs": [
         {
@@ -892,6 +905,11 @@
             {
               "internalType": "uint256",
               "name": "minimumSubscriptionWhenStaking",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "minimumSubscriptionWhenNotStaking",
               "type": "uint256"
             },
             {
@@ -1257,16 +1275,20 @@
     "0xbE19B59E8C588d68f475A407C7BA5fE813AEb792",
     "0x839810c0000000000000000000000000be19b59e8c588d68f475a407c7ba5fe813aeb7920000000000000000000000007681710eeb550b70c3533f09e6d0dea3f318e43a000000000000000000000000365e18ec7d716d21b75dd0715f3fcdfa5d23d1420000000000000000000000001874f6326eebcce664410a93a5217741a977d14a0000000000000000000000000000000000000000000000000000000000034bc000000000000000000000000000000000000000000000000000000000000007d000000000000000000000000000000000000000000000000000000000000186a0000000000000000000000000000000000000000000000000000000000003f48000000000000000000000000000000000000000000000000000000000000000120000000000000000000000000000000000000000000000004563918244f40000000000000000000000000000000000000000000000000000000000000002a3000000000000000000000000000000000000000000000000000de0b6b3a76400002e8844c4be4bb08968bf024167442ff346c1277cfa814adce21207b6a4bcd005"
   ],
-  "numDeployments": 1,
+  "numDeployments": 2,
   "linkedData": {
     "genesis": "0x2E8844C4BE4BB08968BF024167442FF346C1277CFA814ADCE21207B6A4BCD005",
     "acquireNumSpaceships": 100000,
     "productionCapAsDuration": 259200,
     "frontrunningDelay": 18,
-    "numSecondsPerTokens": 216000,
+    "numSecondsPerTokens": 302400,
     "spaceshipsToKeepPer10000": 2000,
     "minAverageStakePerPlanet": "5000000000000000000",
-    "maxClaimDelay": 172800,
+    "maxClaimDelay": 86400,
+    "minimumSubscriptionWhenNotStaking": {
+      "type": "BigNumber",
+      "hex": "0x0de0b6b3a7640000"
+    },
     "minimumSubscriptionWhenStaking": {
       "type": "BigNumber",
       "hex": "0x0de0b6b3a7640000"
@@ -1288,10 +1310,14 @@
         "acquireNumSpaceships": 100000,
         "productionCapAsDuration": 259200,
         "frontrunningDelay": 18,
-        "numSecondsPerTokens": 216000,
+        "numSecondsPerTokens": 302400,
         "spaceshipsToKeepPer10000": 2000,
         "minAverageStakePerPlanet": "5000000000000000000",
-        "maxClaimDelay": 172800,
+        "maxClaimDelay": 86400,
+        "minimumSubscriptionWhenNotStaking": {
+          "type": "BigNumber",
+          "hex": "0x0de0b6b3a7640000"
+        },
         "minimumSubscriptionWhenStaking": {
           "type": "BigNumber",
           "hex": "0x0de0b6b3a7640000"
@@ -1299,7 +1325,7 @@
       }
     ]
   },
-  "implementation": "0x0f2A4626FDdFa0A7c22164243aA3625989E4F7B1",
+  "implementation": "0x352581E875D94ff10bbD6d78f49024D375d4D6CF",
   "devdoc": {
     "kind": "dev",
     "methods": {},

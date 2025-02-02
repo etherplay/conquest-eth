@@ -148,7 +148,12 @@
           placeholder="all"
         />
         <br />
-        <Button class="block w-max-content m-4" label="claim" disabled={waiting_tx} on:click={() => subscribe(amount)}>
+        <Button
+          class="block w-max-content m-4"
+          label="claim"
+          disabled={waiting_tx || error}
+          on:click={() => subscribe(amount)}
+        >
           Subscribe
         </Button>
       {/if}

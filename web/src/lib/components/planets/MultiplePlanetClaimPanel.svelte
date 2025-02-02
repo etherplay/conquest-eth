@@ -1,5 +1,5 @@
 <script lang="ts">
-  import claimFlow from '$lib/flows/claim';
+  import claimFlow, {computeStakingTokenDistribution} from '$lib/flows/claim';
   import {BigNumber} from '@ethersproject/bignumber';
   import PanelButton from '../generic/PanelButton.svelte';
   import {spaceInfo} from '$lib/space/spaceInfo';
@@ -11,12 +11,21 @@
   import {formatEther} from '@ethersproject/units';
   import {flow} from '$lib/blockchain/wallet';
   import {spaceQuery} from '$lib/space/spaceQuery';
+  import {nativeTokenSymbol} from '$lib/config';
 
   $: coords = $claimFlow.data?.coords;
   $: planetInfos = coords ? coords.map((v) => spaceInfo.getPlanetInfo(v.x, v.y)) : undefined;
   $: stats = planetInfos ? planetInfos.map((v) => v.stats) : undefined;
   $: totalStake = stats ? stats.reduce((prev, curr) => prev + curr.stake, 0) : undefined;
   $: cost = totalStake ? BigNumber.from(totalStake) : undefined; // TODO multiplier from config/contract
+
+  $: distribution = $claimFlow.yakuza
+    ? computeStakingTokenDistribution(
+        cost.mul('100000000000000'),
+        $myTokens.playTokenBalance,
+        $spaceQuery.data?.yakuza?.playTokenBalance || BigNumber.from(0)
+      )
+    : computeStakingTokenDistribution(cost.mul('100000000000000'), $myTokens.playTokenBalance);
 
   function nativeTokenAmountFor(tokenAmountIn10000: BigNumber) {
     return (
@@ -44,45 +53,19 @@
     if (paymentMethod === 'nativeOnly') {
       claimFlow.confirm({amountToMint: cost.mul('100000000000000'), tokenAvailable: BigNumber.from(0)});
     } else if (paymentMethod === 'nativeAndToken') {
-      let yakuzaTokenAvailable = BigNumber.from(0);
-      let amountToMint = cost.mul('100000000000000');
-
-      if ($claimFlow.yakuza) {
-        const yakuzaBalance = $spaceQuery.data?.yakuza?.playTokenBalance;
-        if (yakuzaBalance) {
-          if (yakuzaBalance.gt(amountToMint)) {
-            yakuzaTokenAvailable = amountToMint;
-            amountToMint = BigNumber.from(0);
-          } else {
-            yakuzaTokenAvailable = yakuzaBalance;
-            amountToMint = amountToMint.sub(yakuzaBalance);
-          }
-        }
-      }
-
-      let tokenAvailable = BigNumber.from(0);
-      if ($myTokens.playTokenBalance.gt(amountToMint)) {
-        tokenAvailable = amountToMint;
-        amountToMint = BigNumber.from(0);
-      } else {
-        amountToMint = amountToMint.sub($myTokens.playTokenBalance);
-        tokenAvailable = $myTokens.playTokenBalance;
-      }
-
-      console.log({
-        amountToMint: formatEther(amountToMint),
-        tokenAvailable: formatEther(tokenAvailable),
-      });
-      claimFlow.confirm({
-        amountToMint,
-        tokenAvailable,
-      });
+      claimFlow.confirm(distribution);
     } else {
       claimFlow.confirm();
     }
   }
 
   $: YakuzaContract = (initialContractsInfos as any).contracts.Yakuza;
+
+  $: requireBiggerPlanetForYakuza =
+    $claimFlow.yakuza &&
+    BigNumber.from(YakuzaContract.linkedData.minAverageStakePerPlanet)
+      .mul(coords.length)
+      .gt(cost.mul('100000000000000'));
 </script>
 
 <div
@@ -94,10 +77,58 @@
         Give the selected planets (worth ${nativeTokenAmountFor(cost)}) to Yakuza in exchange for
         {timeToText(cost.mul(YakuzaContract.linkedData.numSecondsPerTokens).toNumber(), {verbose: true})} of protection
       </h2>
+      {#if distribution.amountToMint.gt(0) && distribution.tokenAvailable.gt(0) && distribution.yakuzaTokenAvailable.gt(0)}
+        <p class="text-yellow-500 mt-4">
+          You'll spend {formatEther(distribution.amountToMint)}
+          {nativeTokenSymbol},
+          {formatEther(distribution.tokenAvailable)}
+          <PlayCoin class="inline w-4" /> and Yakuza provide {formatEther(distribution.yakuzaTokenAvailable)}
+          <PlayCoin class="inline w-4" />
+        </p>
+      {:else if distribution.amountToMint.eq(0) && distribution.tokenAvailable.gt(0) && distribution.yakuzaTokenAvailable.gt(0)}
+        <p class="text-yellow-500 mt-4">
+          You'll spend
+          {formatEther(distribution.tokenAvailable)}
+          <PlayCoin class="inline w-4" /> and Yakuza provide {formatEther(distribution.yakuzaTokenAvailable)}
+          <PlayCoin class="inline w-4" />
+        </p>
+      {:else if distribution.amountToMint.eq(0) && distribution.tokenAvailable.eq(0) && distribution.yakuzaTokenAvailable.gt(0)}
+        <p class="text-yellow-500 mt-4">
+          Yakuza provide all
+          <PlayCoin class="inline w-4" />
+        </p>
+      {:else if distribution.amountToMint.gt(0) && distribution.tokenAvailable.eq(0) && distribution.yakuzaTokenAvailable.gt(0)}
+        <p class="text-yellow-500 mt-4">
+          You'll spend {formatEther(distribution.amountToMint)}
+          {nativeTokenSymbol} and Yakuza provide {formatEther(distribution.yakuzaTokenAvailable)}
+          <PlayCoin class="inline w-4" />
+        </p>
+      {:else if distribution.amountToMint.gt(0) && distribution.tokenAvailable.eq(0) && distribution.yakuzaTokenAvailable.eq(0)}
+        <p class="text-yellow-500 mt-4">
+          You'll spend {formatEther(distribution.amountToMint)}
+          {nativeTokenSymbol}
+        </p>
+      {:else if distribution.amountToMint.eq(0) && distribution.tokenAvailable.gt(0) && distribution.yakuzaTokenAvailable.eq(0)}
+        <p class="text-yellow-500 mt-4">
+          You'll spend
+          {formatEther(distribution.tokenAvailable)}
+          <PlayCoin class="inline w-4" />
+        </p>
+      {/if}
+
       <p class="text-gray-300 mt-2 text-sm">
         You'll be able to claim revenge when other players capture any of your planet as long as the subscription does
         not expire
       </p>
+
+      {#if requireBiggerPlanetForYakuza}
+        <p class="text-yellow-500 mt-4">
+          Yakuza only accept planets in average worth at least {formatEther(
+            YakuzaContract.linkedData.minAverageStakePerPlanet
+          )}
+          <PlayCoin class="inline w-4" />
+        </p>
+      {/if}
     {:else}
       <h2>
         Stake
@@ -134,7 +165,7 @@
     {/if}
   </div>
   <div class="flex p-3 flex-col items-center">
-    <PanelButton label="Cancel" class="m-2" on:click={confirm}>
+    <PanelButton disabled={requireBiggerPlanetForYakuza} label="Cancel" class="m-2" on:click={confirm}>
       <div class="w-20">Confirm</div>
     </PanelButton>
 

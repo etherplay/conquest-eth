@@ -164,7 +164,7 @@
         {/if}
       {/if}
       {#if (!$planetState.owner || $planetState.owner === '0x0000000000000000000000000000000000000000') && $planetState.capturing}
-        <p>Capturing....</p>
+        <p>Activating....</p>
       {:else if $sendFlow.step === 'PICK_DESTINATION'}
         <!-- TAKEN CARE BY VirtualFleetActionPanel -->
         {#if !walletIsOwner}

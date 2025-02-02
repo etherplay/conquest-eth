@@ -29,6 +29,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         uint256 minAverageStakePerPlanet;
         uint256 maxClaimDelay;
         uint256 minimumSubscriptionWhenStaking;
+        uint256 minimumSubscriptionWhenNotStaking;
         bytes32 genesis;
     }
     // --------------------------------------------------------------------------------------------
@@ -65,6 +66,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     uint256 public immutable minAverageStakePerPlanet;
     uint256 public immutable maxClaimDelay;
     uint256 public immutable minimumSubscriptionWhenStaking;
+    uint256 public immutable minimumSubscriptionWhenNotStaking;
     // --------------------------------------------------------------------------------------------
 
     // --------------------------------------------------------------------------------------------
@@ -110,6 +112,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         maxClaimDelay = config.maxClaimDelay;
         minAverageStakePerPlanet = config.minAverageStakePerPlanet;
         minimumSubscriptionWhenStaking = config.minimumSubscriptionWhenStaking;
+        minimumSubscriptionWhenNotStaking = config.minimumSubscriptionWhenNotStaking;
 
         _postUpgrade(initialRewardReceiver, initialGenerator);
     }
@@ -147,6 +150,8 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     // --------------------------------------------------------------------------------------------
 
     function subscribeWithoutStaking(uint256 amountToMint, uint256 tokenAmount) external payable {
+        require(tokenAmount + amountToMint >= minimumSubscriptionWhenNotStaking, "MINIMUM_SUBSCRIPTION_REQUIRED");
+
         address sender = msg.sender;
         if (tokenAmount > 0) {
             playToken.transferFrom(sender, address(this), tokenAmount);
@@ -163,8 +168,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     ) external payable {
         address sender = msg.sender;
 
-        // TODO Config
-        require(tokenAmount + amountToMint > minimumSubscriptionWhenStaking, "MINIMUM_SUBSCRIPTION_REQUIRED");
+        require(tokenAmount + amountToMint >= minimumSubscriptionWhenStaking, "MINIMUM_SUBSCRIPTION_REQUIRED");
 
         if (tokenAmount > 0) {
             playToken.transferFrom(sender, address(this), tokenAmount);
@@ -203,20 +207,6 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     // --------------------------------------------------------------------------------------------
     // Claim attack by providing the details of the fleet that captured your planet
     // --------------------------------------------------------------------------------------------
-
-    // THis would allow any attack, but this would also allow gifting and more
-    // so it would easy to trigger claims and get more than you spent
-    // Unless we modifiy the logic to ensure you only get what you lost in the claimed attack
-    // But this in turn would reduce the utility / power of Yakuza
-    // function claimAttack(
-    //     uint256 fleetId,
-    //     ImportingOuterSpaceTypes.FleetResolution calldata resolution,
-    //     uint32 amount,
-    //     uint256 from,
-    //     bytes32 toHash
-    // ) external {
-    //     _claimAttack(fleetId, resolution, amount, from, toHash);
-    // }
 
     function claimCounterAttack(
         uint256 fleetId,

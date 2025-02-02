@@ -1,5 +1,5 @@
 <script lang="ts">
-  import claimFlow from '$lib/flows/claim';
+  import claimFlow, {computeStakingTokenDistribution} from '$lib/flows/claim';
   import Modal from '$lib/components/generic/Modal.svelte';
   import Button from '$lib/components/generic/PanelButton.svelte';
   import {planets} from '$lib/space/planets';
@@ -19,6 +19,7 @@
   import MultiplePlanetClaimPanel from '$lib/components/planets/MultiplePlanetClaimPanel.svelte';
   import Help from '$lib/components/utils/Help.svelte';
   import {spaceQuery} from '$lib/space/spaceQuery';
+  import {formatEther} from '@ethersproject/units';
 
   $: coords = $claimFlow.data?.coords;
   $: planetInfo = coords ? spaceInfo.getPlanetInfo(coords[0].x, coords[0].y) : undefined;
@@ -58,6 +59,17 @@
   $: YakuzaContract = (initialContractsInfos as any).contracts.Yakuza;
 
   $: giveToYakuza = $claimFlow.yakuza;
+
+  $: requireBiggerPlanetForYakuza =
+    giveToYakuza && BigNumber.from(YakuzaContract.linkedData.minAverageStakePerPlanet).gt(cost.mul('100000000000000'));
+
+  $: distribution = $claimFlow.yakuza
+    ? computeStakingTokenDistribution(
+        cost.mul('100000000000000'),
+        $myTokens.playTokenBalance,
+        $spaceQuery.data?.yakuza?.playTokenBalance || BigNumber.from(0)
+      )
+    : computeStakingTokenDistribution(cost.mul('100000000000000'), $myTokens.playTokenBalance);
 </script>
 
 {#if $mintFlow.step !== 'IDLE' && $mintFlow.step !== 'SUCCESS'}
@@ -140,45 +152,65 @@
           Yakuza in exchange for
           {timeToText(cost.mul(YakuzaContract.linkedData.numSecondsPerTokens).toNumber(), {verbose: true})} of protection
         </h2>
+        {#if distribution.amountToMint.gt(0) && distribution.tokenAvailable.gt(0) && distribution.yakuzaTokenAvailable.gt(0)}
+          <p class="text-yellow-500 mt-4">
+            You'll spend {formatEther(distribution.amountToMint)}
+            {nativeTokenSymbol},
+            {formatEther(distribution.tokenAvailable)}
+            <PlayCoin class="inline w-4" /> and Yakuza provide {formatEther(distribution.yakuzaTokenAvailable)}
+            <PlayCoin class="inline w-4" />
+          </p>
+        {:else if distribution.amountToMint.eq(0) && distribution.tokenAvailable.gt(0) && distribution.yakuzaTokenAvailable.gt(0)}
+          <p class="text-yellow-500 mt-4">
+            You'll spend
+            {formatEther(distribution.tokenAvailable)}
+            <PlayCoin class="inline w-4" /> and Yakuza provide {formatEther(distribution.yakuzaTokenAvailable)}
+            <PlayCoin class="inline w-4" />
+          </p>
+        {:else if distribution.amountToMint.eq(0) && distribution.tokenAvailable.eq(0) && distribution.yakuzaTokenAvailable.gt(0)}
+          <p class="text-yellow-500 mt-4">
+            Yakuza provide all
+            <PlayCoin class="inline w-4" />
+          </p>
+        {:else if distribution.amountToMint.gt(0) && distribution.tokenAvailable.eq(0) && distribution.yakuzaTokenAvailable.gt(0)}
+          <p class="text-yellow-500 mt-4">
+            You'll spend {formatEther(distribution.amountToMint)}
+            {nativeTokenSymbol} and Yakuza provide {formatEther(distribution.yakuzaTokenAvailable)}
+            <PlayCoin class="inline w-4" />
+          </p>
+        {:else if distribution.amountToMint.gt(0) && distribution.tokenAvailable.eq(0) && distribution.yakuzaTokenAvailable.eq(0)}
+          <p class="text-yellow-500 mt-4">
+            You'll spend {formatEther(distribution.amountToMint)}
+            {nativeTokenSymbol}
+          </p>
+        {:else if distribution.amountToMint.eq(0) && distribution.tokenAvailable.gt(0) && distribution.yakuzaTokenAvailable.eq(0)}
+          <p class="text-yellow-500 mt-4">
+            You'll spend
+            {formatEther(distribution.tokenAvailable)}
+            <PlayCoin class="inline w-4" />
+          </p>
+        {/if}
         <p class="text-gray-300 mt-2 text-sm">
           You'll be able to claim revenge when other players capture any of your planet as long as the subscription does
           not expire
         </p>
 
+        {#if requireBiggerPlanetForYakuza}
+          <p class="text-yellow-500 mt-4">
+            Yakuza only accept planets in average worth at least {formatEther(
+              YakuzaContract.linkedData.minAverageStakePerPlanet
+            )}
+            <PlayCoin class="inline w-4" />
+          </p>
+        {/if}
+
         <Button class="mt-5" label="Add More Planet" on:click={() => claimFlow.askForMore()}>Add More</Button>
         <Button
+          disabled={requireBiggerPlanetForYakuza}
           class="mt-5"
           label="Stake"
           on:click={() => {
-            let yakuzaTokenAvailable = BigNumber.from(0);
-            let amountToMint = cost.mul('100000000000000');
-
-            if ($claimFlow.yakuza) {
-              const yakuzaBalance = $spaceQuery.data?.yakuza?.playTokenBalance;
-              if (yakuzaBalance) {
-                if (yakuzaBalance.gt(amountToMint)) {
-                  yakuzaTokenAvailable = amountToMint;
-                  amountToMint = BigNumber.from(0);
-                } else {
-                  yakuzaTokenAvailable = yakuzaBalance;
-                  amountToMint = amountToMint.sub(yakuzaBalance);
-                }
-              }
-            }
-            let tokenAvailable = BigNumber.from(0);
-            if ($myTokens.playTokenBalance.gt(amountToMint)) {
-              tokenAvailable = amountToMint;
-              amountToMint = BigNumber.from(0);
-            } else {
-              amountToMint = amountToMint.sub($myTokens.playTokenBalance);
-              tokenAvailable = $myTokens.playTokenBalance;
-            }
-
-            claimFlow.confirm({
-              amountToMint,
-              tokenAvailable,
-              yakuzaTokenAvailable,
-            });
+            claimFlow.confirm(distribution);
           }}>Confirm</Button
         >
         {#if YakuzaContract}

@@ -99,7 +99,7 @@
     scale = 0.025 * multiplier;
     x = planetInfo.location.globalX - frame.w / 2;
     y = planetInfo.location.globalY - frame.h / 2;
-    // rewardAttached = true; // TODO again
+    rewardAttached = true; // TODO again
   } else {
     // TODO remove duplication above
     frameType = planetTypesToFrame[planetInfo.type % planetTypesToFrame.length];

@@ -13,6 +13,7 @@ import {initialContractsInfos} from '$lib/blockchain/contracts';
 import {getGasPrice} from './gasPrice';
 import selection from '$lib/map/selection';
 import {conversations} from '$lib/missiv';
+import {formatEther} from '@ethersproject/units';
 
 type Data = {txHash?: string; coords: {x: number; y: number}[]};
 export type ClaimFlow = {
@@ -35,6 +36,76 @@ export type ClaimFlow = {
   data?: Data;
   error?: {message?: string}; // TODO other places: add message as optional field
 };
+
+export function computeStakingTokenDistribution(
+  amountToMint: BigNumber,
+  myPlayTokenBalance: BigNumber,
+  yakuzaPlayTokenBalance?: BigNumber
+) {
+  let yakuzaTokenAvailable = BigNumber.from(0);
+  if (yakuzaPlayTokenBalance) {
+    const YakuzaContract = (initialContractsInfos as any).contracts.Yakuza;
+    if (!YakuzaContract) {
+      throw new Error(`no yakuza`);
+    }
+    const minimumSubscriptionWhenStaking = BigNumber.from(YakuzaContract.linkedData.minimumSubscriptionWhenStaking);
+
+    console.log({minimumSubscriptionWhenStaking: formatEther(minimumSubscriptionWhenStaking)});
+
+    const yakuzaBalance = yakuzaPlayTokenBalance;
+    if (yakuzaBalance) {
+      if (yakuzaBalance.gt(amountToMint)) {
+        yakuzaTokenAvailable = amountToMint.sub(minimumSubscriptionWhenStaking);
+        amountToMint = minimumSubscriptionWhenStaking;
+        console.log(`yakuza balance more than enough`, {
+          amountToMint: formatEther(amountToMint),
+          yakuzaTokenAvailable: formatEther(yakuzaTokenAvailable),
+        });
+      } else {
+        console.log(`yakuza balance not enough`);
+        const remainingAmount = amountToMint.sub(yakuzaBalance);
+        if (remainingAmount.lt(minimumSubscriptionWhenStaking)) {
+          const difference = minimumSubscriptionWhenStaking.sub(remainingAmount);
+          yakuzaTokenAvailable = yakuzaBalance.sub(difference);
+          amountToMint = minimumSubscriptionWhenStaking;
+          console.log(`remainingAmount to be paid is samller than the minimum`, {
+            amountToMint: formatEther(amountToMint),
+            yakuzaTokenAvailable: formatEther(yakuzaTokenAvailable),
+          });
+        } else {
+          yakuzaTokenAvailable = yakuzaBalance;
+          amountToMint = remainingAmount;
+          console.log(`remainingAmount to be paid is bigger than the minimum`, {
+            amountToMint: formatEther(amountToMint),
+            yakuzaTokenAvailable: formatEther(yakuzaTokenAvailable),
+          });
+        }
+      }
+    } else {
+      console.log(`no yakuza`);
+    }
+  }
+
+  let tokenAvailable = BigNumber.from(0);
+  if (myPlayTokenBalance.gt(amountToMint)) {
+    tokenAvailable = amountToMint;
+    amountToMint = BigNumber.from(0);
+  } else {
+    amountToMint = amountToMint.sub(myPlayTokenBalance);
+    tokenAvailable = myPlayTokenBalance;
+  }
+
+  console.log({
+    amountToMint: formatEther(amountToMint),
+    tokenAvailable: formatEther(tokenAvailable),
+    yakuzaTokenAvailable: formatEther(yakuzaTokenAvailable),
+  });
+  return {
+    amountToMint,
+    tokenAvailable,
+    yakuzaTokenAvailable,
+  };
+}
 
 class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
   public constructor() {

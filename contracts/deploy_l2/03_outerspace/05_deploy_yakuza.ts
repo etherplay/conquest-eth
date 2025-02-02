@@ -9,16 +9,19 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const PlayToken = await hre.deployments.get('PlayToken');
   const RewardsGenerator = await hre.deployments.get('RewardsGenerator');
 
+  //const numSecondsPerTokens = 259200; // 12$ gives you 36 days
+  const numSecondsPerTokens = 302400; // 2$ gives you 1 week
   const config = {
     genesis: OuterSpace.linkedData.genesisHash,
     acquireNumSpaceships: OuterSpace.linkedData.acquireNumSpaceships,
     productionCapAsDuration: OuterSpace.linkedData.productionCapAsDuration,
     frontrunningDelay: OuterSpace.linkedData.frontrunningDelay,
 
-    numSecondsPerTokens: 216000, // 12$ gives you 30 days
+    numSecondsPerTokens,
     spaceshipsToKeepPer10000: 2000, // 20% of cap to keep
     minAverageStakePerPlanet: parseEther('5').toString(), // 5 tokens per planet on average minimum, do mot accept low planet unless bigger are given too
-    maxClaimDelay: 2 * 24 * 60 * 60, // 2 days
+    maxClaimDelay: 1 * 24 * 60 * 60, // 1 day
+    minimumSubscriptionWhenNotStaking: parseEther('1'),
     minimumSubscriptionWhenStaking: parseEther('1'),
   };
 
