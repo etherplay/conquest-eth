@@ -72,7 +72,7 @@ export class YakuzaQueryStore implements QueryStore<YakuzaState> {
     this.queryStore = new HookedQueryStore( // TODO full list
       endpoint,
       `query($first: Int! $lastId: ID! $myself: String $myselfOrYakuza: [String]! $time: BigInt!) {
-       fleetArrivedEvents (first: $first where: {id_gt: $lastId won: true planetActive: true destinationOwner: $myself owner_not_in: $myselfOrYakuza yakuzaClaimed: false timestamp_gt: $time}) {
+       fleetArrivedEvents (first: $first where: {id_gt: $lastId won: true planetActive: true destinationOwner_in: $myselfOrYakuza owner_not_in: $myselfOrYakuza yakuzaClaimed: false timestamp_gt: $time}) {
     yakuzaClaimAmountLeft
     destinationOwner {id}
     owner {id}

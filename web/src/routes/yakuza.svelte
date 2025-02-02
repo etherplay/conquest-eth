@@ -68,6 +68,8 @@
     ? YakuzaContract && BigNumber.from(amount).mul(YakuzaContract.linkedData.numSecondsPerTokens).toNumber()
     : 0;
 
+  $: console.log({amount, amountOfTime, numSecondsPerTokens: YakuzaContract?.linkedData.numSecondsPerTokens || 0});
+
   $: yakuzaPlayTokenBalance = $spaceQuery.data?.yakuza?.playTokenBalance
     ? formatEther($spaceQuery.data.yakuza.playTokenBalance)
     : undefined;
