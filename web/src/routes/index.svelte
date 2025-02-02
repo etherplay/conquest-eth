@@ -7,6 +7,7 @@
   import ClaimTokenScreen from '$lib/screens/tokenClaim/ClaimTokenScreen.svelte';
 
   import {logo} from '$lib/screens/loading/logo';
+  import {params} from '$lib/config';
 
   import {onMount} from 'svelte';
   import {browser} from '$app/env';
@@ -60,7 +61,7 @@
   });
 
   $: countdown =
-    typeof window !== 'undefined' && location.hostname == '2025-1.conquest.game'
+    typeof window !== 'undefined' && (location.hostname == '2025-1.conquest.game' || location.hostname == 'localhost')
       ? {timeLeft: 1738575000 - $time}
       : undefined;
 
@@ -70,7 +71,7 @@
 
 <Storereader />
 
-{#if countdown && countdown.timeLeft > 0}
+{#if countdown && countdown.timeLeft > 0 && !params['force']}
   <CountdownScreen {countdown} />
 {:else}
   <WalletAccess>
