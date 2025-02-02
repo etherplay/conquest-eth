@@ -89,7 +89,7 @@
     } else if ($planetState?.rewardGiver === '0x5555555555555555555555555555555555555555') {
       frameType = 'cafecosmos_planet.png';
     } else if ($planetState?.rewardGiver === '0x6666666666666666666666666666666666666666') {
-      frameType = 'gg_sun_green.png';
+      frameType = 'gg_sun_gray.png';
     } else if ($planetState?.rewardGiver === '0x7777777777777777777777777777777777777777') {
       frameType = 'InfiniteSeas_sun.png';
     }
