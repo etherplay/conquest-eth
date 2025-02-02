@@ -66,10 +66,10 @@
   $: distribution = $claimFlow.yakuza
     ? computeStakingTokenDistribution(
         cost.mul('100000000000000'),
-        $myTokens.playTokenBalance,
+        $myTokens.playTokenBalance || BigNumber.from(0),
         $spaceQuery.data?.yakuza?.playTokenBalance || BigNumber.from(0)
       )
-    : computeStakingTokenDistribution(cost.mul('100000000000000'), $myTokens.playTokenBalance);
+    : computeStakingTokenDistribution(cost.mul('100000000000000'), $myTokens.playTokenBalance || BigNumber.from(0));
 </script>
 
 {#if $mintFlow.step !== 'IDLE' && $mintFlow.step !== 'SUCCESS'}

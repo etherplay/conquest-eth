@@ -30,6 +30,6 @@
     </div>
   </div>
   <div class="text-center">
-    <PanelButton label="OK" class="mt-4" on:click={setProfile}>SETUP</PanelButton>
+    <PanelButton disabled={!description} label="OK" class="mt-4" on:click={setProfile}>SETUP</PanelButton>
   </div>
 </Modal>
