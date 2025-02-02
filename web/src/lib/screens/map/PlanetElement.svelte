@@ -87,9 +87,9 @@
     } else if ($planetState?.rewardGiver === '0x4444444444444444444444444444444444444444') {
       frameType = 'Blockscout_sun.png';
     } else if ($planetState?.rewardGiver === '0x5555555555555555555555555555555555555555') {
-      frameType = 'gg_sun_green.png';
-    } else if ($planetState?.rewardGiver === '0x6666666666666666666666666666666666666666') {
       frameType = 'cafecosmos_planet.png';
+    } else if ($planetState?.rewardGiver === '0x6666666666666666666666666666666666666666') {
+      frameType = 'gg_sun_green.png';
     } else if ($planetState?.rewardGiver === '0x7777777777777777777777777777777777777777') {
       frameType = 'InfiniteSeas_sun.png';
     }
@@ -312,7 +312,7 @@
         style={`
         width: ${frame.w}px;
         height: ${frame.h}px;
-        border: ${selectionBorder}px dashed gold;
+        border: ${selectionBorder}px dashed #FFD70066;
       `}
       />
     </div>
@@ -471,28 +471,6 @@
     </div>
   {/if}
 
-  {#if $planetState && $planetState.exiting && $planetState.flagTime > 0 && $planetState.startExitTime < $planetState.flagTime + (6 * 24 * 3600) / spaceInfo.productionSpeedUp}
-    <div
-      style={`
-  z-index: 5;
-  position: absolute;
-  transform: translate(${x}px,${y}px) scale(${blockieScale * 2}, ${blockieScale * 2});
-  width: ${frame.w}px;
-  height: ${frame.h}px;
-`}
-    >
-      <svg viewBox="0 0 36 36">
-        <path
-          style="fill: none; stroke-width: 2.24; stroke-linecap: round; stroke: #86efac;"
-          stroke-dasharray="95 95"
-          d="M18 4.5014
-      a 12.7324 12.7324 0 0 1 0 25.4648
-      a 12.7324 12.7324 0 0 1 0 -25.4648"
-        />
-      </svg>
-    </div>
-  {/if}
-
   {#each plugins as plugin}
     <!-- TODO color -->
     <div
@@ -507,10 +485,7 @@
       <svg viewBox="0 0 36 36">
         <path
           style="fill: none; stroke-width: 2.8; stroke-linecap: round; stroke: blue;"
-          stroke-dasharray={`${Math.max(
-            ((spaceInfo.exitDuration - $planetState.exitTimeLeft) / spaceInfo.exitDuration) * 100,
-            3
-          )} 100`}
+          stroke-dasharray={`100 100`}
           d="M18 2.0845
             a 15.9155 15.9155 0 0 1 0 31.831
             a 15.9155 15.9155 0 0 1 0 -31.831"
@@ -524,18 +499,17 @@
       style={`
     z-index: 5;
     position: absolute;
-    transform: translate(${x}px,${y}px) scale(${blockieScale * 2}, ${blockieScale * 2});
+    transform: translate(${x}px,${y}px) scale(${blockieScale * 2.5}, ${blockieScale * 2.5});
     width: ${frame.w}px;
     height: ${frame.h}px;
   `}
     >
       <svg viewBox="0 0 36 36">
         <path
-          style="fill: none; stroke-width: 2.8; stroke-linecap: round; stroke: #FB48C4;"
-          stroke-dasharray={`100 100`}
+          style="fill: none; stroke-width: 2; stroke-linecap: round; stroke: #FB48C4;"
           d="M18 2.0845
-        a 15.9155 15.9155 0 0 1 0 31.831
-        a 15.9155 15.9155 0 0 1 0 -31.831"
+          a 15.9155 15.9155 0 0 1 0 31.831
+          a 15.9155 15.9155 0 0 1 0 -31.831"
         />
       </svg>
     </div>
