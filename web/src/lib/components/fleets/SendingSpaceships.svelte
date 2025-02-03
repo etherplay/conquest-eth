@@ -137,7 +137,7 @@
       fleetAmount = maxSpaceships;
     }
 
-    console.log({maxSpaceships, numSpaceshipsToKeep: $sendFlow.data?.config?.numSpaceshipsToKeep});
+    // console.log({maxSpaceships, numSpaceshipsToKeep: $sendFlow.data?.config?.numSpaceshipsToKeep});
   }
 
   $: agentServiceAccount = $agentService.account;

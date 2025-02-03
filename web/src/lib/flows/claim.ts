@@ -50,7 +50,7 @@ export function computeStakingTokenDistribution(
     }
     const minimumSubscriptionWhenStaking = BigNumber.from(YakuzaContract.linkedData.minimumSubscriptionWhenStaking);
 
-    console.log({minimumSubscriptionWhenStaking: formatEther(minimumSubscriptionWhenStaking)});
+    // console.log({minimumSubscriptionWhenStaking: formatEther(minimumSubscriptionWhenStaking)});
 
     const yakuzaBalance = yakuzaPlayTokenBalance;
     if (yakuzaBalance) {
@@ -95,11 +95,11 @@ export function computeStakingTokenDistribution(
     tokenAvailable = myPlayTokenBalance;
   }
 
-  console.log({
-    amountToMint: formatEther(amountToMint),
-    tokenAvailable: formatEther(tokenAvailable),
-    yakuzaTokenAvailable: formatEther(yakuzaTokenAvailable),
-  });
+  // console.log({
+  //   amountToMint: formatEther(amountToMint),
+  //   tokenAvailable: formatEther(tokenAvailable),
+  //   yakuzaTokenAvailable: formatEther(yakuzaTokenAvailable),
+  // });
   return {
     amountToMint,
     tokenAvailable,
@@ -359,7 +359,7 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
     }
     console.log(wallet.address, locationIds);
     const callData = defaultAbiCoder.encode(['address', 'uint256[]'], [wallet.address, locationIds]);
-    console.log({callData});
+    // console.log({callData});
 
     // TODO add multiple claim
     // tokenAmount = tokenAmount.add(BigNumber.from("1900000000000000000"));

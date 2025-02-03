@@ -28,11 +28,11 @@
         const nativeTokenAmount = amountToMint
           .mul('1000000000000000000')
           .div(initialContractsInfos.contracts.PlayToken.linkedData.numTokensPerNativeTokenAt18Decimals);
-        console.log({
-          amountToMint: formatUnits(amountToMint, 'gwei'),
-          nativeTokenAmount: formatUnits(nativeTokenAmount, 'gwei'),
-          div: formatEther(initialContractsInfos.contracts.PlayToken.linkedData.numTokensPerNativeTokenAt18Decimals),
-        });
+        // console.log({
+        //   amountToMint: formatUnits(amountToMint, 'gwei'),
+        //   nativeTokenAmount: formatUnits(nativeTokenAmount, 'gwei'),
+        //   div: formatEther(initialContractsInfos.contracts.PlayToken.linkedData.numTokensPerNativeTokenAt18Decimals),
+        // });
         const tx = await wallet.contracts.Yakuza.subscribeWithoutStaking(amountToMint, 0, {value: nativeTokenAmount});
         waiting_tx = {endTimeBefore, startTimeBefore, txMinted: false};
         await tx.wait();

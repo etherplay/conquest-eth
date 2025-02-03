@@ -205,7 +205,6 @@ export class YakuzaQueryStore implements QueryStore<YakuzaState> {
   }
 
   _transform(data?: YakuzaQueryResult): YakuzaState | undefined {
-    console.log({data});
     if (!data) {
       return undefined;
     }
