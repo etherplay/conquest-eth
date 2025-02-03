@@ -71,14 +71,14 @@
 
 <Storereader />
 
-{#if countdown && countdown.timeLeft > 0 && !params['force']}
-  <CountdownScreen {countdown} />
-{:else}
+<!-- {#if countdown && countdown.timeLeft > 0 && !params['force']} -->
+<CountdownScreen {countdown} />
+<!-- {:else}
   <WalletAccess>
     <ClaimTokenScreen />
     <MapScreen />
   </WalletAccess>
-{/if}
+{/if} -->
 
 {#if $logo && $logo.stage === 1}
   <div class="fixed z-50 inset-0 overflow-y-auto bg-black" out:fade on:click={() => logo.nextStage()}>
