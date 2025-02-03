@@ -52,36 +52,37 @@ export class ErrorsStore implements Readable<SpaceError[]> {
             }
           }
         }
-        if (!pendingResolution) {
-          // copied from fleets, TODO DRY
-          const from = spaceInfo.getPlanetInfo(sendAction.from.x, sendAction.from.y);
-          const to = spaceInfo.getPlanetInfo(sendAction.to.x, sendAction.to.y);
-          const minDuration = spaceInfo.timeToArrive(from, to);
+        // TODO fix (maybe with Yakuza error)
+        // if (!pendingResolution) {
+        //   // copied from fleets, TODO DRY
+        //   const from = spaceInfo.getPlanetInfo(sendAction.from.x, sendAction.from.y);
+        //   const to = spaceInfo.getPlanetInfo(sendAction.to.x, sendAction.to.y);
+        //   const minDuration = spaceInfo.timeToArrive(from, to);
 
-          if (sendAction.actualLaunchTime) {
-            const duration = Math.max(minDuration, sendAction.arrivalTimeWanted - sendAction.actualLaunchTime);
-            const launchTime = sendAction.actualLaunchTime;
-            const timeLeft = Math.max(duration - (now() - launchTime), 0);
-            let timeToResolve = 0;
-            if (pendingAction.status === 'SUCCESS') {
-              if (timeLeft <= 0) {
-                timeToResolve = Math.max(launchTime + duration + spaceInfo.resolveWindow - now(), 0);
-                if (timeToResolve <= 0) {
-                  errorProcessed = true;
-                  location = pendingAction.action.to;
-                  newErrors.push({
-                    action: pendingAction.action,
-                    status: 'TIMEOUT',
-                    txHash: pendingAction.id,
-                    location,
-                    acknowledged: pendingAction.action.acknowledged === 'ERROR',
-                    late: true, // special case
-                  });
-                }
-              }
-            }
-          }
-        }
+        //   if (sendAction.actualLaunchTime) {
+        //     const duration = Math.max(minDuration, sendAction.arrivalTimeWanted - sendAction.actualLaunchTime);
+        //     const launchTime = sendAction.actualLaunchTime;
+        //     const timeLeft = Math.max(duration - (now() - launchTime), 0);
+        //     let timeToResolve = 0;
+        //     if (pendingAction.status === 'SUCCESS') {
+        //       if (timeLeft <= 0) {
+        //         timeToResolve = Math.max(launchTime + duration + spaceInfo.resolveWindow - now(), 0);
+        //         if (timeToResolve <= 0) {
+        //           errorProcessed = true;
+        //           location = pendingAction.action.to;
+        //           newErrors.push({
+        //             action: pendingAction.action,
+        //             status: 'TIMEOUT',
+        //             txHash: pendingAction.id,
+        //             location,
+        //             acknowledged: pendingAction.action.acknowledged === 'ERROR',
+        //             late: true, // special case
+        //           });
+        //         }
+        //       }
+        //     }
+        //   }
+        // }
       } else if (pendingAction.action.type === 'CAPTURE') {
         // TODO  handle multiple coords
         location = pendingAction.action.planetCoords[0];
