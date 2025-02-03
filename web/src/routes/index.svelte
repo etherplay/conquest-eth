@@ -62,7 +62,7 @@
 
   $: countdown =
     typeof window !== 'undefined' && (location.hostname == '2025-1.conquest.game' || location.hostname == 'localhost')
-      ? {timeLeft: 1738578000 - $time}
+      ? {timeLeft: 1738575000 - $time}
       : undefined;
 
   $: timePassed = Math.max($time - startTime, 1);
