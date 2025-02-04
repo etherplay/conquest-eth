@@ -1,6 +1,6 @@
 /* eslint-disable prefer-const */
-import {YakuzaSubscribed, YakuzaClaimed} from '../../generated/Yakuza/YakuzaContract';
-import {Fleet, FleetArrivedEvent, YakuzaClaim, YakuzaSubscription} from '../../generated/schema';
+import {YakuzaSubscribed, YakuzaClaimed, YakuzaAttack} from '../../generated/Yakuza/YakuzaContract';
+import {Fleet, FleetArrivedEvent, Planet, YakuzaClaim, YakuzaPlanet, YakuzaSubscription} from '../../generated/schema';
 import {store, BigInt} from '@graphprotocol/graph-ts';
 import {getOrCreatePlanet, handleOwner} from '../shared';
 import {toEventId, toFleetId} from '../utils';
@@ -30,6 +30,21 @@ export function handleYakuzaSubscribed(event: YakuzaSubscribed): void {
   existingSubscription.totalContribution = existingSubscription.totalContribution.plus(event.params.contribution);
 
   existingSubscription.save();
+
+  for (let i = 0; i < event.params.planets.length; i++) {
+    let planetId = toPlanetId(event.params.planets[i]);
+    let planet = getOrCreatePlanet(planetId);
+    planet.save();
+
+    let yakuzaPlanet = YakuzaPlanet.load(planetId);
+    if (!yakuzaPlanet) {
+      yakuzaPlanet = new YakuzaPlanet(planetId);
+      yakuzaPlanet.planet = planetId;
+      yakuzaPlanet.amountSpentOverTime = ZERO;
+      yakuzaPlanet.lastAttackTime = ZERO;
+      yakuzaPlanet.save();
+    }
+  }
 }
 
 export function handleYakuzaClaimed(event: YakuzaClaimed): void {
@@ -44,8 +59,20 @@ export function handleYakuzaClaimed(event: YakuzaClaimed): void {
 
   let fleetArrivedEvent = FleetArrivedEvent.load(fleet.arrivalEvent as string) as FleetArrivedEvent; // assert it is there
 
-  let planet = getOrCreatePlanet(toPlanetId(event.params.attackedPlanet));
+  let planetId = toPlanetId(event.params.attackedPlanet);
+  let planet = getOrCreatePlanet(planetId);
   planet.save();
+
+  let yakuzaPlanet = YakuzaPlanet.load(planetId);
+  if (!yakuzaPlanet) {
+    yakuzaPlanet = new YakuzaPlanet(planetId);
+    yakuzaPlanet.planet = planetId;
+    yakuzaPlanet.amountSpentOverTime = ZERO;
+    yakuzaPlanet.lastAttackTime = ZERO;
+  }
+  yakuzaPlanet.lastAttackTime = event.params.lastAttackTime;
+  yakuzaPlanet.save();
+
   let existingClaim = YakuzaClaim.load(fleetId);
   if (!existingClaim) {
     existingClaim = new YakuzaClaim(fleetId);
@@ -62,3 +89,5 @@ export function handleYakuzaClaimed(event: YakuzaClaimed): void {
 
   existingClaim.save();
 }
+
+export function handleYakuzaAttack(event: YakuzaAttack): void {}

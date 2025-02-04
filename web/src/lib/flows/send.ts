@@ -212,7 +212,7 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
             '{numSpaceships}',
             '{from}',
             '{toHash}',
-            '{arrivalTimeWanted}',
+            '{distance}',
             '{secret}',
             '{payee}',
           ],
@@ -222,7 +222,12 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
               ? {fixed: Number(yakuzaClaim.yakuzaClaimAmountLeft)}
               : {
                   func: (fromPlanetInfo: PlanetInfo) =>
-                    Math.floor((toPlanetInfo.stats.cap * toPlanetInfo.stats.defense) / fromPlanetInfo.stats.attack) + 1,
+                    // TODO proper calculation, see Yakuza.sol
+                    toPlanetInfo.stats.defense < fromPlanetInfo.stats.attack
+                      ? toPlanetInfo.stats.cap
+                      : Math.floor(
+                          (toPlanetInfo.stats.cap * toPlanetInfo.stats.defense) / fromPlanetInfo.stats.attack
+                        ) + 1,
                 },
           contractAddress: YakuzaContract.address,
           msgValue: '{amountForPayee}',
@@ -582,9 +587,13 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
           args[i] = valueRequiredToSendForResolution;
         } else if (args[i] === '{secret}') {
           args[i] = secretHash;
+        } else if (args[i] === '{distance}') {
+          args[i] = distance;
         }
       }
     }
+
+    console.log(args);
 
     // TODO dynamic value (not only '{numSpaceships*pricePerUnit}')
     let msgValue = BigNumber.from(0);

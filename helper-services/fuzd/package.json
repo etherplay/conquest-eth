@@ -9,6 +9,6 @@
     },
     "scripts": {
         "prepare": "set-defaults .",
-        "dev": "echo 'waiting for contracts.json...'; wait-on contracts.json && node generate-env.js && fuzd-nodejs --port 34002"
+        "dev": "echo 'waiting for contracts.json...'; wait-on ../../web/src/lib/contracts.json && node generate-env.js ../../web/src/lib/contracts.json && fuzd-nodejs --port 34002"
     }
 }

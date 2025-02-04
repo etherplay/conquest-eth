@@ -427,40 +427,42 @@
       </div>
       <div class="my-2 bg-cyan-300 border-cyan-300 w-full h-1" />
 
-      <div class="text-center">
-        {#if flatpickrOptions}
-          <!-- {new Date(arrivalTimeWanted).getTime() / 1000} -->
-          <Flatpickr
-            class="bg-gray-800 text-cyan-500 inline-block"
-            options={flatpickrOptions}
-            bind:value={arrivalTimeWanted}
-            bind:formattedValue={formatted_arrivalTimeWanted}
-            on:change={() => (travelingFleetSelected = '')}
-            name="arrivalTimeWanted"
-            placeholder="Arrival Time"
-            ><Help class="w-6 h-6"
-              >You can specify a specific arrival time. If you use the same exact arrival time for multiple fleets,
-              they'll combine their attack making bigger damage that if sent one by one. This also work with yout
-              allies, in which case, you'll need to pick the same address for "fleetOwner" (See below) that will own the
-              planet being attacked in case of success.</Help
-            ></Flatpickr
-          >
-        {/if}
-      </div>
+      {#if !$sendFlow.yakuzaClaim}
+        <div class="text-center">
+          {#if flatpickrOptions}
+            <!-- {new Date(arrivalTimeWanted).getTime() / 1000} -->
+            <Flatpickr
+              class="bg-gray-800 text-cyan-500 inline-block"
+              options={flatpickrOptions}
+              bind:value={arrivalTimeWanted}
+              bind:formattedValue={formatted_arrivalTimeWanted}
+              on:change={() => (travelingFleetSelected = '')}
+              name="arrivalTimeWanted"
+              placeholder="Arrival Time"
+              ><Help class="w-6 h-6"
+                >You can specify a specific arrival time. If you use the same exact arrival time for multiple fleets,
+                they'll combine their attack making bigger damage that if sent one by one. This also work with yout
+                allies, in which case, you'll need to pick the same address for "fleetOwner" (See below) that will own
+                the planet being attacked in case of success.</Help
+              ></Flatpickr
+            >
+          {/if}
+        </div>
 
-      {#if travelingArrivals.length > 0}
-        <select
-          class="bg-black mx-auto"
-          name="Fleet"
-          id="travelingFleets"
-          bind:value={travelingFleetSelected}
-          on:change={onTravelingFleetSelected}
-        >
-          <option value="">Or Pick a Traveling Fleet</option>
-          {#each travelingArrivals as arrival}
-            <option value={arrival}>{new Date(arrival * 1000).toLocaleString()}</option>
-          {/each}
-        </select>
+        {#if travelingArrivals.length > 0}
+          <select
+            class="bg-black mx-auto"
+            name="Fleet"
+            id="travelingFleets"
+            bind:value={travelingFleetSelected}
+            on:change={onTravelingFleetSelected}
+          >
+            <option value="">Or Pick a Traveling Fleet</option>
+            {#each travelingArrivals as arrival}
+              <option value={arrival}>{new Date(arrival * 1000).toLocaleString()}</option>
+            {/each}
+          </select>
+        {/if}
       {/if}
 
       <!-- {travelingFleetSelected} -->
@@ -662,7 +664,9 @@
                 gift,
                 useAgentService,
                 fleetOwnerSpecified,
-                arrivalTimeWanted
+                $sendFlow.yakuzaClaim
+                  ? 0
+                  : arrivalTimeWanted
                   ? Math.floor(arrivalTimeWanted.getTime() / 1000)
                   : Math.ceil((spaceInfo.timeToArrive(fromPlanetInfo, toPlanetInfo) + now()) / 60) * 60,
                 false

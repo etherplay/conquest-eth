@@ -94,7 +94,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     stakeRange = '0x0064008200aa00c800f0010e012c014a014a017201900212029e032003a204b0';
     stakeMultiplier10000th = 100;
 
-    bootstrapSessionEndTime = deploymentTimestamp + 2 * 60 * 60; //exitDuration * 2; // in 48 min (2 * 24)
+    bootstrapSessionEndTime = deploymentTimestamp + 10 * 60 * 60; //exitDuration * 2; // in 48 min (2 * 24)
     infinityStartTime = bootstrapSessionEndTime + exitDuration / 6; // (4min) /// + 10 * 60 + 5 * 60; // 5 min pause
   }
 

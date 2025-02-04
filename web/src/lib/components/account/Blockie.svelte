@@ -195,7 +195,7 @@
         for (let i = 0; i < data.length; i += 4) {
           const color = `rgba(${data[i]},${data[i + 1]},${data[i + 2]},${data[i + 3]})`;
           cc.fillStyle = color;
-          console.log(cc.fillStyle, color);
+          // console.log(cc.fillStyle, color);
           const row = Math.floor(Math.floor(i / 4) / width);
           const col = Math.floor(i / 4) % width;
           cc.fillRect(col * scale, row * scale, scale, scale);

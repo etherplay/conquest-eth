@@ -413,4 +413,11 @@ type YakuzaSubscription @entity {
   totalContribution: BigInt!
 }
 
+type YakuzaPlanet @entity {
+  id: ID!
+  planet: Planet!
+  lastAttackTime: BigInt!
+  amountSpentOverTime: BigInt!
+}
+
 #######################################################################################
