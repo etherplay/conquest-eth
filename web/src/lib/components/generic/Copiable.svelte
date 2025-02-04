@@ -9,6 +9,10 @@
     let textToCopy = text;
     if (textCallBack) {
       textToCopy = textCallBack();
+      const textToCopyAsPromise = textToCopy as any;
+      if (textToCopyAsPromise instanceof Promise) {
+        textToCopy = await textToCopyAsPromise;
+      }
     }
     navigator.clipboard.writeText(textToCopy);
     successful = true;

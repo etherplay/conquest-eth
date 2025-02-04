@@ -117,7 +117,12 @@
         <Button href="https://ramp.network/buy" target="_blank">Purchase XDAI</Button>
       </div>
       <div class="m-2">
-        <Button href="https://bridge.gnosischain.com/" target="_blank">Or Bridge Some</Button>
+        <Button href="https://bridge.gnosischain.com/" target="_blank">Or Bridge Some from Ethereum</Button>
+      </div>
+      <div class="m-2">
+        <Button href="https://app.hop.exchange/#/send?destNetwork=gnosis&token=DAI" target="_blank"
+          >Or From Other networks</Button
+        >
       </div>
 
       <div class="m-2">

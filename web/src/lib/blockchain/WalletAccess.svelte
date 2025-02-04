@@ -84,8 +84,8 @@
     coinbase: `https://go.cb-w.com/dapp?cb_url={encodedLocation}`,
     //phantom:  `https://phantom.app/ul/browse/{encodedLocation}?ref={encodedLocation}`,
     phantom: `phantom://browse/{encodedLocation}?ref={encodedLocation}`,
-    trust: `https://link.trustwallet.com/open_url?coin_id=60&url={encodedLocation}`,
-    // metamask: `metamask://dapp/{host}`, //`https://metamask.app.link/dapp/${host}`
+    // trust: `https://link.trustwallet.com/open_url?coin_id=60&url={encodedLocation}`,
+    metamask: 'https://metamask.io',
     // rainbow: `https://rainbow.com/add/{encodedLocation}`,
     // brave: `brave://dapp/${host}`,
     // opera: `opera://dapp/${host}`,
@@ -233,19 +233,18 @@
                 />
                 Phantom
               </NavButton> -->
-              <NavButton label="Use Trust" blank={true} on:click={() => goto('trust')} class="m-4 w-max-content">
+              <!-- <NavButton label="Use Trust" blank={true} on:click={() => goto('trust')} class="m-4 w-max-content">
                 <img
                   class="cursor-pointer p-0 m-auto h-10 w-10 object-contain mb-2"
                   alt={`Use Trust`}
                   src={`${base}images/trust.svg`}
                 />
                 Trust
-              </NavButton>
-              <!-- <NavButton
+              </NavButton> -->
+              <NavButton
                 label="Use Metamask"
                 blank={true}
-                ahref={`https://metamask.app.link/dapp/${host}`}
-                bhref={`metamask://dapp/${host}`}
+                target="_blank"
                 on:click={() => goto('metamask')}
                 class="m-4 w-max-content"
               >
@@ -255,7 +254,7 @@
                   src={`${base}images/metamask.svg`}
                 />
                 Metamask<br />
-              </NavButton> -->
+              </NavButton>
               <!-- <div class="text-center">
                 (if you are not redirected to the game in the app, you'll get the url in your clipboard)
               </div> -->

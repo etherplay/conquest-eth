@@ -78,6 +78,28 @@
           '0x0000000000000000000000000000000000000011'
         ),
       };
+
+      if (timeDelta > 0) {
+        const deltaInSeconds = timeDelta * 600;
+        prediction.arrivalTime = timeToText(duration - deltaInSeconds);
+        prediction.numSpaceshipsAtArrival = spaceInfo.numSpaceshipsAtArrival(
+          toPlanetInfo,
+          $toPlanetState,
+          duration - deltaInSeconds
+        );
+        prediction.outcome = spaceInfo.outcome(
+          fromPlanetInfo,
+          toPlanetInfo,
+          $toPlanetState,
+          fleetAmount,
+          duration,
+          undefined,
+          undefined,
+          undefined,
+          false,
+          '0x0000000000000000000000000000000000000011'
+        );
+      }
     }
   }
 
@@ -87,6 +109,8 @@
       confirmDisabled = !!($toPlanetState.natives && !prediction?.outcome.min.captured);
     }
   }
+
+  let timeDelta: number = 0;
 
   onMount(() => {
     fleetAmount = 1;
@@ -122,6 +146,17 @@
         bind:value={fleetAmount}
       />
     </div>
+
+    <!-- TODO -->
+    <!-- <div class="text-center">
+      <input class="accent-cyan-300" type="range" id="timeDelta" name="timeDelta" bind:value={timeDelta} />
+      <input
+        class={`bg-gray-700 border-cyan-800 border-2`}
+        type="text"
+        id="textInputTimeDelta"
+        bind:value={timeDelta}
+      />
+    </div> -->
 
     {#if prediction?.durationAndAmountAdded && prediction?.durationAndAmountAdded.amount > 0}
       <p class="m-1 text-sm text-red-500">

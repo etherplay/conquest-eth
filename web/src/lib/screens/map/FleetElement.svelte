@@ -9,6 +9,8 @@
   import fleetselection from '$lib/map/fleetselection';
   import {wallet} from '$lib/blockchain/wallet';
   import type {Outcome} from 'conquest-eth-common';
+  import Copiable from '$lib/components/generic/Copiable.svelte';
+  import {account} from '$lib/account/account';
   export let fleet: Fleet;
 
   $: angle = Math.atan2(
@@ -263,7 +265,28 @@ animation-timing-function: linear;
        position: absolute; z-index: 99; overflow: visible; transform: translate(${x}px,${y}px) scale(${2 / scale})`}
   >
     <ul class="text-white">
-      <li><span class="text-yellow-300">spaceships:</span> {fleet.quantity}</li>
+      <li>
+        <!-- TODO <Copiable
+          textCallBack={async () => {
+            const {toHash, fleetId, secretHash} = await account.hashFleet(
+              fleet.from.location,
+              fleet.to.location,
+              fleet.gift,
+              fleet.specific,
+              fleet.arrivalTimeWanted,
+              fleet.sending.action.nonce, // this might not be tx nonce // TODO use a different fieldName : secretNonce
+              //  and then we can have action.nonce optional
+              fleet.owner,
+              fleet.fleetSender,
+              fleet.operator
+            );
+            return fleetId;
+          }}><span class="text-yellow-300">spaceships:</span></Copiable
+        > -->
+
+        <span class="text-yellow-300">spaceships:</span>
+        {fleet.quantity}
+      </li>
       <li><span class="text-yellow-300">Time left:</span> {timeToText(fleet.timeLeft)}</li>
       <li>
         <span class="text-yellow-300">Arrival:</span>
