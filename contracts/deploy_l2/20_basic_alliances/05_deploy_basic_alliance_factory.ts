@@ -15,7 +15,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   const frontendBaseURI = localTesting
     ? 'http://localhost:3000/basic-alliances/alliances/#'
     : `https://${
-        networkName === 'mainnet' ? '' : '-' + networkName.replace('_', '-')
+        networkName === 'mainnet' ? '' : networkName.replace('_', '-')
       }.conquest.game/basic-alliances/alliances/#`;
 
   await deploy('BasicAllianceFactory', {
