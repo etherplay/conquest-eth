@@ -74,8 +74,10 @@
           <h3 class="text-xl text-yellow-500">
             <Blockie class="inline w-10 h-10 m-1" address={entry[0]} /> Alliance {entry[0]}
           </h3>
-          <a target="_blank" class="inline-block border-2 border-yellow-400 p-1 m-1" href={entry[1].frontendURI}
-            >JOIN/MANAGE</a
+          <a
+            target="_blank"
+            class="inline-block border-2 border-yellow-400 p-1 m-1"
+            href={entry[1].frontendURI.replace('https://-', 'https://')}>JOIN/MANAGE</a
           >
           <p>members:</p>
           <ul class="m-2">
