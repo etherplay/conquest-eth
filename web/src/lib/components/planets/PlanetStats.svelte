@@ -79,7 +79,7 @@
       </div>
     {:else if $planetState.flagTime > 0}
       <div class="m-1 w-26 md:w-36 flex justify-between text-green-300">
-        <p class="p-0 mb-1">Free until:</p>
+        <p class="p-0 mb-1" style="font-size: 0.6rem">Redeemable</p>
         <p class="p-0 mb-1">
           {timeToText($planetState.flagTime + (6 * 24 * 3600) / spaceInfo.productionSpeedUp - $time)}
         </p>
