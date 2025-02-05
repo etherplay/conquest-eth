@@ -427,7 +427,7 @@
       </div>
       <div class="my-2 bg-cyan-300 border-cyan-300 w-full h-1" />
 
-      {#if !$sendFlow.yakuzaClaim}
+      {#if !$sendFlow.yakuzaClaim && !$sendFlow.yakuzaPlanet}
         <div class="text-center">
           {#if flatpickrOptions}
             <!-- {new Date(arrivalTimeWanted).getTime() / 1000} -->
@@ -664,7 +664,7 @@
                 gift,
                 useAgentService,
                 fleetOwnerSpecified,
-                $sendFlow.yakuzaClaim
+                $sendFlow.yakuzaClaim || $sendFlow.yakuzaPlanet
                   ? 0
                   : arrivalTimeWanted
                   ? Math.floor(arrivalTimeWanted.getTime() / 1000)

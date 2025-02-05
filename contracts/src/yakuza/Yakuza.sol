@@ -33,6 +33,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         uint256 maxAmountSpentPerSecondForAttacks;
         uint256 attackMaxDistance;
         uint256 timePerDistance;
+        uint256 productionSpeedUp;
         bytes32 genesis;
     }
     // --------------------------------------------------------------------------------------------
@@ -54,7 +55,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         uint256 fleetSentId,
         uint256 amount,
         uint256 amountLeft,
-        uint256 lastAttackTime,
+        uint256 lockTime,
         bytes32 secret
     );
 
@@ -63,7 +64,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         uint256 indexed to,
         uint256 fleetSentId,
         uint256 amountSent,
-        uint256 timestamp,
+        uint256 lastAttackTime,
         uint256 amountSpentOverTime,
         bytes32 secret
     );
@@ -82,6 +83,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     uint256 internal immutable _productionCapAsDuration;
     uint256 internal immutable _frontrunningDelay;
     uint256 internal immutable _timePerDistance;
+    uint256 internal immutable _productionSpeedUp;
 
     uint256 public immutable numSecondsPerTokens;
     uint256 public immutable spaceshipsToKeepPer10000;
@@ -114,7 +116,8 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     struct MyPlanet {
         bool mine;
         uint40 lastAttackTime;
-        uint208 amountSpentOverTime;
+        uint40 lockTime;
+        uint168 amountSpentOverTime;
     }
     mapping(uint256 => MyPlanet) public myPlanets;
 
@@ -138,6 +141,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         _productionCapAsDuration = config.productionCapAsDuration;
         _frontrunningDelay = config.frontrunningDelay;
         _timePerDistance = config.timePerDistance;
+        _productionSpeedUp = config.productionSpeedUp;
 
         numSecondsPerTokens = config.numSecondsPerTokens;
         spaceshipsToKeepPer10000 = config.spaceshipsToKeepPer10000;
@@ -246,7 +250,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     // --------------------------------------------------------------------------------------------
     // Attack any planet that were belonging to Yakuza or were the target of a claim
     // --------------------------------------------------------------------------------------------
-    function attack(
+    function takeItBack(
         uint256 from,
         uint256 to,
         uint256 distance,
@@ -282,18 +286,26 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         bytes32 secret
     ) internal {
         require(myPlanets[to].mine, "TARGET_PLANET_NOT_YAKUZA");
+        require(myPlanets[to].lockTime < block.timestamp, "TARGET_PLANET_LOCKED");
+
         uint256 timestamp = block.timestamp;
         uint256 amountSpentOverTime = myPlanets[to].amountSpentOverTime;
         uint256 timeSinceLastAttack = timestamp - myPlanets[to].lastAttackTime;
 
+        // TODO config
+        if (timeSinceLastAttack > 3 days / _productionSpeedUp) {
+            timeSinceLastAttack = 3 days / _productionSpeedUp;
+        }
+
         // this is used by claimCounterAttack to block attack while traveling
         require(timestamp >= myPlanets[to].lastAttackTime, "TOO_SOON");
 
-        uint256 amountSpent = _computeAmountSpentAndTime(timeSinceLastAttack, amountSpentOverTime, amount);
+        (uint256 amountSpent, uint256 effectiveTimePassed) = _computeAmountSpentAndTime(timeSinceLastAttack, amount);
 
         // Update the values after the checks
-        myPlanets[to].amountSpentOverTime = uint208(amountSpent);
-        myPlanets[to].lastAttackTime = uint40(timestamp);
+        myPlanets[to].amountSpentOverTime = uint168(amountSpent);
+        uint40 lastAttackTime = uint40(timestamp - timeSinceLastAttack + effectiveTimePassed);
+        myPlanets[to].lastAttackTime = lastAttackTime;
 
         _checkPlanetAndDistance(from, to, distance, amount);
 
@@ -303,30 +315,28 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         outerSpace.send(from, amount, toHash);
 
         uint256 fleetSentId = uint256(keccak256(abi.encodePacked(toHash, from, address(this), address(this))));
-        emit YakuzaAttack(sender, to, fleetSentId, amount, timestamp, amountSpentOverTime, secret);
+        emit YakuzaAttack(sender, to, fleetSentId, amount, lastAttackTime, amountSpentOverTime, secret);
     }
 
     function _computeAmountSpentAndTime(
         uint256 timeSinceLastAttack,
-        uint256 amountSpentOverTime,
         uint32 amount
-    ) internal returns (uint256 amountSpent) {
-        // Apply linear decay
-        uint256 decayRate = 1;
-        uint256 minAttackAmount = 50000;
-        uint256 decayAmount = timeSinceLastAttack * decayRate;
+    ) internal view returns (uint256 amountSpent, uint256 effectiveTimePassed) {
+        uint256 minAttackAmount = 50000; // TODO own config
 
-        if (decayAmount > amountSpentOverTime) {
-            amountSpentOverTime = 0;
-        } else {
-            amountSpentOverTime -= decayAmount;
-        }
-
-        uint256 amountSpent = amountSpentOverTime + amount;
+        amountSpent = amount;
         uint256 amountSpentPerSecond = amountSpent / (timeSinceLastAttack + 1); // Add 1 to avoid division by zero
 
         require(amountSpentPerSecond <= maxAmountSpentPerSecondForAttacks, "TOO_MUCH_SPENT_PER_SECOND");
         require(amount >= minAttackAmount, "ATTACK_AMOUNT_TOO_SMALL");
+
+        // Calculate the effective time passed based on the amount spent
+        uint256 maxBudget = maxAmountSpentPerSecondForAttacks * timeSinceLastAttack;
+        if (amountSpent < maxBudget) {
+            effectiveTimePassed = amountSpent / maxAmountSpentPerSecondForAttacks;
+        } else {
+            effectiveTimePassed = timeSinceLastAttack;
+        }
     }
 
     function _checkPlanetAndDistance(
@@ -500,15 +510,15 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
 
         Result memory planetResult = _computeArrivalTimeAndAmountLeft(fleetId, from, resolution.to, distance, amount);
 
-        // once a attacked planet is claim, it is considered being owned by Yakuza
+        // once a attacked planet is claimed, it is considered being owned by Yakuza
         myPlanets[resolution.to].mine = true;
-        uint40 lastAttackTime = myPlanets[resolution.to].lastAttackTime;
+        uint40 lockTime = myPlanets[resolution.to].lockTime;
         if (claims[fleetId].amountLeft == 0) {
-            lastAttackTime = planetResult.arrivalTime;
+            lockTime = planetResult.arrivalTime;
         } else {
-            lastAttackTime = planetResult.arrivalTime < lastAttackTime ? planetResult.arrivalTime : lastAttackTime;
+            lockTime = planetResult.arrivalTime < lockTime ? planetResult.arrivalTime : lockTime;
         }
-        myPlanets[resolution.to].lastAttackTime = lastAttackTime;
+        myPlanets[resolution.to].lockTime = lockTime + uint40(_frontrunningDelay);
 
         if (amount >= planetResult.amountLeft) {
             planetResult.amountLeft = 0;
@@ -531,7 +541,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
             fleetSentId,
             amount,
             planetResult.amountLeft,
-            lastAttackTime,
+            lockTime,
             secret
         );
     }

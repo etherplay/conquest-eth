@@ -253,7 +253,9 @@
       );
 
   $: yakuzaClaim =
-    $yakuzaQuery.data?.state && $yakuzaQuery.data.state.fleets.find((v) => v.to === planetInfo.location.id);
+    $yakuzaQuery.data?.state &&
+    ($yakuzaQuery.data.state.fleets.find((v) => v.to === planetInfo.location.id) ||
+      $yakuzaQuery.data.state.yakuzaPlanets.find((v) => v.id === planetInfo.location.id));
 
   $: isYakuzaSubscriber = $planetState && $planetState.ownerYakuzaSubscriptionEndTime > $time;
 

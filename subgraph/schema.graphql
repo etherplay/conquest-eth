@@ -415,7 +415,9 @@ type YakuzaSubscription @entity {
 
 type YakuzaPlanet @entity {
   id: ID!
+  owner: Owner
   planet: Planet!
+  lockTime: BigInt!
   lastAttackTime: BigInt!
   amountSpentOverTime: BigInt!
 }

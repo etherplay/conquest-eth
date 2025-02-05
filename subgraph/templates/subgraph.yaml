@@ -26,6 +26,7 @@ dataSources:
         - StakeToWithdrawEvent
         - TravelingUpkeepRefundEvent
         - Chain
+        - YakuzaPlanet
       abis:
         - name: OuterSpaceContract
           file: ./abis/OuterSpace.json

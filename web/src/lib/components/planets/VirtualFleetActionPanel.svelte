@@ -69,13 +69,13 @@
 
 {#if planetInfo.location.id === (planetChosenInfo ? planetChosenInfo.location.id : null)}
   <p class="m-3">Pick a Different Planet than Itself</p>
-{:else if $sendFlow.yakuzaClaim}
+{:else if $sendFlow.yakuzaClaim || $sendFlow.yakuzaPlanet}
   {#if !planetIsYakuza}
     <p class="m-3">Pick a Yakuza Planet to send from.</p>
   {:else}
     <PanelButton label="Confirm" class="m-2" color="text-blue-500" borderColor="border-blue-500" on:click={sendFleet}>
       <div class="w-20">
-        Confirm
+        Continue
         <Help class="inline w-4 h-4">
           You can send out spaceships in the form of fleets to either attack or send reinforcement.
         </Help>
@@ -91,7 +91,7 @@
 {:else}
   <PanelButton label="Confirm" class="m-2" color="text-blue-500" borderColor="border-blue-500" on:click={sendFleet}>
     <div class="w-20">
-      Confirm
+      Continue
       <Help class="inline w-4 h-4">
         You can send out spaceships in the form of fleets to either attack or send reinforcement.
       </Help>

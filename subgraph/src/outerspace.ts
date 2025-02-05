@@ -32,6 +32,7 @@ import {
   PlanetStakeEvent,
   PlanetTransferEvent,
   FleetRevealedEvent,
+  YakuzaPlanet,
 } from '../generated/schema';
 import {log} from '@graphprotocol/graph-ts';
 
@@ -139,6 +140,12 @@ export function handlePlanetStake(event: PlanetStake): void {
     entity.flagTime = event.block.timestamp;
   }
   entity.save();
+
+  let yakuzaPlanet = YakuzaPlanet.load(entity.id);
+  if (yakuzaPlanet) {
+    yakuzaPlanet.owner = entity.owner;
+    yakuzaPlanet.save();
+  }
 
   let planetStakeEvent = new PlanetStakeEvent(toEventId(event));
   planetStakeEvent.blockNumber = event.block.number.toI32();
@@ -266,6 +273,12 @@ export function handleFleetArrived(event: FleetArrived): void {
 
   planetEntity.save();
 
+  let yakuzaPlanet = YakuzaPlanet.load(planetEntity.id);
+  if (yakuzaPlanet) {
+    yakuzaPlanet.owner = planetEntity.owner;
+    yakuzaPlanet.save();
+  }
+
   let fleet = Fleet.load(fleetId) as Fleet; // assert it is available by then
 
   let fleetReveal = FleetRevealedEvent.load(fleetId) as FleetRevealedEvent; // assert it is available by then
@@ -356,6 +369,12 @@ export function handlePlanetTransfer(event: PlanetTransfer): void {
   // NOTE we do not reset exitTime
   planetEntity.save();
 
+  let yakuzaPlanet = YakuzaPlanet.load(planetEntity.id);
+  if (yakuzaPlanet) {
+    yakuzaPlanet.owner = planetEntity.owner;
+    yakuzaPlanet.save();
+  }
+
   let planetTransferEvent = new PlanetTransferEvent(toEventId(event));
   planetTransferEvent.blockNumber = event.block.number.toI32();
   planetTransferEvent.timestamp = event.block.timestamp;
@@ -426,6 +445,12 @@ export function handlePlanetReset(event: PlanetReset): void {
     planet.stakeDeposited = ZERO;
     planet.currentExit = null;
     planet.save();
+
+    let yakuzaPlanet = YakuzaPlanet.load(planet.id);
+    if (yakuzaPlanet) {
+      yakuzaPlanet.owner = planet.owner;
+      yakuzaPlanet.save();
+    }
   }
 }
 
@@ -494,6 +519,12 @@ export function handleExitComplete(event: ExitComplete): void {
 
   planetEntity.currentExit = null;
   planetEntity.save();
+
+  let yakuzaPlanet = YakuzaPlanet.load(planetEntity.id);
+  if (yakuzaPlanet) {
+    yakuzaPlanet.owner = planetEntity.owner;
+    yakuzaPlanet.save();
+  }
 
   let exitCompleteEvent = new ExitCompleteEvent(toEventId(event));
   exitCompleteEvent.blockNumber = event.block.number.toI32();

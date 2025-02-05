@@ -40,8 +40,10 @@ export function handleYakuzaSubscribed(event: YakuzaSubscribed): void {
     if (!yakuzaPlanet) {
       yakuzaPlanet = new YakuzaPlanet(planetId);
       yakuzaPlanet.planet = planetId;
+      yakuzaPlanet.owner = planet.owner;
       yakuzaPlanet.amountSpentOverTime = ZERO;
       yakuzaPlanet.lastAttackTime = ZERO;
+      yakuzaPlanet.lockTime = ZERO;
       yakuzaPlanet.save();
     }
   }
@@ -66,11 +68,13 @@ export function handleYakuzaClaimed(event: YakuzaClaimed): void {
   let yakuzaPlanet = YakuzaPlanet.load(planetId);
   if (!yakuzaPlanet) {
     yakuzaPlanet = new YakuzaPlanet(planetId);
+    yakuzaPlanet.owner = planet.owner;
     yakuzaPlanet.planet = planetId;
     yakuzaPlanet.amountSpentOverTime = ZERO;
     yakuzaPlanet.lastAttackTime = ZERO;
+    yakuzaPlanet.lockTime = ZERO;
   }
-  yakuzaPlanet.lastAttackTime = event.params.lastAttackTime;
+  yakuzaPlanet.lockTime = event.params.lockTime;
   yakuzaPlanet.save();
 
   let existingClaim = YakuzaClaim.load(fleetId);
@@ -90,4 +94,20 @@ export function handleYakuzaClaimed(event: YakuzaClaimed): void {
   existingClaim.save();
 }
 
-export function handleYakuzaAttack(event: YakuzaAttack): void {}
+export function handleYakuzaAttack(event: YakuzaAttack): void {
+  let planetId = toPlanetId(event.params.to);
+  let planet = getOrCreatePlanet(planetId);
+  planet.save();
+  let yakuzaPlanet = YakuzaPlanet.load(planet.id);
+  if (!yakuzaPlanet) {
+    yakuzaPlanet = new YakuzaPlanet(planet.id);
+    yakuzaPlanet.owner = planet.owner;
+    yakuzaPlanet.planet = planet.id;
+    yakuzaPlanet.amountSpentOverTime = ZERO;
+    yakuzaPlanet.lastAttackTime = ZERO;
+    yakuzaPlanet.lockTime = ZERO;
+  }
+  yakuzaPlanet.lastAttackTime = event.params.lastAttackTime;
+  yakuzaPlanet.amountSpentOverTime = event.params.amountSpentOverTime;
+  yakuzaPlanet.save();
+}

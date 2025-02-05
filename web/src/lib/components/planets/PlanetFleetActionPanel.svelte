@@ -24,9 +24,14 @@
 
   $: planetState = planets.planetStateFor(planetInfo);
 
-  $: yakuzaClaim = $yakuzaQuery.data?.state
+  $: yakuzaClaimAsFleet = $yakuzaQuery.data?.state
     ? $yakuzaQuery.data.state.fleets.find((v) => v.to === planetInfo.location.id)
     : null;
+
+  $: yakuzaClaimAsPlanet =
+    !yakuzaClaimAsFleet && $yakuzaQuery.data?.state
+      ? $yakuzaQuery.data.state.yakuzaPlanets.find((v) => v.id === planetInfo.location.id)
+      : null;
 
   function capture() {
     claimFlow.claim(coords);
@@ -99,7 +104,12 @@
   }
 
   function revenge() {
-    sendFlow.revenge(coords, yakuzaClaim);
+    sendFlow.revenge(coords, yakuzaClaimAsFleet);
+    close();
+  }
+
+  function takeItBack() {
+    sendFlow.takeItBack(coords, yakuzaClaimAsPlanet);
     close();
   }
 
@@ -153,13 +163,21 @@
             </div>
           </PanelButton>
         {/each}
-        {#if yakuzaClaim}
+        {#if yakuzaClaimAsFleet}
           <PanelButton
             color="text-pink-400"
             label="REVENGE"
             class="m-2"
             borderColor="border-pink-600"
             on:click={() => revenge()}><div class="w-20">REVENGE</div></PanelButton
+          >
+        {:else if yakuzaClaimAsPlanet}
+          <PanelButton
+            color="text-pink-400"
+            label="Take it Back"
+            class="m-2"
+            borderColor="border-pink-600"
+            on:click={() => takeItBack()}><div class="w-20">Take it back</div></PanelButton
           >
         {/if}
       {/if}

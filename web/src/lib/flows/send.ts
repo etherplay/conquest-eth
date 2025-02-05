@@ -18,7 +18,7 @@ import {Contract} from '@ethersproject/contracts';
 import {getGasPrice} from './gasPrice';
 import {zeroAddress} from 'viem';
 import type {PartialSubmission} from '$lib/account/fuzd-client-types';
-import type {YakuzaClaimFleet} from '$lib/default-plugins/yakuza/yakuzaQuery';
+import type {YakuzaClaimFleet, YakuzaPlanet} from '$lib/default-plugins/yakuza/yakuzaQuery';
 import {initialContractsInfos} from '$lib/blockchain/contracts';
 
 export type VirtualFleet = {
@@ -112,6 +112,7 @@ export type SendFlow = {
   error?: {message?: string; type?: string};
   lastFleet?: LastFleet;
   yakuzaClaim?: YakuzaClaimFleet;
+  yakuzaPlanet?: YakuzaPlanet;
 };
 
 export function virtualFleetFrom(sendFlowData: Data, pos: {x: number; y: number}): VirtualFleet {
@@ -238,6 +239,31 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
         },
       },
       {step: 'PICK_ORIGIN', pastStep: 'PICK_ORIGIN', cancelingConfirmation: undefined, yakuzaClaim}
+    );
+  }
+
+  async takeItBack(to: {x: number; y: number}, yakuzaPlanet: YakuzaPlanet): Promise<void> {
+    await privateWallet.login();
+    const YakuzaContract = (initialContractsInfos as any).contracts.Yakuza;
+
+    this.setData(
+      {
+        to,
+        config: {
+          abi: YakuzaContract.abi.find((v) => v.name === 'takeItBack'),
+          args: ['{from}', yakuzaPlanet.id, '{distance}', '{numSpaceships}', '{toHash}', '{secret}', '{payee}'],
+
+          numSpaceshipsAvailable: {fixed: 1000000}, // TODO
+
+          contractAddress: YakuzaContract.address,
+          msgValue: '{amountForPayee}',
+          fleetOwner: YakuzaContract.address,
+          fleetSender: YakuzaContract.address,
+          specific: '0x0000000000000000000000000000000000000000',
+          gift: false,
+        },
+      },
+      {step: 'PICK_ORIGIN', pastStep: 'PICK_ORIGIN', cancelingConfirmation: undefined, yakuzaPlanet}
     );
   }
 
@@ -879,7 +905,7 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
   }
 
   private _reset() {
-    this.setPartial({step: 'IDLE', data: undefined});
+    this.setPartial({step: 'IDLE', data: undefined, yakuzaClaim: undefined, yakuzaPlanet: undefined});
   }
 }
 

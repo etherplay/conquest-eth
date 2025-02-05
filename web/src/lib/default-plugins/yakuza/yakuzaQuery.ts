@@ -34,6 +34,12 @@ export type YakuzaQueryResult = {
     startTime: string;
     endTime: string;
   };
+
+  yakuzaPlanets: {
+    id: string;
+    lastAttackTime: string;
+    amountSpentOverTime: string;
+  }[];
 };
 
 export type YakuzaClaimFleet = {
@@ -50,10 +56,17 @@ export type YakuzaClaimFleet = {
   operator: string;
 };
 
+export type YakuzaPlanet = {
+  id: string;
+  lastAttackTime: number;
+  amountSpentOverTime: number;
+};
+
 export type YakuzaState = {
   loading: boolean;
   state?: {
     fleets: YakuzaClaimFleet[];
+    yakuzaPlanets: YakuzaPlanet[];
     yakuzaSubscription: {
       startTime: number;
       endTime: number;
@@ -71,8 +84,8 @@ export class YakuzaQueryStore implements QueryStore<YakuzaState> {
   constructor(endpoint: EndPoint) {
     this.queryStore = new HookedQueryStore( // TODO full list
       endpoint,
-      `query($first: Int! $lastId: ID! $myself: String $myselfOrYakuza: [String]! $time: BigInt!) {
-       fleetArrivedEvents (first: $first where: {id_gt: $lastId won: true planetActive: true destinationOwner_in: $myselfOrYakuza owner_not_in: $myselfOrYakuza yakuzaClaimed: false timestamp_gt: $time}) {
+      `query($first: Int! $lastId: ID! $yakuza: String $myself: String $myselfOrYakuza: [String]! $lastClaimTime: BigInt! $time: BigInt!) {
+       fleetArrivedEvents (first: $first where: {id_gt: $lastId won: true planetActive: true destinationOwner: $myself owner_not_in: $myselfOrYakuza yakuzaClaimed: false timestamp_gt: $lastClaimTime}) {
     yakuzaClaimAmountLeft
     destinationOwner {id}
     owner {id}
@@ -96,6 +109,13 @@ export class YakuzaQueryStore implements QueryStore<YakuzaState> {
     startTime
     endTime
   }
+
+  # TODO pagination
+  yakuzaPlanets(first:100 where: {lockTime_lt: $time owner_not: $yakuza}) {
+    id
+    lastAttackTime
+    amountSpentOverTime
+  }
   
 }`,
       chainTempo, // replayTempo, //
@@ -113,7 +133,8 @@ export class YakuzaQueryStore implements QueryStore<YakuzaState> {
   protected start(): () => void {
     this._timeout;
     this.queryStore.runtimeVariables.owner = '0x0000000000000000000000000000000000000000';
-    this.queryStore.runtimeVariables.time = '' + this.getTime();
+    this.queryStore.runtimeVariables.lastClaimTime = '' + this.getLastClaimTime();
+    this.queryStore.runtimeVariables.time = '' + now();
     this._timeout = setInterval(this.onTime.bind(this), 1000);
     this.stopAccountSubscription = account.subscribe(async ($account) => {
       await this._handleAccountChange($account);
@@ -122,13 +143,14 @@ export class YakuzaQueryStore implements QueryStore<YakuzaState> {
     return this.stop.bind(this);
   }
 
-  getTime(): number {
+  getLastClaimTime(): number {
     const timestamp = now();
     return timestamp - (initialContractsInfos as any).contracts.Yakuza?.linkedData.maxClaimDelay || 0;
   }
 
   onTime(): void {
-    this.queryStore.runtimeVariables.time = '' + this.getTime();
+    this.queryStore.runtimeVariables.lastClaimTime = '' + this.getLastClaimTime();
+    this.queryStore.runtimeVariables.time = '' + now();
   }
 
   private _fetch(): Promise<void> {
@@ -153,22 +175,25 @@ export class YakuzaQueryStore implements QueryStore<YakuzaState> {
     if (this.queryStore.runtimeVariables.myself !== accountAddress) {
       this.queryStore.runtimeVariables.myself = accountAddress;
       if ((initialContractsInfos as any).contracts.Yakuza) {
-        this.queryStore.runtimeVariables.myselfOrYakuza = [
-          accountAddress,
-          (initialContractsInfos as any).contracts.Yakuza.address.toLowerCase(),
-        ] as unknown as string;
+        const yakuza = (initialContractsInfos as any).contracts.Yakuza.address.toLowerCase();
+        this.queryStore.runtimeVariables.myselfOrYakuza = [accountAddress, yakuza] as unknown as string;
+        this.queryStore.runtimeVariables.yakuza = yakuza;
       } else {
         this.queryStore.runtimeVariables.myselfOrYakuza = [accountAddress] as unknown as string;
+        this.queryStore.runtimeVariables.yakuza = '0x0000000000000000000000000000000000000000';
       }
 
       if (!this.queryStore.runtimeVariables.myself) {
         this.queryStore.runtimeVariables.myself = '0x0000000000000000000000000000000000000000';
         if ((initialContractsInfos as any).contracts.Yakuza) {
+          const yakuza = (initialContractsInfos as any).contracts.Yakuza.address.toLowerCase();
           this.queryStore.runtimeVariables.myselfOrYakuza = [
             '0x0000000000000000000000000000000000000000',
-            (initialContractsInfos as any).contracts.Yakuza.address.toLowerCase(),
+            yakuza,
           ] as unknown as string;
+          this.queryStore.runtimeVariables.yakuza = yakuza;
         } else {
+          this.queryStore.runtimeVariables.yakuza = '0x0000000000000000000000000000000000000000';
           this.queryStore.runtimeVariables.myselfOrYakuza = [
             '0x0000000000000000000000000000000000000000',
           ] as unknown as string;
@@ -235,6 +260,11 @@ export class YakuzaQueryStore implements QueryStore<YakuzaState> {
             }
             return duringSubscription;
           }),
+        yakuzaPlanets: data.yakuzaPlanets.map((v) => ({
+          id: v.id,
+          amountSpentOverTime: Number(v.amountSpentOverTime),
+          lastAttackTime: Number(v.lastAttackTime),
+        })),
         yakuzaSubscription: {
           endTime,
           startTime,
