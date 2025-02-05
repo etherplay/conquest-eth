@@ -94,7 +94,7 @@
     ? 'fixed' in $sendFlow.data?.config?.numSpaceshipsAvailable
       ? $sendFlow.data?.config?.numSpaceshipsAvailable.fixed
       : fromPlanetInfo
-      ? $sendFlow.data?.config?.numSpaceshipsAvailable.func(fromPlanetInfo)
+      ? $sendFlow.data?.config?.numSpaceshipsAvailable.func(fromPlanetInfo, $time)
       : undefined
     : undefined;
   // TODO maxSpaceshipsLoaded and invalid message if maxSpaceships == 0
@@ -138,6 +138,13 @@
     }
 
     // console.log({maxSpaceships, numSpaceshipsToKeep: $sendFlow.data?.config?.numSpaceshipsToKeep});
+  }
+
+  let minSpaceships = 1;
+  $: {
+    if ($sendFlow.data?.config?.minSpaceships) {
+      minSpaceships = $sendFlow.data?.config?.minSpaceships;
+    }
   }
 
   $: agentServiceAccount = $agentService.account;
@@ -406,11 +413,17 @@
           id="fleetAmount"
           name="fleetAmount"
           bind:value={fleetAmount}
-          min="1"
+          min={minSpaceships}
           max={maxSpaceships}
         />
         <!-- <label for="fleetAmount">Number Of Spaceships</label> -->
-        <input class="bg-gray-700 border-cyan-800 border-2" type="text" id="textInput" bind:value={fleetAmount} />
+        <input
+          class="bg-gray-700 border-cyan-800 border-2"
+          min={minSpaceships}
+          type="number"
+          id="textInput"
+          bind:value={fleetAmount}
+        />
       </div>
 
       <div class="flex flex-row justify-center">

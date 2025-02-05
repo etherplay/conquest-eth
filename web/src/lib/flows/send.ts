@@ -55,7 +55,8 @@ export type LastFleet = {
 type SendConfig = {
   fleetOwner?: string;
   numSpaceshipsToKeep?: number;
-  numSpaceshipsAvailable?: {fixed: number} | {func: (fromPlanetInfo: PlanetInfo) => number};
+  minSpaceships?: number;
+  numSpaceshipsAvailable?: {fixed: number} | {func: (fromPlanetInfo: PlanetInfo, time: number) => number};
   abi?: any;
   contractAddress?: string;
   numSpaceships?: number;
@@ -246,6 +247,8 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
     await privateWallet.login();
     const YakuzaContract = (initialContractsInfos as any).contracts.Yakuza;
 
+    const toPlanetInfo = spaceInfo.getPlanetInfo(to.x, to.y);
+
     this.setData(
       {
         to,
@@ -253,8 +256,27 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
           abi: YakuzaContract.abi.find((v) => v.name === 'takeItBack'),
           args: ['{from}', yakuzaPlanet.id, '{distance}', '{numSpaceships}', '{toHash}', '{secret}', '{payee}'],
 
-          numSpaceshipsAvailable: {fixed: 1000000}, // TODO
+          numSpaceshipsAvailable: {
+            func: (fromPlanetInfo: PlanetInfo, time: number) => {
+              const toCap = toPlanetInfo.stats.cap;
 
+              const rate = Math.floor(
+                (toPlanetInfo.stats.production *
+                  initialContractsInfos.contracts.OuterSpace.linkedData.productionSpeedUp) /
+                  3600
+              );
+              const maxTime = Math.floor(toCap / rate);
+
+              let timeSinceLastAttack = time - yakuzaPlanet.lastAttackTime;
+              if (timeSinceLastAttack > maxTime) {
+                timeSinceLastAttack = maxTime;
+              }
+
+              const result = (rate + 1) * (timeSinceLastAttack + 1) - 1;
+              return result;
+            },
+          },
+          minSpaceships: YakuzaContract.linkedData.minAttackAmount,
           contractAddress: YakuzaContract.address,
           msgValue: '{amountForPayee}',
           fleetOwner: YakuzaContract.address,
@@ -289,7 +311,7 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
       throw new Error(`Need to be in step PICK_ORIGIN`);
     }
 
-    if (this.$store.yakuzaClaim) {
+    if (this.$store.yakuzaClaim || this.$store.yakuzaPlanet) {
       const fromPlanetInfo = spaceInfo.getPlanetInfo(from.x, from.y);
       this.setData({
         config: {
@@ -358,6 +380,7 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
     arrivalTimeWanted: number | undefined,
     force: boolean
   ) {
+    console.log({fleetAmount});
     this.setData({
       fleetAmount,
       gift,
@@ -587,20 +610,20 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
     }
 
     const abi = flow.data.config?.abi;
-    const args = flow.data.config?.args;
+    const args = flow.data.config?.args ? [...flow.data.config?.args] : undefined;
     if (args) {
       for (let i = 0; i < args.length; i++) {
         if (args[i] === '{numSpaceships}') {
-          console.log({amount: flow.data.fleetAmount});
-          args[i] = flow.data.fleetAmount;
+          console.log({amount: fleetAmount});
+          args[i] = fleetAmount;
         } else if (args[i] === '{toHash}') {
           args[i] = toHash;
         } else if (args[i] === '{numSpaceships*pricePerUnit}') {
           // TODO dynamic value (not only '{numSpaceships*pricePerUnit}')
-          args[i] = pricePerUnit.mul(flow.data.fleetAmount);
+          args[i] = pricePerUnit.mul(fleetAmount);
         } else if (args[i] === '{numSpaceships*pricePerUnit+amountForPayee}') {
           // TODO dynamic value (not only '{numSpaceships*pricePerUnit}')
-          args[i] = pricePerUnit.mul(flow.data.fleetAmount).add(valueRequiredToSendForResolution);
+          args[i] = pricePerUnit.mul(fleetAmount).add(valueRequiredToSendForResolution);
         } else if (args[i] === '{fleetOwner}') {
           args[i] = fleetOwner;
         } else if (args[i] === '{from}') {
@@ -624,9 +647,9 @@ class SendFlowStore extends BaseStoreWithData<SendFlow, Data> {
     // TODO dynamic value (not only '{numSpaceships*pricePerUnit}')
     let msgValue = BigNumber.from(0);
     if (msgValueString === '{numSpaceships*pricePerUnit}') {
-      msgValue = pricePerUnit.mul(flow.data.fleetAmount);
+      msgValue = pricePerUnit.mul(fleetAmount);
     } else if (msgValueString === '{numSpaceships*pricePerUnit+amountForPayee}') {
-      msgValue = pricePerUnit.mul(flow.data.fleetAmount).add(valueRequiredToSendForResolution);
+      msgValue = pricePerUnit.mul(fleetAmount).add(valueRequiredToSendForResolution);
     } else if (msgValueString === '{amountForPayee}') {
       msgValue = BigNumber.from(valueRequiredToSendForResolution);
     } else if (msgValueString) {

@@ -30,7 +30,6 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         uint256 maxClaimDelay;
         uint256 minimumSubscriptionWhenStaking;
         uint256 minimumSubscriptionWhenNotStaking;
-        uint256 maxAmountSpentPerSecondForAttacks;
         uint256 attackMaxDistance;
         uint256 timePerDistance;
         uint256 productionSpeedUp;
@@ -66,7 +65,6 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         uint256 fleetSentId,
         uint256 amountSent,
         uint256 lastAttackTime,
-        uint256 amount,
         bytes32 secret
     );
 
@@ -92,7 +90,6 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     uint256 public immutable maxClaimDelay;
     uint256 public immutable minimumSubscriptionWhenStaking;
     uint256 public immutable minimumSubscriptionWhenNotStaking;
-    uint256 public immutable maxAmountSpentPerSecondForAttacks;
     uint256 public immutable attackMaxDistance;
     uint256 public immutable minAttackAmount;
     // --------------------------------------------------------------------------------------------
@@ -150,7 +147,6 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         minAverageStakePerPlanet = config.minAverageStakePerPlanet;
         minimumSubscriptionWhenStaking = config.minimumSubscriptionWhenStaking;
         minimumSubscriptionWhenNotStaking = config.minimumSubscriptionWhenNotStaking;
-        maxAmountSpentPerSecondForAttacks = config.maxAmountSpentPerSecondForAttacks;
         attackMaxDistance = config.attackMaxDistance;
         minAttackAmount = config.minAttackAmount;
 
@@ -290,24 +286,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         require(myPlanets[to].mine, "TARGET_PLANET_NOT_YAKUZA");
         require(myPlanets[to].lockTime < block.timestamp, "TARGET_PLANET_LOCKED");
 
-        uint256 timestamp = block.timestamp;
-        uint256 timeSinceLastAttack = timestamp - myPlanets[to].lastAttackTime;
-
-        // TODO config
-        if (timeSinceLastAttack > 3 days / _productionSpeedUp) {
-            timeSinceLastAttack = 3 days / _productionSpeedUp;
-        }
-
-        // this is used by claimCounterAttack to block attack while traveling
-        require(timestamp >= myPlanets[to].lastAttackTime, "TOO_SOON");
-
-        uint256 effectiveTimePassed = _computeAmountSpentAndTime(timeSinceLastAttack, amount);
-
-        // Update the values after the checks
-        uint40 lastAttackTime = uint40(timestamp - timeSinceLastAttack + effectiveTimePassed);
-        myPlanets[to].lastAttackTime = lastAttackTime;
-
-        _checkPlanetAndDistance(from, to, distance, amount);
+        uint40 lastAttackTime = _updatePlanet(from, to, distance, amount);
 
         // then we do a basic send
         // Yakuza is going to take control of the planet
@@ -315,33 +294,15 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         outerSpace.send(from, amount, toHash);
 
         uint256 fleetSentId = uint256(keccak256(abi.encodePacked(toHash, from, address(this), address(this))));
-        emit YakuzaAttack(sender, to, fleetSentId, amount, lastAttackTime, amount, secret);
+        emit YakuzaAttack(sender, to, fleetSentId, amount, lastAttackTime, secret);
     }
 
-    function _computeAmountSpentAndTime(
-        uint256 timeSinceLastAttack,
-        uint32 amount
-    ) internal view returns (uint256 effectiveTimePassed) {
-        uint256 amountSpentPerSecond = amount / (timeSinceLastAttack + 1); // Add 1 to avoid division by zero
-
-        require(amountSpentPerSecond <= maxAmountSpentPerSecondForAttacks, "TOO_MUCH_SPENT_PER_SECOND");
-        require(amount >= minAttackAmount, "ATTACK_AMOUNT_TOO_SMALL");
-
-        // Calculate the effective time passed based on the amount spent
-        uint256 maxBudget = maxAmountSpentPerSecondForAttacks * timeSinceLastAttack;
-        if (amount < maxBudget) {
-            effectiveTimePassed = amount / maxAmountSpentPerSecondForAttacks;
-        } else {
-            effectiveTimePassed = timeSinceLastAttack;
-        }
-    }
-
-    function _checkPlanetAndDistance(
+    function _updatePlanet(
         uint256 from,
         uint256 to,
         uint256 distance,
         uint32 amount
-    ) internal view returns (Result memory result) {
+    ) internal returns (uint40 lastAttackTime) {
         Stats memory statsForFromPlanet = _getStats(from);
         Stats memory statsForToPlanet = _getStats(to);
 
@@ -362,6 +323,42 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         // There is a minimum number of spaceships Yakuza want to keep on each planet
         require(fromPlanet.numSpaceships > minimumSpaceshipsToLeave, "NOT_ENOUGH_SPACESHIPS");
         require(amount <= fromPlanet.numSpaceships - minimumSpaceshipsToLeave, "NEED_TO_LEAVE_ENOUGH_DEFENSE");
+
+        lastAttackTime = _handleAttackCap(to, statsForToPlanet, amount);
+    }
+
+    function _handleAttackCap(
+        uint256 to,
+        Stats memory statsForToPlanet,
+        uint32 amount
+    ) internal returns (uint40 lastAttackTime) {
+        uint256 timestamp = block.timestamp;
+
+        uint256 toCap = _capWhenActive(statsForToPlanet.production);
+        uint256 rate = (uint256(statsForToPlanet.production) * uint256(_productionSpeedUp)) / 1 hours;
+        uint256 maxTime = toCap / rate;
+
+        uint256 timeSinceLastAttack = timestamp - myPlanets[to].lastAttackTime;
+        if (timeSinceLastAttack > maxTime) {
+            timeSinceLastAttack = maxTime;
+        }
+
+        uint256 amountSpentPerSecond = amount / (timeSinceLastAttack + 1); // Add 1 to avoid division by zero
+
+        require(amountSpentPerSecond <= rate, "TOO_MUCH_SPENT_PER_SECOND");
+        require(amount >= minAttackAmount, "ATTACK_AMOUNT_TOO_SMALL");
+
+        // Calculate the effective time passed based on the amount spent
+
+        uint256 maxBudget = rate * timeSinceLastAttack;
+        if (amount < maxBudget) {
+            lastAttackTime = uint40(timestamp - timeSinceLastAttack + (amount / rate));
+        } else {
+            lastAttackTime = uint40(timestamp);
+        }
+
+        // Update the values after the checks
+        myPlanets[to].lastAttackTime = uint40(lastAttackTime);
     }
 
     // --------------------------------------------------------------------------------------------
