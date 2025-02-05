@@ -177,8 +177,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     resolveWindow /= 25;
     genesisHash = '0x2E8844C4BE4BB08968BF024167442FF346C1277CFA814ADCE21207B6A4BCD005';
 
-    bootstrapSessionEndTime = 1738576468; // Monday, 3 February 2025 09:54:28
-    infinityStartTime = 1741255200; // Thursday, 6 March 2025 10:00:00
+    bootstrapSessionEndTime = 17385764680; // Saturday, 7 December 2520 03:04:40 1738576468; // Monday, 3 February 2025 09:54:28
+    infinityStartTime = 17412552000; // Monday, 13 October 2521 04:00:00 1741255200; // Thursday, 6 March 2025 10:00:00
   }
   // ----------------------------------------------------------------------------------------------
 
