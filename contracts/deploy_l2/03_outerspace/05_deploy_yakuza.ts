@@ -19,6 +19,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     timePerDistance: OuterSpace.linkedData.timePerDistance,
     productionSpeedUp: OuterSpace.linkedData.productionSpeedUp,
 
+    minAttackAmount: 50000,
     numSecondsPerTokens,
     spaceshipsToKeepPer10000: 2000, // 20% of cap to keep
     minAverageStakePerPlanet: parseEther('5').toString(), // 5 tokens per planet on average minimum, do mot accept low planet unless bigger are given too

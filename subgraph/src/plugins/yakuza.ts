@@ -41,7 +41,6 @@ export function handleYakuzaSubscribed(event: YakuzaSubscribed): void {
       yakuzaPlanet = new YakuzaPlanet(planetId);
       yakuzaPlanet.planet = planetId;
       yakuzaPlanet.owner = planet.owner;
-      yakuzaPlanet.amountSpentOverTime = ZERO;
       yakuzaPlanet.lastAttackTime = ZERO;
       yakuzaPlanet.lockTime = ZERO;
       yakuzaPlanet.save();
@@ -70,7 +69,6 @@ export function handleYakuzaClaimed(event: YakuzaClaimed): void {
     yakuzaPlanet = new YakuzaPlanet(planetId);
     yakuzaPlanet.owner = planet.owner;
     yakuzaPlanet.planet = planetId;
-    yakuzaPlanet.amountSpentOverTime = ZERO;
     yakuzaPlanet.lastAttackTime = ZERO;
     yakuzaPlanet.lockTime = ZERO;
   }
@@ -103,11 +101,9 @@ export function handleYakuzaAttack(event: YakuzaAttack): void {
     yakuzaPlanet = new YakuzaPlanet(planet.id);
     yakuzaPlanet.owner = planet.owner;
     yakuzaPlanet.planet = planet.id;
-    yakuzaPlanet.amountSpentOverTime = ZERO;
     yakuzaPlanet.lastAttackTime = ZERO;
     yakuzaPlanet.lockTime = ZERO;
   }
   yakuzaPlanet.lastAttackTime = event.params.lastAttackTime;
-  yakuzaPlanet.amountSpentOverTime = event.params.amountSpentOverTime;
   yakuzaPlanet.save();
 }

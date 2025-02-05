@@ -34,6 +34,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         uint256 attackMaxDistance;
         uint256 timePerDistance;
         uint256 productionSpeedUp;
+        uint256 minAttackAmount;
         bytes32 genesis;
     }
     // --------------------------------------------------------------------------------------------
@@ -65,7 +66,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         uint256 fleetSentId,
         uint256 amountSent,
         uint256 lastAttackTime,
-        uint256 amountSpentOverTime,
+        uint256 amount,
         bytes32 secret
     );
 
@@ -93,6 +94,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     uint256 public immutable minimumSubscriptionWhenNotStaking;
     uint256 public immutable maxAmountSpentPerSecondForAttacks;
     uint256 public immutable attackMaxDistance;
+    uint256 public immutable minAttackAmount;
     // --------------------------------------------------------------------------------------------
 
     // --------------------------------------------------------------------------------------------
@@ -117,7 +119,6 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         bool mine;
         uint40 lastAttackTime;
         uint40 lockTime;
-        uint168 amountSpentOverTime;
     }
     mapping(uint256 => MyPlanet) public myPlanets;
 
@@ -151,6 +152,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         minimumSubscriptionWhenNotStaking = config.minimumSubscriptionWhenNotStaking;
         maxAmountSpentPerSecondForAttacks = config.maxAmountSpentPerSecondForAttacks;
         attackMaxDistance = config.attackMaxDistance;
+        minAttackAmount = config.minAttackAmount;
 
         _postUpgrade(initialRewardReceiver, initialGenerator);
     }
@@ -289,7 +291,6 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         require(myPlanets[to].lockTime < block.timestamp, "TARGET_PLANET_LOCKED");
 
         uint256 timestamp = block.timestamp;
-        uint256 amountSpentOverTime = myPlanets[to].amountSpentOverTime;
         uint256 timeSinceLastAttack = timestamp - myPlanets[to].lastAttackTime;
 
         // TODO config
@@ -300,10 +301,9 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         // this is used by claimCounterAttack to block attack while traveling
         require(timestamp >= myPlanets[to].lastAttackTime, "TOO_SOON");
 
-        (uint256 amountSpent, uint256 effectiveTimePassed) = _computeAmountSpentAndTime(timeSinceLastAttack, amount);
+        uint256 effectiveTimePassed = _computeAmountSpentAndTime(timeSinceLastAttack, amount);
 
         // Update the values after the checks
-        myPlanets[to].amountSpentOverTime = uint168(amountSpent);
         uint40 lastAttackTime = uint40(timestamp - timeSinceLastAttack + effectiveTimePassed);
         myPlanets[to].lastAttackTime = lastAttackTime;
 
@@ -315,25 +315,22 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         outerSpace.send(from, amount, toHash);
 
         uint256 fleetSentId = uint256(keccak256(abi.encodePacked(toHash, from, address(this), address(this))));
-        emit YakuzaAttack(sender, to, fleetSentId, amount, lastAttackTime, amountSpentOverTime, secret);
+        emit YakuzaAttack(sender, to, fleetSentId, amount, lastAttackTime, amount, secret);
     }
 
     function _computeAmountSpentAndTime(
         uint256 timeSinceLastAttack,
         uint32 amount
-    ) internal view returns (uint256 amountSpent, uint256 effectiveTimePassed) {
-        uint256 minAttackAmount = 50000; // TODO own config
-
-        amountSpent = amount;
-        uint256 amountSpentPerSecond = amountSpent / (timeSinceLastAttack + 1); // Add 1 to avoid division by zero
+    ) internal view returns (uint256 effectiveTimePassed) {
+        uint256 amountSpentPerSecond = amount / (timeSinceLastAttack + 1); // Add 1 to avoid division by zero
 
         require(amountSpentPerSecond <= maxAmountSpentPerSecondForAttacks, "TOO_MUCH_SPENT_PER_SECOND");
         require(amount >= minAttackAmount, "ATTACK_AMOUNT_TOO_SMALL");
 
         // Calculate the effective time passed based on the amount spent
         uint256 maxBudget = maxAmountSpentPerSecondForAttacks * timeSinceLastAttack;
-        if (amountSpent < maxBudget) {
-            effectiveTimePassed = amountSpent / maxAmountSpentPerSecondForAttacks;
+        if (amount < maxBudget) {
+            effectiveTimePassed = amount / maxAmountSpentPerSecondForAttacks;
         } else {
             effectiveTimePassed = timeSinceLastAttack;
         }

@@ -6,6 +6,7 @@ import type {SpaceQueryWithPendingState} from '$lib/space/optimisticSpace';
 import {spaceQueryWithPendingActions} from '$lib/space/optimisticSpace';
 import {BigNumber} from '@ethersproject/bignumber';
 import {now} from '$lib/time';
+import {wallet} from '$lib/blockchain/wallet';
 
 export type MyToken = {
   playTokenBalance?: BigNumber;
@@ -13,6 +14,7 @@ export type MyToken = {
   freePlayTokenClaimBalance?: BigNumber;
   playTokenAllowance?: BigNumber;
   freePlayTokenAllowance?: BigNumber;
+  nativeBalance?: BigNumber;
 };
 
 export class MyTokenStore implements Readable<MyToken> {
@@ -67,7 +69,18 @@ export class MyTokenStore implements Readable<MyToken> {
     return {playTokenDelta, freePlayTokenDelta};
   }
 
+  async updateNativeBalance() {
+    const nativeBalance = await wallet.provider?.getBalance(wallet.address);
+    if (nativeBalance) {
+      this.store.update((s: MyToken) => {
+        s.nativeBalance = nativeBalance;
+        return s;
+      });
+    }
+  }
+
   private onSpaceUpdate(update: SpaceQueryWithPendingState): void {
+    this.updateNativeBalance();
     // console.log({update});
     const updatePlayer = update.queryState.data?.player?.id;
     if (!updatePlayer) {

@@ -52,6 +52,12 @@
           {'' + $myTokens.playTokenBalance.div('10000000000000000').toNumber() / 100 + ''}
           <PlayCoin class="inline w-4" />
         </span>
+        {#if $myTokens.nativeBalance}
+          <span class="white font-black pr-4">
+            {'' + $myTokens.nativeBalance.div('10000000000000000').toNumber() / 100 + ''}
+            {nativeTokenSymbol}
+          </span>
+        {/if}
         {#if $myTokens.freePlayTokenBalance.gt(0)}
           <span class="text-green-300 font-black pr-4">
             {'' + $myTokens.freePlayTokenBalance.div('10000000000000000').toNumber() / 100 + ''}

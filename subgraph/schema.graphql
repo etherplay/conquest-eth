@@ -419,7 +419,6 @@ type YakuzaPlanet @entity {
   planet: Planet!
   lockTime: BigInt!
   lastAttackTime: BigInt!
-  amountSpentOverTime: BigInt!
 }
 
 #######################################################################################

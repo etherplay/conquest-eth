@@ -38,7 +38,6 @@ export type YakuzaQueryResult = {
   yakuzaPlanets: {
     id: string;
     lastAttackTime: string;
-    amountSpentOverTime: string;
   }[];
 };
 
@@ -59,7 +58,6 @@ export type YakuzaClaimFleet = {
 export type YakuzaPlanet = {
   id: string;
   lastAttackTime: number;
-  amountSpentOverTime: number;
 };
 
 export type YakuzaState = {
@@ -114,7 +112,6 @@ export class YakuzaQueryStore implements QueryStore<YakuzaState> {
   yakuzaPlanets(first:100 where: {lockTime_lt: $time owner_not: $yakuza}) {
     id
     lastAttackTime
-    amountSpentOverTime
   }
   
 }`,
@@ -262,7 +259,6 @@ export class YakuzaQueryStore implements QueryStore<YakuzaState> {
           }),
         yakuzaPlanets: data.yakuzaPlanets.map((v) => ({
           id: v.id,
-          amountSpentOverTime: Number(v.amountSpentOverTime),
           lastAttackTime: Number(v.lastAttackTime),
         })),
         yakuzaSubscription: {
