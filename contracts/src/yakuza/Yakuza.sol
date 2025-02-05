@@ -21,20 +21,22 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     // TYPES
     // --------------------------------------------------------------------------------------------
     struct Config {
-        uint256 numSecondsPerTokens;
-        uint256 spaceshipsToKeepPer10000;
+        // OuterSpace Config
+        bytes32 genesis;
         uint256 acquireNumSpaceships;
         uint256 productionCapAsDuration;
         uint256 frontrunningDelay;
+        uint256 timePerDistance;
+        uint256 productionSpeedUp;
+        // Yakuza Config
+        uint256 numSecondsPerTokens;
+        uint256 spaceshipsToKeepPer10000;
         uint256 minAverageStakePerPlanet;
         uint256 maxClaimDelay;
         uint256 minimumSubscriptionWhenStaking;
         uint256 minimumSubscriptionWhenNotStaking;
         uint256 attackMaxDistance;
-        uint256 timePerDistance;
-        uint256 productionSpeedUp;
         uint256 minAttackAmount;
-        bytes32 genesis;
     }
     // --------------------------------------------------------------------------------------------
 
@@ -74,8 +76,8 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     // --------------------------------------------------------------------------------------------
     // IMMUTABLES
     // --------------------------------------------------------------------------------------------
-    IOuterSpace public immutable outerSpace;
-    PlayToken public immutable playToken;
+    IOuterSpace internal immutable outerSpace;
+    PlayToken internal immutable playToken;
 
     bytes32 internal immutable _genesis;
     uint256 internal immutable _acquireNumSpaceships;
@@ -98,7 +100,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     // STATE VARIABLES
     // --------------------------------------------------------------------------------------------
     address public rewardReceiver;
-    RewardsGenerator public generator;
+    RewardsGenerator internal generator;
 
     struct Subscription {
         uint256 startTime;
@@ -138,7 +140,9 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         _acquireNumSpaceships = config.acquireNumSpaceships;
         _productionCapAsDuration = config.productionCapAsDuration;
         _frontrunningDelay = config.frontrunningDelay;
-        _timePerDistance = config.timePerDistance;
+        uint32 t = uint32(config.timePerDistance) / 4; // the coordinates space is 4 times bigger
+        require(t * 4 == config.timePerDistance, "TIME_PER_DIST_NOT_DIVISIBLE_4");
+        _timePerDistance = t;
         _productionSpeedUp = config.productionSpeedUp;
 
         numSecondsPerTokens = config.numSecondsPerTokens;
@@ -193,8 +197,8 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
             playToken.transferFrom(sender, address(this), tokenAmount);
         }
         playToken.mint{value: msg.value}(address(this), amountToMint);
-        uint256[] memory planets = new uint256[](0);
-        _recordContribution(sender, amountToMint + tokenAmount, planets);
+        uint256[] memory zeroPlanets = new uint256[](0);
+        _recordContribution(sender, amountToMint + tokenAmount, zeroPlanets);
     }
 
     function subscribeViaStaking(
@@ -263,7 +267,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         }
         address sender = msg.sender;
 
-        // we enforce sending back, which make such fleet visible to anyone
+        // this fleet is visible to anyone
         bytes32 expectedToHash = keccak256(abi.encodePacked(secret, to, false, address(0), uint256(0)));
 
         require(expectedToHash == toHash, "INVALID_TO_HASH");
@@ -289,8 +293,6 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         uint40 lastAttackTime = _updatePlanet(from, to, distance, amount);
 
         // then we do a basic send
-        // Yakuza is going to take control of the planet
-        // This also ensure this cannot be abused by losing planet in purpose
         outerSpace.send(from, amount, toHash);
 
         uint256 fleetSentId = uint256(keccak256(abi.encodePacked(toHash, from, address(this), address(this))));
@@ -395,6 +397,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     struct Result {
         uint40 arrivalTime;
         uint256 amountLeft;
+        bool firstClaim;
     }
 
     function _computeArrivalTimeAndAmountLeft(
@@ -412,7 +415,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
 
         // we compute the minimum arrival time
         result.arrivalTime = uint40(
-            block.timestamp + ((distance * (_timePerDistance * 10000)) / statsForFromPlanet.speed / 4)
+            block.timestamp + ((distance * (_timePerDistance * 10000)) / statsForFromPlanet.speed)
         );
 
         ImportingOuterSpaceTypes.ExternalPlanet memory fromPlanet = outerSpace.getUpdatedPlanetState(from);
@@ -426,6 +429,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         // we give you revenge enough to capture it back
         result.amountLeft = claims[fleetId].amountLeft;
         if (result.amountLeft == 0) {
+            result.firstClaim = true;
             uint256 attackedPlanetCap = _capWhenActive(statsForToPlanet.production);
 
             // TODO
@@ -440,24 +444,40 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         require(amount <= result.amountLeft, "TOO_MANY_SPACESHIPS_CLAIMED");
     }
 
-    function _checkValidFleet(address sender, uint256 fleetId, uint256 fleetOrigin) internal view {
+    function _checkValidFleet(address sender, uint256 fleetId, uint256 fleetOrigin, bool firstClaim) internal view {
         // You cannot claim the same winning fleet twice
         require(!claims[fleetId].claimed, "ALREADY_CLAIMED");
+
+        ImportingOuterSpaceTypes.ExternalPlanet memory toPlanet = outerSpace.getUpdatedPlanetState(fleetOrigin);
+        require(toPlanet.active, "TARGET_PLANET_NOT_ACTIVE");
+        require(toPlanet.owner != address(this), "TARGET_PLANET_ALREADY_OWNED");
 
         ImportingOuterSpaceTypes.FleetData memory fleet = outerSpace.getFleetData(fleetId, fleetOrigin);
 
         require(fleet.owner != address(this), "FLEET_IS_YAKUZA");
 
-        // we used to allow revenge on behalf of Yakuza
-        // but this is now handled by allowing attacking any planet that once belonged to Yakuza
-        // require(fleet.defender == sender || fleet.defender == address(this), "DID_NOT_TARGETED_YOU_NOR_YAKUZA");
-        require(fleet.defender == sender, "DID_NOT_TARGETED_YOU");
+        if (firstClaim) {
+            require(fleet.defender == sender, "DID_NOT_TARGETED_YOU");
+        }
+        // else
+        // once first claim is made, any subscriber can not continue the claim
 
         // Fleet arrived before you subscribe (minus _frontrunningDelay)
         require(fleet.arrivalTime - _frontrunningDelay > subscriptions[sender].startTime, "FLEET_NOT_COVERED");
 
         // There is a delay after which you cannot claim anymore
-        require(block.timestamp < fleet.arrivalTime + maxClaimDelay, "TOO_LATE_TO_CLAIM");
+        if (firstClaim) {
+            require(block.timestamp < fleet.arrivalTime + maxClaimDelay, "TOO_LATE_TO_CLAIM");
+        } else {
+            // once first claim is made, there are more time to complete it
+            // allowing others to continue the counter-attack
+            // this prevent player to use yakuza to partially attack their planets
+            // with the intent to exit in time
+            require(
+                block.timestamp < fleet.arrivalTime + maxClaimDelay + maxClaimDelay / 2,
+                "TOO_LATE_TO_CLAIM_FURTHER"
+            );
+        }
 
         // the fleet need to exist
         require(fleet.quantity > 0, "NO_FLEET");
@@ -500,19 +520,23 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
             "INVALID_FLEET_DATA_OR_SECRET"
         );
 
-        _checkValidFleet(sender, fleetId, resolution.from);
-
         Result memory planetResult = _computeArrivalTimeAndAmountLeft(fleetId, from, resolution.to, distance, amount);
+
+        _checkValidFleet(sender, fleetId, resolution.from, planetResult.firstClaim);
+
+        require(amount >= minAttackAmount, "ATTACK_AMOUNT_TOO_SMALL");
 
         // once a attacked planet is claimed, it is considered being owned by Yakuza
         myPlanets[resolution.to].mine = true;
         uint40 lockTime = myPlanets[resolution.to].lockTime;
         if (claims[fleetId].amountLeft == 0) {
-            lockTime = planetResult.arrivalTime;
+            lockTime = planetResult.arrivalTime + uint40(_frontrunningDelay);
         } else {
-            lockTime = planetResult.arrivalTime < lockTime ? planetResult.arrivalTime : lockTime;
+            lockTime = planetResult.arrivalTime + uint40(_frontrunningDelay) < lockTime
+                ? planetResult.arrivalTime + uint40(_frontrunningDelay)
+                : lockTime;
         }
-        myPlanets[resolution.to].lockTime = lockTime + uint40(_frontrunningDelay);
+        myPlanets[resolution.to].lockTime = lockTime;
 
         if (amount >= planetResult.amountLeft) {
             planetResult.amountLeft = 0;
@@ -565,12 +589,6 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     function claimFixedRewards(address to) external {
         require(msg.sender == rewardReceiver, "NOT_ALLOWED");
         generator.claimFixedRewards(to);
-    }
-
-    // support upgrade of generator if any
-    function claim(address to) external {
-        require(msg.sender == rewardReceiver, "NOT_ALLOWED");
-        IClaim(address(generator)).claim(to);
     }
 
     function changegGenerator(RewardsGenerator newGenerator) external {
