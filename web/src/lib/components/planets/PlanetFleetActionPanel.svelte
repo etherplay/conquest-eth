@@ -16,6 +16,7 @@
   import {privateWallet} from '$lib/account/privateWallet';
   import {matchConditions, pluginShowing, showPlanetButtons} from '$lib/plugins/currentPlugin';
   import {yakuzaQuery} from '$lib/default-plugins/yakuza/yakuzaQuery';
+  import {initialContractsInfos} from '$lib/blockchain/contracts';
 
   export let coords: {x: number; y: number};
   export let close: () => void;

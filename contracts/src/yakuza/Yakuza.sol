@@ -35,7 +35,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         uint256 maxClaimDelay;
         uint256 minimumSubscriptionWhenStaking;
         uint256 minimumSubscriptionWhenNotStaking;
-        uint256 attackMaxDistance;
+        uint256 maxTimeRange;
         uint256 minAttackAmount;
     }
     // --------------------------------------------------------------------------------------------
@@ -86,14 +86,14 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     uint256 internal immutable _timePerDistance;
     uint256 internal immutable _productionSpeedUp;
 
-    uint256 public immutable numSecondsPerTokens;
-    uint256 public immutable spaceshipsToKeepPer10000;
-    uint256 public immutable minAverageStakePerPlanet;
-    uint256 public immutable maxClaimDelay;
-    uint256 public immutable minimumSubscriptionWhenStaking;
-    uint256 public immutable minimumSubscriptionWhenNotStaking;
-    uint256 public immutable attackMaxDistance;
-    uint256 public immutable minAttackAmount;
+    uint256 internal immutable numSecondsPerTokens;
+    uint256 internal immutable spaceshipsToKeepPer10000;
+    uint256 internal immutable minAverageStakePerPlanet;
+    uint256 internal immutable maxClaimDelay;
+    uint256 internal immutable minimumSubscriptionWhenStaking;
+    uint256 internal immutable minimumSubscriptionWhenNotStaking;
+    uint256 internal immutable maxTimeRange;
+    uint256 internal immutable minAttackAmount;
     // --------------------------------------------------------------------------------------------
 
     // --------------------------------------------------------------------------------------------
@@ -151,7 +151,7 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         minAverageStakePerPlanet = config.minAverageStakePerPlanet;
         minimumSubscriptionWhenStaking = config.minimumSubscriptionWhenStaking;
         minimumSubscriptionWhenNotStaking = config.minimumSubscriptionWhenNotStaking;
-        attackMaxDistance = config.attackMaxDistance;
+        maxTimeRange = config.maxTimeRange;
         minAttackAmount = config.minAttackAmount;
 
         _postUpgrade(initialRewardReceiver, initialGenerator);
@@ -173,6 +173,28 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     }
 
     // --------------------------------------------------------------------------------------------
+
+    // function getConfig() external view returns (Config memory) {
+    //     return
+    //         Config({
+    //             // OuterSpace Config
+    //             genesis: _genesis,
+    //             acquireNumSpaceships: _acquireNumSpaceships,
+    //             productionCapAsDuration: _productionCapAsDuration,
+    //             frontrunningDelay: _frontrunningDelay,
+    //             timePerDistance: _timePerDistance,
+    //             productionSpeedUp: _productionSpeedUp,
+    //             // Yakuza Config
+    //             numSecondsPerTokens: numSecondsPerTokens,
+    //             spaceshipsToKeepPer10000: spaceshipsToKeepPer10000,
+    //             minAverageStakePerPlanet: minAverageStakePerPlanet,
+    //             maxClaimDelay: maxClaimDelay,
+    //             minimumSubscriptionWhenStaking: minimumSubscriptionWhenStaking,
+    //             minimumSubscriptionWhenNotStaking: minimumSubscriptionWhenNotStaking,
+    //             maxTimeRange: maxTimeRange,
+    //             minAttackAmount: minAttackAmount
+    //         });
+    // }
 
     // --------------------------------------------------------------------------------------------
     // ERC20
@@ -315,7 +337,8 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         // player provide the distance, we need to check it
         _requireCorrectDistance(distance, from, to, statsForFromPlanet, statsForToPlanet);
 
-        require(distance <= attackMaxDistance, "TARGET_PLANET_TOO_FAR_AWAY");
+        uint256 timeItTakes = ((distance * (_timePerDistance * 10000)) / statsForFromPlanet.speed);
+        require(timeItTakes <= maxTimeRange, "TOO_FAR_AWAY");
 
         ImportingOuterSpaceTypes.ExternalPlanet memory fromPlanet = outerSpace.getUpdatedPlanetState(from);
 
@@ -413,10 +436,10 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         // player provide the distance, we need to check it
         _requireCorrectDistance(distance, from, to, statsForFromPlanet, statsForToPlanet);
 
+        uint256 timeItTakes = ((distance * (_timePerDistance * 10000)) / statsForFromPlanet.speed);
+        require(timeItTakes <= maxTimeRange, "TOO_FAR_AWAY");
         // we compute the minimum arrival time
-        result.arrivalTime = uint40(
-            block.timestamp + ((distance * (_timePerDistance * 10000)) / statsForFromPlanet.speed)
-        );
+        result.arrivalTime = uint40(block.timestamp + timeItTakes);
 
         ImportingOuterSpaceTypes.ExternalPlanet memory fromPlanet = outerSpace.getUpdatedPlanetState(from);
         uint256 yakuzaCap = _capWhenActive(statsForFromPlanet.production);

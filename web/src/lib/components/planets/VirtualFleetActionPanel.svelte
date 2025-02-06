@@ -1,6 +1,7 @@
 <script lang="ts">
   export let planetState;
   export let planetInfo;
+  export let timeItTakes: number;
   export let close: () => void;
 
   import sendFlow from '$lib/flows/send';
@@ -73,12 +74,23 @@
   {#if !planetIsYakuza}
     <p class="m-3">Pick a Yakuza Planet to send from.</p>
   {:else}
-    <PanelButton label="Confirm" class="m-2" color="text-blue-500" borderColor="border-blue-500" on:click={sendFleet}>
+    <PanelButton
+      disabled={planetIsYakuza && timeItTakes > YakuzaContract.linkedData.maxTimeRange}
+      label="Confirm"
+      class="m-2"
+      color="text-blue-500"
+      borderColor="border-blue-500"
+      on:click={sendFleet}
+    >
       <div class="w-20">
-        Continue
-        <Help class="inline w-4 h-4">
-          You can send out spaceships in the form of fleets to either attack or send reinforcement.
-        </Help>
+        {#if planetIsYakuza && timeItTakes > YakuzaContract.linkedData.maxTimeRange}
+          Too Far for Yakuza
+        {:else}
+          Continue
+          <Help class="inline w-4 h-4">
+            You can send out spaceships in the form of fleets to either attack or send reinforcement.
+          </Help>
+        {/if}
       </div>
     </PanelButton>
   {/if}

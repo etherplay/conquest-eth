@@ -19,6 +19,8 @@
   function cancelSend() {
     sendFlow.cancel();
   }
+
+  $: timeItTakes = selectedPlanetInfo ? spaceInfo.timeToArrive(selectedPlanetInfo, planetInfo) : undefined;
 </script>
 
 <div
@@ -37,9 +39,9 @@
 
     {#if selectedPlanetInfo}
       <p class="m-1 text-sm text-yellow-400">
-        Will take {timeToText(spaceInfo.timeToArrive(selectedPlanetInfo, planetInfo))}
+        Will take {timeToText(timeItTakes)}
       </p>
-      <VirtualFleetActionPanel {planetState} {planetInfo} close={() => selection.unselect()} />
+      <VirtualFleetActionPanel {planetState} {planetInfo} {timeItTakes} close={() => selection.unselect()} />
     {/if}
 
     <PanelButton label="Cancel" class="m-2" on:click={cancelSend}>

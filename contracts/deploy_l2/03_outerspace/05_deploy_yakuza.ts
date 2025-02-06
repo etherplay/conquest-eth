@@ -21,12 +21,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     minAttackAmount: 20000,
     numSecondsPerTokens,
-    spaceshipsToKeepPer10000: 2000, // 20% of cap to keep
+    spaceshipsToKeepPer10000: 1500, // 15% of cap to keep
     minAverageStakePerPlanet: parseEther('4').toString(), // 5 tokens per planet on average minimum, do mot accept low planet unless bigger are given too
     maxClaimDelay: Math.floor((1 * 24 * 60 * 60) / OuterSpace.linkedData.productionSpeedUp), // 1 day
     minimumSubscriptionWhenNotStaking: parseEther('1').toString(),
     minimumSubscriptionWhenStaking: parseEther('1').toString(),
-    attackMaxDistance: 64,
+    maxTimeRange: Math.floor((4 * 24 * 60 * 60) / OuterSpace.linkedData.productionSpeedUp), // 4 days
   };
 
   console.log(config);
