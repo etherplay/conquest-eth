@@ -5,7 +5,7 @@ import {xyToLocation, locationToXY} from 'conquest-eth-common';
 const args = process.argv.slice(2);
 
 if (args.length === 0) {
-  throw new Error(`need to pass the addresses to send to`);
+  throw new Error(`need to pass the location to send to`);
 }
 let location = args[0];
 
