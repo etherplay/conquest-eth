@@ -164,7 +164,7 @@
             </div>
           </PanelButton>
         {/each}
-        {#if yakuzaClaimAsFleet}
+        {#if yakuzaClaimAsFleet && $planetState.active}
           <PanelButton
             color="text-pink-400"
             label="REVENGE"
@@ -172,7 +172,7 @@
             borderColor="border-pink-600"
             on:click={() => revenge()}><div class="w-20">REVENGE</div></PanelButton
           >
-        {:else if yakuzaClaimAsPlanet}
+        {:else if yakuzaClaimAsPlanet && $planetState.active}
           <PanelButton
             color="text-pink-400"
             label="Take it Back"

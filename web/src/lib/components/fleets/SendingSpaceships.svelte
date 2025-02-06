@@ -90,13 +90,17 @@
     !$sendFlow.data?.config?.abi ||
     ($sendFlow.data?.config?.args && $sendFlow.data?.config?.args.includes('{fleetOwner}'));
 
-  $: numSpaceshipsAvailable = $sendFlow.data?.config?.numSpaceshipsAvailable
-    ? 'fixed' in $sendFlow.data?.config?.numSpaceshipsAvailable
-      ? $sendFlow.data?.config?.numSpaceshipsAvailable.fixed
-      : fromPlanetInfo
-      ? $sendFlow.data?.config?.numSpaceshipsAvailable.func(fromPlanetInfo, $time)
-      : undefined
-    : undefined;
+  let numSpaceshipsAvailable: number | undefined;
+  $: {
+    numSpaceshipsAvailable = undefined;
+    if ($sendFlow.data?.config?.numSpaceshipsAvailable) {
+      if ('fixed' in $sendFlow.data?.config?.numSpaceshipsAvailable) {
+        numSpaceshipsAvailable = $sendFlow.data?.config?.numSpaceshipsAvailable.fixed;
+      } else if (fromPlanetInfo) {
+        numSpaceshipsAvailable = $sendFlow.data?.config?.numSpaceshipsAvailable.func(fromPlanetInfo, $time);
+      }
+    }
+  }
   // TODO maxSpaceshipsLoaded and invalid message if maxSpaceships == 0
   let fleetAmountSet = false;
   let fleetAmount = 1;
@@ -136,8 +140,6 @@
     if (fleetAmount > maxSpaceships) {
       fleetAmount = maxSpaceships;
     }
-
-    // console.log({maxSpaceships, numSpaceshipsToKeep: $sendFlow.data?.config?.numSpaceshipsToKeep});
   }
 
   let minSpaceships = 1;
