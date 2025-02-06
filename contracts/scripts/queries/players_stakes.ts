@@ -52,7 +52,7 @@ query($fromBlock: Int! $toBlock: Int! $first: Int! $lastId: ID!) {
   for (const event of planetStakeEvents) {
     const playerAddress = event.owner.id;
     if (event.planet.stakeDeposited != event.stake) {
-      throw new Error(`mismarch stake`);
+      throw new Error(`mismarch stake ${event.planet.stakeDeposited} != ${event.stake}`);
     }
     const amountStaked = event.planet.stakeDeposited;
     const numPlanetsStaked = 1;

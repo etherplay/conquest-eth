@@ -22,9 +22,10 @@ contract OuterSpaceFleetsReadFacet is OuterSpaceFacetBase, IOuterSpaceFleetsRead
             uint64 destroyedAtLaunch
         )
     {
-        launchTime = _fleets[fleetId].launchTime;
-        quantity = _fleets[fleetId].quantity & 0x3FFFFFFF;
-        owner = _fleets[fleetId].owner;
+        Fleet memory fleet = _fleets[fleetId];
+        launchTime = fleet.launchTime;
+        quantity = fleet.quantity >> 31 == 1 ? 0 : fleet.quantity; // keep old behavior
+        owner = fleet.owner;
 
         uint256 timeSlot = launchTime / (_frontrunningDelay / 2);
         destroyedAtLaunch = _inFlight[from][timeSlot].destroyed;
