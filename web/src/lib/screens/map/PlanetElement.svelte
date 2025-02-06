@@ -92,6 +92,8 @@
       frameType = 'gg_sun_gray.png';
     } else if ($planetState?.rewardGiver === '0x7777777777777777777777777777777777777777') {
       frameType = 'InfiniteSeas_sun.png';
+    } else if ($planetState?.rewardGiver === `0x8888888888888888888888888888888888888888`) {
+      frameType = 'mithril_sun.png';
     }
 
     frameInfo = (planetsFrame.frames as any)[frameType] as {frame: Frame};

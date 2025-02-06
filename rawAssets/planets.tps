@@ -215,6 +215,7 @@
             <key type="filename">Xaya_sun.png</key>
             <key type="filename">gg_sun_gray.png</key>
             <key type="filename">gg_sun_green.png</key>
+            <key type="filename">mithril_sun.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -360,6 +361,7 @@
                     <filename>gg_sun_gray.png</filename>
                     <filename>gg_sun_green.png</filename>
                     <filename>InfiniteSeas_sun.png</filename>
+                    <filename>mithril_sun.png</filename>
                 </array>
             </struct>
         </map>
