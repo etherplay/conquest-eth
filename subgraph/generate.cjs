@@ -44,7 +44,7 @@ if (stat.isDirectory()) {
   };
   const files = fs.readdirSync(pathArg, {withFileTypes: true});
   for (const file of files) {
-    console.log(`${file.path}...`);
+    // console.log(`${file.path}...`);
     if (!file.isDirectory() && file.name.substr(file.name.length - 5) === '.json' && !file.name.startsWith('.')) {
       const contractName = file.name.substr(0, file.name.length - 5);
       contractsInfo.contracts[contractName] = JSON.parse(fs.readFileSync(path.join(pathArg, file.name)).toString());
@@ -72,9 +72,9 @@ fs.emptyDirSync('./abis');
 fs.copySync('./interfaces_abis', './abis');
 for (const contractName of Object.keys(contracts)) {
   const contractInfo = contracts[contractName];
-  console.log(`writing abi for ${contractName}...`);
+  // console.log(`writing abi for ${contractName}...`);
   fs.writeFileSync(path.join('abis', contractName + '.json'), JSON.stringify(contractInfo.abi));
-  console.log(`...done`);
+  // console.log(`...done`);
 }
 
 console.log({chainName: contractsInfo.chainName});
