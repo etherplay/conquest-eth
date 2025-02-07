@@ -5,7 +5,7 @@ import {xyToLocation, locationToXY} from 'conquest-eth-common';
 const args = process.argv.slice(2);
 
 if (args.length === 0) {
-  throw new Error(`need to pass the addresses to send to`);
+  throw new Error(`need to pass the location to send to`);
 }
 let location = args[0];
 
@@ -30,6 +30,8 @@ if (sponsor === 'xaya') {
   giverAddress = `0x6666666666666666666666666666666666666666`;
 } else if (sponsor === 'infinite-seas') {
   giverAddress = `0x7777777777777777777777777777777777777777`;
+} else if (sponsor === 'mithril') {
+  giverAddress = `0x8888888888888888888888888888888888888888`;
 }
 
 if (!giverAddress) {
