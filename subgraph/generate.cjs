@@ -72,7 +72,9 @@ fs.emptyDirSync('./abis');
 fs.copySync('./interfaces_abis', './abis');
 for (const contractName of Object.keys(contracts)) {
   const contractInfo = contracts[contractName];
+  console.log(`writing abi for ${contractName}...`);
   fs.writeFileSync(path.join('abis', contractName + '.json'), JSON.stringify(contractInfo.abi));
+  console.log(`...done`);
 }
 
 console.log({chainName: contractsInfo.chainName});
