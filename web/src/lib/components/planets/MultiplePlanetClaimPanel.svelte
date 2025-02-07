@@ -75,7 +75,7 @@
     {#if $claimFlow.yakuza && YakuzaContract}
       <h2 class="text-red-500">
         Give the selected planets (worth ${nativeTokenAmountFor(cost)}) to Yakuza in exchange for
-        {timeToText(cost.mul(YakuzaContract.linkedData.numSecondsPerTokens).toNumber(), {verbose: true})} of protection
+        {timeToText(cost.mul(YakuzaContract.linkedData.numSecondsPerTokens).toNumber() / 10000, {verbose: true})} of protection
       </h2>
       {#if distribution.amountToMint.gt(0) && distribution.tokenAvailable.gt(0) && distribution.yakuzaTokenAvailable.gt(0)}
         <p class="text-yellow-500 mt-4">
