@@ -24,6 +24,7 @@
     "local_node": "pnpm run --filter ./contracts dev:node",
     "contracts:dev": "rm web/src/lib/contracts.json; wait-on tcp:127.0.0.1:8545 && pnpm run --filter ./contracts local:dev --export ../web/src/lib/contracts.json",
     "contracts:deploy": "ldenv -m localhost pnpm run --filter ./contracts deploy @@MODE @@",
+    "contracts:fork:deploy": "ldenv -m localhost pnpm run --filter ./contracts fork:deploy @@MODE @@",
     "contracts:export": "rm web/src/lib/contracts.json; ldenv -m localhost pnpm run --filter ./contracts export @@MODE ../web/src/lib/contracts.json @@",
     "contracts:execute": "ldenv -m localhost pnpm run --filter ./contracts execute @@MODE @@",
     "contracts:fork:execute": "ldenv -m localhost pnpm run --filter ./contracts fork:execute @@MODE @@",

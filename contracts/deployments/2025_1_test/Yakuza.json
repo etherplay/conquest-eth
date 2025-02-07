@@ -1,5 +1,5 @@
 {
-  "address": "0xDe57C8BEe69ef1e407BA55E3AB8cEF8A57f29d63",
+  "address": "0xF5333b31C636a2d1827A8eF75006C33eBFD5146b",
   "abi": [
     {
       "anonymous": false,
@@ -198,6 +198,49 @@
         {
           "indexed": true,
           "internalType": "uint256",
+          "name": "to",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "fleetSentId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "amountSent",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "lastAttackTime",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "secret",
+          "type": "bytes32"
+        }
+      ],
+      "name": "YakuzaAttack",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "sender",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
           "name": "fleetId",
           "type": "uint256"
         },
@@ -224,6 +267,18 @@
           "internalType": "uint256",
           "name": "amountLeft",
           "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "lockTime",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "secret",
+          "type": "bytes32"
         }
       ],
       "name": "YakuzaClaimed",
@@ -255,6 +310,12 @@
           "internalType": "uint256",
           "name": "contribution",
           "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256[]",
+          "name": "planets",
+          "type": "uint256[]"
         }
       ],
       "name": "YakuzaSubscribed",
@@ -385,19 +446,6 @@
     {
       "inputs": [
         {
-          "internalType": "address",
-          "name": "to",
-          "type": "address"
-        }
-      ],
-      "name": "claim",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        {
           "internalType": "uint256",
           "name": "fleetId",
           "type": "uint256"
@@ -471,7 +519,7 @@
         },
         {
           "internalType": "uint256",
-          "name": "arrivalTimeWanted",
+          "name": "distance",
           "type": "uint256"
         },
         {
@@ -631,65 +679,29 @@
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "generator",
-      "outputs": [
-        {
-          "internalType": "contract RewardsGenerator",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "maxClaimDelay",
-      "outputs": [
+      "inputs": [
         {
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
         }
       ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "minAverageStakePerPlanet",
+      "name": "myPlanets",
       "outputs": [
         {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "minimumSubscriptionWhenNotStaking",
-      "outputs": [
+          "internalType": "bool",
+          "name": "mine",
+          "type": "bool"
+        },
         {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "minimumSubscriptionWhenStaking",
-      "outputs": [
+          "internalType": "uint40",
+          "name": "lastAttackTime",
+          "type": "uint40"
+        },
         {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
+          "internalType": "uint40",
+          "name": "lockTime",
+          "type": "uint40"
         }
       ],
       "stateMutability": "view",
@@ -722,32 +734,6 @@
           "internalType": "uint256",
           "name": "",
           "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "numSecondsPerTokens",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "outerSpace",
-      "outputs": [
-        {
-          "internalType": "contract IOuterSpace",
-          "name": "",
-          "type": "address"
         }
       ],
       "stateMutability": "view",
@@ -831,19 +817,6 @@
       "type": "function"
     },
     {
-      "inputs": [],
-      "name": "playToken",
-      "outputs": [
-        {
-          "internalType": "contract PlayToken",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
       "inputs": [
         {
           "internalType": "address",
@@ -868,14 +841,9 @@
         {
           "components": [
             {
-              "internalType": "uint256",
-              "name": "numSecondsPerTokens",
-              "type": "uint256"
-            },
-            {
-              "internalType": "uint256",
-              "name": "spaceshipsToKeepPer10000",
-              "type": "uint256"
+              "internalType": "bytes32",
+              "name": "genesis",
+              "type": "bytes32"
             },
             {
               "internalType": "uint256",
@@ -890,6 +858,26 @@
             {
               "internalType": "uint256",
               "name": "frontrunningDelay",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "timePerDistance",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "productionSpeedUp",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "numSecondsPerTokens",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "spaceshipsToKeepPer10000",
               "type": "uint256"
             },
             {
@@ -913,9 +901,14 @@
               "type": "uint256"
             },
             {
-              "internalType": "bytes32",
-              "name": "genesis",
-              "type": "bytes32"
+              "internalType": "uint256",
+              "name": "maxTimeRange",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "minAttackAmount",
+              "type": "uint256"
             }
           ],
           "internalType": "struct Yakuza.Config",
@@ -952,19 +945,6 @@
       "name": "setRewardReceiver",
       "outputs": [],
       "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "spaceshipsToKeepPer10000",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "",
-          "type": "uint256"
-        }
-      ],
-      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -1048,6 +1028,49 @@
         }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "from",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "to",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "distance",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint32",
+          "name": "amount",
+          "type": "uint32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "toHash",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes32",
+          "name": "secret",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address payable",
+          "name": "payee",
+          "type": "address"
+        }
+      ],
+      "name": "takeItBack",
+      "outputs": [],
+      "stateMutability": "payable",
       "type": "function"
     },
     {
@@ -1225,74 +1248,72 @@
       "type": "constructor"
     }
   ],
-  "transactionHash": "0x4c41b9650869651f699661bf3f6e74a01ddabb5694c188b8eb9f196f7e9e49b5",
+  "transactionHash": "0x05b58653aae3bcd1c32e8a43a3313ec36314eb8b5c5d7d2d64056e06ec4cd170",
   "receipt": {
     "to": null,
     "from": "0xbE19B59E8C588d68f475A407C7BA5fE813AEb792",
-    "contractAddress": "0xDe57C8BEe69ef1e407BA55E3AB8cEF8A57f29d63",
+    "contractAddress": "0xF5333b31C636a2d1827A8eF75006C33eBFD5146b",
     "transactionIndex": 6,
-    "gasUsed": "695654",
-    "logsBloom": "0x00000000000000000000000000000000000000000000000000800000000000000000000400000000100400000000000000000000000000000000020000000000080080000000000000000000000000000001000000000000000000000000000000000000020000000000000000000800000000000000000000000000000000400080000000000000000000000000408000000000000000000000000000000000000000000000000400000000000200000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000020000000000000000000000400000000000000000000000000000000000000000000",
-    "blockHash": "0xdff5c4ce9ac51edda2446f5006c4766a71145e4f3b480b3ba5c7e1acc361e1ca",
-    "transactionHash": "0x4c41b9650869651f699661bf3f6e74a01ddabb5694c188b8eb9f196f7e9e49b5",
+    "gasUsed": "697109",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000800000000000000000000400000000000400000000000000000000000000000000000000000000000000000000000000000000000000000001000000000000000000000000400000000000020000000000000000000800000000000000000000000000000000400080100000000000000000000080000000000000008000000000000000000000000000000000000400000000000200000000000000000000000000000000020000000000000000000000000000000000000000000000000000001000000020000000000000000000000400000000000000000000000000000000000000000000",
+    "blockHash": "0x628c1f84f7fe1f2dfde43cb7482167bc3fffa311a7314278410365590fe82412",
+    "transactionHash": "0x05b58653aae3bcd1c32e8a43a3313ec36314eb8b5c5d7d2d64056e06ec4cd170",
     "logs": [
       {
         "transactionIndex": 6,
-        "blockNumber": 38327263,
-        "transactionHash": "0x4c41b9650869651f699661bf3f6e74a01ddabb5694c188b8eb9f196f7e9e49b5",
-        "address": "0xDe57C8BEe69ef1e407BA55E3AB8cEF8A57f29d63",
+        "blockNumber": 38441042,
+        "transactionHash": "0x05b58653aae3bcd1c32e8a43a3313ec36314eb8b5c5d7d2d64056e06ec4cd170",
+        "address": "0xF5333b31C636a2d1827A8eF75006C33eBFD5146b",
         "topics": [
           "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
           "0x0000000000000000000000000000000000000000000000000000000000000000",
           "0x000000000000000000000000be19b59e8c588d68f475a407c7ba5fe813aeb792"
         ],
         "data": "0x",
-        "logIndex": 80,
-        "blockHash": "0xdff5c4ce9ac51edda2446f5006c4766a71145e4f3b480b3ba5c7e1acc361e1ca"
+        "logIndex": 47,
+        "blockHash": "0x628c1f84f7fe1f2dfde43cb7482167bc3fffa311a7314278410365590fe82412"
       },
       {
         "transactionIndex": 6,
-        "blockNumber": 38327263,
-        "transactionHash": "0x4c41b9650869651f699661bf3f6e74a01ddabb5694c188b8eb9f196f7e9e49b5",
-        "address": "0xDe57C8BEe69ef1e407BA55E3AB8cEF8A57f29d63",
+        "blockNumber": 38441042,
+        "transactionHash": "0x05b58653aae3bcd1c32e8a43a3313ec36314eb8b5c5d7d2d64056e06ec4cd170",
+        "address": "0xF5333b31C636a2d1827A8eF75006C33eBFD5146b",
         "topics": [
           "0x5570d70a002632a7b0b3c9304cc89efb62d8da9eca0dbd7752c83b7379068296",
           "0x0000000000000000000000000000000000000000000000000000000000000000",
-          "0x00000000000000000000000038722d0544c48dbf3a11bde1a71f96279e6d773d"
+          "0x0000000000000000000000005ed26b6dd3eb95ce8f5812d1179d7ea067bf0c22"
         ],
         "data": "0x",
-        "logIndex": 81,
-        "blockHash": "0xdff5c4ce9ac51edda2446f5006c4766a71145e4f3b480b3ba5c7e1acc361e1ca"
+        "logIndex": 48,
+        "blockHash": "0x628c1f84f7fe1f2dfde43cb7482167bc3fffa311a7314278410365590fe82412"
       }
     ],
-    "blockNumber": 38327263,
-    "cumulativeGasUsed": "2820899",
+    "blockNumber": 38441042,
+    "cumulativeGasUsed": "2169812",
     "status": 1,
     "byzantium": true
   },
   "args": [
-    "0x38722D0544C48Dbf3a11BdE1A71f96279e6D773d",
+    "0x5eD26B6Dd3EB95Ce8f5812d1179d7EA067bf0c22",
     "0xbE19B59E8C588d68f475A407C7BA5fE813AEb792",
-    "0x839810c0000000000000000000000000be19b59e8c588d68f475a407c7ba5fe813aeb792000000000000000000000000b8246260a355ced5af2a8d45991249f31bb8de61000000000000000000000000d833d4dbbb0c19af1eef76540d66e2076a5e9d720000000000000000000000001874f6326eebcce664410a93a5217741a977d14a0000000000000000000000000000000000000000000000000000000000034bc000000000000000000000000000000000000000000000000000000000000007d000000000000000000000000000000000000000000000000000000000000186a0000000000000000000000000000000000000000000000000000000000003f48000000000000000000000000000000000000000000000000000000000000007080000000000000000000000000000000000000000000000004563918244f40000000000000000000000000000000000000000000000000000000000000002a3000000000000000000000000000000000000000000000000000de0b6b3a764000069ab0921cc2bcc5c203b2bccc4b5ce33acb9520a4776421236c81ad3da565991"
+    "0x0ccdb355000000000000000000000000be19b59e8c588d68f475a407c7ba5fe813aeb7920000000000000000000000007681710eeb550b70c3533f09e6d0dea3f318e43a000000000000000000000000365e18ec7d716d21b75dd0715f3fcdfa5d23d1420000000000000000000000001874f6326eebcce664410a93a5217741a977d14a2e8844c4be4bb08968bf024167442ff346c1277cfa814adce21207b6a4bcd00500000000000000000000000000000000000000000000000000000000000186a0000000000000000000000000000000000000000000000000000000000003f4800000000000000000000000000000000000000000000000000000000000000012000000000000000000000000000000000000000000000000000000000000004800000000000000000000000000000000000000000000000000000000000000640000000000000000000000000000000000000000000000000000000000049d4000000000000000000000000000000000000000000000000000000000000005dc0000000000000000000000000000000000000000000000003782dace9d90000000000000000000000000000000000000000000000000000000000000000003600000000000000000000000000000000000000000000000000de0b6b3a76400000000000000000000000000000000000000000000000000000de0b6b3a76400000000000000000000000000000000000000000000000000000000000000000d800000000000000000000000000000000000000000000000000000000000004e20"
   ],
-  "numDeployments": 3,
+  "numDeployments": 1,
   "linkedData": {
-    "genesis": "0x69AB0921CC2BCC5C203B2BCCC4B5CE33ACB9520A4776421236C81AD3DA565991",
+    "genesis": "0x2E8844C4BE4BB08968BF024167442FF346C1277CFA814ADCE21207B6A4BCD005",
     "acquireNumSpaceships": 100000,
     "productionCapAsDuration": 259200,
-    "frontrunningDelay": 1800,
+    "frontrunningDelay": 18,
+    "timePerDistance": 72,
+    "productionSpeedUp": 100,
+    "minAttackAmount": 20000,
     "numSecondsPerTokens": 302400,
-    "spaceshipsToKeepPer10000": 2000,
-    "minAverageStakePerPlanet": "5000000000000000000",
-    "maxClaimDelay": 86400,
-    "minimumSubscriptionWhenNotStaking": {
-      "type": "BigNumber",
-      "hex": "0x0de0b6b3a7640000"
-    },
-    "minimumSubscriptionWhenStaking": {
-      "type": "BigNumber",
-      "hex": "0x0de0b6b3a7640000"
-    }
+    "spaceshipsToKeepPer10000": 1500,
+    "minAverageStakePerPlanet": "4000000000000000000",
+    "maxClaimDelay": 864,
+    "minimumSubscriptionWhenNotStaking": "1000000000000000000",
+    "minimumSubscriptionWhenStaking": "1000000000000000000",
+    "maxTimeRange": 3456
   },
   "solcInputHash": "4a46ee6c1a29be400c9fab1ecc28e172",
   "metadata": "{\"compiler\":{\"version\":\"0.8.10+commit.fc410830\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"address\",\"name\":\"implementationAddress\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"ownerAddress\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"stateMutability\":\"payable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousImplementation\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newImplementation\",\"type\":\"address\"}],\"name\":\"ProxyImplementationUpdated\",\"type\":\"event\"},{\"stateMutability\":\"payable\",\"type\":\"fallback\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes4\",\"name\":\"id\",\"type\":\"bytes4\"}],\"name\":\"supportsInterface\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newImplementation\",\"type\":\"address\"}],\"name\":\"upgradeTo\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"notice\":\"Proxy implementing EIP173 for ownership management\",\"version\":1}},\"settings\":{\"compilationTarget\":{\"solc_0.8/proxy/EIP173Proxy.sol\":\"EIP173Proxy\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":999999},\"remappings\":[]},\"sources\":{\"solc_0.8/proxy/EIP173Proxy.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\nimport \\\"./Proxy.sol\\\";\\n\\ninterface ERC165 {\\n    function supportsInterface(bytes4 id) external view returns (bool);\\n}\\n\\n///@notice Proxy implementing EIP173 for ownership management\\ncontract EIP173Proxy is Proxy {\\n    // ////////////////////////// EVENTS ///////////////////////////////////////////////////////////////////////\\n\\n    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);\\n\\n    // /////////////////////// CONSTRUCTOR //////////////////////////////////////////////////////////////////////\\n\\n    constructor(\\n        address implementationAddress,\\n        address ownerAddress,\\n        bytes memory data\\n    ) payable {\\n        _setOwner(ownerAddress);\\n        _setImplementation(implementationAddress, data);\\n    }\\n\\n    // ///////////////////// EXTERNAL ///////////////////////////////////////////////////////////////////////////\\n\\n    function owner() external view returns (address) {\\n        return _owner();\\n    }\\n\\n    function supportsInterface(bytes4 id) external view returns (bool) {\\n        if (id == 0x01ffc9a7 || id == 0x7f5828d0) {\\n            return true;\\n        }\\n        if (id == 0xFFFFFFFF) {\\n            return false;\\n        }\\n\\n        ERC165 implementation;\\n        // solhint-disable-next-line security/no-inline-assembly\\n        assembly {\\n            implementation := sload(0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc)\\n        }\\n\\n        // Technically this is not standard compliant as ERC-165 require 30,000 gas which that call cannot ensure\\n        // because it is itself inside `supportsInterface` that might only get 30,000 gas.\\n        // In practise this is unlikely to be an issue.\\n        try implementation.supportsInterface(id) returns (bool support) {\\n            return support;\\n        } catch {\\n            return false;\\n        }\\n    }\\n\\n    function transferOwnership(address newOwner) external onlyOwner {\\n        _setOwner(newOwner);\\n    }\\n\\n    function upgradeTo(address newImplementation) external onlyOwner {\\n        _setImplementation(newImplementation, \\\"\\\");\\n    }\\n\\n    function upgradeToAndCall(address newImplementation, bytes calldata data) external payable onlyOwner {\\n        _setImplementation(newImplementation, data);\\n    }\\n\\n    // /////////////////////// MODIFIERS ////////////////////////////////////////////////////////////////////////\\n\\n    modifier onlyOwner() {\\n        require(msg.sender == _owner(), \\\"NOT_AUTHORIZED\\\");\\n        _;\\n    }\\n\\n    // ///////////////////////// INTERNAL //////////////////////////////////////////////////////////////////////\\n\\n    function _owner() internal view returns (address adminAddress) {\\n        // solhint-disable-next-line security/no-inline-assembly\\n        assembly {\\n            adminAddress := sload(0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103)\\n        }\\n    }\\n\\n    function _setOwner(address newOwner) internal {\\n        address previousOwner = _owner();\\n        // solhint-disable-next-line security/no-inline-assembly\\n        assembly {\\n            sstore(0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103, newOwner)\\n        }\\n        emit OwnershipTransferred(previousOwner, newOwner);\\n    }\\n}\\n\",\"keccak256\":\"0xa52a027d9e3ad599c98da343572c0f8e16d65551d6fa0ab218e9e2d0f76e2ab0\",\"license\":\"MIT\"},\"solc_0.8/proxy/Proxy.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\n// EIP-1967\\nabstract contract Proxy {\\n    // /////////////////////// EVENTS ///////////////////////////////////////////////////////////////////////////\\n\\n    event ProxyImplementationUpdated(address indexed previousImplementation, address indexed newImplementation);\\n\\n    // ///////////////////// EXTERNAL ///////////////////////////////////////////////////////////////////////////\\n\\n    receive() external payable virtual {\\n        revert(\\\"ETHER_REJECTED\\\"); // explicit reject by default\\n    }\\n\\n    fallback() external payable {\\n        _fallback();\\n    }\\n\\n    // ///////////////////////// INTERNAL //////////////////////////////////////////////////////////////////////\\n\\n    function _fallback() internal {\\n        // solhint-disable-next-line security/no-inline-assembly\\n        assembly {\\n            let implementationAddress := sload(0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc)\\n            calldatacopy(0x0, 0x0, calldatasize())\\n            let success := delegatecall(gas(), implementationAddress, 0x0, calldatasize(), 0, 0)\\n            let retSz := returndatasize()\\n            returndatacopy(0, 0, retSz)\\n            switch success\\n            case 0 {\\n                revert(0, retSz)\\n            }\\n            default {\\n                return(0, retSz)\\n            }\\n        }\\n    }\\n\\n    function _setImplementation(address newImplementation, bytes memory data) internal {\\n        address previousImplementation;\\n        // solhint-disable-next-line security/no-inline-assembly\\n        assembly {\\n            previousImplementation := sload(0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc)\\n        }\\n\\n        // solhint-disable-next-line security/no-inline-assembly\\n        assembly {\\n            sstore(0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc, newImplementation)\\n        }\\n\\n        emit ProxyImplementationUpdated(previousImplementation, newImplementation);\\n\\n        if (data.length > 0) {\\n            (bool success, ) = newImplementation.delegatecall(data);\\n            if (!success) {\\n                assembly {\\n                    // This assembly ensure the revert contains the exact string data\\n                    let returnDataSize := returndatasize()\\n                    returndatacopy(0, 0, returnDataSize)\\n                    revert(0, returnDataSize)\\n                }\\n            }\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0x68c8cf1a340a53d31de8ed808bb66d64e83d50b20d80a0b2dff6aba903cebc98\",\"license\":\"MIT\"}},\"version\":1}",
@@ -1302,30 +1323,28 @@
     "methodName": "postUpgrade",
     "args": [
       "0xbE19B59E8C588d68f475A407C7BA5fE813AEb792",
-      "0xB8246260a355cEd5aF2a8D45991249F31Bb8DE61",
-      "0xD833d4dBBb0C19aF1EEf76540d66E2076a5e9D72",
+      "0x7681710Eeb550B70C3533f09E6d0DeA3f318E43A",
+      "0x365E18Ec7d716D21B75DD0715F3Fcdfa5d23D142",
       "0x1874F6326eEbcCe664410a93a5217741a977D14A",
       {
-        "genesis": "0x69AB0921CC2BCC5C203B2BCCC4B5CE33ACB9520A4776421236C81AD3DA565991",
+        "genesis": "0x2E8844C4BE4BB08968BF024167442FF346C1277CFA814ADCE21207B6A4BCD005",
         "acquireNumSpaceships": 100000,
         "productionCapAsDuration": 259200,
-        "frontrunningDelay": 1800,
+        "frontrunningDelay": 18,
+        "timePerDistance": 72,
+        "productionSpeedUp": 100,
+        "minAttackAmount": 20000,
         "numSecondsPerTokens": 302400,
-        "spaceshipsToKeepPer10000": 2000,
-        "minAverageStakePerPlanet": "5000000000000000000",
-        "maxClaimDelay": 86400,
-        "minimumSubscriptionWhenNotStaking": {
-          "type": "BigNumber",
-          "hex": "0x0de0b6b3a7640000"
-        },
-        "minimumSubscriptionWhenStaking": {
-          "type": "BigNumber",
-          "hex": "0x0de0b6b3a7640000"
-        }
+        "spaceshipsToKeepPer10000": 1500,
+        "minAverageStakePerPlanet": "4000000000000000000",
+        "maxClaimDelay": 864,
+        "minimumSubscriptionWhenNotStaking": "1000000000000000000",
+        "minimumSubscriptionWhenStaking": "1000000000000000000",
+        "maxTimeRange": 3456
       }
     ]
   },
-  "implementation": "0x54272c8E8280a1846F4E23e70B02fE2D6E15467f",
+  "implementation": "0x5eD26B6Dd3EB95Ce8f5812d1179d7EA067bf0c22",
   "devdoc": {
     "kind": "dev",
     "methods": {},
