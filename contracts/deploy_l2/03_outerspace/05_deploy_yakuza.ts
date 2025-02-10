@@ -26,7 +26,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     maxClaimDelay: Math.floor((1 * 24 * 60 * 60) / OuterSpace.linkedData.productionSpeedUp), // 1 day
     minimumSubscriptionWhenNotStaking: parseEther('1').toString(),
     minimumSubscriptionWhenStaking: parseEther('1').toString(),
-    maxTimeRange: Math.floor((4 * 24 * 60 * 60) / OuterSpace.linkedData.productionSpeedUp), // 4 days
+    maxTimeRange: Math.floor((5 * 24 * 60 * 60) / OuterSpace.linkedData.productionSpeedUp), // 5 days
   };
 
   console.log(config);
