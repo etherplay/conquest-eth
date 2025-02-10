@@ -1,5 +1,5 @@
 {
-  "address": "0x5eD26B6Dd3EB95Ce8f5812d1179d7EA067bf0c22",
+  "address": "0xDBA085A819F98FF7A3268c2405DeB8f3B3df1D7c",
   "abi": [
     {
       "inputs": [
@@ -1208,19 +1208,19 @@
       "type": "function"
     }
   ],
-  "transactionHash": "0x4ceb08efb79ad3dca217acc2e88c6cbe6464821a8383e0314a2a72edb73fca7e",
+  "transactionHash": "0x6be023eb156ac87bdb31f30ba0e4968ad3a43e276dbfc781cd20452fd54a7e01",
   "receipt": {
     "to": null,
     "from": "0xbE19B59E8C588d68f475A407C7BA5fE813AEb792",
-    "contractAddress": "0x5eD26B6Dd3EB95Ce8f5812d1179d7EA067bf0c22",
-    "transactionIndex": 6,
+    "contractAddress": "0xDBA085A819F98FF7A3268c2405DeB8f3B3df1D7c",
+    "transactionIndex": 4,
     "gasUsed": "5268547",
     "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-    "blockHash": "0x9b89aa9a84001e50d43eca77f20b9a4f1f343b3d323df696a84f5245bbbb0788",
-    "transactionHash": "0x4ceb08efb79ad3dca217acc2e88c6cbe6464821a8383e0314a2a72edb73fca7e",
+    "blockHash": "0x731efda0542b5592c85db406cf42cf57a004f224a0d1f987a97c5bfbafb73535",
+    "transactionHash": "0x6be023eb156ac87bdb31f30ba0e4968ad3a43e276dbfc781cd20452fd54a7e01",
     "logs": [],
-    "blockNumber": 38441040,
-    "cumulativeGasUsed": "5881193",
+    "blockNumber": 38489805,
+    "cumulativeGasUsed": "6280000",
     "status": 1,
     "byzantium": true
   },
@@ -1239,14 +1239,14 @@
       "minAttackAmount": 20000,
       "numSecondsPerTokens": 302400,
       "spaceshipsToKeepPer10000": 1500,
-      "minAverageStakePerPlanet": "4000000000000000000",
+      "minAverageStakePerPlanet": "1000000000000000000",
       "maxClaimDelay": 864,
       "minimumSubscriptionWhenNotStaking": "1000000000000000000",
       "minimumSubscriptionWhenStaking": "1000000000000000000",
       "maxTimeRange": 3456
     }
   ],
-  "numDeployments": 1,
+  "numDeployments": 2,
   "linkedData": {
     "genesis": "0x2E8844C4BE4BB08968BF024167442FF346C1277CFA814ADCE21207B6A4BCD005",
     "acquireNumSpaceships": 100000,
@@ -1257,7 +1257,7 @@
     "minAttackAmount": 20000,
     "numSecondsPerTokens": 302400,
     "spaceshipsToKeepPer10000": 1500,
-    "minAverageStakePerPlanet": "4000000000000000000",
+    "minAverageStakePerPlanet": "1000000000000000000",
     "maxClaimDelay": 864,
     "minimumSubscriptionWhenNotStaking": "1000000000000000000",
     "minimumSubscriptionWhenStaking": "1000000000000000000",
