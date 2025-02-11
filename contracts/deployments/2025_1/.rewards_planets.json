@@ -1,4 +1,37 @@
 [
-    {"x":4, "y": -52, "sponsor": "cafecosmos"},
-    {"x":33, "y": -15, "sponsor": "cafecosmos"}
+  {
+    "x": 4,
+    "y": -52,
+    "sponsor": "cafecosmos"
+  },
+  {
+    "x": 33,
+    "y": -15,
+    "sponsor": "cafecosmos"
+  },
+  {
+    "x": 32,
+    "y": -61,
+    "sponsor": "infinite-seas"
+  },
+  {
+    "x": 42,
+    "y": 13,
+    "sponsor": "infinite-seas"
+  },
+  {
+    "x": 29,
+    "y": -16,
+    "sponsor": "infinite-seas"
+  },
+  {
+    "x": -17,
+    "y": 24,
+    "sponsor": "infinite-seas"
+  },
+  {
+    "x": -24,
+    "y": -58,
+    "sponsor": "infinite-seas"
+  }
 ]

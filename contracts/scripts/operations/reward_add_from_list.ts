@@ -45,6 +45,10 @@ async function func(hre: HardhatRuntimeEnvironment): Promise<void> {
     if (planets.length !== 4) {
       throw new Error(`4 required`);
     }
+  } else if (sponsor === 'infinite-seas') {
+    if (planets.length !== 5) {
+      throw new Error(`5 required`);
+    }
   } else {
     throw new Error(`no number of planet specified`);
   }
@@ -68,6 +72,9 @@ async function func(hre: HardhatRuntimeEnvironment): Promise<void> {
     }
     locations.push(planet.location);
   }
+
+  console.log(locations);
+  console.log(locations.map(locationToXY));
 
   const receipt = await execute(
     'OuterSpace',
