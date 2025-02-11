@@ -26,7 +26,6 @@ query($fromBlock: Int! $toBlock: Int! $first: Int! $lastId: ID!) {
   planetStakeEvents(first: $first block: {number: $toBlock} where: { id_gt: $lastId blockNumber_gte: $fromBlock blockNumber_lte: $toBlock   }){
     id
     owner {id}
-    planet {stakeDeposited}
     stake
   }
 }
@@ -35,9 +34,9 @@ query($fromBlock: Int! $toBlock: Int! $first: Int! $lastId: ID!) {
   const planetStakeEvents: {
     id: string;
     owner: {id: string};
-    planet: {
-      stakeDeposited: string;
-    };
+    // planet: {
+    //   stakeDeposited: string;
+    // };
     stake: string;
   }[] = await theGraph.query(queryString, {
     field: 'planetStakeEvents',
@@ -51,10 +50,10 @@ query($fromBlock: Int! $toBlock: Int! $first: Int! $lastId: ID!) {
 
   for (const event of planetStakeEvents) {
     const playerAddress = event.owner.id;
-    if (event.planet.stakeDeposited != event.stake) {
-      throw new Error(`mismarch stake ${event.planet.stakeDeposited} != ${event.stake}`);
-    }
-    const amountStaked = event.planet.stakeDeposited;
+    // if (event.planet.stakeDeposited != event.stake) {
+    //   throw new Error(`mismarch planet.stakeDeposited=${event.planet.stakeDeposited} != event.stake=${event.stake}`);
+    // }
+    const amountStaked = event.stake;
     const numPlanetsStaked = 1;
     const playerCapture = players_captures.find((player) => player.playerAddress === playerAddress);
     if (playerCapture) {
