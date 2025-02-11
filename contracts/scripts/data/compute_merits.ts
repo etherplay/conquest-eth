@@ -84,6 +84,7 @@ async function func(hre: HardhatRuntimeEnvironment): Promise<void> {
     totalDistributedPoints = 0;
     excessPoints = 0;
     const uncappedPlayers: string[] = [];
+    let totalUncappedPoints = 0;
 
     for (const [address, points] of Object.entries(playerMerits)) {
       if (points > maxPointsPerPlayer) {
@@ -94,18 +95,16 @@ async function func(hre: HardhatRuntimeEnvironment): Promise<void> {
         totalDistributedPoints += points;
         if (points < maxPointsPerPlayer) {
           uncappedPlayers.push(address);
+          totalUncappedPoints += points;
         }
       }
     }
 
     if (excessPoints > 0 && uncappedPlayers.length > 0) {
-      // Sort uncapped players by their current points (descending)
-      uncappedPlayers.sort((a, b) => playerMerits[b] - playerMerits[a]);
-
       for (const address of uncappedPlayers) {
-        if (excessPoints <= 0) break;
         const currentPoints = playerMerits[address];
-        const pointsToAdd = Math.min(maxPointsPerPlayer - currentPoints, excessPoints);
+        const proportion = currentPoints / totalUncappedPoints;
+        const pointsToAdd = Math.min(maxPointsPerPlayer - currentPoints, Math.floor(excessPoints * proportion));
         playerMerits[address] += pointsToAdd;
         excessPoints -= pointsToAdd;
         totalDistributedPoints += pointsToAdd;
@@ -143,8 +142,7 @@ async function func(hre: HardhatRuntimeEnvironment): Promise<void> {
     );
   }
 
-  const outputPath = './player_merits.json';
-  await fs.writeFile(outputPath, JSON.stringify(sortedPlayers, null, 2));
+  await deployments.saveDotFile('.players_merits.json', JSON.stringify(sortedPlayers, null, 2));
 
   console.log({
     totalAmountCaptured: formatEther(totalAmountCaptured),
@@ -159,7 +157,6 @@ async function func(hre: HardhatRuntimeEnvironment): Promise<void> {
     totalNumPlayerWhoStaked,
     totalMeritsPointPerWeek,
     numberOfPlayersWithMerits: sortedPlayers.length,
-    outputPath,
   });
 }
 

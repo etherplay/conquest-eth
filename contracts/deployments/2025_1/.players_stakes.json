@@ -1,0 +1,117 @@
+[
+  {
+    "playerAddress": "0xed684079af754343484a7cd29db21d3a6d1dbdf7",
+    "amountStaked": "125300000000000000000",
+    "numPlanetsStaked": 16
+  },
+  {
+    "playerAddress": "0x71f1fb05d18edfa471cc2f66738b5eec97802099",
+    "amountStaked": "17400000000000000000",
+    "numPlanetsStaked": 3
+  },
+  {
+    "playerAddress": "0xd0f46a5d48596409264d4efc1f3b229878fff743",
+    "amountStaked": "24600000000000000000",
+    "numPlanetsStaked": 3
+  },
+  {
+    "playerAddress": "0x5a016b206d0314c7ec641c3a6fd89dac7fea010e",
+    "amountStaked": "50000000000000000000",
+    "numPlanetsStaked": 17
+  },
+  {
+    "playerAddress": "0xdf976487469c0e8000f5ff4e08d89421e83e36a5",
+    "amountStaked": "39700000000000000000",
+    "numPlanetsStaked": 9
+  },
+  {
+    "playerAddress": "0x990e99d9fef9bb83e5854f3ce7e6846dcd9e5fd5",
+    "amountStaked": "51600000000000000000",
+    "numPlanetsStaked": 16
+  },
+  {
+    "playerAddress": "0x617512fa7d3fd26bda51b9ac8c23b04a48d625f1",
+    "amountStaked": "4000000000000000000",
+    "numPlanetsStaked": 1
+  },
+  {
+    "playerAddress": "0x547cc3f629d6a6c634978a51eaf11360b0a349e8",
+    "amountStaked": "3000000000000000000",
+    "numPlanetsStaked": 1
+  },
+  {
+    "playerAddress": "0xfe3865dd730eabfe973b2d9035c4eefed3076a36",
+    "amountStaked": "36400000000000000000",
+    "numPlanetsStaked": 11
+  },
+  {
+    "playerAddress": "0xd093211ff0dc403aa8b79d907b6ed8799e729eb7",
+    "amountStaked": "90700000000000000000",
+    "numPlanetsStaked": 26
+  },
+  {
+    "playerAddress": "0xd191fcf07d18d9d22d44ce0bccb926a3a98ad212",
+    "amountStaked": "74100000000000000000",
+    "numPlanetsStaked": 18
+  },
+  {
+    "playerAddress": "0xce8e8cc4a75a49955f58c9c98abfbbaab4c85ec9",
+    "amountStaked": "2000000000000000000",
+    "numPlanetsStaked": 1
+  },
+  {
+    "playerAddress": "0x6dcadae0572e0f4d33993f77c745658e049e9ce6",
+    "amountStaked": "1000000000000000000",
+    "numPlanetsStaked": 1
+  },
+  {
+    "playerAddress": "0x522d634b6bffb444fdbcde5932738995a4cfd1f1",
+    "amountStaked": "7300000000000000000",
+    "numPlanetsStaked": 2
+  },
+  {
+    "playerAddress": "0x1175fab192e2017a835984ea8345eea72e83e74f",
+    "amountStaked": "1700000000000000000",
+    "numPlanetsStaked": 1
+  },
+  {
+    "playerAddress": "0x807e4ddf6b0aa08c8402ed8515131fb383818dd2",
+    "amountStaked": "5300000000000000000",
+    "numPlanetsStaked": 1
+  },
+  {
+    "playerAddress": "0xce3ee3ccfd1435796c916e046ced548bd5a37e78",
+    "amountStaked": "7800000000000000000",
+    "numPlanetsStaked": 3
+  },
+  {
+    "playerAddress": "0xee8b97b753aa589422dea77a936bbd8a26f6e1ca",
+    "amountStaked": "9600000000000000000",
+    "numPlanetsStaked": 3
+  },
+  {
+    "playerAddress": "0x066a2edcc0b7278a2cf5bf2a040b4a54a41a9550",
+    "amountStaked": "2700000000000000000",
+    "numPlanetsStaked": 1
+  },
+  {
+    "playerAddress": "0x72301623f4a0c291ffcb708f820cce50150950ae",
+    "amountStaked": "28000000000000000000",
+    "numPlanetsStaked": 4
+  },
+  {
+    "playerAddress": "0x154a2229e7b8315375e6d68149f2b93e118c6443",
+    "amountStaked": "6300000000000000000",
+    "numPlanetsStaked": 2
+  },
+  {
+    "playerAddress": "0x2beba030cdc9c4a47c5aa657974840428b9fefac",
+    "amountStaked": "6700000000000000000",
+    "numPlanetsStaked": 1
+  },
+  {
+    "playerAddress": "0x5d43c834af830c9315919ad95367635d8701aa18",
+    "amountStaked": "7000000000000000000",
+    "numPlanetsStaked": 2
+  }
+]
