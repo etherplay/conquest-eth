@@ -79,20 +79,25 @@
         ),
       };
 
-      if (timeDelta > 0) {
-        const deltaInSeconds = timeDelta * 600;
-        prediction.arrivalTime = timeToText(duration - deltaInSeconds);
+      let timeDeltaToUse = timeDelta * 600;
+      if (launchTime > 0) {
+        const deltaWithRealTime = $time - launchTime;
+        timeDeltaToUse += deltaWithRealTime;
+      }
+
+      if (timeDeltaToUse > 0) {
+        prediction.arrivalTime = timeToText(duration - timeDeltaToUse);
         prediction.numSpaceshipsAtArrival = spaceInfo.numSpaceshipsAtArrival(
           toPlanetInfo,
           $toPlanetState,
-          duration - deltaInSeconds
+          duration - timeDeltaToUse
         );
         prediction.outcome = spaceInfo.outcome(
           fromPlanetInfo,
           toPlanetInfo,
           $toPlanetState,
           fleetAmount,
-          duration,
+          duration - timeDeltaToUse,
           undefined,
           undefined,
           undefined,
@@ -111,6 +116,8 @@
   }
 
   let timeDelta: number = 0;
+
+  let launchTime: number = 0;
 
   onMount(() => {
     fleetAmount = 1;
@@ -155,6 +162,24 @@
         type="text"
         id="textInputTimeDelta"
         bind:value={timeDelta}
+      />
+    </div> -->
+
+    <!-- <div class="text-center">
+      <input
+        class="accent-cyan-300"
+        type="range"
+        id="launchTime"
+        name="launchTime"
+        bind:value={launchTime}
+        max={17392848900}
+      />
+      <input
+        class={`bg-gray-700 border-cyan-800 border-2`}
+        type="text"
+        id="textInputTimeDelta"
+        bind:value={launchTime}
+        max={17392848900}
       />
     </div> -->
 
