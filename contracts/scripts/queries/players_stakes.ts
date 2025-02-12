@@ -9,14 +9,14 @@ async function func(hre: HardhatRuntimeEnvironment): Promise<void> {
   const theGraph = await getTHEGRAPH(hre);
   const args = process.argv.slice(2);
   const fromBlock = parseInt(args[0]);
-  const toBlock = parseInt(args[1]);
 
-  if (!fromBlock || !toBlock) {
+  if (!fromBlock || !args[1]) {
     throw new Error('Missing fromBlock or toBlock');
   }
 
   const latestBlockNnmber = await hre.ethers.provider.getBlockNumber();
 
+  const toBlock = args[1] === 'latest' ? latestBlockNnmber - 12 : parseInt(args[1]);
   if (toBlock > latestBlockNnmber - 12) {
     throw new Error('toBlock is too recent');
   }
@@ -46,7 +46,7 @@ query($fromBlock: Int! $toBlock: Int! $first: Int! $lastId: ID!) {
     },
   });
 
-  const players_captures: {playerAddress: string; amountStaked: string; numPlanetsStaked: number}[] = [];
+  const players_stakes: {playerAddress: string; amountStaked: string; numPlanetsStaked: number}[] = [];
 
   for (const event of planetStakeEvents) {
     const playerAddress = event.owner.id;
@@ -55,18 +55,18 @@ query($fromBlock: Int! $toBlock: Int! $first: Int! $lastId: ID!) {
     // }
     const amountStaked = event.stake;
     const numPlanetsStaked = 1;
-    const playerCapture = players_captures.find((player) => player.playerAddress === playerAddress);
+    const playerCapture = players_stakes.find((player) => player.playerAddress === playerAddress);
     if (playerCapture) {
       playerCapture.amountStaked = (BigInt(playerCapture.amountStaked) + BigInt(amountStaked)).toString();
       playerCapture.numPlanetsStaked += numPlanetsStaked;
     } else {
-      players_captures.push({playerAddress, amountStaked, numPlanetsStaked});
+      players_stakes.push({playerAddress, amountStaked, numPlanetsStaked});
     }
   }
 
-  await deployments.saveDotFile('.players_stakes.json', JSON.stringify(players_captures, null, 2));
+  await deployments.saveDotFile('.players_stakes.json', JSON.stringify(players_stakes, null, 2));
   //   await deployments.saveDotFile('.fleetArrivedEvents.json', JSON.stringify(fleetArrivedEvents, null, 2));
-  console.log({numPlanetStakeEvents: planetStakeEvents.length});
+  console.log({numPlanetStakeEvents: planetStakeEvents.length, numPlayers: players_stakes.length});
 }
 
 async function main() {
