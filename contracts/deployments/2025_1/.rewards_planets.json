@@ -33,5 +33,25 @@
     "x": -24,
     "y": -58,
     "sponsor": "infinite-seas"
+  },
+  {
+    "x": 32,
+    "y": 13,
+    "sponsor": "blockscout"
+  },
+  {
+    "x": -25,
+    "y": 39,
+    "sponsor": "blockscout"
+  },
+  {
+    "x": -16,
+    "y": -50,
+    "sponsor": "blockscout"
+  },
+  {
+    "x": -32,
+    "y": 37,
+    "sponsor": "blockscout"
   }
 ]
