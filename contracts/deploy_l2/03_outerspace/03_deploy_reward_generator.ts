@@ -26,6 +26,12 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     // fixedRewardRateThousandsMillionth = 10; // 10 for every  thousand million of seconds, or 0.000864 per day per stake or 315.36 / year / 1000 stake
   }
 
+  if (networkName === '2025_1') {
+    // will be upgraded with these parameters:
+    rewardRateMillionth = 100; // 100 for every million of second. or 8.64 / day
+    fixedRewardRateThousandsMillionth = 10; // 10 for every  thousand million of seconds, or 0.000864 per day per stake or 315.36 / year / 1000 stake
+  }
+
   const timestamp = Math.floor(Date.now() / 1000);
   const ExistingRewardsGenerator = await getOrNull('RewardsGenerator');
   if (ExistingRewardsGenerator) {
