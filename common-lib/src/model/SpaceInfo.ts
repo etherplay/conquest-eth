@@ -696,7 +696,7 @@ export class SpaceInfo {
       numDefenseMin = BigNumber.from(min);
     } catch (e) {
       numDefenseMin = BigNumber.from(0);
-      (window as any)?.generateError(
+      (window as any)?.generateError?(
         JSON.stringify(
           {
             min,
@@ -716,7 +716,7 @@ export class SpaceInfo {
       numDefenseMax = BigNumber.from(max);
     } catch (e) {
       numDefenseMax = BigNumber.from(0);
-      (window as any)?.generateError(
+      (window as any)?.generateError?(
         JSON.stringify(
           {
             max,
