@@ -36,9 +36,9 @@
               {player.id}
             </div>
             <!-- <table><tr><tl>{player.score}</tl><tl>{player.points}</tl></tr></table> -->
-            <span style="font-family: monospace;">{player.pool_score}</span>
+            <!-- <span style="font-family: monospace;">{player.pool_score}</span> -->
 
-            <span style="font-family: monospace;">{player.fixed_score}</span>
+            <span style="font-family: monospace;">{Math.floor(player.fixed_score * 100000)}</span>
 
             <span style="font-family: monospace;">{player.points}</span>
             <!-- 

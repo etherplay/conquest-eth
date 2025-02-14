@@ -260,7 +260,11 @@ contract RewardsGenerator is IERC20, Proxied, IOnStakeChange {
 
     /// @notice The amount of reward an account has accrued so far. Does not include already withdrawn rewards.
     function earnedFromFixedRate(address account) public view returns (uint256) {
-        uint256 extraFixed = ((block.timestamp - _fixedRateRewardPerAccount[account].lastTime) *
+        uint256 lastTime = _fixedRateRewardPerAccount[account].lastTime;
+        if (lastTime < 1739550865) {
+            lastTime = 1739550865;
+        }
+        uint256 extraFixed = ((block.timestamp - lastTime) *
             _sharedRateRewardPerAccount[account].points *
             FIXED_REWARD_RATE_thousands_millionth) / 1000000000;
         return extraFixed + _fixedRateRewardPerAccount[account].toWithdraw;
@@ -327,7 +331,11 @@ contract RewardsGenerator is IERC20, Proxied, IOnStakeChange {
         );
         _sharedRateRewardPerAccount[account].totalRewardPerPointAccounted = uint104(totalRewardPerPointAllocatedSoFar);
 
-        uint256 extraFixed = ((block.timestamp - _fixedRateRewardPerAccount[account].lastTime) *
+        uint256 lastTime = _fixedRateRewardPerAccount[account].lastTime;
+        if (lastTime < 1739550865) {
+            lastTime = 1739550865;
+        }
+        uint256 extraFixed = ((block.timestamp - lastTime) *
             accountPointsSoFar *
             FIXED_REWARD_RATE_thousands_millionth) / 1000000000;
         _fixedRateRewardPerAccount[account].lastTime = uint40(block.timestamp);

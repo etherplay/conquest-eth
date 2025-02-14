@@ -122,7 +122,7 @@
         Logs
         <Help class="w-4 h-4">See Global Logs</Help>
       </NavButton>
-      <!-- <NavButton
+      <NavButton
         borderColor="border-yellow-600"
         textColor="text-yellow-300"
         class="m-1"
@@ -131,7 +131,7 @@
       >
         Highscores
         <Help class="w-4 h-4">See Highscores for current alpha</Help>
-      </NavButton> -->
+      </NavButton>
       <NavButton class="m-1" label="help" href={url('alliances/')}>
         Alliances
         <Help class="w-4 h-4">See All Public Alliances</Help>

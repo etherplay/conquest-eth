@@ -213,7 +213,8 @@ export const highscores: Readable<{step: 'IDLE' | 'LOADING' | 'READY'; data?: Hi
 
         .map((p) => {
           const points = BigNumber.from(p.points);
-          const points_fixed_lastTime = BigNumber.from(p.points_fixed_lastTime);
+          // broken because fixed_lastTime
+          const points_fixed_lastTime = BigNumber.from(1739550865); // BigNumber.from(p.points_fixed_lastTime);
           const points_fixed_toWithdraw = BigNumber.from(p.points_fixed_toWithdraw);
           const points_shared_rewardsToWithdraw = BigNumber.from(p.points_shared_rewardsToWithdraw);
           const points_shared_totalRewardPerPointAccounted = BigNumber.from(
@@ -250,7 +251,7 @@ export const highscores: Readable<{step: 'IDLE' | 'LOADING' | 'READY'; data?: Hi
             globalData,
           };
         })
-        .sort((a, b) => b.pool_score - a.pool_score);
+        .sort((a, b) => b.fixed_score - a.fixed_score);
     }
 
     return {
