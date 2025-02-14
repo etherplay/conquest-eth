@@ -212,9 +212,14 @@ export const highscores: Readable<{step: 'IDLE' | 'LOADING' | 'READY'; data?: Hi
       highscores = data.data.owners
 
         .map((p) => {
+          // TODO fix this , also in RewardsGenerator.sol
+          let lastTime = BigNumber.from(p.points_fixed_lastTime);
+          if (lastTime.lt(1739550865)) {
+            lastTime = BigNumber.from(1739550865);
+          }
           const points = BigNumber.from(p.points);
           // broken because fixed_lastTime
-          const points_fixed_lastTime = BigNumber.from(1739550865); // BigNumber.from(p.points_fixed_lastTime);
+          const points_fixed_lastTime = lastTime; // ;
           const points_fixed_toWithdraw = BigNumber.from(p.points_fixed_toWithdraw);
           const points_shared_rewardsToWithdraw = BigNumber.from(p.points_shared_rewardsToWithdraw);
           const points_shared_totalRewardPerPointAccounted = BigNumber.from(
