@@ -40,7 +40,7 @@
 
             <span style="font-family: monospace;">{Math.floor(player.fixed_score * 100000)}</span>
 
-            <span style="font-family: monospace;">{player.points}</span>
+            <span style="font-family: monospace;">(stake: {player.points})</span>
             <!-- 
             <div>{format(player.account)}</div>
             <div>{format(player.globalData)}</div> -->
