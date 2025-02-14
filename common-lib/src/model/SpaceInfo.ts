@@ -696,17 +696,20 @@ export class SpaceInfo {
       numDefenseMin = BigNumber.from(min);
     } catch (e) {
       numDefenseMin = BigNumber.from(0);
-      (window as any)?.generateError?(
-        JSON.stringify(
-          {
-            min,
-            duration,
-            toPlanetState,
-          },
-          null,
-          2
-        )
-      );
+      if ((window as any).generateError) {
+        (window as any).generateError(
+          JSON.stringify(
+            {
+              min,
+              duration,
+              toPlanetState,
+            },
+            null,
+            2
+          )
+        );
+      }
+
       console.error(`min is not a number`);
       console.error(e);
     }
@@ -716,17 +719,19 @@ export class SpaceInfo {
       numDefenseMax = BigNumber.from(max);
     } catch (e) {
       numDefenseMax = BigNumber.from(0);
-      (window as any)?.generateError?(
-        JSON.stringify(
-          {
-            max,
-            duration,
-            toPlanetState,
-          },
-          null,
-          2
-        )
-      );
+      if ((window as any).generateError) {
+        (window as any).generateError(
+          JSON.stringify(
+            {
+              max,
+              duration,
+              toPlanetState,
+            },
+            null,
+            2
+          )
+        );
+      }
       console.error(`max is not a number`);
       console.error(e);
     }
