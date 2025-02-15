@@ -148,7 +148,7 @@ type PerAccount = {
 };
 
 function earnedFromFixedRate(time: number, account: PerAccount): BigNumber {
-  console.log({time});
+  // console.log({time});
   const extraFixed = BigNumber.from(time)
     .sub(account.points_fixed_lastTime)
     .mul(account.points.mul(FIXED_REWARD_RATE_thousands_millionth))
@@ -232,8 +232,20 @@ export const highscores: Readable<{step: 'IDLE' | 'LOADING' | 'READY'; data?: Hi
             points_shared_rewardsToWithdraw,
             points_shared_totalRewardPerPointAccounted,
           };
-
-          console.log(account);
+          // if (
+          //   p.id === '0xd0f46a5d48596409264d4efc1f3b229878fff743' ||
+          //   p.id == '0xd191fcf07d18d9d22d44ce0bccb926a3a98ad212' ||
+          //   p.id == '0xed684079af754343484a7cd29db21d3a6d1dbdf7'
+          // ) {
+          //   console.log('------------------------------------------------------');
+          //   console.log(p.id);
+          //   console.log({
+          //     points_fixed_lastTime: points_fixed_lastTime.toString(),
+          //     points_fixed_toWithdraw: points_fixed_toWithdraw.toString(),
+          //     lastTime: lastTime.toNumber(),
+          //   });
+          //   console.log('------------------------------------------------------');
+          // }
 
           const accountPointsSoFar = points;
 

@@ -11,6 +11,9 @@ let DECIMALS_9: BigInt = BigInt.fromString('1000000000');
 let DECIMALS_18_MILLIONTH: BigInt = BigInt.fromString('1000000000000');
 let PRECISION: BigInt = BigInt.fromString('1000000000000000000000000');
 
+// TODO remove
+let MIN_LAST_TIME = BigInt.fromString('1739550865');
+
 function _computeRewardsEarned(
   totalRewardPerPointAccountedSoFar: BigInt,
   accountPoints: BigInt,
@@ -105,8 +108,12 @@ export function handleGeneratorPointsTransfer(event: Transfer): void {
   );
   owner.points_shared_totalRewardPerPointAccounted = totalRewardPerPointAllocatedSoFar;
 
+  let lastTime = owner.points_fixed_lastTime;
+  if (lastTime.lt(MIN_LAST_TIME)) {
+    lastTime = MIN_LAST_TIME;
+  }
   let extraFixed = event.block.timestamp
-    .minus(owner.points_fixed_lastTime)
+    .minus(lastTime)
     .times(accountPointsSoFar.times(FIXED_REWARD_RATE_thousands_millionth))
     .div(DECIMALS_9);
   owner.points_fixed_lastTime = event.block.timestamp;
