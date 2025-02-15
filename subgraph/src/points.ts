@@ -108,10 +108,15 @@ export function handleGeneratorPointsTransfer(event: Transfer): void {
   );
   owner.points_shared_totalRewardPerPointAccounted = totalRewardPerPointAllocatedSoFar;
 
+  // TODO remove
   let lastTime = owner.points_fixed_lastTime;
   if (lastTime.lt(MIN_LAST_TIME)) {
     lastTime = MIN_LAST_TIME;
   }
+  if (lastTime < event.block.timestamp) {
+    lastTime = event.block.timestamp;
+  }
+
   let extraFixed = event.block.timestamp
     .minus(lastTime)
     .times(accountPointsSoFar.times(FIXED_REWARD_RATE_thousands_millionth))
