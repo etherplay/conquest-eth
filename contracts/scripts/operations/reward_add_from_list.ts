@@ -42,13 +42,17 @@ async function func(hre: HardhatRuntimeEnvironment): Promise<void> {
   //   }
   // } else
   if (sponsor === 'blockscout') {
-    if (planets.length !== 4) {
-      throw new Error(`4 required`);
-    }
+    // if (planets.length !== 4) {
+    throw new Error(`4 required`);
+    // }
+  } else if (sponsor == 'gg.xyz') {
+    // if (planets.length !== 3) {
+    throw new Error(`3 required`);
+    // }
   } else if (sponsor === 'infinite-seas') {
-    if (planets.length !== 5) {
-      throw new Error(`5 required`);
-    }
+    // if (planets.length !== 5) {
+    throw new Error(`5 required`);
+    // }
   } else {
     throw new Error(`no number of planet specified`);
   }

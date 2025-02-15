@@ -53,5 +53,20 @@
     "x": -32,
     "y": 37,
     "sponsor": "blockscout"
+  },
+  {
+    "x": 20,
+    "y": -48,
+    "sponsor": "gg.xyz"
+  },
+  {
+    "x": 31,
+    "y": -54,
+    "sponsor": "gg.xyz"
+  },
+  {
+    "x": 56,
+    "y": 9,
+    "sponsor": "gg.xyz"
   }
 ]
