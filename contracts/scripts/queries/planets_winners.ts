@@ -17,41 +17,10 @@ if (!sponsor) {
   process.exit(1);
 }
 
-const planetsPerSponsors: {[sponsor: string]: {x: number; y: number; location: string}[]} = {
-  blockscout: [
-    {
-      x: 12,
-      y: 20,
-      location: '0x000000000000000000000000000000140000000000000000000000000000000c',
-    },
-    {
-      x: 11,
-      y: 18,
-      location: '0x000000000000000000000000000000120000000000000000000000000000000b',
-    },
-    {
-      x: 4,
-      y: -11,
-      location: '0xfffffffffffffffffffffffffffffff500000000000000000000000000000004',
-    },
-    {
-      x: 5,
-      y: -9,
-      location: '0xfffffffffffffffffffffffffffffff700000000000000000000000000000005',
-    },
-  ],
-};
+async function main() {
+  const theGraph = await getTHEGRAPH(hre);
 
-const planets = planetsPerSponsors[sponsor].map((v) => {
-  return v.location;
-});
-
-console.log({
-  planets: planets.map((v) => `${locationToXY(v).x}, ${locationToXY(v).y}`),
-  planetIds: planets,
-});
-
-const queryString = `
+  const queryString = `
 query($planets: [ID!]! $blockNumber: Int!) {
   planetExitEvents(orderBy: timestamp orderDirection: asc block: {number: $blockNumber} where: {planet_in: $planets}) {
     planet {id x y}
@@ -72,12 +41,39 @@ query($planets: [ID!]! $blockNumber: Int!) {
 }
 `;
 
-async function main() {
-  const theGraph = await getTHEGRAPH(hre);
-  let rewardsAlreadyGiven: {[token: string]: {[address: string]: {given: {tx: string; planets: string[]}[]}}} = {};
+  const planetsPerSponsors: {[sponsor: string]: {x: number; y: number; location: string}[]} = {};
+  try {
+    const rewardsPlanets: {
+      x: number;
+      y: number;
+      sponsor: string;
+    }[] = JSON.parse(await deployments.readDotFile('.rewards_planets.json'));
+
+    for (const planet of rewardsPlanets) {
+      planetsPerSponsors[planet.sponsor] = planetsPerSponsors[planet.sponsor] || [];
+      planetsPerSponsors[planet.sponsor].push({
+        x: planet.x,
+        y: planet.y,
+        location: xyToLocation(planet.x, planet.y),
+      });
+    }
+  } catch {}
+
+  const planets = planetsPerSponsors[sponsor].map((v) => {
+    return v.location;
+  });
+
+  console.log({
+    planets: planets.map((v) => `${locationToXY(v).x}, ${locationToXY(v).y}`),
+    planetIds: planets,
+  });
+
+  let rewardsAlreadyGiven: {
+    [sponsor: string]: {[address: string]: {given: {tx: string; planets: string[]; units: number}[]}};
+  } = {};
 
   try {
-    rewardsAlreadyGiven = JSON.parse(await deployments.readDotFile('.planets_rewards.json'));
+    rewardsAlreadyGiven = JSON.parse(await deployments.readDotFile('.planets_rewards_given.json'));
   } catch {}
 
   const result = await theGraph.query(queryString, {
@@ -96,7 +92,7 @@ async function main() {
     planets: {owner: {id: string} | null; id: string}[];
   };
 
-  console.log(data);
+  console.log(JSON.stringify(data, null, 2));
   // const exited = data.exitCompleteEvents;
   const held = data.planets;
   const now = Date.now() / 1000;
@@ -107,7 +103,6 @@ async function main() {
 
   const exited = exittedComplete.concat(exitingDone);
 
-  const token = 'unit';
   const amount = 1;
 
   const winners: {[id: string]: {planets: string[]} & {[token: string]: number}} = {};
@@ -120,8 +115,8 @@ async function main() {
       const planetString = `${locationToXY(planetExited.planet.id).x},${locationToXY(planetExited.planet.id).y}`;
 
       let alreadyCounted = false;
-      if (rewardsAlreadyGiven[token] && rewardsAlreadyGiven[token][planetExited.owner.id]) {
-        for (const givenElem of rewardsAlreadyGiven[token][planetExited.owner.id].given) {
+      if (rewardsAlreadyGiven[sponsor] && rewardsAlreadyGiven[sponsor][planetExited.owner.id]) {
+        for (const givenElem of rewardsAlreadyGiven[sponsor][planetExited.owner.id].given) {
           if (givenElem.planets.indexOf(planetString) !== -1) {
             alreadyCounted = true;
           }
@@ -129,39 +124,40 @@ async function main() {
       }
 
       if (!alreadyCounted) {
-        winners[planetExited.owner.id][token] = winners[planetExited.owner.id][token] || 0;
-        winners[planetExited.owner.id][token] += amount;
+        winners[planetExited.owner.id][sponsor] = winners[planetExited.owner.id][sponsor] || 0;
+        winners[planetExited.owner.id][sponsor] += amount;
         winners[planetExited.owner.id].planets.push(planetString);
       }
       planetsCounted[planetExited.planet.id] = true;
     }
   }
 
-  console.log(JSON.stringify({held}));
-  for (const planetHeld of held) {
-    if (!planetsCounted[planetHeld.id] && planetHeld.owner) {
-      winners[planetHeld.owner.id] = winners[planetHeld.owner.id] || {
-        planets: [],
-      };
-      const planetString = `${locationToXY(planetHeld.id).x},${locationToXY(planetHeld.id).y}`;
+  // TODO activate held at the end
+  // console.log(JSON.stringify({held}));
+  // for (const planetHeld of held) {
+  //   if (!planetsCounted[planetHeld.id] && planetHeld.owner) {
+  //     winners[planetHeld.owner.id] = winners[planetHeld.owner.id] || {
+  //       planets: [],
+  //     };
+  //     const planetString = `${locationToXY(planetHeld.id).x},${locationToXY(planetHeld.id).y}`;
 
-      let alreadyCounted = false;
-      if (rewardsAlreadyGiven[token] && rewardsAlreadyGiven[token][planetHeld.owner.id]) {
-        for (const givenElem of rewardsAlreadyGiven[token][planetHeld.owner.id].given) {
-          if (givenElem.planets.indexOf(planetString) !== -1) {
-            alreadyCounted = true;
-          }
-        }
-      }
+  //     let alreadyCounted = false;
+  //     if (rewardsAlreadyGiven[sponsor] && rewardsAlreadyGiven[sponsor][planetHeld.owner.id]) {
+  //       for (const givenElem of rewardsAlreadyGiven[sponsor][planetHeld.owner.id].given) {
+  //         if (givenElem.planets.indexOf(planetString) !== -1) {
+  //           alreadyCounted = true;
+  //         }
+  //       }
+  //     }
 
-      if (!alreadyCounted) {
-        winners[planetHeld.owner.id][token] = winners[planetHeld.owner.id][token] || 0;
-        winners[planetHeld.owner.id][token] += amount;
-        winners[planetHeld.owner.id].planets.push(planetString);
-      }
-      planetsCounted[planetHeld.id] = true;
-    }
-  }
+  //     if (!alreadyCounted) {
+  //       winners[planetHeld.owner.id][sponsor] = winners[planetHeld.owner.id][sponsor] || 0;
+  //       winners[planetHeld.owner.id][sponsor] += amount;
+  //       winners[planetHeld.owner.id].planets.push(planetString);
+  //     }
+  //     planetsCounted[planetHeld.id] = true;
+  //   }
+  // }
 
   console.log({
     // winners,
@@ -182,6 +178,8 @@ async function main() {
       console.log(`not counted: ${locationToXY(loc).x}, ${locationToXY(loc).y}`);
     }
   }
+
+  await deployments.saveDotFile(`.planets_rewards_${sponsor}.json`, JSON.stringify(winners, null, 2));
 }
 
 main();

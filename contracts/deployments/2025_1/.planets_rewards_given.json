@@ -1,0 +1,56 @@
+{
+  "cafecosmos": {
+    "0xd191fcf07d18d9d22d44ce0bccb926a3a98ad212": {
+      "given": [
+        {
+          "tx": "string",
+          "planets": [
+            "33,-15",
+            "4,-52"
+          ],
+          "units": 2
+        }
+      ]
+    }
+  },
+  "blockscout": {
+    "0xed684079af754343484a7cd29db21d3a6d1dbdf7": {
+      "given": [
+        {
+          "tx": "string",
+          "planets": [
+            "-32,37",
+            "-25,39"
+          ],
+          "units": 1
+        }
+      ]
+    }
+  },
+  "infinite-seas": {
+    "0xed684079af754343484a7cd29db21d3a6d1dbdf7": {
+      "given": [
+        {
+          "tx": "string",
+          "planets": [
+            "32,-61",
+            "-24,-58",
+            "42,13"
+          ],
+          "units": 3
+        }
+      ]
+    },
+    "0xd191fcf07d18d9d22d44ce0bccb926a3a98ad212": {
+      "given": [
+        {
+          "tx": "string",
+          "planets": [
+            "29,-16"
+          ],
+          "units": 1
+        }
+      ]
+    }
+  }
+}
