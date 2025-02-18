@@ -51,7 +51,7 @@ async function func(hre: HardhatRuntimeEnvironment): Promise<void> {
     }
   }
 
-  const totalMeritsPointPerWeek = 10000;
+  const totalMeritsPointPerWeek = 30000;
   const captureWeight = 3;
   const stakeWeight = 1;
   const maxPointsPerPlayer = 1000;
