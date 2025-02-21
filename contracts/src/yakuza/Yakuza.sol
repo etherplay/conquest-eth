@@ -361,6 +361,9 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
 
         uint256 toCap = _capWhenActive(statsForToPlanet.production);
         uint256 rate = (uint256(statsForToPlanet.production) * uint256(_productionSpeedUp)) / 1 hours;
+        if (rate == 0) {
+            rate = 1;
+        }
         uint256 maxTime = toCap / rate;
 
         uint256 timeSinceLastAttack = timestamp - myPlanets[to].lastAttackTime;
