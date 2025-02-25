@@ -25,7 +25,29 @@
           "units": 1
         }
       ]
-    }
+    },
+  "0xd191fcf07d18d9d22d44ce0bccb926a3a98ad212": {
+    "given": [
+        {
+          "tx": "string",
+          "planets": [
+            "-16,-50"
+          ],
+          "units": 1
+        }
+      ]
+  },
+  "0xb646c4793a4ec4b4e84dcbe47e4e92f641430263": {
+    "given": [
+        {
+          "tx": "string",
+          "planets": [
+            "32,13"
+          ],
+          "units": 1
+        }
+      ]
+  }
   },
   "infinite-seas": {
     "0xed684079af754343484a7cd29db21d3a6d1dbdf7": {
