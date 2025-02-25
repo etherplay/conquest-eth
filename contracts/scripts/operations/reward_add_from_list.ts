@@ -49,6 +49,10 @@ async function func(hre: HardhatRuntimeEnvironment): Promise<void> {
     // if (planets.length !== 3) {
     throw new Error(`3 required`);
     // }
+  } else if (sponsor == 'soccerverse') {
+    // if (planets.length !== 5) {
+    throw new Error(`5 required`);
+    // }
   } else if (sponsor === 'infinite-seas') {
     // if (planets.length !== 5) {
     throw new Error(`5 required`);
