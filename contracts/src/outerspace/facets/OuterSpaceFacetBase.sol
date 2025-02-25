@@ -469,16 +469,17 @@ contract OuterSpaceFacetBase is
 
         uint256 flagTime = _planetFlagged[planetUpdate.location];
         if (flagTime > 0) {
-            if (planetUpdate.exitStartTime >= flagTime + (6 days / _productionSpeedUp)) {
-                _freeStakingToken.burn(address(this), address(this), stake);
-                uint256 newStake = _stakeReadyToBeWithdrawn[planetUpdate.owner] + stake;
-                _stakeReadyToBeWithdrawn[planetUpdate.owner] = newStake;
-                emit StakeToWithdraw(planetUpdate.owner, newStake, false);
-            } else {
-                uint256 newStake = _freeStakeReadyToBeWithdrawn[planetUpdate.owner] + stake;
-                _freeStakeReadyToBeWithdrawn[planetUpdate.owner] = newStake;
-                emit StakeToWithdraw(planetUpdate.owner, newStake, true);
-            }
+            // TODO reactivate once we siwtch to a fixed FreePlayToken
+            // if (planetUpdate.exitStartTime >= flagTime + (6 days / _productionSpeedUp)) {
+            //     _freeStakingToken.burn(address(this), address(this), stake);
+            //     uint256 newStake = _stakeReadyToBeWithdrawn[planetUpdate.owner] + stake;
+            //     _stakeReadyToBeWithdrawn[planetUpdate.owner] = newStake;
+            //     emit StakeToWithdraw(planetUpdate.owner, newStake, false);
+            // } else {
+            uint256 newStake = _freeStakeReadyToBeWithdrawn[planetUpdate.owner] + stake;
+            _freeStakeReadyToBeWithdrawn[planetUpdate.owner] = newStake;
+            emit StakeToWithdraw(planetUpdate.owner, newStake, true);
+            // }
         } else {
             uint256 newStake = _stakeReadyToBeWithdrawn[planetUpdate.owner] + stake;
             _stakeReadyToBeWithdrawn[planetUpdate.owner] = newStake;
@@ -533,13 +534,14 @@ contract OuterSpaceFacetBase is
 
                 uint256 flagTime = _planetFlagged[locations[i]];
                 if (flagTime > 0) {
-                    if (planet.exitStartTime >= flagTime + (6 days / _productionSpeedUp)) {
-                        uint256 extra = _completeExit(planet.owner, locations[i], _planetData(locations[i]));
-                        addedStake += extra;
-                        _freeStakingToken.burn(address(this), address(this), extra);
-                    } else {
-                        freeAddedStake += _completeExit(planet.owner, locations[i], _planetData(locations[i]));
-                    }
+                    // TODO reactivate once we siwtch to a fixed FreePlayToken
+                    // if (planet.exitStartTime >= flagTime + (6 days / _productionSpeedUp)) {
+                    //     uint256 extra = _completeExit(planet.owner, locations[i], _planetData(locations[i]));
+                    //     addedStake += extra;
+                    //     _freeStakingToken.burn(address(this), address(this), extra);
+                    // } else {
+                    freeAddedStake += _completeExit(planet.owner, locations[i], _planetData(locations[i]));
+                    // }
                 } else {
                     addedStake += _completeExit(planet.owner, locations[i], _planetData(locations[i]));
                 }
