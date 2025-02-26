@@ -12,7 +12,7 @@
     "numTokens": 50
   },
   "0xfe3865dd730eabfe973b2d9035c4eefed3076a36": {
-    "numTokens": 45
+    "numTokens": 0
   },
   "0xc6ccd3c2d63bc8de8fcf43ede80d135666b7acee": {
     "numTokens": 10
@@ -57,7 +57,7 @@
     "numTokens": 1000
   },
   "0x5a016b206d0314c7ec641c3a6fd89dac7fea010e": {
-    "numTokens": 400
+    "numTokens": 350
   },
   "0x9dab5a6393eef78eb36cd84bb9bbb055189429a5": {
     "numTokens": 200
@@ -111,7 +111,7 @@
     "numTokens": 400
   },
   "0xe2a00cc90358f148c8fd3e052cf86a4be22a4eac": {
-    "numTokens": 200
+    "numTokens": 150
   },
   "0xe3fa0cc9fd3c3c81ceb97d2389345ec03bc3752b": {
     "numTokens": 75
