@@ -3,7 +3,7 @@
     "0xd191fcf07d18d9d22d44ce0bccb926a3a98ad212": {
       "given": [
         {
-          "tx": "string",
+          "tx": "0x4116950575596655aa14898210f862ac4ed0ed9f447cf980614ec7f9a657d793",
           "planets": [
             "33,-15",
             "4,-52"
@@ -17,7 +17,7 @@
     "0xed684079af754343484a7cd29db21d3a6d1dbdf7": {
       "given": [
         {
-          "tx": "string",
+          "tx": "0xa7a2f3f6fab1194a43b1a7c3cd8236de090d5843ce7023b54140368a80129e9c",
           "planets": [
             "-32,37",
             "-25,39"
@@ -26,34 +26,34 @@
         }
       ]
     },
-  "0xd191fcf07d18d9d22d44ce0bccb926a3a98ad212": {
-    "given": [
+    "0xd191fcf07d18d9d22d44ce0bccb926a3a98ad212": {
+      "given": [
         {
-          "tx": "NOT_GIVEN",
+          "tx": "0x114edef00052cf2e39346696ad6a4b03fe894bb864aec7089ba3591453e764ba",
           "planets": [
             "-16,-50"
           ],
           "units": 1
         }
       ]
-  },
-  "0xb646c4793a4ec4b4e84dcbe47e4e92f641430263": {
-    "given": [
+    },
+    "0xb646c4793a4ec4b4e84dcbe47e4e92f641430263": {
+      "given": [
         {
-          "tx": "NOT_GIVEN",
+          "tx": "0xd1e1cb9132da7c1648bc4b29e13f7e8a00c84bd60539fc7c07779ef9e4d0c80c",
           "planets": [
             "32,13"
           ],
           "units": 1
         }
       ]
-  }
+    }
   },
   "infinite-seas": {
     "0xed684079af754343484a7cd29db21d3a6d1dbdf7": {
       "given": [
         {
-          "tx": "string",
+          "tx": "0xa7a2f3f6fab1194a43b1a7c3cd8236de090d5843ce7023b54140368a80129e9c",
           "planets": [
             "32,-61",
             "-24,-58",
@@ -66,7 +66,7 @@
     "0xd191fcf07d18d9d22d44ce0bccb926a3a98ad212": {
       "given": [
         {
-          "tx": "string",
+          "tx": "0x4116950575596655aa14898210f862ac4ed0ed9f447cf980614ec7f9a657d793",
           "planets": [
             "29,-16"
           ],
