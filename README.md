@@ -60,7 +60,7 @@ Ronan is a game designer with love for permissionless-ness. He is also an active
 >
 > And [Zellij](https://zellij.dev/) for easily launching the game locally
 >
-> For nodejs we use volta for version management, it allow to automatically pick the correct version for each sub package.
+> For nodejs we use [volta](https://volta.sh/) for version management, it allow to automatically pick the correct version for each sub package.
 
 ### docker and docker-compose
 
