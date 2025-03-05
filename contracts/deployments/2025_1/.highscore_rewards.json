@@ -1,0 +1,1606 @@
+[
+  {
+    "address": "0xd191fcf07d18d9d22d44ce0bccb926a3a98ad212",
+    "score": 453483,
+    "reward": "410073074415454411457",
+    "rewardFormated": "410.073074415454411457",
+    "percentage": 41.00730744154544
+  },
+  {
+    "address": "0xed684079af754343484a7cd29db21d3a6d1dbdf7",
+    "score": 237551,
+    "reward": "214811291493761862949",
+    "rewardFormated": "214.811291493761862949",
+    "percentage": 21.481129149376184
+  },
+  {
+    "address": "0xd0f46a5d48596409264d4efc1f3b229878fff743",
+    "score": 67467,
+    "reward": "61008681938655832253",
+    "rewardFormated": "61.008681938655832253",
+    "percentage": 6.100868193865583
+  },
+ 
+  {
+    "address": "0xdf976487469c0e8000f5ff4e08d89421e83e36a5",
+    "score": 30430,
+    "reward": "27517070440264084300",
+    "rewardFormated": "27.5170704402640843",
+    "percentage": 2.7517070440264084
+  },
+  {
+    "address": "0x5d43c834af830c9315919ad95367635d8701aa18",
+    "score": 30309,
+    "reward": "27407653236081634277",
+    "rewardFormated": "27.407653236081634277",
+    "percentage": 2.7407653236081635
+  },
+  {
+    "address": "0x988236e5a0a27c62124d131c2b8de67189532100",
+    "score": 19415,
+    "reward": "17556487762002208238",
+    "rewardFormated": "17.556487762002208238",
+    "percentage": 1.7556487762002206
+  },
+  {
+    "address": "0x5a016b206d0314c7ec641c3a6fd89dac7fea010e",
+    "score": 14203,
+    "reward": "12843409512424278321",
+    "rewardFormated": "12.843409512424278321",
+    "percentage": 1.2843409512424278
+  },
+  {
+    "address": "0x2beba030cdc9c4a47c5aa657974840428b9fefac",
+    "score": 10840,
+    "reward": "9802334655683952474",
+    "rewardFormated": "9.802334655683952474",
+    "percentage": 0.9802334655683953
+  },
+  {
+    "address": "0xb646c4793a4ec4b4e84dcbe47e4e92f641430263",
+    "score": 8798,
+    "reward": "7955806300803266962",
+    "rewardFormated": "7.955806300803266962",
+    "percentage": 0.7955806300803268
+  },
+  {
+    "address": "0x97ac8d0430f1f5f205b2e81aa6f556d851bfc9fe",
+    "score": 7743,
+    "reward": "7001796793262070480",
+    "rewardFormated": "7.00179679326207048",
+    "percentage": 0.7001796793262071
+  },
+  {
+    "address": "0xee8b97b753aa589422dea77a936bbd8a26f6e1ca",
+    "score": 6874,
+    "reward": "6215982326860838497",
+    "rewardFormated": "6.215982326860838497",
+    "percentage": 0.6215982326860838
+  },
+  {
+    "address": "0x154a2229e7b8315375e6d68149f2b93e118c6443",
+    "score": 6453,
+    "reward": "5835282798259090896",
+    "rewardFormated": "5.835282798259090896",
+    "percentage": 0.583528279825909
+  },
+  {
+    "address": "0x70276ca0deb4a5cf752dc36f679366707ced20f0",
+    "score": 4581,
+    "reward": "4142481093882674011",
+    "rewardFormated": "4.142481093882674011",
+    "percentage": 0.4142481093882674
+  },
+  {
+    "address": "0xfe3865dd730eabfe973b2d9035c4eefed3076a36",
+    "score": 4292,
+    "reward": "3881145788025417345",
+    "rewardFormated": "3.881145788025417345",
+    "percentage": 0.38811457880254174
+  },
+  {
+    "address": "0x915d72fd6cf53c34d6b7c238be60a79d5214c452",
+    "score": 4052,
+    "reward": "3664119928489979283",
+    "rewardFormated": "3.664119928489979283",
+    "percentage": 0.36641199284899795
+  },
+  {
+    "address": "0xd73b4d093e3d8be30eb69c7ab0f1eed9f82aac01",
+    "score": 3990,
+    "reward": "3608054914776657783",
+    "rewardFormated": "3.608054914776657783",
+    "percentage": 0.3608054914776658
+  },
+  {
+    "address": "0x709a97638476e9e9e9e4b5b4c9ae3352b75399d1",
+    "score": 3735,
+    "reward": "3377464939020254842",
+    "rewardFormated": "3.377464939020254842",
+    "percentage": 0.3377464939020255
+  },
+  {
+    "address": "0xb8542377534c1075a9bb535acbff6dd560a32799",
+    "score": 3602,
+    "reward": "3257196441861032916",
+    "rewardFormated": "3.257196441861032916",
+    "percentage": 0.3257196441861033
+  },
+  {
+    "address": "0x7e05389332c929778c8807ddb3b896190da36d7e",
+    "score": 3568,
+    "reward": "3226451111760179191",
+    "rewardFormated": "3.226451111760179191",
+    "percentage": 0.3226451111760179
+  },
+  {
+    "address": "0x0e9b063789909565ceda1fba162474405a151e66",
+    "score": 3462,
+    "reward": "3130598023798694046",
+    "rewardFormated": "3.130598023798694046",
+    "percentage": 0.3130598023798694
+  },
+  {
+    "address": "0xb6c8cabc2150083261d541a3011a658a36ca55b9",
+    "score": 3167,
+    "reward": "2863837071453051428",
+    "rewardFormated": "2.863837071453051428",
+    "percentage": 0.28638370714530514
+  },
+  {
+    "address": "0xcbba4a3ab07e76b57fd53e46f6ffd8dea5dced1b",
+    "score": 3046,
+    "reward": "2754419867270601405",
+    "rewardFormated": "2.754419867270601405",
+    "percentage": 0.27544198672706016
+  },
+  {
+    "address": "0x09774238fd4a4569b9319743a80e95f18f41e4e1",
+    "score": 2748,
+    "reward": "2484946091680765811",
+    "rewardFormated": "2.484946091680765811",
+    "percentage": 0.24849460916807659
+  },
+  {
+    "address": "0xa8bcbccb087ac2c185171532983ff0f493cb56ee",
+    "score": 2663,
+    "reward": "2408082766428631498",
+    "rewardFormated": "2.408082766428631498",
+    "percentage": 0.24080827664286317
+  },
+  {
+    "address": "0x9a9fcd1d3e19d3738dca340382b5bcea746806d0",
+    "score": 2633,
+    "reward": "2380954533986701740",
+    "rewardFormated": "2.38095453398670174",
+    "percentage": 0.2380954533986702
+  },
+  {
+    "address": "0xaa312eb19552f924dfc47bfefe47f35a902fc595",
+    "score": 2621,
+    "reward": "2370103241009929837",
+    "rewardFormated": "2.370103241009929837",
+    "percentage": 0.23701032410099301
+  },
+  {
+    "address": "0xe35464872c90cb3aa60fba4b4044578ed15ada5d",
+    "score": 2584,
+    "reward": "2336645087664883136",
+    "rewardFormated": "2.336645087664883136",
+    "percentage": 0.2336645087664883
+  },
+  {
+    "address": "0xda9d2c741087321c7aeac9e2cba76ff8f9b8baf4",
+    "score": 2548,
+    "reward": "2304091208734567426",
+    "rewardFormated": "2.304091208734567426",
+    "percentage": 0.23040912087345672
+  },
+  {
+    "address": "0x3695a9ce972902c47bd515725ab5b66b402f8015",
+    "score": 2546,
+    "reward": "2302282659905105442",
+    "rewardFormated": "2.302282659905105442",
+    "percentage": 0.23022826599051055
+  },
+  {
+    "address": "0x8910b201ffb27dda870a73f4518e2734204ce56a",
+    "score": 2468,
+    "reward": "2231749255556088072",
+    "rewardFormated": "2.231749255556088072",
+    "percentage": 0.22317492555560878
+  },
+  {
+    "address": "0x8559e50c15112cf50a6b6aeb5f629b08aa2433d9",
+    "score": 2457,
+    "reward": "2221802236994047161",
+    "rewardFormated": "2.221802236994047161",
+    "percentage": 0.22218022369940474
+  },
+  {
+    "address": "0x615b274fd1a404fe5f6c59f0b8310cc7f889a9cf",
+    "score": 2340,
+    "reward": "2116002130470521106",
+    "rewardFormated": "2.116002130470521106",
+    "percentage": 0.21160021304705212
+  },
+  {
+    "address": "0x55e174227d8451a5f763e9c45c261f9dc5dc517d",
+    "score": 2333,
+    "reward": "2109672209567404162",
+    "rewardFormated": "2.109672209567404162",
+    "percentage": 0.21096722095674042
+  },
+  {
+    "address": "0x0e475f3afcfa3ff0e10040dd53fc5b7f905ed2fc",
+    "score": 2327,
+    "reward": "2104246563079018211",
+    "rewardFormated": "2.104246563079018211",
+    "percentage": 0.2104246563079018
+  },
+  {
+    "address": "0xda4e257275a686592a3bc7c43ab94526086ca281",
+    "score": 2211,
+    "reward": "1999350730970223147",
+    "rewardFormated": "1.999350730970223147",
+    "percentage": 0.19993507309702233
+  },
+  {
+    "address": "0xe81d19226365d94f691e1bda0cb8cf6c58432ab3",
+    "score": 2132,
+    "reward": "1927913052206474785",
+    "rewardFormated": "1.927913052206474785",
+    "percentage": 0.1927913052206475
+  },
+  {
+    "address": "0x1c670dc214de4819730e7305703ec8c986b8c7fc",
+    "score": 2117,
+    "reward": "1914348935985509906",
+    "rewardFormated": "1.914348935985509906",
+    "percentage": 0.191434893598551
+  },
+  {
+    "address": "0x91b75da696b269f1996f4b5cb8799dc594002ab3",
+    "score": 2068,
+    "reward": "1870039489663691302",
+    "rewardFormated": "1.870039489663691302",
+    "percentage": 0.18700394896636913
+  },
+  {
+    "address": "0x8301896a161498ade17d8c6b860fd8d0d39ad302",
+    "score": 2017,
+    "reward": "1823921494512410714",
+    "rewardFormated": "1.823921494512410714",
+    "percentage": 0.18239214945124108
+  },
+  {
+    "address": "0xcb1b704ce494b73e2f9f67f876a464b507d2c97a",
+    "score": 1950,
+    "reward": "1763335108725434255",
+    "rewardFormated": "1.763335108725434255",
+    "percentage": 0.17633351087254343
+  },
+  {
+    "address": "0x3a77817f890171963cf8643872902112febe4833",
+    "score": 1880,
+    "reward": "1700035899694264820",
+    "rewardFormated": "1.70003589969426482",
+    "percentage": 0.17000358996942647
+  },
+  {
+    "address": "0xcc78d2f004c9de9694ff6a9bbdee4793d30f3842",
+    "score": 1845,
+    "reward": "1668386295178680102",
+    "rewardFormated": "1.668386295178680102",
+    "percentage": 0.16683862951786801
+  },
+  {
+    "address": "0x2edf2717ab68e7eaf3735e705668d8e56c91db57",
+    "score": 1804,
+    "reward": "1631311044174709434",
+    "rewardFormated": "1.631311044174709434",
+    "percentage": 0.16313110441747095
+  },
+  {
+    "address": "0x9d2d462d88c1df143b218383c367886c3c487a5e",
+    "score": 1801,
+    "reward": "1628598220930516458",
+    "rewardFormated": "1.628598220930516458",
+    "percentage": 0.16285982209305164
+  },
+  {
+    "address": "0x3198edb222d3e57a6c30e6acb04eefd5b6d9b870",
+    "score": 1800,
+    "reward": "1627693946515785466",
+    "rewardFormated": "1.627693946515785466",
+    "percentage": 0.16276939465157853
+  },
+  {
+    "address": "0xb742c7eeedbfc092765ad2d9817d6c4665a4fe8e",
+    "score": 1749,
+    "reward": "1581575951364504878",
+    "rewardFormated": "1.581575951364504878",
+    "percentage": 0.1581575951364505
+  },
+  {
+    "address": "0x1175fab192e2017a835984ea8345eea72e83e74f",
+    "score": 1726,
+    "reward": "1560777639825692063",
+    "rewardFormated": "1.560777639825692063",
+    "percentage": 0.15607776398256923
+  },
+  {
+    "address": "0x066a2edcc0b7278a2cf5bf2a040b4a54a41a9550",
+    "score": 1683,
+    "reward": "1521893839992259411",
+    "rewardFormated": "1.521893839992259411",
+    "percentage": 0.15218938399922594
+  },
+  {
+    "address": "0x429a23f27d223d7ccb770ac6dd79c76f6343ea34",
+    "score": 1679,
+    "reward": "1518276742333335443",
+    "rewardFormated": "1.518276742333335443",
+    "percentage": 0.15182767423333354
+  },
+  {
+    "address": "0xb8e87e7395234aecfeeb5e6e7d2feb5a73652e7d",
+    "score": 1627,
+    "reward": "1471254472767323863",
+    "rewardFormated": "1.471254472767323863",
+    "percentage": 0.1471254472767324
+  },
+  {
+    "address": "0xa0ddd7fee15ad33904f0e9e82df41ffbd5512429",
+    "score": 1617,
+    "reward": "1462211728620013943",
+    "rewardFormated": "1.462211728620013943",
+    "percentage": 0.1462211728620014
+  },
+  {
+    "address": "0xfcae5296fc6f7d18d817f67d9f57c9233d85e7c2",
+    "score": 1617,
+    "reward": "1462211728620013943",
+    "rewardFormated": "1.462211728620013943",
+    "percentage": 0.1462211728620014
+  },
+  {
+    "address": "0x08b0ae040f1e51686c14ac6d1d44b7e010730cbd",
+    "score": 1579,
+    "reward": "1427849300860236250",
+    "rewardFormated": "1.42784930086023625",
+    "percentage": 0.1427849300860236
+  },
+  {
+    "address": "0xbd5b2d238b6a61256c28c837d463d8f0fc715db9",
+    "score": 1577,
+    "reward": "1426040752030774266",
+    "rewardFormated": "1.426040752030774266",
+    "percentage": 0.1426040752030774
+  },
+  {
+    "address": "0x06ce84f051ce93c2fe99344bc8c9d2bf92e64409",
+    "score": 1530,
+    "reward": "1383539854538417646",
+    "rewardFormated": "1.383539854538417646",
+    "percentage": 0.13835398545384178
+  },
+  {
+    "address": "0x57d3ca64f4745b1936e34b3296238246895aecf3",
+    "score": 1496,
+    "reward": "1352794524437563920",
+    "rewardFormated": "1.35279452443756392",
+    "percentage": 0.1352794524437564
+  },
+  {
+    "address": "0xe3bd63713efb377860ab3da1ac6d6fd4d24ba4d5",
+    "score": 1408,
+    "reward": "1273218375941236631",
+    "rewardFormated": "1.273218375941236631",
+    "percentage": 0.12732183759412366
+  },
+  {
+    "address": "0x1c916de24a80546e04bbc5478d0b72cd6c70c23f",
+    "score": 1392,
+    "reward": "1258749985305540760",
+    "rewardFormated": "1.25874998530554076",
+    "percentage": 0.12587499853055406
+  },
+  {
+    "address": "0x8d5fe65f1e78244972af4106cdf8e559247491ae",
+    "score": 1387,
+    "reward": "1254228613231885800",
+    "rewardFormated": "1.2542286132318858",
+    "percentage": 0.12542286132318858
+  },
+  {
+    "address": "0x5b9f89b853d6fb5e545ff49094b9247756e4e361",
+    "score": 1377,
+    "reward": "1245185869084575881",
+    "rewardFormated": "1.245185869084575881",
+    "percentage": 0.12451858690845757
+  },
+  {
+    "address": "0x38820b1101d4914e7fa2be123b96024f85906db8",
+    "score": 1360,
+    "reward": "1229813204034149018",
+    "rewardFormated": "1.229813204034149018",
+    "percentage": 0.12298132040341492
+  },
+  {
+    "address": "0x0bb814f4db94e5c74e835a6c6e11d3da8f3d4196",
+    "score": 1345,
+    "reward": "1216249087813184140",
+    "rewardFormated": "1.21624908781318414",
+    "percentage": 0.12162490878131842
+  },
+  {
+    "address": "0x703cf6401d04a06378c6f59dbd9117203ba9892d",
+    "score": 1316,
+    "reward": "1190025129785985374",
+    "rewardFormated": "1.190025129785985374",
+    "percentage": 0.11900251297859853
+  },
+  {
+    "address": "0x45032a436bcea53b3105103444c81554639e26ff",
+    "score": 1306,
+    "reward": "1180982385638675455",
+    "rewardFormated": "1.180982385638675455",
+    "percentage": 0.11809823856386754
+  },
+  {
+    "address": "0x9b02589b2ed7d02620cbe4d71eea1f5b72cae0d5",
+    "score": 1264,
+    "reward": "1143002860219973794",
+    "rewardFormated": "1.143002860219973794",
+    "percentage": 0.11430028602199738
+  },
+  {
+    "address": "0xb4dc5453aa5301b33a2234b2648ff4ef15588b8b",
+    "score": 1178,
+    "reward": "1065235260553108488",
+    "rewardFormated": "1.065235260553108488",
+    "percentage": 0.10652352605531085
+  },
+  {
+    "address": "0x0a9425b6c93b2447fcbd33e9c28b397bf49e8628",
+    "score": 1174,
+    "reward": "1061618162894184520",
+    "rewardFormated": "1.06161816289418452",
+    "percentage": 0.10616181628941845
+  },
+  {
+    "address": "0x7ad9d8711788ef3bcaba5348c5ba3c8d58b58ca8",
+    "score": 1114,
+    "reward": "1007361698010325005",
+    "rewardFormated": "1.007361698010325005",
+    "percentage": 0.10073616980103249
+  },
+  {
+    "address": "0xd1942d3982946c86b65ae0f34e4ca5475351fd22",
+    "score": 1103,
+    "reward": "997414679448284094",
+    "rewardFormated": "0.997414679448284094",
+    "percentage": 0.09974146794482841
+  },
+  {
+    "address": "0x574f2d47a7f74de9f6ad35a5bac16610341ed1b7",
+    "score": 1062,
+    "reward": "960339428444313425",
+    "rewardFormated": "0.960339428444313425",
+    "percentage": 0.09603394284443134
+  },
+  {
+    "address": "0x2c84da7b35fe4da77b8ee6e8d590f39510ca9a54",
+    "score": 1046,
+    "reward": "945871037808617554",
+    "rewardFormated": "0.945871037808617554",
+    "percentage": 0.09458710378086176
+  },
+  {
+    "address": "0xa0f614d8a255928ed45f99bd9d53fbc29d4629d3",
+    "score": 1012,
+    "reward": "915125707707763828",
+    "rewardFormated": "0.915125707707763828",
+    "percentage": 0.09151257077077639
+  },
+  {
+    "address": "0x2654ddf31e5d8dda52fe8c1d759be186d316d8a6",
+    "score": 1008,
+    "reward": "911508610048839861",
+    "rewardFormated": "0.911508610048839861",
+    "percentage": 0.091150861004884
+  },
+  {
+    "address": "0x9df5c06973a224c13eaf877c35732f0bc2701362",
+    "score": 972,
+    "reward": "878954731118524151",
+    "rewardFormated": "0.878954731118524151",
+    "percentage": 0.08789547311185242
+  },
+  {
+    "address": "0x1b2d294ab6ca449e34f946b86540cd342cf49100",
+    "score": 960,
+    "reward": "868103438141752248",
+    "rewardFormated": "0.868103438141752248",
+    "percentage": 0.08681034381417523
+  },
+  {
+    "address": "0x28040867a02a21b77b2c6da1890bedae9302efa2",
+    "score": 956,
+    "reward": "864486340482828281",
+    "rewardFormated": "0.864486340482828281",
+    "percentage": 0.08644863404828283
+  },
+  {
+    "address": "0xb2a5741a365c710267ec91a7da7eabedee1ac552",
+    "score": 941,
+    "reward": "850922224261863402",
+    "rewardFormated": "0.850922224261863402",
+    "percentage": 0.08509222242618633
+  },
+  {
+    "address": "0x325b38bfd989ed85079135573e0e361ca7a2f44e",
+    "score": 899,
+    "reward": "812942698843161741",
+    "rewardFormated": "0.812942698843161741",
+    "percentage": 0.08129426988431616
+  },
+  {
+    "address": "0x3ccd2216814aa9126c2d78706677f02c82664fd9",
+    "score": 898,
+    "reward": "812038424428430749",
+    "rewardFormated": "0.812038424428430749",
+    "percentage": 0.08120384244284307
+  },
+  {
+    "address": "0x8f4d466606f280c7402153f1f0101928c1819dac",
+    "score": 853,
+    "reward": "771346075765536112",
+    "rewardFormated": "0.771346075765536112",
+    "percentage": 0.0771346075765536
+  },
+  {
+    "address": "0x3fa92c59e7add64a3bf1fb5bbbf32ee0758142bb",
+    "score": 838,
+    "reward": "757781959544571233",
+    "rewardFormated": "0.757781959544571233",
+    "percentage": 0.07577819595445712
+  },
+  {
+    "address": "0xd8f3676a7567842295170b3f6ae4bd466a878374",
+    "score": 828,
+    "reward": "748739215397261314",
+    "rewardFormated": "0.748739215397261314",
+    "percentage": 0.07487392153972613
+  },
+  {
+    "address": "0xfb30b2826a67e3231a2e564ebaa0d52be8ffc066",
+    "score": 825,
+    "reward": "746026392153068338",
+    "rewardFormated": "0.746026392153068338",
+    "percentage": 0.07460263921530684
+  },
+  {
+    "address": "0xefa324c6b378ae627e79df43df764dfcbb525e85",
+    "score": 732,
+    "reward": "661928871583086089",
+    "rewardFormated": "0.661928871583086089",
+    "percentage": 0.06619288715830861
+  },
+  {
+    "address": "0xf9ab14db9143c92123384bdaf2ebf5f1ffe3c3bb",
+    "score": 725,
+    "reward": "655598950679969146",
+    "rewardFormated": "0.655598950679969146",
+    "percentage": 0.06555989506799692
+  },
+  {
+    "address": "0x66ea65c2fd7d25ab5f90bfda88bbb6c2fe9f0e39",
+    "score": 711,
+    "reward": "642939108873735259",
+    "rewardFormated": "0.642939108873735259",
+    "percentage": 0.06429391088737353
+  },
+  {
+    "address": "0x60234d66231d913ccae06f1adcece471ba1fd242",
+    "score": 695,
+    "reward": "628470718238039388",
+    "rewardFormated": "0.628470718238039388",
+    "percentage": 0.06284707182380393
+  },
+  {
+    "address": "0x1b9990a0cffa23bb425ceb333c5d5db481ba67d6",
+    "score": 681,
+    "reward": "615810876431805501",
+    "rewardFormated": "0.615810876431805501",
+    "percentage": 0.06158108764318056
+  },
+  {
+    "address": "0x813399e5b08bb50b038aa7df6347b6af2d161828",
+    "score": 679,
+    "reward": "614002327602343517",
+    "rewardFormated": "0.614002327602343517",
+    "percentage": 0.06140023276023435
+  },
+  {
+    "address": "0xb2474c9cae8443af7a3a13ee29d486750509f4e2",
+    "score": 678,
+    "reward": "613098053187612525",
+    "rewardFormated": "0.613098053187612525",
+    "percentage": 0.06130980531876125
+  },
+  {
+    "address": "0x2713edbf942eb145a964a86f59e3a3439ed9c2c9",
+    "score": 669,
+    "reward": "604959583455033598",
+    "rewardFormated": "0.604959583455033598",
+    "percentage": 0.06049595834550336
+  },
+  {
+    "address": "0x51fabbe2e33eb2212b3e66e15e899d048a27977b",
+    "score": 653,
+    "reward": "590491192819337727",
+    "rewardFormated": "0.590491192819337727",
+    "percentage": 0.05904911928193377
+  },
+  {
+    "address": "0x770569f85346b971114e11e4bb5f7ac776673469",
+    "score": 625,
+    "reward": "565171509206869953",
+    "rewardFormated": "0.565171509206869953",
+    "percentage": 0.056517150920687
+  },
+  {
+    "address": "0x7c88c1296f6cfc8b5b8102aed241b347e31c5611",
+    "score": 600,
+    "reward": "542564648838595155",
+    "rewardFormated": "0.542564648838595155",
+    "percentage": 0.05425646488385952
+  },
+  {
+    "address": "0x2552a06d9242acf134bb184ea561a83597a0f431",
+    "score": 583,
+    "reward": "527191983788168292",
+    "rewardFormated": "0.527191983788168292",
+    "percentage": 0.052719198378816834
+  },
+  {
+    "address": "0x7d9bfd6e688f94e6f2c6ddb1f8bda63b6550e964",
+    "score": 576,
+    "reward": "520862062885051349",
+    "rewardFormated": "0.520862062885051349",
+    "percentage": 0.05208620628850513
+  },
+  {
+    "address": "0xe401d18f6f835c12ca54e54a2f16a802b651eaa7",
+    "score": 563,
+    "reward": "509106495493548454",
+    "rewardFormated": "0.509106495493548454",
+    "percentage": 0.05091064954935485
+  },
+  {
+    "address": "0x7dcb8d8cf41467c2556bea1a90a5677076ec5a2b",
+    "score": 562,
+    "reward": "508202221078817462",
+    "rewardFormated": "0.508202221078817462",
+    "percentage": 0.05082022210788175
+  },
+  {
+    "address": "0x6c60280a5562761f77938b3b5c6ba6eab878f95d",
+    "score": 555,
+    "reward": "501872300175700518",
+    "rewardFormated": "0.501872300175700518",
+    "percentage": 0.05018723001757005
+  },
+  {
+    "address": "0x990e99d9fef9bb83e5854f3ce7e6846dcd9e5fd5",
+    "score": 552,
+    "reward": "499159476931507543",
+    "rewardFormated": "0.499159476931507543",
+    "percentage": 0.049915947693150754
+  },
+  {
+    "address": "0x716048804d5d4641771baef073dd2e3d36a95b03",
+    "score": 541,
+    "reward": "489212458369466631",
+    "rewardFormated": "0.489212458369466631",
+    "percentage": 0.04892124583694667
+  },
+  {
+    "address": "0xd2258bb7ed0c1738c44c1493350c8960408d8faa",
+    "score": 512,
+    "reward": "462988500342267865",
+    "rewardFormated": "0.462988500342267865",
+    "percentage": 0.046298850034226784
+  },
+  {
+    "address": "0xbd7723c39bdcad792f14acc9aa86ae7424e211b6",
+    "score": 509,
+    "reward": "460275677098074890",
+    "rewardFormated": "0.46027567709807489",
+    "percentage": 0.04602756770980749
+  },
+  {
+    "address": "0x119f8a224e41cbdd5961ec8811dda02c1ffa34ab",
+    "score": 493,
+    "reward": "445807286462379019",
+    "rewardFormated": "0.445807286462379019",
+    "percentage": 0.044580728646237903
+  },
+  {
+    "address": "0x4128f1a04767f1856db4f1588f8250f9ed948d12",
+    "score": 462,
+    "reward": "417774779605718269",
+    "rewardFormated": "0.417774779605718269",
+    "percentage": 0.04177747796057183
+  },
+  {
+    "address": "0x530aef31073a40eff1251f8d5154f2444a29fe3e",
+    "score": 457,
+    "reward": "413253407532063310",
+    "rewardFormated": "0.41325340753206331",
+    "percentage": 0.04132534075320633
+  },
+  {
+    "address": "0x8f6d6e2b57784795f0f7aefc75a6edc37fcde22c",
+    "score": 449,
+    "reward": "406019212214215374",
+    "rewardFormated": "0.406019212214215374",
+    "percentage": 0.04060192122142153
+  },
+  {
+    "address": "0x99dda6754a2f4b8aeda5b20131b08e1247a6da38",
+    "score": 442,
+    "reward": "399689291311098431",
+    "rewardFormated": "0.399689291311098431",
+    "percentage": 0.039968929131109845
+  },
+  {
+    "address": "0xfd1efac4c7e875e6c293b479188ccac4885003f4",
+    "score": 423,
+    "reward": "382508077431209584",
+    "rewardFormated": "0.382508077431209584",
+    "percentage": 0.03825080774312096
+  },
+  {
+    "address": "0x46b705da2c286fe00b4cc0f33e086e10e52a5bec",
+    "score": 416,
+    "reward": "376178156528092641",
+    "rewardFormated": "0.376178156528092641",
+    "percentage": 0.037617815652809264
+  },
+  {
+    "address": "0xf92a9c4f76681b6b51ce9d132d816b53070e6b8a",
+    "score": 415,
+    "reward": "375273882113361649",
+    "rewardFormated": "0.375273882113361649",
+    "percentage": 0.037527388211336166
+  },
+  {
+    "address": "0x371209d50e65c3d1b3fa12a67415c197712697ad",
+    "score": 413,
+    "reward": "373465333283899665",
+    "rewardFormated": "0.373465333283899665",
+    "percentage": 0.03734653332838997
+  },
+  {
+    "address": "0x9f81311af8d9fa648a4c4d9caa1888e68e2d88b2",
+    "score": 411,
+    "reward": "371656784454437681",
+    "rewardFormated": "0.371656784454437681",
+    "percentage": 0.03716567844544377
+  },
+  {
+    "address": "0x879124cd2a3e5c7f2ee41a3e8025ddb986749f99",
+    "score": 396,
+    "reward": "358092668233472802",
+    "rewardFormated": "0.358092668233472802",
+    "percentage": 0.03580926682334728
+  },
+  {
+    "address": "0x2eb919dc3a5bbb13d91e62acf6eeb4bfa1aa60d3",
+    "score": 390,
+    "reward": "352667021745086851",
+    "rewardFormated": "0.352667021745086851",
+    "percentage": 0.03526670217450868
+  },
+  {
+    "address": "0xf83a6492f613749bbc9fc592fbfc058b0a369b45",
+    "score": 384,
+    "reward": "347241375256700899",
+    "rewardFormated": "0.347241375256700899",
+    "percentage": 0.03472413752567009
+  },
+  {
+    "address": "0x7ebdebe88ec46b316fdfb4e783364177c9d6bac9",
+    "score": 359,
+    "reward": "324634514888426101",
+    "rewardFormated": "0.324634514888426101",
+    "percentage": 0.03246345148884261
+  },
+  {
+    "address": "0x0374f0273e01841f594a4c0becdf7bfbd9b13a42",
+    "score": 348,
+    "reward": "314687496326385190",
+    "rewardFormated": "0.31468749632638519",
+    "percentage": 0.031468749632638515
+  },
+  {
+    "address": "0x0e1e24a976efa1435b580d88b40d7dd65070c5f9",
+    "score": 335,
+    "reward": "302931928934882295",
+    "rewardFormated": "0.302931928934882295",
+    "percentage": 0.030293192893488228
+  },
+  {
+    "address": "0x21b30b4b6cdbb15c98b1a19952e880d7e80f9a54",
+    "score": 311,
+    "reward": "281229342981338488",
+    "rewardFormated": "0.281229342981338488",
+    "percentage": 0.02812293429813385
+  },
+  {
+    "address": "0xed2b5b2aa27fd631f435286a01b5cf6aa9452060",
+    "score": 301,
+    "reward": "272186598834028569",
+    "rewardFormated": "0.272186598834028569",
+    "percentage": 0.027218659883402857
+  },
+  {
+    "address": "0x6b33fdf05c01ebf6e830eb95027ae460d561b8f2",
+    "score": 296,
+    "reward": "267665226760373610",
+    "rewardFormated": "0.26766522676037361",
+    "percentage": 0.02676652267603736
+  },
+  {
+    "address": "0x58c771b054edba5cf7d771c0291261ae50736513",
+    "score": 290,
+    "reward": "262239580271987658",
+    "rewardFormated": "0.262239580271987658",
+    "percentage": 0.02622395802719877
+  },
+  {
+    "address": "0xec3f391225f8e7ce482b3d9fc2ed05f4dcabd311",
+    "score": 289,
+    "reward": "261335305857256666",
+    "rewardFormated": "0.261335305857256666",
+    "percentage": 0.026133530585725664
+  },
+  {
+    "address": "0x5b806286c200aa1d2fe5404dcfde5854aa16e5be",
+    "score": 287,
+    "reward": "259526757027794682",
+    "rewardFormated": "0.259526757027794682",
+    "percentage": 0.025952675702779468
+  },
+  {
+    "address": "0x216e7a2afc7206a560b1cff735c148aa21df7eb9",
+    "score": 286,
+    "reward": "258622482613063690",
+    "rewardFormated": "0.25862248261306369",
+    "percentage": 0.02586224826130637
+  },
+  {
+    "address": "0x1824a65abab12ff47122efd8c7309929547aa492",
+    "score": 286,
+    "reward": "258622482613063690",
+    "rewardFormated": "0.25862248261306369",
+    "percentage": 0.02586224826130637
+  },
+  {
+    "address": "0x88483f6ac6a29d6314fada20881af919a13f6a9b",
+    "score": 285,
+    "reward": "257718208198332698",
+    "rewardFormated": "0.257718208198332698",
+    "percentage": 0.025771820819833268
+  },
+  {
+    "address": "0x35bc9e854b107289020812b3fd34f969b82c598f",
+    "score": 285,
+    "reward": "257718208198332698",
+    "rewardFormated": "0.257718208198332698",
+    "percentage": 0.025771820819833268
+  },
+  {
+    "address": "0x494fec7ebba4a63515f579de3466dc490dc7a88c",
+    "score": 270,
+    "reward": "244154091977367819",
+    "rewardFormated": "0.244154091977367819",
+    "percentage": 0.024415409197736784
+  },
+  {
+    "address": "0x8d1509e0240eba23cccd58941fa2b5d7ff1fc70f",
+    "score": 258,
+    "reward": "233302799000595916",
+    "rewardFormated": "0.233302799000595916",
+    "percentage": 0.023330279900059592
+  },
+  {
+    "address": "0xbcfd5b70c3c85fefd61b3418e8af40709d06200f",
+    "score": 257,
+    "reward": "232398524585864924",
+    "rewardFormated": "0.232398524585864924",
+    "percentage": 0.023239852458586494
+  },
+  {
+    "address": "0x6ed4a5bfb8cfa9f76469184368c90cc1f6a73dfc",
+    "score": 254,
+    "reward": "229685701341671949",
+    "rewardFormated": "0.229685701341671949",
+    "percentage": 0.022968570134167195
+  },
+  {
+    "address": "0xed4d87e2132838adf39d76fca668c47dc3c40162",
+    "score": 254,
+    "reward": "229685701341671949",
+    "rewardFormated": "0.229685701341671949",
+    "percentage": 0.022968570134167195
+  },
+  {
+    "address": "0x3574e417f432c58ec1138d226ec3b170e4471c0b",
+    "score": 254,
+    "reward": "229685701341671949",
+    "rewardFormated": "0.229685701341671949",
+    "percentage": 0.022968570134167195
+  },
+  {
+    "address": "0x64e9c3656aee020f22a9f3dc6c405916185c9290",
+    "score": 250,
+    "reward": "226068603682747981",
+    "rewardFormated": "0.226068603682747981",
+    "percentage": 0.0226068603682748
+  },
+  {
+    "address": "0x03dd3f1329a4cb42800fba65b82378e9fc41646b",
+    "score": 248,
+    "reward": "224260054853285997",
+    "rewardFormated": "0.224260054853285997",
+    "percentage": 0.0224260054853286
+  },
+  {
+    "address": "0x8562e4199743671322652dd7955920d7bb0fd372",
+    "score": 247,
+    "reward": "223355780438555005",
+    "rewardFormated": "0.223355780438555005",
+    "percentage": 0.0223355780438555
+  },
+  {
+    "address": "0xaeb9890b488cedb2927c2a242e27cba20f477777",
+    "score": 239,
+    "reward": "216121585120707070",
+    "rewardFormated": "0.21612158512070707",
+    "percentage": 0.021612158512070708
+  },
+  {
+    "address": "0xb1fba78da54ea383d3558f458d9cfc75b656111e",
+    "score": 236,
+    "reward": "213408761876514094",
+    "rewardFormated": "0.213408761876514094",
+    "percentage": 0.02134087618765141
+  },
+  {
+    "address": "0xeefa41fe64f28526123a92afe87827b6f6f4c2a6",
+    "score": 233,
+    "reward": "210695938632321118",
+    "rewardFormated": "0.210695938632321118",
+    "percentage": 0.021069593863232112
+  },
+  {
+    "address": "0x815611ea3f076c2f0d5e5742431ef16cca577967",
+    "score": 231,
+    "reward": "208887389802859134",
+    "rewardFormated": "0.208887389802859134",
+    "percentage": 0.020888738980285915
+  },
+  {
+    "address": "0x88df4d4240d4f388a88d9edc1dbc7d0154b996cf",
+    "score": 227,
+    "reward": "205270292143935167",
+    "rewardFormated": "0.205270292143935167",
+    "percentage": 0.02052702921439352
+  },
+  {
+    "address": "0x3dcdbd9e2bc163089964cc74c97d39aa7e65d633",
+    "score": 219,
+    "reward": "198036096826087231",
+    "rewardFormated": "0.198036096826087231",
+    "percentage": 0.019803609682608723
+  },
+  {
+    "address": "0xefd28ef6a78cc4ee89f17a57a200856b29e4638e",
+    "score": 218,
+    "reward": "197131822411356239",
+    "rewardFormated": "0.197131822411356239",
+    "percentage": 0.019713182241135625
+  },
+  {
+    "address": "0x01485557c2bc6e26c7187ff4cc38d5d9474405d4",
+    "score": 218,
+    "reward": "197131822411356239",
+    "rewardFormated": "0.197131822411356239",
+    "percentage": 0.019713182241135625
+  },
+  {
+    "address": "0xff88430c7c656fc6355656234bc522b8c7e03b40",
+    "score": 204,
+    "reward": "184471980605122352",
+    "rewardFormated": "0.184471980605122352",
+    "percentage": 0.018447198060512236
+  },
+  {
+    "address": "0x58e7ca15b7ad6af451a455697f1f9acdba27cc98",
+    "score": 202,
+    "reward": "182663431775660368",
+    "rewardFormated": "0.182663431775660368",
+    "percentage": 0.018266343177566036
+  },
+  {
+    "address": "0x76a7bce04f583b40e30e63041a6b1bf4d7799222",
+    "score": 199,
+    "reward": "179950608531467393",
+    "rewardFormated": "0.179950608531467393",
+    "percentage": 0.017995060853146738
+  },
+  {
+    "address": "0xe3f5ebab783b3284120add823e99f07efa724742",
+    "score": 196,
+    "reward": "177237785287274417",
+    "rewardFormated": "0.177237785287274417",
+    "percentage": 0.017723778528727443
+  },
+  {
+    "address": "0x9a10586aa206a401ba50a168a847686d1e500dc6",
+    "score": 196,
+    "reward": "177237785287274417",
+    "rewardFormated": "0.177237785287274417",
+    "percentage": 0.017723778528727443
+  },
+  {
+    "address": "0xe4fb057c253cc5dd67d713118e0691590476bbc2",
+    "score": 194,
+    "reward": "175429236457812433",
+    "rewardFormated": "0.175429236457812433",
+    "percentage": 0.017542923645781243
+  },
+  {
+    "address": "0x65ab2af69d1d7c96b12e527584e5d457b57206b5",
+    "score": 193,
+    "reward": "174524962043081441",
+    "rewardFormated": "0.174524962043081441",
+    "percentage": 0.017452496204308145
+  },
+  {
+    "address": "0x50da33142cdd903af82666df5d4149dc6ab0c59d",
+    "score": 185,
+    "reward": "167290766725233506",
+    "rewardFormated": "0.167290766725233506",
+    "percentage": 0.01672907667252335
+  },
+  {
+    "address": "0xc07fbbf7b2a686531192676ea09967ef76a59087",
+    "score": 183,
+    "reward": "165482217895771522",
+    "rewardFormated": "0.165482217895771522",
+    "percentage": 0.016548221789577152
+  },
+  {
+    "address": "0x7872822f2d9cf58974b930b2161cf5e079b583d2",
+    "score": 183,
+    "reward": "165482217895771522",
+    "rewardFormated": "0.165482217895771522",
+    "percentage": 0.016548221789577152
+  },
+  {
+    "address": "0x38f9a6cb26747194deb0f6bfb6b89340aad1b270",
+    "score": 182,
+    "reward": "164577943481040530",
+    "rewardFormated": "0.16457794348104053",
+    "percentage": 0.016457794348104054
+  },
+  {
+    "address": "0xb40583d61bf10b04cec15ebf005557bdb8837aa0",
+    "score": 178,
+    "reward": "160960845822116562",
+    "rewardFormated": "0.160960845822116562",
+    "percentage": 0.016096084582211657
+  },
+  {
+    "address": "0xe8c25ce0957110a7b92a2b1b03d1c27f6d21ab67",
+    "score": 167,
+    "reward": "151013827260075651",
+    "rewardFormated": "0.151013827260075651",
+    "percentage": 0.015101382726007565
+  },
+  {
+    "address": "0x68ed29ebd361581a566a78bf0fd274d61f1439a8",
+    "score": 164,
+    "reward": "148301004015882675",
+    "rewardFormated": "0.148301004015882675",
+    "percentage": 0.014830100401588267
+  },
+  {
+    "address": "0x6a6bb7d8968f80cdd78d9759f2b23456713d72d2",
+    "score": 162,
+    "reward": "146492455186420691",
+    "rewardFormated": "0.146492455186420691",
+    "percentage": 0.014649245518642069
+  },
+  {
+    "address": "0x9d9c1715c66cbee0566f509b8db7344095d93622",
+    "score": 157,
+    "reward": "141971083112765732",
+    "rewardFormated": "0.141971083112765732",
+    "percentage": 0.014197108311276574
+  },
+  {
+    "address": "0x760ffd8ea75bd798b73f01a6808921795711749e",
+    "score": 157,
+    "reward": "141971083112765732",
+    "rewardFormated": "0.141971083112765732",
+    "percentage": 0.014197108311276574
+  },
+  {
+    "address": "0xea94e8832cadd3c2da4ccbe78c5f889da2782ae0",
+    "score": 155,
+    "reward": "140162534283303748",
+    "rewardFormated": "0.140162534283303748",
+    "percentage": 0.014016253428330376
+  },
+  {
+    "address": "0xa315c96c0903b6a5f0c997fdc6b257851017590b",
+    "score": 150,
+    "reward": "135641162209648788",
+    "rewardFormated": "0.135641162209648788",
+    "percentage": 0.01356411622096488
+  },
+  {
+    "address": "0xb43d6a23d72f124677f305acaff5a6adb828137f",
+    "score": 149,
+    "reward": "134736887794917796",
+    "rewardFormated": "0.134736887794917796",
+    "percentage": 0.01347368877949178
+  },
+  {
+    "address": "0x15f408322a4f8f0ca4b079eaf3dcddbc2e06a158",
+    "score": 148,
+    "reward": "133832613380186805",
+    "rewardFormated": "0.133832613380186805",
+    "percentage": 0.01338326133801868
+  },
+  {
+    "address": "0x0a389c8c7101409831e81c82dcc9cdb13dfb4e39",
+    "score": 142,
+    "reward": "128406966891800853",
+    "rewardFormated": "0.128406966891800853",
+    "percentage": 0.012840696689180085
+  },
+  {
+    "address": "0x53f3f5d1da7ae9756d6c1fc38996e9e592ecb488",
+    "score": 141,
+    "reward": "127502692477069861",
+    "rewardFormated": "0.127502692477069861",
+    "percentage": 0.012750269247706987
+  },
+  {
+    "address": "0xa0db55584558a16765a94db4f2cacf5f76836a05",
+    "score": 138,
+    "reward": "124789869232876885",
+    "rewardFormated": "0.124789869232876885",
+    "percentage": 0.012478986923287689
+  },
+  {
+    "address": "0x9c952fc22ad42a56a7399feb9879b0e696099798",
+    "score": 138,
+    "reward": "124789869232876885",
+    "rewardFormated": "0.124789869232876885",
+    "percentage": 0.012478986923287689
+  },
+  {
+    "address": "0x6510971a72c9d30903e1c81dcc796a94ba1300ad",
+    "score": 138,
+    "reward": "124789869232876885",
+    "rewardFormated": "0.124789869232876885",
+    "percentage": 0.012478986923287689
+  },
+  {
+    "address": "0xe38b3806517671c470c2f2c389715f0442a36295",
+    "score": 135,
+    "reward": "122077045988683909",
+    "rewardFormated": "0.122077045988683909",
+    "percentage": 0.012207704598868392
+  },
+  {
+    "address": "0x4bbae8097464f8036bea0113a600813f8a6a6add",
+    "score": 132,
+    "reward": "119364222744490934",
+    "rewardFormated": "0.119364222744490934",
+    "percentage": 0.011936422274449094
+  },
+  {
+    "address": "0x82cd80cee3e990ef869ce1675dbdd29574881632",
+    "score": 130,
+    "reward": "117555673915028950",
+    "rewardFormated": "0.11755567391502895",
+    "percentage": 0.011755567391502894
+  },
+  {
+    "address": "0x1a536e56fb2f40f25896b80b45a8a96a817bdd49",
+    "score": 127,
+    "reward": "114842850670835974",
+    "rewardFormated": "0.114842850670835974",
+    "percentage": 0.011484285067083598
+  },
+  {
+    "address": "0xd7613b407a9eb751f7e391aa2588063ee4e883d1",
+    "score": 127,
+    "reward": "114842850670835974",
+    "rewardFormated": "0.114842850670835974",
+    "percentage": 0.011484285067083598
+  },
+  {
+    "address": "0x08f09176704a65c00aa7b17d90af302fdc2b16a8",
+    "score": 118,
+    "reward": "106704380938257047",
+    "rewardFormated": "0.106704380938257047",
+    "percentage": 0.010670438093825705
+  },
+  {
+    "address": "0xcb9526abe0e32d78b64619aa46c17ac0f247db9e",
+    "score": 117,
+    "reward": "105800106523526055",
+    "rewardFormated": "0.105800106523526055",
+    "percentage": 0.010580010652352605
+  },
+  {
+    "address": "0xbcd8dc1b5b6aebdad79e7f4c805a11d52e1a7ded",
+    "score": 117,
+    "reward": "105800106523526055",
+    "rewardFormated": "0.105800106523526055",
+    "percentage": 0.010580010652352605
+  },
+  {
+    "address": "0xbdf643bf3b3e3124c2c8974b4ea85084b1843a66",
+    "score": 116,
+    "reward": "104895832108795063",
+    "rewardFormated": "0.104895832108795063",
+    "percentage": 0.010489583210879507
+  },
+  {
+    "address": "0xdace19d65488596dc67722453afa52267958871d",
+    "score": 110,
+    "reward": "99470185620409111",
+    "rewardFormated": "0.099470185620409111",
+    "percentage": 0.00994701856204091
+  },
+  {
+    "address": "0xc3489b4876c42aae5fc688da945674d100d4dc31",
+    "score": 109,
+    "reward": "98565911205678119",
+    "rewardFormated": "0.098565911205678119",
+    "percentage": 0.009856591120567812
+  },
+  {
+    "address": "0x8a0c098e896fa309828a35ce714403d23cbbcf3a",
+    "score": 107,
+    "reward": "96757362376216136",
+    "rewardFormated": "0.096757362376216136",
+    "percentage": 0.009675736237621614
+  },
+  {
+    "address": "0xb85bb9a82dad89021c3e89f539d4a9548d9038ad",
+    "score": 100,
+    "reward": "90427441473099192",
+    "rewardFormated": "0.090427441473099192",
+    "percentage": 0.009042744147309918
+  },
+  {
+    "address": "0x1faee34ff197ced9042b3ed4b441f90cc1522dc9",
+    "score": 92,
+    "reward": "83193246155251257",
+    "rewardFormated": "0.083193246155251257",
+    "percentage": 0.008319324615525125
+  },
+  {
+    "address": "0x841e2a057961bbb5cc2d48df4321c517f6d6f03c",
+    "score": 84,
+    "reward": "75959050837403321",
+    "rewardFormated": "0.075959050837403321",
+    "percentage": 0.007595905083740332
+  },
+  {
+    "address": "0x99fa48ccea8a38cde6b437450ff9bbddafaa4fc8",
+    "score": 83,
+    "reward": "75054776422672329",
+    "rewardFormated": "0.075054776422672329",
+    "percentage": 0.007505477642267233
+  },
+  {
+    "address": "0x582e6caadf06d7b4ceda46d85215381dcf67361a",
+    "score": 78,
+    "reward": "70533404349017370",
+    "rewardFormated": "0.07053340434901737",
+    "percentage": 0.007053340434901737
+  },
+  {
+    "address": "0x5e40eac11e2e8ebb312ad35692d1891675007115",
+    "score": 74,
+    "reward": "66916306690093402",
+    "rewardFormated": "0.066916306690093402",
+    "percentage": 0.00669163066900934
+  },
+  {
+    "address": "0x25e58696fbc8eb88301ee06a57f77d9f0715ec97",
+    "score": 73,
+    "reward": "66012032275362410",
+    "rewardFormated": "0.06601203227536241",
+    "percentage": 0.0066012032275362415
+  },
+  {
+    "address": "0xbd75a7e6d75113004873108c96d9a585c099ae80",
+    "score": 65,
+    "reward": "58777836957514475",
+    "rewardFormated": "0.058777836957514475",
+    "percentage": 0.005877783695751447
+  },
+  {
+    "address": "0x07f62f48709b2c427e54e102531d07d9e21ad99e",
+    "score": 56,
+    "reward": "50639367224935547",
+    "rewardFormated": "0.050639367224935547",
+    "percentage": 0.005063936722493554
+  },
+  {
+    "address": "0xb77729e9c00a508351bd81f01657eb2dbac247ea",
+    "score": 55,
+    "reward": "49735092810204555",
+    "rewardFormated": "0.049735092810204555",
+    "percentage": 0.004973509281020455
+  },
+  {
+    "address": "0x4ce421cc282faa22fa039f76e0de7cb4d4457e5c",
+    "score": 52,
+    "reward": "47022269566011580",
+    "rewardFormated": "0.04702226956601158",
+    "percentage": 0.004702226956601158
+  },
+  {
+    "address": "0x490132355cb7a7273238e6fe87a0cc31751e816e",
+    "score": 49,
+    "reward": "44309446321818604",
+    "rewardFormated": "0.044309446321818604",
+    "percentage": 0.004430944632181861
+  },
+  {
+    "address": "0x441ee75085762664b6c4269d0f20414e56cb4a37",
+    "score": 49,
+    "reward": "44309446321818604",
+    "rewardFormated": "0.044309446321818604",
+    "percentage": 0.004430944632181861
+  },
+  {
+    "address": "0xa61f23023c9937236080840e1e58e0314cc95b58",
+    "score": 45,
+    "reward": "40692348662894636",
+    "rewardFormated": "0.040692348662894636",
+    "percentage": 0.0040692348662894635
+  },
+  {
+    "address": "0xdd64399d5fbdee78f95a7a3e755e3492838e5420",
+    "score": 45,
+    "reward": "40692348662894636",
+    "rewardFormated": "0.040692348662894636",
+    "percentage": 0.0040692348662894635
+  },
+  {
+    "address": "0x0ed7a2469834fe7e26a5a2db5ecab4e23cbd585f",
+    "score": 41,
+    "reward": "37075251003970668",
+    "rewardFormated": "0.037075251003970668",
+    "percentage": 0.0037075251003970667
+  },
+  {
+    "address": "0x9d37e8c4b4263093d812f7382c659e05c34d7ed4",
+    "score": 41,
+    "reward": "37075251003970668",
+    "rewardFormated": "0.037075251003970668",
+    "percentage": 0.0037075251003970667
+  },
+  {
+    "address": "0x3326f398e1abfbe6143401beb0d1847994be1c36",
+    "score": 40,
+    "reward": "36170976589239677",
+    "rewardFormated": "0.036170976589239677",
+    "percentage": 0.003617097658923968
+  },
+  {
+    "address": "0x7987811584c27fb03c615f4165e487b6d9945d64",
+    "score": 29,
+    "reward": "26223958027198765",
+    "rewardFormated": "0.026223958027198765",
+    "percentage": 0.0026223958027198767
+  },
+  {
+    "address": "0x19d7a7086e3a96e0aa783e59594eff743eb12acf",
+    "score": 27,
+    "reward": "24415409197736781",
+    "rewardFormated": "0.024415409197736781",
+    "percentage": 0.0024415409197736785
+  },
+  {
+    "address": "0xdb912fab7ab5fd40f17fd470573b3b999c62232c",
+    "score": 26,
+    "reward": "23511134783005790",
+    "rewardFormated": "0.02351113478300579",
+    "percentage": 0.002351113478300579
+  },
+  {
+    "address": "0xaa133c2e90b32a1b5d62b084d0e0e65f51e21869",
+    "score": 22,
+    "reward": "19894037124081822",
+    "rewardFormated": "0.019894037124081822",
+    "percentage": 0.001989403712408182
+  },
+  {
+    "address": "0x11b9dd6d3129eb740011b1a948adcbcb67758a10",
+    "score": 8,
+    "reward": "7234195317847935",
+    "rewardFormated": "0.007234195317847935",
+    "percentage": 0.0007234195317847935
+  },
+  {
+    "address": "0x98c2cd08c5d3163afc473bbbe8742855bfdfc775",
+    "score": 3,
+    "reward": "2712823244192975",
+    "rewardFormated": "0.002712823244192975",
+    "percentage": 0.0002712823244192976
+  },
+  {
+    "address": "0x5f2bf75522893c05041035c541dc33e7f373d009",
+    "score": 1,
+    "reward": "904274414730991",
+    "rewardFormated": "0.000904274414730991",
+    "percentage": 0.00009042744147309919
+  },
+  {
+    "address": "0x7ac79c369a3585b19e068578d37916259e497616",
+    "score": 1,
+    "reward": "904274414730991",
+    "rewardFormated": "0.000904274414730991",
+    "percentage": 0.00009042744147309919
+  },
+  {
+    "address": "0x96405971b72bafaa5f313bef47ceb46cd031d9a8",
+    "score": 0,
+    "reward": "0",
+    "rewardFormated": "0.0",
+    "percentage": 0
+  },
+  {
+    "address": "0x2957c2968ebcb91f5683768a9bdc468d08c2a2c2",
+    "score": 0,
+    "reward": "0",
+    "rewardFormated": "0.0",
+    "percentage": 0
+  },
+  {
+    "address": "0x26d82ecace3ea30a8f61cec406ad8b8df5c7de2d",
+    "score": 0,
+    "reward": "0",
+    "rewardFormated": "0.0",
+    "percentage": 0
+  },
+  {
+    "address": "0x019e778d93254c106828cdf52f9b6ff2c8cc486d",
+    "score": 0,
+    "reward": "0",
+    "rewardFormated": "0.0",
+    "percentage": 0
+  },
+  {
+    "address": "0x04fcbca5eb6b969d080f059ff3944a6240c7a901",
+    "score": 0,
+    "reward": "0",
+    "rewardFormated": "0.0",
+    "percentage": 0
+  },
+  {
+    "address": "0x30a094d390f52d1dd13088babfc2a2d77a4eef38",
+    "score": 0,
+    "reward": "0",
+    "rewardFormated": "0.0",
+    "percentage": 0
+  },
+  {
+    "address": "0x3b81b1f0397458b20a1cb8f4a7467224d8002c59",
+    "score": 0,
+    "reward": "0",
+    "rewardFormated": "0.0",
+    "percentage": 0
+  },
+  {
+    "address": "0x522d634b6bffb444fdbcde5932738995a4cfd1f1",
+    "score": 0,
+    "reward": "0",
+    "rewardFormated": "0.0",
+    "percentage": 0
+  },
+  {
+    "address": "0x547cc3f629d6a6c634978a51eaf11360b0a349e8",
+    "score": 0,
+    "reward": "0",
+    "rewardFormated": "0.0",
+    "percentage": 0
+  },
+  {
+    "address": "0x617512fa7d3fd26bda51b9ac8c23b04a48d625f1",
+    "score": 0,
+    "reward": "0",
+    "rewardFormated": "0.0",
+    "percentage": 0
+  },
+  {
+    "address": "0x6dcadae0572e0f4d33993f77c745658e049e9ce6",
+    "score": 0,
+    "reward": "0",
+    "rewardFormated": "0.0",
+    "percentage": 0
+  },
+  {
+    "address": "0x71f1fb05d18edfa471cc2f66738b5eec97802099",
+    "score": 0,
+    "reward": "0",
+    "rewardFormated": "0.0",
+    "percentage": 0
+  },
+  {
+    "address": "0x807e4ddf6b0aa08c8402ed8515131fb383818dd2",
+    "score": 0,
+    "reward": "0",
+    "rewardFormated": "0.0",
+    "percentage": 0
+  },
+  {
+    "address": "0x8768300f4ef840714e496859cb56a19a92ed4ba8",
+    "score": 0,
+    "reward": "0",
+    "rewardFormated": "0.0",
+    "percentage": 0
+  },
+  {
+    "address": "0xce3ee3ccfd1435796c916e046ced548bd5a37e78",
+    "score": 0,
+    "reward": "0",
+    "rewardFormated": "0.0",
+    "percentage": 0
+  },
+  {
+    "address": "0xce8e8cc4a75a49955f58c9c98abfbbaab4c85ec9",
+    "score": 0,
+    "reward": "0",
+    "rewardFormated": "0.0",
+    "percentage": 0
+  },
+  {
+    "address": "0xd093211ff0dc403aa8b79d907b6ed8799e729eb7",
+    "score": 0,
+    "reward": "0",
+    "rewardFormated": "0.0",
+    "percentage": 0
+  },
+  {
+    "address": "0xde48f44e2a2efc3f208e75b2c82cf2e53c163b3c",
+    "score": 0,
+    "reward": "0",
+    "rewardFormated": "0.0",
+    "percentage": 0
+  },
+  {
+    "address": "0xe298ef1c077c5e3373c7ca7d7d9990ba8ff07921",
+    "score": 0,
+    "reward": "0",
+    "rewardFormated": "0.0",
+    "percentage": 0
+  }
+]

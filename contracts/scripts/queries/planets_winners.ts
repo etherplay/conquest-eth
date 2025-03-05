@@ -133,31 +133,31 @@ query($planets: [ID!]! $blockNumber: Int!) {
   }
 
   // TODO activate held at the end
-  // console.log(JSON.stringify({held}));
-  // for (const planetHeld of held) {
-  //   if (!planetsCounted[planetHeld.id] && planetHeld.owner) {
-  //     winners[planetHeld.owner.id] = winners[planetHeld.owner.id] || {
-  //       planets: [],
-  //     };
-  //     const planetString = `${locationToXY(planetHeld.id).x},${locationToXY(planetHeld.id).y}`;
+  console.log(JSON.stringify({held}));
+  for (const planetHeld of held) {
+    if (!planetsCounted[planetHeld.id] && planetHeld.owner) {
+      winners[planetHeld.owner.id] = winners[planetHeld.owner.id] || {
+        planets: [],
+      };
+      const planetString = `${locationToXY(planetHeld.id).x},${locationToXY(planetHeld.id).y}`;
 
-  //     let alreadyCounted = false;
-  //     if (rewardsAlreadyGiven[sponsor] && rewardsAlreadyGiven[sponsor][planetHeld.owner.id]) {
-  //       for (const givenElem of rewardsAlreadyGiven[sponsor][planetHeld.owner.id].given) {
-  //         if (givenElem.planets.indexOf(planetString) !== -1) {
-  //           alreadyCounted = true;
-  //         }
-  //       }
-  //     }
+      let alreadyCounted = false;
+      if (rewardsAlreadyGiven[sponsor] && rewardsAlreadyGiven[sponsor][planetHeld.owner.id]) {
+        for (const givenElem of rewardsAlreadyGiven[sponsor][planetHeld.owner.id].given) {
+          if (givenElem.planets.indexOf(planetString) !== -1) {
+            alreadyCounted = true;
+          }
+        }
+      }
 
-  //     if (!alreadyCounted) {
-  //       winners[planetHeld.owner.id][sponsor] = winners[planetHeld.owner.id][sponsor] || 0;
-  //       winners[planetHeld.owner.id][sponsor] += amount;
-  //       winners[planetHeld.owner.id].planets.push(planetString);
-  //     }
-  //     planetsCounted[planetHeld.id] = true;
-  //   }
-  // }
+      if (!alreadyCounted) {
+        winners[planetHeld.owner.id][sponsor] = winners[planetHeld.owner.id][sponsor] || 0;
+        winners[planetHeld.owner.id][sponsor] += amount;
+        winners[planetHeld.owner.id].planets.push(planetString);
+      }
+      planetsCounted[planetHeld.id] = true;
+    }
+  }
 
   console.log({
     // winners,

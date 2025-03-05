@@ -106,10 +106,11 @@ export class TheGraph {
       field?: string;
       variables?: Record<string, unknown>;
       getLastId?: (entries: T[]) => string;
+      first?: number;
     }
   ): Promise<T[]> {
     const fields = options?.field?.split('.');
-    const first = 100;
+    const first = options?.first ?? 100;
     let lastId = '0x0';
     let numEntries = first;
     let entries: T[] = [];
