@@ -1,14 +1,10 @@
 [
   {
-    "address": "0xed684079af754343484a7cd29db21d3a6d1dbdf7",
-    "points": 1000
-  },
-  {
     "address": "0xd191fcf07d18d9d22d44ce0bccb926a3a98ad212",
     "points": 1000
   },
   {
-    "address": "0x154a2229e7b8315375e6d68149f2b93e118c6443",
+    "address": "0xed684079af754343484a7cd29db21d3a6d1dbdf7",
     "points": 1000
   },
   {
@@ -16,7 +12,7 @@
     "points": 1000
   },
   {
-    "address": "0x8d5fe65f1e78244972af4106cdf8e559247491ae",
+    "address": "0x5d43c834af830c9315919ad95367635d8701aa18",
     "points": 1000
   },
   {
@@ -24,207 +20,323 @@
     "points": 1000
   },
   {
-    "address": "0x5a016b206d0314c7ec641c3a6fd89dac7fea010e",
-    "points": 897
+    "address": "0x429a23f27d223d7ccb770ac6dd79c76f6343ea34",
+    "points": 1000
   },
   {
-    "address": "0x3fa92c59e7add64a3bf1fb5bbbf32ee0758142bb",
-    "points": 710
+    "address": "0x3574e417f432c58ec1138d226ec3b170e4471c0b",
+    "points": 855
   },
   {
-    "address": "0xd8f3676a7567842295170b3f6ae4bd466a878374",
-    "points": 664
-  },
-  {
-    "address": "0xb8542377534c1075a9bb535acbff6dd560a32799",
-    "points": 645
-  },
-  {
-    "address": "0x915d72fd6cf53c34d6b7c238be60a79d5214c452",
-    "points": 633
-  },
-  {
-    "address": "0x58c771b054edba5cf7d771c0291261ae50736513",
-    "points": 569
-  },
-  {
-    "address": "0xd1942d3982946c86b65ae0f34e4ca5475351fd22",
-    "points": 546
-  },
-  {
-    "address": "0xb2a5741a365c710267ec91a7da7eabedee1ac552",
-    "points": 542
-  },
-  {
-    "address": "0xcbba4a3ab07e76b57fd53e46f6ffd8dea5dced1b",
-    "points": 539
-  },
-  {
-    "address": "0xb6c8cabc2150083261d541a3011a658a36ca55b9",
-    "points": 528
-  },
-  {
-    "address": "0x0e475f3afcfa3ff0e10040dd53fc5b7f905ed2fc",
-    "points": 510
-  },
-  {
-    "address": "0xaa312eb19552f924dfc47bfefe47f35a902fc595",
+    "address": "0x88df4d4240d4f388a88d9edc1dbc7d0154b996cf",
     "points": 508
   },
   {
-    "address": "0x09774238fd4a4569b9319743a80e95f18f41e4e1",
-    "points": 497
+    "address": "0x8d1509e0240eba23cccd58941fa2b5d7ff1fc70f",
+    "points": 501
   },
   {
-    "address": "0x9f81311af8d9fa648a4c4d9caa1888e68e2d88b2",
-    "points": 491
+    "address": "0x66ea65c2fd7d25ab5f90bfda88bbb6c2fe9f0e39",
+    "points": 495
   },
   {
-    "address": "0x9a10586aa206a401ba50a168a847686d1e500dc6",
-    "points": 490
+    "address": "0x9df5c06973a224c13eaf877c35732f0bc2701362",
+    "points": 447
   },
   {
-    "address": "0x45032a436bcea53b3105103444c81554639e26ff",
-    "points": 487
+    "address": "0xed2b5b2aa27fd631f435286a01b5cf6aa9452060",
+    "points": 425
   },
   {
-    "address": "0x91b75da696b269f1996f4b5cb8799dc594002ab3",
-    "points": 483
+    "address": "0x6ed4a5bfb8cfa9f76469184368c90cc1f6a73dfc",
+    "points": 422
   },
   {
-    "address": "0x8559e50c15112cf50a6b6aeb5f629b08aa2433d9",
-    "points": 482
+    "address": "0xa61f23023c9937236080840e1e58e0314cc95b58",
+    "points": 414
   },
   {
-    "address": "0xc07fbbf7b2a686531192676ea09967ef76a59087",
-    "points": 481
-  },
-  {
-    "address": "0xda9d2c741087321c7aeac9e2cba76ff8f9b8baf4",
-    "points": 479
-  },
-  {
-    "address": "0x51fabbe2e33eb2212b3e66e15e899d048a27977b",
-    "points": 475
-  },
-  {
-    "address": "0x3695a9ce972902c47bd515725ab5b66b402f8015",
-    "points": 473
-  },
-  {
-    "address": "0x703cf6401d04a06378c6f59dbd9117203ba9892d",
-    "points": 469
-  },
-  {
-    "address": "0xefd28ef6a78cc4ee89f17a57a200856b29e4638e",
-    "points": 463
-  },
-  {
-    "address": "0x119f8a224e41cbdd5961ec8811dda02c1ffa34ab",
-    "points": 462
-  },
-  {
-    "address": "0x6510971a72c9d30903e1c81dcc796a94ba1300ad",
-    "points": 462
-  },
-  {
-    "address": "0x770569f85346b971114e11e4bb5f7ac776673469",
-    "points": 460
-  },
-  {
-    "address": "0xcc78d2f004c9de9694ff6a9bbdee4793d30f3842",
-    "points": 454
-  },
-  {
-    "address": "0x615b274fd1a404fe5f6c59f0b8310cc7f889a9cf",
-    "points": 453
-  },
-  {
-    "address": "0x01485557c2bc6e26c7187ff4cc38d5d9474405d4",
-    "points": 449
-  },
-  {
-    "address": "0x7dcb8d8cf41467c2556bea1a90a5677076ec5a2b",
-    "points": 440
-  },
-  {
-    "address": "0x2713edbf942eb145a964a86f59e3a3439ed9c2c9",
-    "points": 438
-  },
-  {
-    "address": "0xe8c25ce0957110a7b92a2b1b03d1c27f6d21ab67",
-    "points": 434
-  },
-  {
-    "address": "0x2c84da7b35fe4da77b8ee6e8d590f39510ca9a54",
-    "points": 433
-  },
-  {
-    "address": "0x08b0ae040f1e51686c14ac6d1d44b7e010730cbd",
-    "points": 430
-  },
-  {
-    "address": "0xb4dc5453aa5301b33a2234b2648ff4ef15588b8b",
-    "points": 421
-  },
-  {
-    "address": "0x582e6caadf06d7b4ceda46d85215381dcf67361a",
-    "points": 420
-  },
-  {
-    "address": "0xbd5b2d238b6a61256c28c837d463d8f0fc715db9",
+    "address": "0x6a6bb7d8968f80cdd78d9759f2b23456713d72d2",
     "points": 403
   },
   {
-    "address": "0x9d2d462d88c1df143b218383c367886c3c487a5e",
-    "points": 401
+    "address": "0x371209d50e65c3d1b3fa12a67415c197712697ad",
+    "points": 391
   },
   {
-    "address": "0xb43d6a23d72f124677f305acaff5a6adb828137f",
-    "points": 395
-  },
-  {
-    "address": "0xaa133c2e90b32a1b5d62b084d0e0e65f51e21869",
+    "address": "0xbdf643bf3b3e3124c2c8974b4ea85084b1843a66",
     "points": 386
   },
   {
-    "address": "0x1b9990a0cffa23bb425ceb333c5d5db481ba67d6",
-    "points": 386
+    "address": "0xec3f391225f8e7ce482b3d9fc2ed05f4dcabd311",
+    "points": 383
   },
   {
-    "address": "0x0a9425b6c93b2447fcbd33e9c28b397bf49e8628",
-    "points": 380
+    "address": "0x1824a65abab12ff47122efd8c7309929547aa492",
+    "points": 378
   },
   {
-    "address": "0x60234d66231d913ccae06f1adcece471ba1fd242",
-    "points": 375
+    "address": "0xd2258bb7ed0c1738c44c1493350c8960408d8faa",
+    "points": 370
   },
   {
-    "address": "0x0bb814f4db94e5c74e835a6c6e11d3da8f3d4196",
-    "points": 366
+    "address": "0x8d5fe65f1e78244972af4106cdf8e559247491ae",
+    "points": 365
   },
   {
-    "address": "0x5b9f89b853d6fb5e545ff49094b9247756e4e361",
-    "points": 363
-  },
-  {
-    "address": "0x38820b1101d4914e7fa2be123b96024f85906db8",
+    "address": "0x98c2cd08c5d3163afc473bbbe8742855bfdfc775",
     "points": 362
   },
   {
-    "address": "0x325b38bfd989ed85079135573e0e361ca7a2f44e",
-    "points": 360
+    "address": "0xfd1efac4c7e875e6c293b479188ccac4885003f4",
+    "points": 361
   },
   {
-    "address": "0x3ccd2216814aa9126c2d78706677f02c82664fd9",
-    "points": 348
+    "address": "0x8f6d6e2b57784795f0f7aefc75a6edc37fcde22c",
+    "points": 358
   },
   {
-    "address": "0x879124cd2a3e5c7f2ee41a3e8025ddb986749f99",
-    "points": 331
+    "address": "0x494fec7ebba4a63515f579de3466dc490dc7a88c",
+    "points": 356
   },
   {
-    "address": "0x841e2a057961bbb5cc2d48df4321c517f6d6f03c",
-    "points": 327
+    "address": "0x530aef31073a40eff1251f8d5154f2444a29fe3e",
+    "points": 349
+  },
+  {
+    "address": "0xbcd8dc1b5b6aebdad79e7f4c805a11d52e1a7ded",
+    "points": 328
+  },
+  {
+    "address": "0x216e7a2afc7206a560b1cff735c148aa21df7eb9",
+    "points": 326
+  },
+  {
+    "address": "0x35bc9e854b107289020812b3fd34f969b82c598f",
+    "points": 324
+  },
+  {
+    "address": "0x21b30b4b6cdbb15c98b1a19952e880d7e80f9a54",
+    "points": 323
+  },
+  {
+    "address": "0x4bbae8097464f8036bea0113a600813f8a6a6add",
+    "points": 322
+  },
+  {
+    "address": "0x1faee34ff197ced9042b3ed4b441f90cc1522dc9",
+    "points": 322
+  },
+  {
+    "address": "0xe401d18f6f835c12ca54e54a2f16a802b651eaa7",
+    "points": 319
+  },
+  {
+    "address": "0x5f2bf75522893c05041035c541dc33e7f373d009",
+    "points": 317
+  },
+  {
+    "address": "0x58e7ca15b7ad6af451a455697f1f9acdba27cc98",
+    "points": 311
+  },
+  {
+    "address": "0xf83a6492f613749bbc9fc592fbfc058b0a369b45",
+    "points": 308
+  },
+  {
+    "address": "0x38f9a6cb26747194deb0f6bfb6b89340aad1b270",
+    "points": 303
+  },
+  {
+    "address": "0x3dcdbd9e2bc163089964cc74c97d39aa7e65d633",
+    "points": 303
+  },
+  {
+    "address": "0xa315c96c0903b6a5f0c997fdc6b257851017590b",
+    "points": 295
+  },
+  {
+    "address": "0xa0db55584558a16765a94db4f2cacf5f76836a05",
+    "points": 294
+  },
+  {
+    "address": "0xbd7723c39bdcad792f14acc9aa86ae7424e211b6",
+    "points": 293
+  },
+  {
+    "address": "0x26d82ecace3ea30a8f61cec406ad8b8df5c7de2d",
+    "points": 293
+  },
+  {
+    "address": "0x7872822f2d9cf58974b930b2161cf5e079b583d2",
+    "points": 289
+  },
+  {
+    "address": "0x2957c2968ebcb91f5683768a9bdc468d08c2a2c2",
+    "points": 286
+  },
+  {
+    "address": "0x19d7a7086e3a96e0aa783e59594eff743eb12acf",
+    "points": 285
+  },
+  {
+    "address": "0x7c88c1296f6cfc8b5b8102aed241b347e31c5611",
+    "points": 279
+  },
+  {
+    "address": "0xea94e8832cadd3c2da4ccbe78c5f889da2782ae0",
+    "points": 277
+  },
+  {
+    "address": "0x5b806286c200aa1d2fe5404dcfde5854aa16e5be",
+    "points": 276
+  },
+  {
+    "address": "0xd7613b407a9eb751f7e391aa2588063ee4e883d1",
+    "points": 272
+  },
+  {
+    "address": "0x76a7bce04f583b40e30e63041a6b1bf4d7799222",
+    "points": 270
+  },
+  {
+    "address": "0x03dd3f1329a4cb42800fba65b82378e9fc41646b",
+    "points": 269
+  },
+  {
+    "address": "0x65ab2af69d1d7c96b12e527584e5d457b57206b5",
+    "points": 267
+  },
+  {
+    "address": "0x490132355cb7a7273238e6fe87a0cc31751e816e",
+    "points": 264
+  },
+  {
+    "address": "0x8a0c098e896fa309828a35ce714403d23cbbcf3a",
+    "points": 263
+  },
+  {
+    "address": "0x9d9c1715c66cbee0566f509b8db7344095d93622",
+    "points": 260
+  },
+  {
+    "address": "0xe38b3806517671c470c2f2c389715f0442a36295",
+    "points": 258
+  },
+  {
+    "address": "0x9c952fc22ad42a56a7399feb9879b0e696099798",
+    "points": 257
+  },
+  {
+    "address": "0xeefa41fe64f28526123a92afe87827b6f6f4c2a6",
+    "points": 253
+  },
+  {
+    "address": "0xbd75a7e6d75113004873108c96d9a585c099ae80",
+    "points": 253
+  },
+  {
+    "address": "0x96405971b72bafaa5f313bef47ceb46cd031d9a8",
+    "points": 251
+  },
+  {
+    "address": "0xc3489b4876c42aae5fc688da945674d100d4dc31",
+    "points": 250
+  },
+  {
+    "address": "0xb40583d61bf10b04cec15ebf005557bdb8837aa0",
+    "points": 248
+  },
+  {
+    "address": "0x9d37e8c4b4263093d812f7382c659e05c34d7ed4",
+    "points": 247
+  },
+  {
+    "address": "0x15f408322a4f8f0ca4b079eaf3dcddbc2e06a158",
+    "points": 243
+  },
+  {
+    "address": "0xff88430c7c656fc6355656234bc522b8c7e03b40",
+    "points": 240
+  },
+  {
+    "address": "0x1a536e56fb2f40f25896b80b45a8a96a817bdd49",
+    "points": 240
+  },
+  {
+    "address": "0x08f09176704a65c00aa7b17d90af302fdc2b16a8",
+    "points": 239
+  },
+  {
+    "address": "0xb85bb9a82dad89021c3e89f539d4a9548d9038ad",
+    "points": 236
+  },
+  {
+    "address": "0x99fa48ccea8a38cde6b437450ff9bbddafaa4fc8",
+    "points": 235
+  },
+  {
+    "address": "0x2552a06d9242acf134bb184ea561a83597a0f431",
+    "points": 233
+  },
+  {
+    "address": "0x46b705da2c286fe00b4cc0f33e086e10e52a5bec",
+    "points": 226
+  },
+  {
+    "address": "0x68ed29ebd361581a566a78bf0fd274d61f1439a8",
+    "points": 225
+  },
+  {
+    "address": "0x88483f6ac6a29d6314fada20881af919a13f6a9b",
+    "points": 223
+  },
+  {
+    "address": "0xed4d87e2132838adf39d76fca668c47dc3c40162",
+    "points": 223
+  },
+  {
+    "address": "0xb1fba78da54ea383d3558f458d9cfc75b656111e",
+    "points": 222
+  },
+  {
+    "address": "0x815611ea3f076c2f0d5e5742431ef16cca577967",
+    "points": 222
+  },
+  {
+    "address": "0x4ce421cc282faa22fa039f76e0de7cb4d4457e5c",
+    "points": 222
+  },
+  {
+    "address": "0x441ee75085762664b6c4269d0f20414e56cb4a37",
+    "points": 220
+  },
+  {
+    "address": "0x5e40eac11e2e8ebb312ad35692d1891675007115",
+    "points": 218
+  },
+  {
+    "address": "0xdace19d65488596dc67722453afa52267958871d",
+    "points": 217
+  },
+  {
+    "address": "0xcb9526abe0e32d78b64619aa46c17ac0f247db9e",
+    "points": 213
+  },
+  {
+    "address": "0x82cd80cee3e990ef869ce1675dbdd29574881632",
+    "points": 210
+  },
+  {
+    "address": "0xdb912fab7ab5fd40f17fd470573b3b999c62232c",
+    "points": 208
+  },
+  {
+    "address": "0x0ed7a2469834fe7e26a5a2db5ecab4e23cbd585f",
+    "points": 201
+  },
+  {
+    "address": "0x07f62f48709b2c427e54e102531d07d9e21ad99e",
+    "points": 200
   }
 ]

@@ -1,22 +1,32 @@
 [
   {
-    "playerAddress": "0xed684079af754343484a7cd29db21d3a6d1dbdf7",
-    "amountCaptured": "188000000000000000000",
-    "numPlanetsCaptured": 59
-  },
-  {
     "playerAddress": "0xd191fcf07d18d9d22d44ce0bccb926a3a98ad212",
-    "amountCaptured": "204300000000000000000",
-    "numPlanetsCaptured": 55
+    "amountCaptured": "296300000000000000000",
+    "numPlanetsCaptured": 91
   },
   {
-    "playerAddress": "0x154a2229e7b8315375e6d68149f2b93e118c6443",
-    "amountCaptured": "11900000000000000000",
-    "numPlanetsCaptured": 7
+    "playerAddress": "0xed684079af754343484a7cd29db21d3a6d1dbdf7",
+    "amountCaptured": "292600000000000000000",
+    "numPlanetsCaptured": 90
   },
   {
     "playerAddress": "0x72301623f4a0c291ffcb708f820cce50150950ae",
-    "amountCaptured": "2700000000000000000",
+    "amountCaptured": "11800000000000000000",
+    "numPlanetsCaptured": 5
+  },
+  {
+    "playerAddress": "0x5d43c834af830c9315919ad95367635d8701aa18",
+    "amountCaptured": "45600000000000000000",
+    "numPlanetsCaptured": 9
+  },
+  {
+    "playerAddress": "0xb646c4793a4ec4b4e84dcbe47e4e92f641430263",
+    "amountCaptured": "1700000000000000000",
+    "numPlanetsCaptured": 1
+  },
+  {
+    "playerAddress": "0x429a23f27d223d7ccb770ac6dd79c76f6343ea34",
+    "amountCaptured": "1700000000000000000",
     "numPlanetsCaptured": 1
   }
 ]
