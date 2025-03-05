@@ -61,9 +61,10 @@ class HighscoresStore extends BaseStoreWithData<HighscoresData, QueryResult> {
     });
   }
   async fetch() {
+    // TODO remove block 38876207
     const query = `
-query($first: Int! $lastId: ID!) {
-  owners(first: $first where: {
+query($first: Int! $lastId: ID! ) {
+  owners( block: {number: 38876207} first: $first where: {
     totalStaked_gt: 0
     id_gt: $lastId
   }) {
@@ -206,6 +207,8 @@ function _updateGlobal(g: GlobalPoints, time: BigNumber): GlobalPointsBN {
 export const highscores: Readable<{step: 'IDLE' | 'LOADING' | 'READY'; data?: Highscores; error?: string}> = derived(
   [highscoresData, time],
   ([data, time]) => {
+    // TODO remove time 1741168800
+    time = 1741168800;
     let highscores: Highscores = [];
     if (data.data) {
       const globalData = data.data.points;
