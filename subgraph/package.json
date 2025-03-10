@@ -9,6 +9,7 @@
     "deploy:local:watch": "ldenv -m localhost as-soon -w src -w templates -w ../contracts/deployments/@@MODE pnpm deploy:local:build @@MODE @@",
     "schema:watch": "ldenv as-soon -w schema.graphql pnpm codegen",
     "create:local": "ldenv wait-on http://@@GRAPH_NODE_GRAPHQL ~~ graph create --node @@GRAPH_DEPLOY_ENDPOINT @@SUBGRAPH_NAME ~~",
+    "create:remote": "ldenv graph create --node @@GRAPH_DEPLOY_ENDPOINT @@SUBGRAPH_NAME",
     "remove:local": "ldenv wait-on http://@@GRAPH_NODE_GRAPHQL ~~ graph remove --node @@GRAPH_DEPLOY_ENDPOINT @@SUBGRAPH_NAME ~~",
     "generate:codegen": "ldenv -m localhost pnpm generate @@MODE ~~ pnpm codegen ~~ @@",
     "deploy:build": "ldenv -m localhost pnpm generate @@MODE ~~ pnpm codegen ~~ pnpm run deploy @@MODE ~~ @@",
