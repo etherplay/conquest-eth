@@ -20,6 +20,7 @@ const chainNames = {
   4: 'rinkeby',
   5: 'goerli',
   42: 'kovan',
+  846: 'endurance',
   1337: 'localhost',
   31337: 'localhost',
   100: 'gnosis',
@@ -34,7 +35,7 @@ if (stat.isDirectory()) {
   const chainId = fs.readFileSync(path.join(pathArg, '.chainId')).toString();
   const chainName = chainNames[chainId];
   if (!chainName) {
-    throw new Error(`chainId ${chainId} not know`);
+    throw new Error(`chainId ${chainId} not known`);
   }
 
   console.log({directory: true, chainName, chainId});
@@ -56,7 +57,7 @@ if (stat.isDirectory()) {
   const chainId = contractsInfoFile.chainId;
   const chainName = chainNames[chainId];
   if (!chainName) {
-    throw new Error(`chainId ${chainId} not know`);
+    throw new Error(`chainId ${chainId} not known`);
   }
 
   console.log({directory: false, chainName, chainId});
