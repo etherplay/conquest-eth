@@ -20,7 +20,7 @@ const chainNames = {
   4: 'rinkeby',
   5: 'goerli',
   42: 'kovan',
-  648: 'endurance',
+  648: 'mainnet',
   1337: 'localhost',
   31337: 'localhost',
   100: 'gnosis',
