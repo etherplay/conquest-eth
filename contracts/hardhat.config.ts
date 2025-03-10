@@ -125,6 +125,11 @@ const config: HardhatUserConfig = {
       accounts: accounts('gnosis_chain'),
       deploy: l1_deployments.concat(l1_deployments_dev, l2_deployments, l2_deployments_dev),
     },
+    endurance_test: {
+      url: node_url('endurance_chain'),
+      accounts: accounts('endurance_chain'),
+      deploy: l1_deployments.concat(l1_deployments_dev, l2_deployments, l2_deployments_dev),
+    },
   }),
   paths: {
     sources: 'src',
