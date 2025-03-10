@@ -48,6 +48,12 @@ contract FreePlayToken is UsingERC20Base, IFreePlayToken, WithPermitAndFixedDoma
         return "Free Play";
     }
 
+    function setBurner(address burner, bool enabled) external {
+        require(msg.sender == admin, "NOT_ALLOWED_ADMIN");
+        burners[burner] = enabled;
+        emit Burner(burner, enabled);
+    }
+
     function setMinter(address minter, bool enabled) external {
         require(msg.sender == admin, "NOT_ALLOWED_ADMIN");
         minters[minter] = enabled;
