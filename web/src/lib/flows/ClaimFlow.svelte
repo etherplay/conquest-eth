@@ -113,8 +113,9 @@
         </Button>
       </div> -->
       <!-- https://www.mtpelerin.com/buy-crypto  -->
+      <!-- TODO:ENDURANCE will neeed to adapt this -->
       <div class="m-2">
-        <Button href="https://ramp.network/buy" target="_blank">Purchase XDAI</Button>
+        <Button href="https://ramp.network/buy" target="_blank">Purchase {nativeTokenSymbol}</Button>
       </div>
       <div class="m-2">
         <Button href="https://bridge.gnosischain.com/" target="_blank">Or Bridge Some from Ethereum</Button>

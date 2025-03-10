@@ -48,6 +48,15 @@ if (chainId === '100') {
   defaultTopupValueInEth = 0.9;
 }
 
+if (chainId === '846') {
+  finality = 8; // TODO
+  blockTime = 5;
+  nativeTokenSymbol = 'ACE';
+  nativeTokenName = 'ACE';
+  nativeTokenDecimal = 18;
+  defaultTopupValueInEth = 0.9;
+}
+
 if (chainId === '7001' || chainId === '7001') {
   finality = 8; // TODO
   blockTime = 5;
