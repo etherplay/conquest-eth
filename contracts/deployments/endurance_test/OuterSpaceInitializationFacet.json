@@ -1,5 +1,5 @@
 {
-  "address": "0x3B05f0b067F4cBFb2675D38d5116798F7685D3cc",
+  "address": "0x4c5dC221586F0792C639AAe3Eb42f5Fb10FFd0Fc",
   "abi": [
     {
       "inputs": [
@@ -791,19 +791,19 @@
       "type": "function"
     }
   ],
-  "transactionHash": "0xa714119b5c5d6d40c87ddc78404b4702ae9c781ffab390d6ccd507d0da8ce9ae",
+  "transactionHash": "0x886f8fb757f77ed2576fc1895c2aea51c24d00012758156a20f20d4bd58d62a0",
   "receipt": {
     "to": "0x4e59b44847b379578588920cA78FbF26c0B4956C",
     "from": "0xbE19B59E8C588d68f475A407C7BA5fE813AEb792",
     "contractAddress": null,
     "transactionIndex": 0,
-    "gasUsed": "323239",
+    "gasUsed": "323203",
     "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-    "blockHash": "0x016d1856053dc6711707d0219a18ad9f4e69d96dcf31b58c68cb6d9f0ed564e8",
-    "transactionHash": "0xa714119b5c5d6d40c87ddc78404b4702ae9c781ffab390d6ccd507d0da8ce9ae",
+    "blockHash": "0x8c7b52f2cc94fde0d9560455720a73c9f98b53cdd18d6833e35f107fd69fd459",
+    "transactionHash": "0x886f8fb757f77ed2576fc1895c2aea51c24d00012758156a20f20d4bd58d62a0",
     "logs": [],
-    "blockNumber": 2661712,
-    "cumulativeGasUsed": "323239",
+    "blockNumber": 2661939,
+    "cumulativeGasUsed": "323203",
     "status": 1,
     "byzantium": true
   },
@@ -812,13 +812,13 @@
       "stakingToken": "0x8b3360CDEfdE2Ac4dDf63d805e8D61D630694196",
       "freeStakingToken": "0x04F76fAA3fc38B2B2CD1CB5e9Bd5078B2AFf7511",
       "allianceRegistry": "0x90F884C9886bA2ce8950970d706a7e1B01Db817d",
-      "genesis": "0xcce77b122615b6093c0df0c7392bec6f537eb7a0595c337a573ee6d96d1107c8",
-      "resolveWindow": 43200,
-      "timePerDistance": 7200,
-      "exitDuration": 259200,
+      "genesis": "0x69AB0921CC2BCC5C203B2BCCC4B5CE33ACB9520A4776421236C81AD3DA565992",
+      "resolveWindow": 1728,
+      "timePerDistance": 72,
+      "exitDuration": 2592,
       "acquireNumSpaceships": 100000,
-      "productionSpeedUp": 1,
-      "frontrunningDelay": 1800,
+      "productionSpeedUp": 100,
+      "frontrunningDelay": 18,
       "productionCapAsDuration": 259200,
       "upkeepProductionDecreaseRatePer10000th": 5000,
       "fleetSizeFactor6": 500000,
@@ -827,20 +827,20 @@
       "giftTaxPer10000": 2000,
       "stakeRange": "0x0064008200aa00c800f0010e012c014a014a017201900212029e032003a204b0",
       "stakeMultiplier10000th": 100,
-      "bootstrapSessionEndTime": 1744188844,
-      "infinityStartTime": 1744275244
+      "bootstrapSessionEndTime": 1748336400,
+      "infinityStartTime": 1748422800
     }
   ],
-  "numDeployments": 1,
+  "numDeployments": 2,
   "linkedData": {
-    "genesisHash": "0xcce77b122615b6093c0df0c7392bec6f537eb7a0595c337a573ee6d96d1107c8",
-    "resolveWindow": 43200,
-    "timePerDistance": 7200,
-    "exitDuration": 259200,
+    "genesisHash": "0x69AB0921CC2BCC5C203B2BCCC4B5CE33ACB9520A4776421236C81AD3DA565992",
+    "resolveWindow": 1728,
+    "timePerDistance": 72,
+    "exitDuration": 2592,
     "acquireNumSpaceships": 100000,
-    "productionSpeedUp": 1,
+    "productionSpeedUp": 100,
     "chainGenesisHash": "",
-    "frontrunningDelay": 1800,
+    "frontrunningDelay": 18,
     "productionCapAsDuration": 259200,
     "upkeepProductionDecreaseRatePer10000th": 5000,
     "fleetSizeFactor6": 500000,
@@ -849,8 +849,8 @@
     "giftTaxPer10000": 2000,
     "stakeRange": "0x0064008200aa00c800f0010e012c014a014a017201900212029e032003a204b0",
     "stakeMultiplier10000th": 100,
-    "bootstrapSessionEndTime": 1744188844,
-    "infinityStartTime": 1744275244,
+    "bootstrapSessionEndTime": 1748336400,
+    "infinityStartTime": 1748422800,
     "deploymentTimestamp": 1741596844
   },
   "solcInputHash": "0a78d0b382d4cc19e87ac5aff576d9af",

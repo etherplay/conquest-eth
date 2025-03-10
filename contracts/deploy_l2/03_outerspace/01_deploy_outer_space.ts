@@ -182,6 +182,26 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   }
   // ----------------------------------------------------------------------------------------------
 
+  // if (networkName === 'endurance') {
+  //   genesisHash = '0x69AB0921CC2BCC5C203B2BCCC4B5CE33ACB9520A4776421236C81AD3DA565991';
+
+  //   bootstrapSessionEndTime = 1741168800; // Wednesday, 5 March 2025 10:00:00
+  //   infinityStartTime = 1741255200; // Thursday, 6 March 2025 10:00:00
+  // }
+
+  if (networkName === 'endurance_test') {
+    genesisHash = '0x69AB0921CC2BCC5C203B2BCCC4B5CE33ACB9520A4776421236C81AD3DA565992';
+
+    timePerDistance /= 100;
+    exitDuration /= 100;
+    productionSpeedUp = 100;
+    frontrunningDelay /= 100;
+    resolveWindow /= 25;
+
+    bootstrapSessionEndTime = 1748336400; //  Tuesday, 27 May 2025 09:00:00 GMT
+    infinityStartTime = 1748422800; // Wednesday, 28 May 2025 09:00:00 GMT
+  }
+
   if (networkName === 'sepolia') {
     genesisHash = '0x21B25FA48DFAF94F6FC5D7C14C206CC0F716AAE46A5EA817445EA411E3299541';
     timePerDistance /= 100;
