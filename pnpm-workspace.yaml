@@ -1,7 +1,9 @@
 packages:
-  - 'contracts'
-  - 'web'
-  - 'subgraph'
-  - 'common-lib'
-  - 'agent-service'
-  - 'helper-services/*'
+  - contracts
+  - web
+  - subgraph
+  - common-lib
+  - agent-service
+  - helper-services/*
+onlyBuiltDependencies:
+  - sharp
