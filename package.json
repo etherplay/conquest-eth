@@ -3,6 +3,14 @@
   "version": "0.0.1",
   "description": "conquest.eth",
   "private": true,
+  "volta": {
+    "node": "20.18.1"
+  },
+  "pnpm": {
+    "overrides": {
+      "ipfs-http-client@34.0.0>concat-stream": "github:mihirgupta0900/concat-stream#master"
+    }
+  },
   "devDependencies": {
     "ldenv": "^0.3.12",
     "rimraf": "^3.0.2",
@@ -49,13 +57,5 @@
     "cleanup": "rm -Rf contracts/deployments/localhost",
     "web": "ldenv pnpm contracts:export @@MODE ~~ pnpm zellij:web ~~ @@",
     "start": "pnpm cleanup; zellij-launcher --layout dev/zellij.kdl a $npm_package_name || zellij --layout dev/zellij.kdl -s $npm_package_name"
-  },
-  "volta": {
-    "node": "20.18.1"
-  },
-  "pnpm": {
-    "overrides": {
-      "ipfs-http-client@34.0.0>concat-stream": "github:mihirgupta0900/concat-stream#master"
-    }
   }
 }
