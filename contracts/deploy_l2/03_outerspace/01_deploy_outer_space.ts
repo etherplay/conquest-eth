@@ -202,13 +202,17 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     infinityStartTime = 1748422800; // Wednesday, 28 May 2025 09:00:00 GMT
   }
 
-  if (networkName === 'sepolia') {
-    genesisHash = '0x21B25FA48DFAF94F6FC5D7C14C206CC0F716AAE46A5EA817445EA411E3299541';
+  if (networkName === 'sepolia_fast') {
+    genesisHash = '0x21B25FA48DFAF94F6FC5D7C14C206CC0F716AAE46A5EA817445EA411E3299542';
     timePerDistance /= 100;
     exitDuration /= 100;
     productionSpeedUp = 100;
     frontrunningDelay /= 100;
     resolveWindow /= 25;
+  }
+
+  if (networkName === 'sepolia') {
+    genesisHash = '0x21B25FA48DFAF94F6FC5D7C14C206CC0F716AAE46A5EA817445EA411E3299543';
   }
 
   console.log({

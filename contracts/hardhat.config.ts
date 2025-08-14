@@ -115,6 +115,11 @@ const config: HardhatUserConfig = {
       accounts: accounts('sepolia'),
       deploy: l1_deployments.concat(l1_deployments_dev, l2_deployments, l2_deployments_dev),
     },
+    sepolia_fast: {
+      url: node_url('sepolia'),
+      accounts: accounts('sepolia'),
+      deploy: l1_deployments.concat(l1_deployments_dev, l2_deployments, l2_deployments_dev),
+    },
     '2025_1_test': {
       url: node_url('gnosis_chain'),
       accounts: accounts('gnosis_chain'),
