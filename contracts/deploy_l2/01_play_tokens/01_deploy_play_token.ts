@@ -17,7 +17,7 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
   let numTokensPerNativeTokenAt18Decimals = parseEther('1');
 
-  if (localTesting || networkName === 'sepolia' || networkName === 'endurance_test') {
+  if (localTesting || networkName === 'sepolia' || networkName === 'sepolia_fast' || networkName === 'endurance_test') {
     numTokensPerNativeTokenAt18Decimals = parseEther('1000');
   }
 
