@@ -56,6 +56,6 @@
     "---------------------- RUN FULL LOCAL SETUP ----------------------": "compile and deploy smart contracts",
     "cleanup": "rm -Rf contracts/deployments/localhost",
     "web": "ldenv pnpm contracts:export @@MODE ~~ pnpm zellij:web ~~ @@",
-    "start": "pnpm cleanup; zellij-launcher --layout dev/zellij.kdl a $npm_package_name || zellij --layout dev/zellij.kdl -s $npm_package_name"
+   "start": "pnpm cleanup; zellij-launcher a $npm_package_name || ldenv -d localhost zellij -n dev/zellij.kdl -s $npm_package_name"
   }
 }
