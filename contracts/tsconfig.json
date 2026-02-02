@@ -13,5 +13,5 @@
 		"outDir": "dist",
 		"rootDir": "."
 	},
-	"include": ["deploy_l2", "generated", "hardhat.config.ts"]
+	"include": ["deploy_l2", "generated", "hardhat.config.ts", "js"]
 }
