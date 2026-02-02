@@ -6,7 +6,9 @@ import "../../interfaces/IERC2612Standalone.sol";
 
 abstract contract WithPermit is ERC20BaseInternal, IERC2612Standalone {
     bytes32 internal constant PERMIT_TYPEHASH =
-        keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
+        keccak256(
+            "Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)"
+        );
     mapping(address => uint256) internal _nonces;
 
     function DOMAIN_SEPARATOR() public view virtual override returns (bytes32);
@@ -31,7 +33,16 @@ abstract contract WithPermit is ERC20BaseInternal, IERC2612Standalone {
             abi.encodePacked(
                 "\x19\x01",
                 DOMAIN_SEPARATOR(),
-                keccak256(abi.encode(PERMIT_TYPEHASH, owner, spender, value, currentNonce, deadline))
+                keccak256(
+                    abi.encode(
+                        PERMIT_TYPEHASH,
+                        owner,
+                        spender,
+                        value,
+                        currentNonce,
+                        deadline
+                    )
+                )
             )
         );
         require(owner == ecrecover(digest, v, r, s), "INVALID_SIGNATURE");

@@ -19,7 +19,10 @@ contract OuterSpaceRewardFacet is OuterSpaceFacetBase {
         return _rewards[location];
     }
 
-    function hasRewardGoalBeenAchieved(address player, uint256 fullRewardId) external view returns (bool) {
+    function hasRewardGoalBeenAchieved(
+        address player,
+        uint256 fullRewardId
+    ) external view returns (bool) {
         return _rewardsToWithdraw[player][fullRewardId];
     }
 }

@@ -7,9 +7,9 @@ import ProgressBar from 'progress';
 import {PlayerData, BlockData} from './types';
 
 function wait(numSec: number): Promise<void> {
-  return new Promise<void>((resolve) => {
-    setTimeout(resolve, numSec * 1000);
-  });
+	return new Promise<void>((resolve) => {
+		setTimeout(resolve, numSec * 1000);
+	});
 }
 
 // import rdl from 'readline';
@@ -29,11 +29,13 @@ function wait(numSec: number): Promise<void> {
 // const ld = new LoadingBar(100);
 
 async function func(hre: HardhatRuntimeEnvironment): Promise<void> {
-  const {deployments} = hre;
-  const theGraph = new TheGraph(`https://api.thegraph.com/subgraphs/name/${process.env.SUBGRAPH_NAME}`);
+	const {deployments} = hre;
+	const theGraph = new TheGraph(
+		`https://api.thegraph.com/subgraphs/name/${process.env.SUBGRAPH_NAME}`,
+	);
 
-  // query($blockNumber: Int! $first: Int! $lastId: ID! $id: ID!) {
-  const queryString = `
+	// query($blockNumber: Int! $first: Int! $lastId: ID! $id: ID!) {
+	const queryString = `
 query($first: Int! $lastId: ID! $blockNumber: Int!) {
     owners(
       block: {number: $blockNumber}
@@ -93,54 +95,56 @@ query($first: Int! $lastId: ID! $blockNumber: Int!) {
 }
 `;
 
-  const stats: BlockData[] = [];
-  const start = 5977167;
-  const end = 6074693; // 6074693: last block on December 23rd 10pm UTC
-  let blockNumber = start;
-  let lastPercent = 0;
-  const bar = new ProgressBar('  fetching [:bar] :percent', {
-    complete: '=',
-    incomplete: ' ',
-    width: 100,
-    total: 100,
-  });
-  while (blockNumber <= end) {
-    const block = await ethers.provider.getBlock(blockNumber);
+	const stats: BlockData[] = [];
+	const start = 5977167;
+	const end = 6074693; // 6074693: last block on December 23rd 10pm UTC
+	let blockNumber = start;
+	let lastPercent = 0;
+	const bar = new ProgressBar('  fetching [:bar] :percent', {
+		complete: '=',
+		incomplete: ' ',
+		width: 100,
+		total: 100,
+	});
+	while (blockNumber <= end) {
+		const block = await ethers.provider.getBlock(blockNumber);
 
-    const players: PlayerData[] = await theGraph.query(queryString, {
-      field: 'owners',
-      variables: {blockNumber},
-    });
-    stats.push({blockNumber, players, blockTime: block.timestamp});
+		const players: PlayerData[] = await theGraph.query(queryString, {
+			field: 'owners',
+			variables: {blockNumber},
+		});
+		stats.push({blockNumber, players, blockTime: block.timestamp});
 
-    // await wait(0.3);
+		// await wait(0.3);
 
-    const percentage = Math.floor(((blockNumber - start) / (end - start)) * 100);
-    if (lastPercent != percentage) {
-      // console.log(`${percentage}%`);
-      // ld.increase();
-      bar.tick();
-      lastPercent = percentage;
-    }
-    if (blockNumber == end) {
-      blockNumber++;
-    } else {
-      blockNumber = Math.min(end, blockNumber + 100);
-    }
-  }
-  console.log();
+		const percentage = Math.floor(
+			((blockNumber - start) / (end - start)) * 100,
+		);
+		if (lastPercent != percentage) {
+			// console.log(`${percentage}%`);
+			// ld.increase();
+			bar.tick();
+			lastPercent = percentage;
+		}
+		if (blockNumber == end) {
+			blockNumber++;
+		} else {
+			blockNumber = Math.min(end, blockNumber + 100);
+		}
+	}
+	console.log();
 
-  // avoid RangeError by stringify per elem, see: https://dev.to/madhunimmo/json-stringify-rangeerror-invalid-string-length-3977
-  const out = '[' + stats.map((el) => JSON.stringify(el)).join(',') + ']';
+	// avoid RangeError by stringify per elem, see: https://dev.to/madhunimmo/json-stringify-rangeerror-invalid-string-length-3977
+	const out = '[' + stats.map((el) => JSON.stringify(el)).join(',') + ']';
 
-  await deployments.saveDotFile('.stats.json', out);
-  console.log({numDataPointsPerPlayer: stats.length});
+	await deployments.saveDotFile('.stats.json', out);
+	console.log({numDataPointsPerPlayer: stats.length});
 }
 
 async function main() {
-  await func(hre);
+	await func(hre);
 }
 
 if (require.main === module) {
-  main();
+	main();
 }

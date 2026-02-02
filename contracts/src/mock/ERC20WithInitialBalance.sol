@@ -8,7 +8,9 @@ import "../interfaces/IERC2612.sol";
 ///@notice test ERC20 token that give initial balance to all accounts that can claim it in time.
 contract ERC20WithInitialBalance is UsingBaseERC20Mock, IERC2612 {
     bytes32 internal constant PERMIT_TYPEHASH =
-        keccak256("Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)");
+        keccak256(
+            "Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)"
+        );
 
     bytes32 internal immutable _DOMAIN_SEPARATOR;
     mapping(address => uint256) internal _nonces;
@@ -21,7 +23,9 @@ contract ERC20WithInitialBalance is UsingBaseERC20Mock, IERC2612 {
         // TODO chainId
         _DOMAIN_SEPARATOR = keccak256(
             abi.encode(
-                keccak256("EIP712Domain(string name,string version,address verifyingContract)"),
+                keccak256(
+                    "EIP712Domain(string name,string version,address verifyingContract)"
+                ),
                 keccak256(bytes(name)),
                 keccak256(bytes("1")),
                 address(this)
@@ -53,7 +57,16 @@ contract ERC20WithInitialBalance is UsingBaseERC20Mock, IERC2612 {
             abi.encodePacked(
                 "\x19\x01",
                 _DOMAIN_SEPARATOR,
-                keccak256(abi.encode(PERMIT_TYPEHASH, owner, spender, value, currentNonce, deadline))
+                keccak256(
+                    abi.encode(
+                        PERMIT_TYPEHASH,
+                        owner,
+                        spender,
+                        value,
+                        currentNonce,
+                        deadline
+                    )
+                )
             )
         );
         require(owner == ecrecover(digest, v, r, s), "INVALID_SIGNATURE");

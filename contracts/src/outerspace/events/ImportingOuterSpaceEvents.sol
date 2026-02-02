@@ -81,12 +81,28 @@ interface ImportingOuterSpaceEvents {
 
     event PlanetExit(address indexed owner, uint256 indexed location);
 
-    event ExitComplete(address indexed owner, uint256 indexed location, uint256 stake);
+    event ExitComplete(
+        address indexed owner,
+        uint256 indexed location,
+        uint256 stake
+    );
 
-    event RewardSetup(uint256 indexed location, address indexed giver, uint256 rewardId);
-    event RewardToWithdraw(address indexed owner, uint256 indexed location, uint256 indexed rewardId);
+    event RewardSetup(
+        uint256 indexed location,
+        address indexed giver,
+        uint256 rewardId
+    );
+    event RewardToWithdraw(
+        address indexed owner,
+        uint256 indexed location,
+        uint256 indexed rewardId
+    );
 
-    event StakeToWithdraw(address indexed owner, uint256 newStake, bool freegift);
+    event StakeToWithdraw(
+        address indexed owner,
+        uint256 newStake,
+        bool freegift
+    );
 
     event Initialized(
         bytes32 genesis,
@@ -104,9 +120,17 @@ interface ImportingOuterSpaceEvents {
         uint256 giftTaxPer10000
     );
 
-    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
+    event ApprovalForAll(
+        address indexed owner,
+        address indexed operator,
+        bool approved
+    );
 
-    event Transfer(address indexed from, address indexed to, uint256 indexed location);
+    event Transfer(
+        address indexed from,
+        address indexed to,
+        uint256 indexed location
+    );
 
     event GeneratorChanged(address newGenerator);
     event GeneratorAdminChanged(address newGeneratorAdmin);

@@ -13,9 +13,16 @@ interface WXDAI is IERC20 {
 }
 
 interface SDAI {
-    function deposit(uint256 assets, address receiver) external returns (uint256);
+    function deposit(
+        uint256 assets,
+        address receiver
+    ) external returns (uint256);
 
-    function withdraw(uint256 assets, address receiver, address owner) external returns (uint256);
+    function withdraw(
+        uint256 assets,
+        address receiver,
+        address owner
+    ) external returns (uint256);
 
     function maxWithdraw(address owner) external view returns (uint256);
 }
@@ -57,7 +64,10 @@ contract SDAIHandler {
         to.transfer(balance);
     }
 
-    function redeemInterest(address payable to, uint256 expectedTotalAmount) external returns (uint256) {
+    function redeemInterest(
+        address payable to,
+        uint256 expectedTotalAmount
+    ) external returns (uint256) {
         require(msg.sender == manager, "NOT_AUTHORIZED");
 
         uint256 maxXDaiAmount = sDAI.maxWithdraw(address(this));

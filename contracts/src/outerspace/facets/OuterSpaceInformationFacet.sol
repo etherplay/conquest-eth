@@ -4,7 +4,10 @@ pragma solidity 0.8.9;
 import "./OuterSpaceFacetBase.sol";
 import "../interfaces/IOuterSpaceInformation.sol";
 
-contract OuterSpaceInformationFacet is OuterSpaceFacetBase, IOuterSpaceInformation {
+contract OuterSpaceInformationFacet is
+    OuterSpaceFacetBase,
+    IOuterSpaceInformation
+{
     // solhint-disable-next-line no-empty-blocks
     constructor(Config memory config) OuterSpaceFacetBase(config) {}
 
@@ -48,11 +51,20 @@ contract OuterSpaceInformationFacet is OuterSpaceFacetBase, IOuterSpaceInformati
 
     function getPlanetStates(
         uint256[] calldata locations
-    ) external view returns (ExternalPlanet[] memory planetStates, Discovered memory discovered) {
+    )
+        external
+        view
+        returns (
+            ExternalPlanet[] memory planetStates,
+            Discovered memory discovered
+        )
+    {
         planetStates = new ExternalPlanet[](locations.length);
         for (uint256 i = 0; i < locations.length; i++) {
             Planet storage planet = _getPlanet(locations[i]);
-            (bool active, uint32 numSpaceships) = _activeNumSpaceships(planet.numSpaceships);
+            (bool active, uint32 numSpaceships) = _activeNumSpaceships(
+                planet.numSpaceships
+            );
             planetStates[i] = ExternalPlanet({
                 owner: planet.owner,
                 ownershipStartTime: planet.ownershipStartTime,

@@ -141,7 +141,10 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         _productionCapAsDuration = config.productionCapAsDuration;
         _frontrunningDelay = config.frontrunningDelay;
         uint32 t = uint32(config.timePerDistance) / 4; // the coordinates space is 4 times bigger
-        require(t * 4 == config.timePerDistance, "TIME_PER_DIST_NOT_DIVISIBLE_4");
+        require(
+            t * 4 == config.timePerDistance,
+            "TIME_PER_DIST_NOT_DIVISIBLE_4"
+        );
         _timePerDistance = t;
         _productionSpeedUp = config.productionSpeedUp;
 
@@ -150,7 +153,8 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         maxClaimDelay = config.maxClaimDelay;
         minAverageStakePerPlanet = config.minAverageStakePerPlanet;
         minimumSubscriptionWhenStaking = config.minimumSubscriptionWhenStaking;
-        minimumSubscriptionWhenNotStaking = config.minimumSubscriptionWhenNotStaking;
+        minimumSubscriptionWhenNotStaking = config
+            .minimumSubscriptionWhenNotStaking;
         maxTimeRange = config.maxTimeRange;
         minAttackAmount = config.minAttackAmount;
 
@@ -167,7 +171,10 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         _postUpgrade(initialRewardReceiver, initialGenerator);
     }
 
-    function _postUpgrade(address initialRewardReceiver, RewardsGenerator initialGenerator) internal {
+    function _postUpgrade(
+        address initialRewardReceiver,
+        RewardsGenerator initialGenerator
+    ) internal {
         rewardReceiver = initialRewardReceiver;
         generator = initialGenerator;
     }
@@ -211,8 +218,14 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     // Subscribe to Yakuza
     // --------------------------------------------------------------------------------------------
 
-    function subscribeWithoutStaking(uint256 amountToMint, uint256 tokenAmount) external payable {
-        require(tokenAmount + amountToMint >= minimumSubscriptionWhenNotStaking, "MINIMUM_SUBSCRIPTION_REQUIRED");
+    function subscribeWithoutStaking(
+        uint256 amountToMint,
+        uint256 tokenAmount
+    ) external payable {
+        require(
+            tokenAmount + amountToMint >= minimumSubscriptionWhenNotStaking,
+            "MINIMUM_SUBSCRIPTION_REQUIRED"
+        );
 
         address sender = msg.sender;
         if (tokenAmount > 0) {
@@ -231,27 +244,40 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     ) external payable {
         address sender = msg.sender;
 
-        require(tokenAmount + amountToMint >= minimumSubscriptionWhenStaking, "MINIMUM_SUBSCRIPTION_REQUIRED");
+        require(
+            tokenAmount + amountToMint >= minimumSubscriptionWhenStaking,
+            "MINIMUM_SUBSCRIPTION_REQUIRED"
+        );
 
         if (tokenAmount > 0) {
             playToken.transferFrom(sender, address(this), tokenAmount);
         }
 
         if (tokenAmount + amountFromYakuza > 0) {
-            playToken.approve(address(outerSpace), tokenAmount + amountFromYakuza);
+            playToken.approve(
+                address(outerSpace),
+                tokenAmount + amountFromYakuza
+            );
         }
-        outerSpace.acquireMultipleViaNativeTokenAndStakingToken{value: msg.value}(
-            locations,
-            amountToMint,
-            tokenAmount + amountFromYakuza
-        );
+        outerSpace.acquireMultipleViaNativeTokenAndStakingToken{
+            value: msg.value
+        }(locations, amountToMint, tokenAmount + amountFromYakuza);
         uint256 contribution = amountToMint + tokenAmount;
-        uint256 averagePerPlanet = (amountToMint + tokenAmount + amountFromYakuza) / locations.length;
-        require(averagePerPlanet >= minAverageStakePerPlanet, "PLANETS_TOO_SMALL");
+        uint256 averagePerPlanet = (amountToMint +
+            tokenAmount +
+            amountFromYakuza) / locations.length;
+        require(
+            averagePerPlanet >= minAverageStakePerPlanet,
+            "PLANETS_TOO_SMALL"
+        );
         _recordContribution(sender, contribution, locations);
     }
 
-    function _recordContribution(address subscriber, uint256 contribution, uint256[] memory planets) internal {
+    function _recordContribution(
+        address subscriber,
+        uint256 contribution,
+        uint256[] memory planets
+    ) internal {
         _mint(subscriber, contribution);
         uint256 startTime = subscriptions[subscriber].startTime;
         uint256 endTime = subscriptions[subscriber].endTime;
@@ -268,7 +294,13 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         }
 
         subscriptions[subscriber].endTime = endTime;
-        emit YakuzaSubscribed(subscriber, startTime, endTime, contribution, planets);
+        emit YakuzaSubscribed(
+            subscriber,
+            startTime,
+            endTime,
+            contribution,
+            planets
+        );
     }
 
     // --------------------------------------------------------------------------------------------
@@ -290,12 +322,17 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         address sender = msg.sender;
 
         // this fleet is visible to anyone
-        bytes32 expectedToHash = keccak256(abi.encodePacked(secret, to, false, address(0), uint256(0)));
+        bytes32 expectedToHash = keccak256(
+            abi.encodePacked(secret, to, false, address(0), uint256(0))
+        );
 
         require(expectedToHash == toHash, "INVALID_TO_HASH");
 
         // you have to be subscribed
-        require(block.timestamp < subscriptions[sender].endTime, "SUBSCRIPTION_EXPIRED");
+        require(
+            block.timestamp < subscriptions[sender].endTime,
+            "SUBSCRIPTION_EXPIRED"
+        );
 
         _attack(sender, from, to, distance, amount, toHash, secret);
     }
@@ -310,15 +347,29 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         bytes32 secret
     ) internal {
         require(myPlanets[to].mine, "TARGET_PLANET_NOT_YAKUZA");
-        require(myPlanets[to].lockTime < block.timestamp, "TARGET_PLANET_LOCKED");
+        require(
+            myPlanets[to].lockTime < block.timestamp,
+            "TARGET_PLANET_LOCKED"
+        );
 
         uint40 lastAttackTime = _updatePlanet(from, to, distance, amount);
 
         // then we do a basic send
         outerSpace.send(from, amount, toHash);
 
-        uint256 fleetSentId = uint256(keccak256(abi.encodePacked(toHash, from, address(this), address(this))));
-        emit YakuzaAttack(sender, to, fleetSentId, amount, lastAttackTime, secret);
+        uint256 fleetSentId = uint256(
+            keccak256(
+                abi.encodePacked(toHash, from, address(this), address(this))
+            )
+        );
+        emit YakuzaAttack(
+            sender,
+            to,
+            fleetSentId,
+            amount,
+            lastAttackTime,
+            secret
+        );
     }
 
     function _updatePlanet(
@@ -330,24 +381,40 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         Stats memory statsForFromPlanet = _getStats(from);
         Stats memory statsForToPlanet = _getStats(to);
 
-        ImportingOuterSpaceTypes.ExternalPlanet memory toPlanet = outerSpace.getUpdatedPlanetState(to);
+        ImportingOuterSpaceTypes.ExternalPlanet memory toPlanet = outerSpace
+            .getUpdatedPlanetState(to);
         require(toPlanet.active, "TARGET_PLANET_NOT_ACTIVE");
         require(toPlanet.owner != address(this), "TARGET_PLANET_ALREADY_OWNED");
 
         // player provide the distance, we need to check it
-        _requireCorrectDistance(distance, from, to, statsForFromPlanet, statsForToPlanet);
+        _requireCorrectDistance(
+            distance,
+            from,
+            to,
+            statsForFromPlanet,
+            statsForToPlanet
+        );
 
-        uint256 timeItTakes = ((distance * (_timePerDistance * 10000)) / statsForFromPlanet.speed);
+        uint256 timeItTakes = ((distance * (_timePerDistance * 10000)) /
+            statsForFromPlanet.speed);
         require(timeItTakes <= maxTimeRange, "TOO_FAR_AWAY");
 
-        ImportingOuterSpaceTypes.ExternalPlanet memory fromPlanet = outerSpace.getUpdatedPlanetState(from);
+        ImportingOuterSpaceTypes.ExternalPlanet memory fromPlanet = outerSpace
+            .getUpdatedPlanetState(from);
 
         uint256 fromCap = _capWhenActive(statsForFromPlanet.production);
-        uint256 minimumSpaceshipsToLeave = (fromCap * spaceshipsToKeepPer10000) / 10000;
+        uint256 minimumSpaceshipsToLeave = (fromCap *
+            spaceshipsToKeepPer10000) / 10000;
 
         // There is a minimum number of spaceships Yakuza want to keep on each planet
-        require(fromPlanet.numSpaceships > minimumSpaceshipsToLeave, "NOT_ENOUGH_SPACESHIPS");
-        require(amount <= fromPlanet.numSpaceships - minimumSpaceshipsToLeave, "NEED_TO_LEAVE_ENOUGH_DEFENSE");
+        require(
+            fromPlanet.numSpaceships > minimumSpaceshipsToLeave,
+            "NOT_ENOUGH_SPACESHIPS"
+        );
+        require(
+            amount <= fromPlanet.numSpaceships - minimumSpaceshipsToLeave,
+            "NEED_TO_LEAVE_ENOUGH_DEFENSE"
+        );
 
         lastAttackTime = _handleAttackCap(to, statsForToPlanet, amount);
     }
@@ -360,7 +427,8 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         uint256 timestamp = block.timestamp;
 
         uint256 toCap = _capWhenActive(statsForToPlanet.production);
-        uint256 rate = (uint256(statsForToPlanet.production) * uint256(_productionSpeedUp)) / 1 hours;
+        uint256 rate = (uint256(statsForToPlanet.production) *
+            uint256(_productionSpeedUp)) / 1 hours;
         if (rate == 0) {
             rate = 1;
         }
@@ -380,7 +448,9 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
 
         uint256 maxBudget = rate * timeSinceLastAttack;
         if (amount < maxBudget) {
-            lastAttackTime = uint40(timestamp - timeSinceLastAttack + (amount / rate));
+            lastAttackTime = uint40(
+                timestamp - timeSinceLastAttack + (amount / rate)
+            );
         } else {
             lastAttackTime = uint40(timestamp);
         }
@@ -410,14 +480,33 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         address sender = msg.sender;
 
         // we enforce sending back, which make such fleet visible to anyone
-        bytes32 expectedToHash = keccak256(abi.encodePacked(secret, resolution.to, false, address(0), uint256(0)));
+        bytes32 expectedToHash = keccak256(
+            abi.encodePacked(
+                secret,
+                resolution.to,
+                false,
+                address(0),
+                uint256(0)
+            )
+        );
 
         require(expectedToHash == toHash, "INVALID_TO_HASH");
 
         // you have to be subscribed
-        require(block.timestamp < subscriptions[sender].endTime, "SUBSCRIPTION_EXPIRED");
+        require(
+            block.timestamp < subscriptions[sender].endTime,
+            "SUBSCRIPTION_EXPIRED"
+        );
 
-        _claimAttack(fleetId, resolution, amount, from, toHash, secret, distance);
+        _claimAttack(
+            fleetId,
+            resolution,
+            amount,
+            from,
+            toHash,
+            secret,
+            distance
+        );
     }
 
     struct Result {
@@ -437,48 +526,74 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         Stats memory statsForToPlanet = _getStats(to);
 
         // player provide the distance, we need to check it
-        _requireCorrectDistance(distance, from, to, statsForFromPlanet, statsForToPlanet);
+        _requireCorrectDistance(
+            distance,
+            from,
+            to,
+            statsForFromPlanet,
+            statsForToPlanet
+        );
 
-        uint256 timeItTakes = ((distance * (_timePerDistance * 10000)) / statsForFromPlanet.speed);
+        uint256 timeItTakes = ((distance * (_timePerDistance * 10000)) /
+            statsForFromPlanet.speed);
         require(timeItTakes <= maxTimeRange, "TOO_FAR_AWAY");
         // we compute the minimum arrival time
         result.arrivalTime = uint40(block.timestamp + timeItTakes);
 
-        ImportingOuterSpaceTypes.ExternalPlanet memory fromPlanet = outerSpace.getUpdatedPlanetState(from);
+        ImportingOuterSpaceTypes.ExternalPlanet memory fromPlanet = outerSpace
+            .getUpdatedPlanetState(from);
         uint256 yakuzaCap = _capWhenActive(statsForFromPlanet.production);
-        uint256 minimumSpaceshipsToLeave = (yakuzaCap * spaceshipsToKeepPer10000) / 10000;
+        uint256 minimumSpaceshipsToLeave = (yakuzaCap *
+            spaceshipsToKeepPer10000) / 10000;
 
         // There is a minimum number of spaceships Yakuza want to keep on each planet
-        require(fromPlanet.numSpaceships > minimumSpaceshipsToLeave, "NOT_ENOUGH_SPACESHIPS");
-        require(amount <= fromPlanet.numSpaceships - minimumSpaceshipsToLeave, "NEED_TO_LEAVE_ENOUGH_DEFENSE");
+        require(
+            fromPlanet.numSpaceships > minimumSpaceshipsToLeave,
+            "NOT_ENOUGH_SPACESHIPS"
+        );
+        require(
+            amount <= fromPlanet.numSpaceships - minimumSpaceshipsToLeave,
+            "NEED_TO_LEAVE_ENOUGH_DEFENSE"
+        );
 
         // we give you revenge enough to capture it back
         result.amountLeft = claims[fleetId].amountLeft;
         if (result.amountLeft == 0) {
             result.firstClaim = true;
-            uint256 attackedPlanetCap = _capWhenActive(statsForToPlanet.production);
+            uint256 attackedPlanetCap = _capWhenActive(
+                statsForToPlanet.production
+            );
 
             // TODO
             //      uint256 attackFactor = numAttack *
             //     ((1000000 - _fleetSizeFactor6) + ((_fleetSizeFactor6 * numAttack) / numDefense));
             // uint256 attackDamage = (attackFactor * attack) / defense / 1000000;
 
-            result.amountLeft = statsForToPlanet.defense < statsForFromPlanet.attack
+            result.amountLeft = statsForToPlanet.defense <
+                statsForFromPlanet.attack
                 ? attackedPlanetCap
-                : ((attackedPlanetCap * statsForToPlanet.defense) / statsForFromPlanet.attack) + 1;
+                : ((attackedPlanetCap * statsForToPlanet.defense) /
+                    statsForFromPlanet.attack) + 1;
         }
         require(amount <= result.amountLeft, "TOO_MANY_SPACESHIPS_CLAIMED");
     }
 
-    function _checkValidFleet(address sender, uint256 fleetId, uint256 fleetOrigin, bool firstClaim) internal view {
+    function _checkValidFleet(
+        address sender,
+        uint256 fleetId,
+        uint256 fleetOrigin,
+        bool firstClaim
+    ) internal view {
         // You cannot claim the same winning fleet twice
         require(!claims[fleetId].claimed, "ALREADY_CLAIMED");
 
-        ImportingOuterSpaceTypes.ExternalPlanet memory toPlanet = outerSpace.getUpdatedPlanetState(fleetOrigin);
+        ImportingOuterSpaceTypes.ExternalPlanet memory toPlanet = outerSpace
+            .getUpdatedPlanetState(fleetOrigin);
         require(toPlanet.active, "TARGET_PLANET_NOT_ACTIVE");
         require(toPlanet.owner != address(this), "TARGET_PLANET_ALREADY_OWNED");
 
-        ImportingOuterSpaceTypes.FleetData memory fleet = outerSpace.getFleetData(fleetId, fleetOrigin);
+        ImportingOuterSpaceTypes.FleetData memory fleet = outerSpace
+            .getFleetData(fleetId, fleetOrigin);
 
         require(fleet.owner != address(this), "FLEET_IS_YAKUZA");
 
@@ -489,18 +604,26 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         // once first claim is made, any subscriber can not continue the claim
 
         // Fleet arrived before you subscribe (minus _frontrunningDelay)
-        require(fleet.arrivalTime - _frontrunningDelay > subscriptions[sender].startTime, "FLEET_NOT_COVERED");
+        require(
+            fleet.arrivalTime - _frontrunningDelay >
+                subscriptions[sender].startTime,
+            "FLEET_NOT_COVERED"
+        );
 
         // There is a delay after which you cannot claim anymore
         if (firstClaim) {
-            require(block.timestamp < fleet.arrivalTime + maxClaimDelay, "TOO_LATE_TO_CLAIM");
+            require(
+                block.timestamp < fleet.arrivalTime + maxClaimDelay,
+                "TOO_LATE_TO_CLAIM"
+            );
         } else {
             // once first claim is made, there are more time to complete it
             // allowing others to continue the counter-attack
             // this prevent player to use yakuza to partially attack their planets
             // with the intent to exit in time
             require(
-                block.timestamp < fleet.arrivalTime + maxClaimDelay + maxClaimDelay / 2,
+                block.timestamp <
+                    fleet.arrivalTime + maxClaimDelay + maxClaimDelay / 2,
                 "TOO_LATE_TO_CLAIM_FURTHER"
             );
         }
@@ -546,9 +669,20 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
             "INVALID_FLEET_DATA_OR_SECRET"
         );
 
-        Result memory planetResult = _computeArrivalTimeAndAmountLeft(fleetId, from, resolution.to, distance, amount);
+        Result memory planetResult = _computeArrivalTimeAndAmountLeft(
+            fleetId,
+            from,
+            resolution.to,
+            distance,
+            amount
+        );
 
-        _checkValidFleet(sender, fleetId, resolution.from, planetResult.firstClaim);
+        _checkValidFleet(
+            sender,
+            fleetId,
+            resolution.from,
+            planetResult.firstClaim
+        );
 
         require(amount >= minAttackAmount, "ATTACK_AMOUNT_TOO_SMALL");
 
@@ -558,7 +692,8 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         if (claims[fleetId].amountLeft == 0) {
             lockTime = planetResult.arrivalTime + uint40(_frontrunningDelay);
         } else {
-            lockTime = planetResult.arrivalTime + uint40(_frontrunningDelay) < lockTime
+            lockTime = planetResult.arrivalTime + uint40(_frontrunningDelay) <
+                lockTime
                 ? planetResult.arrivalTime + uint40(_frontrunningDelay)
                 : lockTime;
         }
@@ -577,7 +712,11 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         // This also ensure this cannot be abused by losing planet in purpose
         outerSpace.send(from, amount, toHash);
 
-        uint256 fleetSentId = uint256(keccak256(abi.encodePacked(toHash, from, address(this), address(this))));
+        uint256 fleetSentId = uint256(
+            keccak256(
+                abi.encodePacked(toHash, from, address(this), address(this))
+            )
+        );
         emit YakuzaClaimed(
             sender,
             fleetId,
@@ -629,7 +768,9 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     // --------------------------------------------------------------------------------------------
 
     function _capWhenActive(uint16 production) internal view returns (uint256) {
-        return _acquireNumSpaceships + (uint256(production) * _productionCapAsDuration) / 1 hours;
+        return
+            _acquireNumSpaceships +
+            (uint256(production) * _productionCapAsDuration) / 1 hours;
     }
 
     struct Stats {
@@ -641,7 +782,9 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         int8 subY;
     }
 
-    function _getStats(uint256 location) internal view returns (Stats memory stats) {
+    function _getStats(
+        uint256 location
+    ) internal view returns (Stats memory stats) {
         bytes32 data = _planetData(location);
         stats.production = _production(data);
         stats.attack = _attack(data);
@@ -659,7 +802,11 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     }
 
     function _production(bytes32 data) internal pure returns (uint16) {
-        return data.normal16(12, 0x0708083409600a8c0bb80ce40e100e100e100e101068151819c81e7823282ee0); // per hour
+        return
+            data.normal16(
+                12,
+                0x0708083409600a8c0bb80ce40e100e100e100e101068151819c81e7823282ee0
+            ); // per hour
     }
 
     function _attack(bytes32 data) internal pure returns (uint16) {
@@ -670,7 +817,9 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         return 4000 + data.normal8(28) * 400; // 4,000 - 7,000 - 10,000
     }
 
-    function _subLocation(bytes32 data) internal pure returns (int8 subX, int8 subY) {
+    function _subLocation(
+        bytes32 data
+    ) internal pure returns (int8 subX, int8 subY) {
         subX = 1 - int8(data.value8Mod(0, 3));
         subY = 1 - int8(data.value8Mod(2, 3));
     }
@@ -687,15 +836,23 @@ contract Yakuza is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
         Stats memory toStats
     ) internal pure {
         uint256 distanceSquared = uint256(
-            int256( // check input instead of compute sqrt
-                ((int128(int256(to & 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF)) * 4 + toStats.subX) -
-                    (int128(int256(from & 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF)) * 4 + fromStats.subX)) **
+            int256(
+                // check input instead of compute sqrt
+                ((int128(int256(to & 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF)) * 4 +
+                    toStats.subX) -
+                    (int128(int256(from & 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF)) *
+                        4 +
+                        fromStats.subX)) **
                     2 +
                     ((int128(int256(to >> 128)) * 4 + toStats.subY) -
                         (int128(int256(from >> 128)) * 4 + fromStats.subY)) **
                         2
             )
         );
-        require(distance ** 2 <= distanceSquared && distanceSquared < (distance + 1) ** 2, "wrong distance");
+        require(
+            distance ** 2 <= distanceSquared &&
+                distanceSquared < (distance + 1) ** 2,
+            "wrong distance"
+        );
     }
 }

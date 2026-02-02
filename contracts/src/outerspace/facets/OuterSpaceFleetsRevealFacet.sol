@@ -4,11 +4,17 @@ pragma solidity 0.8.9;
 import "./OuterSpaceFacetBase.sol";
 import "../interfaces/IOuterSpaceFleetsReveal.sol";
 
-contract OuterSpaceFleetsRevealFacet is OuterSpaceFacetBase, IOuterSpaceFleetsReveal {
+contract OuterSpaceFleetsRevealFacet is
+    OuterSpaceFacetBase,
+    IOuterSpaceFleetsReveal
+{
     // solhint-disable-next-line no-empty-blocks
     constructor(Config memory config) OuterSpaceFacetBase(config) {}
 
-    function resolveFleet(uint256 fleetId, FleetResolution calldata resolution) external {
+    function resolveFleet(
+        uint256 fleetId,
+        FleetResolution calldata resolution
+    ) external {
         require(
             uint256(
                 keccak256(

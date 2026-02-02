@@ -37,7 +37,8 @@ library Random {
     }
 
     // 1+1+2+3+4+6+7+8+8+7+6+4+3+2+1+1 // aproximation of normal distribution with mean=7.5 and standard deviation=3 for 16 values
-    bytes32 constant n_m7_5_sd3 = 0x01223334444555555666666677777777888888889999999AAAAAABBBBCCCDDEF;
+    bytes32 constant n_m7_5_sd3 =
+        0x01223334444555555666666677777777888888889999999AAAAAABBBBCCCDDEF;
 
     function r_normal(
         bytes32 seed,
@@ -64,6 +65,8 @@ library Random {
         bytes32 selection
     ) internal pure returns (uint16) {
         uint8 index = r_normal(seed, r, i);
-        return uint16(uint8(selection[index * 2])) * 2**8 + uint16(uint8(selection[index * 2 + 1]));
+        return
+            uint16(uint8(selection[index * 2])) * 2 ** 8 +
+            uint16(uint8(selection[index * 2 + 1]));
     }
 }

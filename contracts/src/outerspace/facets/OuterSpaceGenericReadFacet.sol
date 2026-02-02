@@ -4,7 +4,10 @@ pragma solidity 0.8.9;
 import "./OuterSpaceFacetBase.sol";
 import "../interfaces/IOuterSpaceGenericRead.sol";
 
-contract OuterSpaceGenericReadFacet is OuterSpaceFacetBase, IOuterSpaceGenericRead {
+contract OuterSpaceGenericReadFacet is
+    OuterSpaceFacetBase,
+    IOuterSpaceGenericRead
+{
     // solhint-disable-next-line no-empty-blocks
     constructor(Config memory config) OuterSpaceFacetBase(config) {}
 
@@ -14,7 +17,9 @@ contract OuterSpaceGenericReadFacet is OuterSpaceFacetBase, IOuterSpaceGenericRe
         }
     }
 
-    function readMultiple(uint256[] calldata slots) external view returns (bytes32[] memory data) {
+    function readMultiple(
+        uint256[] calldata slots
+    ) external view returns (bytes32[] memory data) {
         data = new bytes32[](slots.length);
         assembly {
             let slotsOffset := slots.offset
@@ -33,7 +38,10 @@ contract OuterSpaceGenericReadFacet is OuterSpaceFacetBase, IOuterSpaceGenericRe
         }
     }
 
-    function readRange(uint256 start, uint256 num) external view returns (bytes32[] memory data) {
+    function readRange(
+        uint256 start,
+        uint256 num
+    ) external view returns (bytes32[] memory data) {
         data = new bytes32[](num);
         for (uint256 i = 0; i < num; i++) {
             assembly {

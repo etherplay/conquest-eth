@@ -4,11 +4,19 @@ pragma solidity 0.8.9;
 import "./OuterSpaceFacetBase.sol";
 import "../interfaces/IOuterSpaceFleetsCommit.sol";
 
-contract OuterSpaceFleetsCommitFacet is OuterSpaceFacetBase, IOuterSpaceFleetsCommit {
+contract OuterSpaceFleetsCommitFacet is
+    OuterSpaceFacetBase,
+    IOuterSpaceFleetsCommit
+{
     // solhint-disable-next-line no-empty-blocks
     constructor(Config memory config) OuterSpaceFacetBase(config) {}
 
-    function sendWithPayee(uint256 from, uint32 quantity, bytes32 toHash, address payable payee) external payable {
+    function sendWithPayee(
+        uint256 from,
+        uint32 quantity,
+        bytes32 toHash,
+        address payable payee
+    ) external payable {
         if (msg.value > 0) {
             require(payee != address(0), "NO_PAYEE");
             payee.transfer(msg.value);
@@ -19,15 +27,26 @@ contract OuterSpaceFleetsCommitFacet is OuterSpaceFacetBase, IOuterSpaceFleetsCo
 
     function send(uint256 from, uint32 quantity, bytes32 toHash) public {
         address sender = _msgSender();
-        uint256 fleetId = uint256(keccak256(abi.encodePacked(toHash, from, sender, sender)));
+        uint256 fleetId = uint256(
+            keccak256(abi.encodePacked(toHash, from, sender, sender))
+        );
         _unsafe_sendFor(
             fleetId,
             sender,
-            FleetLaunch({fleetSender: sender, fleetOwner: sender, from: from, quantity: quantity, toHash: toHash})
+            FleetLaunch({
+                fleetSender: sender,
+                fleetOwner: sender,
+                from: from,
+                quantity: quantity,
+                toHash: toHash
+            })
         );
     }
 
-    function sendForWithPayee(FleetLaunch calldata launch, address payable payee) external payable {
+    function sendForWithPayee(
+        FleetLaunch calldata launch,
+        address payable payee
+    ) external payable {
         if (msg.value > 0) {
             require(payee != address(0), "NO_PAYEE");
             payee.transfer(msg.value);
@@ -36,7 +55,10 @@ contract OuterSpaceFleetsCommitFacet is OuterSpaceFacetBase, IOuterSpaceFleetsCo
         sendFor(launch);
     }
 
-    function sendForMultipleWithPayee(FleetLaunch[] calldata launches, address payable payee) external payable {
+    function sendForMultipleWithPayee(
+        FleetLaunch[] calldata launches,
+        address payable payee
+    ) external payable {
         if (msg.value > 0) {
             require(payee != address(0), "NO_PAYEE");
             payee.transfer(msg.value);
@@ -52,10 +74,20 @@ contract OuterSpaceFleetsCommitFacet is OuterSpaceFacetBase, IOuterSpaceFleetsCo
 
         address operator = _msgSender();
         if (operator != launch.fleetSender) {
-            require(_operators[launch.fleetSender][operator], "NOT_AUTHORIZED_TO_SEND");
+            require(
+                _operators[launch.fleetSender][operator],
+                "NOT_AUTHORIZED_TO_SEND"
+            );
         }
         uint256 fleetId = uint256(
-            keccak256(abi.encodePacked(launch.toHash, launch.from, launch.fleetSender, operator))
+            keccak256(
+                abi.encodePacked(
+                    launch.toHash,
+                    launch.from,
+                    launch.fleetSender,
+                    operator
+                )
+            )
         );
 
         // fleetOwner is basically the one receiving the planet if the attack succeed

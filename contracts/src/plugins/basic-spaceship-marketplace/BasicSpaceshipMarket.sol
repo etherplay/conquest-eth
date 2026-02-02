@@ -14,7 +14,11 @@ contract BasicSpaceshipMarket is IApprovalForAllReceiver {
     );
     event SaleCancelled(uint256 indexed location, address indexed owner);
 
-    event SpaceshipsSold(uint256 indexed location, address indexed fleetOwner, uint256 numSpaceships);
+    event SpaceshipsSold(
+        uint256 indexed location,
+        address indexed fleetOwner,
+        uint256 numSpaceships
+    );
 
     struct SpaceshipSale {
         uint144 pricePerUnit;
@@ -32,7 +36,9 @@ contract BasicSpaceshipMarket is IApprovalForAllReceiver {
     }
 
     ///@dev useful to get data without any off-chain caching, but does not scale to many locations
-    function getSales(uint256[] calldata locations) external view returns (SpaceshipSale[] memory sales) {
+    function getSales(
+        uint256[] calldata locations
+    ) external view returns (SpaceshipSale[] memory sales) {
         sales = new SpaceshipSale[](locations.length);
         for (uint256 i = 0; i < locations.length; i++) {
             sales[i] = _sales[locations[i]];
@@ -40,12 +46,23 @@ contract BasicSpaceshipMarket is IApprovalForAllReceiver {
     }
 
     function onApprovalForAllBy(address owner, bytes calldata data) external {
-        require(msg.sender == address(_outerspace), "APPROVEDBY_EXPECTS_OUTERSPACE");
-        (uint256 location, uint144 pricePerUnit, uint32 spaceshipsToKeep, uint40 spaceshipsToSell) = abi.decode(
-            data,
-            (uint256, uint144, uint32, uint40)
+        require(
+            msg.sender == address(_outerspace),
+            "APPROVEDBY_EXPECTS_OUTERSPACE"
         );
-        _setSpaceshipsForSale(owner, location, pricePerUnit, spaceshipsToKeep, spaceshipsToSell);
+        (
+            uint256 location,
+            uint144 pricePerUnit,
+            uint32 spaceshipsToKeep,
+            uint40 spaceshipsToSell
+        ) = abi.decode(data, (uint256, uint144, uint32, uint40));
+        _setSpaceshipsForSale(
+            owner,
+            location,
+            pricePerUnit,
+            spaceshipsToKeep,
+            spaceshipsToSell
+        );
     }
 
     function setSpaceshipsForSale(
@@ -54,7 +71,13 @@ contract BasicSpaceshipMarket is IApprovalForAllReceiver {
         uint32 spaceshipsToKeep,
         uint40 spaceshipsToSell
     ) external {
-        _setSpaceshipsForSale(msg.sender, location, pricePerUnit, spaceshipsToKeep, spaceshipsToSell);
+        _setSpaceshipsForSale(
+            msg.sender,
+            location,
+            pricePerUnit,
+            spaceshipsToKeep,
+            spaceshipsToSell
+        );
     }
 
     function cancelSale(uint256 location) external {
@@ -77,12 +100,19 @@ contract BasicSpaceshipMarket is IApprovalForAllReceiver {
         uint256 amountForPayee
     ) external payable {
         SpaceshipSale memory sale = _sales[location];
-        (, uint40 ownershipStartTime) = _outerspace.ownerAndOwnershipStartTimeOf(location);
+        (, uint40 ownershipStartTime) = _outerspace
+            .ownerAndOwnershipStartTimeOf(location);
 
-        require(sale.timestamp > ownershipStartTime, "OWNERSHIP_CHANGED_SALE_OUTDATED");
+        require(
+            sale.timestamp > ownershipStartTime,
+            "OWNERSHIP_CHANGED_SALE_OUTDATED"
+        );
 
         // TODO use a min-max and avoid revert this way ?
-        require(sale.spaceshipsLeftToSell >= numSpaceships, "NOT_ENOUGH_ON_SALE");
+        require(
+            sale.spaceshipsLeftToSell >= numSpaceships,
+            "NOT_ENOUGH_ON_SALE"
+        );
 
         // TODO special case for 0xFFFFF to indicate I want to sell for ever
         // if (sale.spaceshipsLeftToSell != 2**40-1) {
@@ -107,10 +137,14 @@ contract BasicSpaceshipMarket is IApprovalForAllReceiver {
 
         if (sale.spaceshipsToKeep > 0) {
             // we can call getPlanetState as the plane state has been updated above
-            IOuterSpace.ExternalPlanet memory planetUpdated = _outerspace.getPlanetState(location);
+            IOuterSpace.ExternalPlanet memory planetUpdated = _outerspace
+                .getPlanetState(location);
 
             // TODO could update OuterSpace.sendFor function to actually specify the amount left, and then pay for that amount if smaller that what wanted
-            require(planetUpdated.numSpaceships >= sale.spaceshipsToKeep, "TOO_MANY_SPACESHIPS_BOUGHT");
+            require(
+                planetUpdated.numSpaceships >= sale.spaceshipsToKeep,
+                "TOO_MANY_SPACESHIPS_BOUGHT"
+            );
         }
 
         emit SpaceshipsSold(location, msg.sender, numSpaceships);
@@ -134,6 +168,12 @@ contract BasicSpaceshipMarket is IApprovalForAllReceiver {
         _sales[location].spaceshipsLeftToSell = spaceshipsToSell;
         _sales[location].timestamp = uint40(block.timestamp);
 
-        emit SpaceshipsForSale(location, currentOwner, pricePerUnit, spaceshipsToKeep, spaceshipsToSell);
+        emit SpaceshipsForSale(
+            location,
+            currentOwner,
+            pricePerUnit,
+            spaceshipsToKeep,
+            spaceshipsToSell
+        );
     }
 }

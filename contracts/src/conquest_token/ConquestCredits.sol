@@ -9,14 +9,21 @@ import "@rocketh/proxy/solc_0_8/ERC1967/Proxied.sol";
 import "./IReward.sol";
 import "../base/utils/UsingOwner.sol";
 
-contract ConquestCredits is UsingOwner, UsingERC20Base, WithPermitAndFixedDomain, IReward {
+contract ConquestCredits is
+    UsingOwner,
+    UsingERC20Base,
+    WithPermitAndFixedDomain,
+    IReward
+{
     event GeneratorEnabled(address generator, bool enabled);
 
     mapping(address => bool) public generators;
 
     string public constant symbol = "CRED0";
 
-    constructor(address initialOwner) UsingOwner(initialOwner) WithPermitAndFixedDomain("1") {}
+    constructor(
+        address initialOwner
+    ) UsingOwner(initialOwner) WithPermitAndFixedDomain("1") {}
 
     function name() public pure override returns (string memory) {
         return "Conquest v0 Credits";

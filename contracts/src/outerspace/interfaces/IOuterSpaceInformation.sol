@@ -7,7 +7,10 @@ import "../facets/OuterSpaceFacetBase.sol";
 interface IOuterSpaceInformation is ImportingOuterSpaceTypes {
     function getGeneisHash() external view returns (bytes32);
 
-    function getConfig() external view returns (OuterSpaceFacetBase.Config memory);
+    function getConfig()
+        external
+        view
+        returns (OuterSpaceFacetBase.Config memory);
 
     function getAllianceRegistry() external view returns (AllianceRegistry);
 
@@ -15,5 +18,11 @@ interface IOuterSpaceInformation is ImportingOuterSpaceTypes {
 
     function getPlanetStates(
         uint256[] calldata locations
-    ) external view returns (ExternalPlanet[] memory planetStates, Discovered memory discovered);
+    )
+        external
+        view
+        returns (
+            ExternalPlanet[] memory planetStates,
+            Discovered memory discovered
+        );
 }

@@ -10,26 +10,28 @@ import type {
 // this one provide a protocol supporting private key as account
 import {privateKey} from '@rocketh/signer';
 
-
 const l1_deployments: string[] = [];
 const l1_deployments_dev: string[] = [];
 const l2_deployments: string[] = [
-  // 'deploy_l2/00_block_upgrades',
-  'deploy_l2/01_play_tokens',
-  'deploy_l2/02_alliance_registry',
-  'deploy_l2/03_outerspace',
+	// 'deploy_l2/00_block_upgrades',
+	'deploy_l2/01_play_tokens',
+	'deploy_l2/02_alliance_registry',
+	'deploy_l2/03_outerspace',
 ];
 const l2_deployments_dev: string[] = [
-  // 'deploy_l2/00_block_upgrades',
-  'deploy_l2/04_setup',
-  'deploy_l2/10_agent_service',
-  'deploy_l2/20_basic_alliances',
-  'deploy_l2/30_plugins',
+	// 'deploy_l2/00_block_upgrades',
+	'deploy_l2/04_setup',
+	'deploy_l2/10_agent_service',
+	'deploy_l2/20_basic_alliances',
+	'deploy_l2/30_plugins',
 ];
 
-const deploymentsFolder = l1_deployments.concat(l1_deployments_dev, l2_deployments, l2_deployments_dev);
+const deploymentsFolder = l1_deployments.concat(
+	l1_deployments_dev,
+	l2_deployments,
+	l2_deployments_dev,
+);
 // console.log({hardhatNetworkDeploymentFolders});
-
 
 // we define our config and export it as "config"
 export const config = {
@@ -83,7 +85,7 @@ const extensions = {
 	...readExecuteExtension,
 	...deployProxyExtension,
 	...viemExtension,
-	...diamondExtension
+	...diamondExtension,
 };
 export {extensions};
 

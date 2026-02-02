@@ -32,7 +32,7 @@ library Math {
         uint256 b18,
         string memory overflowError
     ) internal pure returns (uint256) {
-        return mul(a18, b18, overflowError) / 10**18;
+        return mul(a18, b18, overflowError) / 10 ** 18;
     }
 
     function div18(
@@ -40,7 +40,7 @@ library Math {
         uint256 b18,
         string memory overflowError
     ) internal pure returns (uint256) {
-        return mul(a18, 10**18, overflowError) / b18;
+        return mul(a18, 10 ** 18, overflowError) / b18;
     }
 
     function min(uint256 a, uint256 b) internal pure returns (uint256) {

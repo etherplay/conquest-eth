@@ -4,6 +4,12 @@ pragma solidity 0.8.9;
 import "../types/ImportingOuterSpaceTypes.sol";
 import "../events/ImportingOuterSpaceEvents.sol";
 
-interface IOuterSpaceFleetsReveal is ImportingOuterSpaceTypes, ImportingOuterSpaceEvents {
-    function resolveFleet(uint256 fleetId, FleetResolution calldata resolution) external;
+interface IOuterSpaceFleetsReveal is
+    ImportingOuterSpaceTypes,
+    ImportingOuterSpaceEvents
+{
+    function resolveFleet(
+        uint256 fleetId,
+        FleetResolution calldata resolution
+    ) external;
 }

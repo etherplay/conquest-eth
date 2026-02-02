@@ -18,6 +18,4 @@ interface IOuterSpace is
     IOuterSpacePlanets,
     IOuterSpaceInformation,
     IOuterSpaceStaking
-{
-
-}
+{}

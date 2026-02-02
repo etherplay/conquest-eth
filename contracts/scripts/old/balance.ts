@@ -8,15 +8,15 @@ const deploymentName = args[1] ? args[0] : undefined;
 const address = args[1] ? args[1] : args[0];
 
 async function func(hre: HardhatRuntimeEnvironment): Promise<void> {
-  const {read} = hre.deployments;
-  if (deploymentName) {
-    const value = await read(deploymentName, 'balanceOf', address);
-    console.log(formatEther(value));
-  } else {
-    const value = await hre.ethers.provider.getBalance(address);
-    console.log(formatEther(value));
-  }
+	const {read} = hre.deployments;
+	if (deploymentName) {
+		const value = await read(deploymentName, 'balanceOf', address);
+		console.log(formatEther(value));
+	} else {
+		const value = await hre.ethers.provider.getBalance(address);
+		console.log(formatEther(value));
+	}
 }
 if (require.main === module) {
-  func(hre);
+	func(hre);
 }

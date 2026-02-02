@@ -25,7 +25,10 @@ contract OuterSpacePlanetsFacet is OuterSpaceFacetBase, IOuterSpacePlanets {
         emit ApprovalForAll(sender, operator, approved);
     }
 
-    function setApprovalForAllIfNeededAndCall(IApprovalForAllReceiver operator, bytes calldata data) external {
+    function setApprovalForAllIfNeededAndCall(
+        IApprovalForAllReceiver operator,
+        bytes calldata data
+    ) external {
         address sender = _msgSender();
         if (!_operators[sender][address(operator)]) {
             _operators[sender][address(operator)] = true;
@@ -34,7 +37,9 @@ contract OuterSpacePlanetsFacet is OuterSpaceFacetBase, IOuterSpacePlanets {
         operator.onApprovalForAllBy(sender, data);
     }
 
-    function ownerOf(uint256 location) external view returns (address currentOwner) {
+    function ownerOf(
+        uint256 location
+    ) external view returns (address currentOwner) {
         Planet storage planet = _getPlanet(location);
         currentOwner = planet.owner;
         // We could have done the following but to keep the state and event in sync, we don't
@@ -49,7 +54,10 @@ contract OuterSpacePlanetsFacet is OuterSpaceFacetBase, IOuterSpacePlanets {
         // }
     }
 
-    function isApprovedForAll(address owner, address operator) external view returns (bool) {
+    function isApprovedForAll(
+        address owner,
+        address operator
+    ) external view returns (bool) {
         return _operators[owner][operator];
     }
 
@@ -61,7 +69,9 @@ contract OuterSpacePlanetsFacet is OuterSpaceFacetBase, IOuterSpacePlanets {
         _symbol = "PLANETV0";
     }
 
-    function _attributes(uint256 location) internal view returns (bytes memory) {
+    function _attributes(
+        uint256 location
+    ) internal view returns (bytes memory) {
         bytes32 data = _planetData(location);
 
         uint256 decimal = _stake(data);
@@ -91,12 +101,20 @@ contract OuterSpacePlanetsFacet is OuterSpaceFacetBase, IOuterSpacePlanets {
             'data:application/json,{"name":"Conquest.eth%20v0%20Planets","description":"Planets%20Staked%20In%20Conquest.eth%20DEFCON%20Edition"}';
     }
 
-    function tokenURI(uint256 _tokenId) external view returns (string memory uri) {
-        int256 x = int256(int128(int256(_tokenId & 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF)));
+    function tokenURI(
+        uint256 _tokenId
+    ) external view returns (string memory uri) {
+        int256 x = int256(
+            int128(int256(_tokenId & 0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF))
+        );
         int256 y = int256(int128(int256(_tokenId >> 128)));
 
         bytes memory attributes = _attributes(_tokenId);
-        bytes memory coords = bytes.concat(StringUtils.toStringSigned(x), ",", StringUtils.toStringSigned(y));
+        bytes memory coords = bytes.concat(
+            StringUtils.toStringSigned(x),
+            ",",
+            StringUtils.toStringSigned(y)
+        );
         uri = string(
             bytes.concat(
                 'data:application/json,{"name":"Planet%20',
@@ -116,17 +134,32 @@ contract OuterSpacePlanetsFacet is OuterSpaceFacetBase, IOuterSpacePlanets {
         );
     }
 
-    function safeTransferFrom(address from, address to, uint256 location) external {
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 location
+    ) external {
         _transfer(from, to, location);
         if (to.code.length > 0) {
-            require(_checkOnERC721Received(msg.sender, from, to, location, ""), "TRANSFER_REJECTED");
+            require(
+                _checkOnERC721Received(msg.sender, from, to, location, ""),
+                "TRANSFER_REJECTED"
+            );
         }
     }
 
-    function safeTransferFrom(address from, address to, uint256 location, bytes calldata data) external {
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 location,
+        bytes calldata data
+    ) external {
         _transfer(from, to, location);
         if (to.code.length > 0) {
-            require(_checkOnERC721Received(msg.sender, from, to, location, data), "TRANSFER_REJECTED");
+            require(
+                _checkOnERC721Received(msg.sender, from, to, location, data),
+                "TRANSFER_REJECTED"
+            );
         }
     }
 
@@ -134,7 +167,11 @@ contract OuterSpacePlanetsFacet is OuterSpaceFacetBase, IOuterSpacePlanets {
         _transfer(from, to, location);
     }
 
-    function _transfer(address from, address to, uint256 location) internal whenNotPaused {
+    function _transfer(
+        address from,
+        address to,
+        uint256 location
+    ) internal whenNotPaused {
         require(from != address(0), "NOT_ZERO_ADDRESS");
         require(to != address(0), "NOT_ZERO_ADDRESS");
 
@@ -142,7 +179,10 @@ contract OuterSpacePlanetsFacet is OuterSpaceFacetBase, IOuterSpacePlanets {
         // Initialise State Update
         // -----------------------------------------------------------------------------------------------------------
         Planet storage planet = _getPlanet(location);
-        PlanetUpdateState memory planetUpdate = _createPlanetUpdateState(planet, location);
+        PlanetUpdateState memory planetUpdate = _createPlanetUpdateState(
+            planet,
+            location
+        );
 
         // -----------------------------------------------------------------------------------------------------------
         // Compute Basic Planet Updates
@@ -155,7 +195,10 @@ contract OuterSpacePlanetsFacet is OuterSpaceFacetBase, IOuterSpacePlanets {
 
         require(planetUpdate.newOwner == from, "FROM_NOT_OWNER");
         if (msg.sender != planetUpdate.newOwner) {
-            require(_operators[planetUpdate.newOwner][msg.sender], "NOT_OPERATOR");
+            require(
+                _operators[planetUpdate.newOwner][msg.sender],
+                "NOT_OPERATOR"
+            );
         }
 
         // -----------------------------------------------------------------------------------------------------------
@@ -163,9 +206,14 @@ contract OuterSpacePlanetsFacet is OuterSpaceFacetBase, IOuterSpacePlanets {
         // -----------------------------------------------------------------------------------------------------------
         planetUpdate.newOwner = to;
         // NOTE transfer incurs a tax if the new owner and previous owner are not in an alliance since at least 3 days.
-        if (planetUpdate.numSpaceships > 0 && !_isFleetOwnerTaxed(from, to, uint40(block.timestamp - 3 days))) {
+        if (
+            planetUpdate.numSpaceships > 0 &&
+            !_isFleetOwnerTaxed(from, to, uint40(block.timestamp - 3 days))
+        ) {
             planetUpdate.numSpaceships = uint32(
-                uint256(planetUpdate.numSpaceships) - (uint256(planetUpdate.numSpaceships) * _giftTaxPer10000) / 10000
+                uint256(planetUpdate.numSpaceships) -
+                    (uint256(planetUpdate.numSpaceships) * _giftTaxPer10000) /
+                        10000
             );
         }
 
@@ -191,7 +239,11 @@ contract OuterSpacePlanetsFacet is OuterSpaceFacetBase, IOuterSpacePlanets {
         // since planetUpdate.active would be false if it expired
         if (planetUpdate.active && planetUpdate.newExitStartTime == 0) {
             // we only move if the planet is a staked planet and it is not already exiting
-            _notifyGeneratorMove(from, to, uint256(_stake(planetUpdate.data)) * (DECIMALS_14));
+            _notifyGeneratorMove(
+                from,
+                to,
+                uint256(_stake(planetUpdate.data)) * (DECIMALS_14)
+            );
         }
     }
 
@@ -203,9 +255,13 @@ contract OuterSpacePlanetsFacet is OuterSpaceFacetBase, IOuterSpacePlanets {
     }
 
     // TODO update spaceship sale contract // now use ExternalPlanet
-    function getPlanetState(uint256 location) external view returns (ExternalPlanet memory state) {
+    function getPlanetState(
+        uint256 location
+    ) external view returns (ExternalPlanet memory state) {
         Planet storage planet = _getPlanet(location);
-        (bool active, uint32 numSpaceships) = _activeNumSpaceships(planet.numSpaceships);
+        (bool active, uint32 numSpaceships) = _activeNumSpaceships(
+            planet.numSpaceships
+        );
         state = ExternalPlanet({
             owner: planet.owner,
             ownershipStartTime: planet.ownershipStartTime,
@@ -218,12 +274,17 @@ contract OuterSpacePlanetsFacet is OuterSpaceFacetBase, IOuterSpacePlanets {
         });
     }
 
-    function getUpdatedPlanetState(uint256 location) external view returns (ExternalPlanet memory state) {
+    function getUpdatedPlanetState(
+        uint256 location
+    ) external view returns (ExternalPlanet memory state) {
         // -----------------------------------------------------------------------------------------------------------
         // Initialise State Update
         // -----------------------------------------------------------------------------------------------------------
         Planet storage planet = _getPlanet(location);
-        PlanetUpdateState memory planetUpdate = _createPlanetUpdateState(planet, location);
+        PlanetUpdateState memory planetUpdate = _createPlanetUpdateState(
+            planet,
+            location
+        );
 
         // -----------------------------------------------------------------------------------------------------------
         // Compute Basic Planet Updates
@@ -241,13 +302,21 @@ contract OuterSpacePlanetsFacet is OuterSpaceFacetBase, IOuterSpacePlanets {
             lastUpdated: uint40(block.timestamp),
             active: planetUpdate.active,
             reward: _rewards[location]
-            // travelingUpkeep
         });
+        // travelingUpkeep
     }
 
-    function getPlanet(uint256 location) external view returns (ExternalPlanet memory state, PlanetStats memory stats) {
+    function getPlanet(
+        uint256 location
+    )
+        external
+        view
+        returns (ExternalPlanet memory state, PlanetStats memory stats)
+    {
         Planet storage planet = _getPlanet(location);
-        (bool active, uint32 numSpaceships) = _activeNumSpaceships(planet.numSpaceships);
+        (bool active, uint32 numSpaceships) = _activeNumSpaceships(
+            planet.numSpaceships
+        );
         state = ExternalPlanet({
             owner: planet.owner,
             ownershipStartTime: planet.ownershipStartTime,
@@ -270,7 +339,12 @@ contract OuterSpacePlanetsFacet is OuterSpaceFacetBase, IOuterSpacePlanets {
         uint256 tokenID,
         bytes memory data
     ) internal returns (bool) {
-        bytes4 retval = IERC721Receiver(to).onERC721Received(operator, from, tokenID, data);
+        bytes4 retval = IERC721Receiver(to).onERC721Received(
+            operator,
+            from,
+            tokenID,
+            data
+        );
         return (retval == ERC721_RECEIVED);
     }
 }

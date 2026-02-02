@@ -11,7 +11,10 @@ interface IClaim {
 contract BrainLess is UsingOwner {
     RewardsGenerator public generator;
 
-    constructor(address initialOwner, RewardsGenerator initialGenerator) UsingOwner(initialOwner) {
+    constructor(
+        address initialOwner,
+        RewardsGenerator initialGenerator
+    ) UsingOwner(initialOwner) {
         generator = initialGenerator;
     }
 
@@ -27,7 +30,9 @@ contract BrainLess is UsingOwner {
         IClaim(address(generator)).claim(to);
     }
 
-    function changegGenerator(RewardsGenerator newGenerator) external onlyOwner {
+    function changegGenerator(
+        RewardsGenerator newGenerator
+    ) external onlyOwner {
         generator = newGenerator;
     }
 }

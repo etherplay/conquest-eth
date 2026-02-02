@@ -11,6 +11,6 @@ const location = xyToLocation(x, y);
 const bn = BigNumber.from(location);
 
 console.log({
-  decimal: bn.toString(),
-  hex: location,
+	decimal: bn.toString(),
+	hex: location,
 });

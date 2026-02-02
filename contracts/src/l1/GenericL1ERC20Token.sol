@@ -13,7 +13,10 @@ contract GenericL1ERC20Token is UsingERC20Base, WithPermitAndFixedDomain {
     address internal immutable _gateway; // TODO proper bridging
     address internal immutable _l2Contract; // TODO proper bridging
 
-    constructor(address gateway, address l2Contract) WithPermitAndFixedDomain("1") {
+    constructor(
+        address gateway,
+        address l2Contract
+    ) WithPermitAndFixedDomain("1") {
         _gateway = gateway;
         _l2Contract = l2Contract;
     }
@@ -36,12 +39,20 @@ contract GenericL1ERC20Token is UsingERC20Base, WithPermitAndFixedDomain {
         address to,
         uint256 amount
     ) internal override {
-        require(!requireAuthorization || authorized[from] || authorized[to] || !touched[to], "NOT_AUTHORIZED_TRANSFER");
+        require(
+            !requireAuthorization ||
+                authorized[from] ||
+                authorized[to] ||
+                !touched[to],
+            "NOT_AUTHORIZED_TRANSFER"
+        );
         super._transfer(from, to, amount);
         touched[to] = true;
     }
 
-    function anyNotAuthorized(address[] memory accounts) external view returns (bool) {
+    function anyNotAuthorized(
+        address[] memory accounts
+    ) external view returns (bool) {
         for (uint256 i = 0; i < accounts.length; i++) {
             if (!authorized[accounts[i]]) {
                 return true;
@@ -71,7 +82,9 @@ contract GenericL1ERC20Token is UsingERC20Base, WithPermitAndFixedDomain {
     function _admin() internal view returns (address adminAddress) {
         // solhint-disable-next-line no-inline-assembly
         assembly {
-            adminAddress := sload(0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103)
+            adminAddress := sload(
+                0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103
+            )
         }
     }
     // ----------------------------------------------------------------------

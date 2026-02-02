@@ -14,7 +14,11 @@ contract FreePlayTokenClaim is IERC20, UsingOwner {
     PlayToken immutable _underlyingToken;
     FreePlayToken immutable _freePlayToken;
 
-    constructor(address initialOwner, PlayToken underlyingToken, FreePlayToken freePlayToekn) UsingOwner(initialOwner) {
+    constructor(
+        address initialOwner,
+        PlayToken underlyingToken,
+        FreePlayToken freePlayToekn
+    ) UsingOwner(initialOwner) {
         _underlyingToken = underlyingToken;
         _freePlayToken = freePlayToekn;
     }
@@ -33,7 +37,10 @@ contract FreePlayTokenClaim is IERC20, UsingOwner {
         return _balances[owner];
     }
 
-    function allowance(address, address) external pure override returns (uint256) {
+    function allowance(
+        address,
+        address
+    ) external pure override returns (uint256) {
         return 0;
     }
 
@@ -69,7 +76,9 @@ contract FreePlayTokenClaim is IERC20, UsingOwner {
         uint256 amount;
     }
 
-    function mintMultipleViaNativeToken(Claim[] calldata claims) external payable {
+    function mintMultipleViaNativeToken(
+        Claim[] calldata claims
+    ) external payable {
         uint256 numClaims = claims.length;
         uint256 totalAmount = 0;
         for (uint256 i = 0; i < numClaims; i++) {
@@ -99,7 +108,10 @@ contract FreePlayTokenClaim is IERC20, UsingOwner {
         _freePlayToken.mint(address(this), to, amount);
     }
 
-    function withdrawAllUnderlyingToken(address[] calldata froms, address to) external {
+    function withdrawAllUnderlyingToken(
+        address[] calldata froms,
+        address to
+    ) external {
         require(msg.sender == owner, "NOT_AUTHORIZED");
 
         uint256 total = 0;
@@ -115,7 +127,11 @@ contract FreePlayTokenClaim is IERC20, UsingOwner {
         _underlyingToken.transfer(to, total);
     }
 
-    function withdrawUnderlyingToken(address from, address to, uint256 amount) external {
+    function withdrawUnderlyingToken(
+        address from,
+        address to,
+        uint256 amount
+    ) external {
         require(msg.sender == owner, "NOT_AUTHORIZED");
         require(_balances[from] >= amount, "INSUFFICIENT_BALANCE");
 

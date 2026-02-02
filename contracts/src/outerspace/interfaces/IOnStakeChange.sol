@@ -6,9 +6,5 @@ interface IOnStakeChange {
 
     function remove(address account, uint256 amount) external;
 
-    function move(
-        address from,
-        address to,
-        uint256 amount
-    ) external;
+    function move(address from, address to, uint256 amount) external;
 }

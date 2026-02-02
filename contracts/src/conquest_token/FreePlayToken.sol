@@ -9,7 +9,12 @@ import "../base/erc20/WithPermitAndFixedDomain.sol";
 import "@rocketh/proxy/solc_0_8/ERC1967/Proxied.sol";
 import "./PlayToken.sol";
 
-contract FreePlayToken is UsingERC20Base, IFreePlayToken, WithPermitAndFixedDomain, Proxied {
+contract FreePlayToken is
+    UsingERC20Base,
+    IFreePlayToken,
+    WithPermitAndFixedDomain,
+    Proxied
+{
     using Address for address;
     using SafeERC20 for PlayToken;
 
@@ -26,12 +31,18 @@ contract FreePlayToken is UsingERC20Base, IFreePlayToken, WithPermitAndFixedDoma
 
     address public admin;
 
-    constructor(PlayToken underlyingToken, address initialAdmin) WithPermitAndFixedDomain("1") {
+    constructor(
+        PlayToken underlyingToken,
+        address initialAdmin
+    ) WithPermitAndFixedDomain("1") {
         _underlyingToken = underlyingToken;
         _postUpgrade(underlyingToken, initialAdmin);
     }
 
-    function postUpgrade(PlayToken underlyingToken, address initialAdmin) external onlyProxyAdmin {
+    function postUpgrade(
+        PlayToken underlyingToken,
+        address initialAdmin
+    ) external onlyProxyAdmin {
         _postUpgrade(underlyingToken, initialAdmin);
     }
 
@@ -72,9 +83,13 @@ contract FreePlayToken is UsingERC20Base, IFreePlayToken, WithPermitAndFixedDoma
         _mint(to, amount);
     }
 
-    function mintViaNativeTokenPlusSendExtraNativeTokens(address payable to, uint256 amount) external payable {
+    function mintViaNativeTokenPlusSendExtraNativeTokens(
+        address payable to,
+        uint256 amount
+    ) external payable {
         require(minters[msg.sender], "NOT_ALLOWED_MINTER");
-        uint256 valueExpected = (amount * DECIMALS_18) / _underlyingToken.numTokensPerNativeTokenAt18Decimals();
+        uint256 valueExpected = (amount * DECIMALS_18) /
+            _underlyingToken.numTokensPerNativeTokenAt18Decimals();
         _underlyingToken.mint{value: valueExpected}(address(this), amount);
         _mint(to, amount);
         if (msg.value > valueExpected) {
@@ -89,8 +104,12 @@ contract FreePlayToken is UsingERC20Base, IFreePlayToken, WithPermitAndFixedDoma
     ) external payable {
         require(minters[msg.sender], "NOT_ALLOWED_MINTER");
         for (uint256 i = 0; i < tos.length; i++) {
-            uint256 valueExpected = (amounts[i] * DECIMALS_18) / _underlyingToken.numTokensPerNativeTokenAt18Decimals();
-            _underlyingToken.mint{value: valueExpected}(address(this), amounts[i]);
+            uint256 valueExpected = (amounts[i] * DECIMALS_18) /
+                _underlyingToken.numTokensPerNativeTokenAt18Decimals();
+            _underlyingToken.mint{value: valueExpected}(
+                address(this),
+                amounts[i]
+            );
             _mint(tos[i], amounts[i]);
             if (nativeTokenAmounts[i] > 0) {
                 tos[i].transfer(nativeTokenAmounts[i]);

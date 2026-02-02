@@ -25,7 +25,11 @@ contract BasicAlliance {
     //     _allianceRegistry.addMultiplePlayersToAlliance(playerSubmissions);
     // }
 
-    constructor(AllianceRegistry allianceRegistry, address initialAdmin, string memory initialBaseURI) {
+    constructor(
+        AllianceRegistry allianceRegistry,
+        address initialAdmin,
+        string memory initialBaseURI
+    ) {
         _allianceRegistry = allianceRegistry;
         admin = initialAdmin;
         emit AdminSet(initialAdmin);
@@ -60,7 +64,15 @@ contract BasicAlliance {
     }
 
     function frontendURI() external view returns (string memory) {
-        return string(bytes.concat(bytes(baseURI()), bytes(Strings.toHexString(uint256(uint160(address(this))), 20))));
+        return
+            string(
+                bytes.concat(
+                    bytes(baseURI()),
+                    bytes(
+                        Strings.toHexString(uint256(uint160(address(this))), 20)
+                    )
+                )
+            );
     }
 
     function setAdminAndAddMembers(
@@ -68,14 +80,19 @@ contract BasicAlliance {
         AllianceRegistry.PlayerSubmission[] calldata playerSubmissions
     ) public onlyIfInstance {
         address currentAdmin = admin;
-        require(currentAdmin == address(0) || msg.sender == currentAdmin, "NOT_ALLOWED");
+        require(
+            currentAdmin == address(0) || msg.sender == currentAdmin,
+            "NOT_ALLOWED"
+        );
         admin = newAdmin;
         if (playerSubmissions.length > 0) {
             _allianceRegistry.addMultiplePlayersToAlliance(playerSubmissions);
         }
     }
 
-    function addMembers(AllianceRegistry.PlayerSubmission[] calldata playerSubmissions) external onlyIfInstance {
+    function addMembers(
+        AllianceRegistry.PlayerSubmission[] calldata playerSubmissions
+    ) external onlyIfInstance {
         require(msg.sender == admin, "NOT_ALLOWED");
         _allianceRegistry.addMultiplePlayersToAlliance(playerSubmissions);
     }
@@ -126,12 +143,20 @@ contract BasicAlliance {
         AllianceRegistry.PlayerSubmission[] calldata playerSubmissions,
         bytes32 salt
     ) external onlyIfFactory {
-        address newAlliance = Clones.cloneDeterministic(address(this), keccak256(abi.encodePacked(salt, msg.sender)));
+        address newAlliance = Clones.cloneDeterministic(
+            address(this),
+            keccak256(abi.encodePacked(salt, msg.sender))
+        );
         BasicAlliance(newAlliance).initInstance(this);
-        BasicAlliance(newAlliance).setAdminAndAddMembers(initialAdmin, playerSubmissions);
+        BasicAlliance(newAlliance).setAdminAndAddMembers(
+            initialAdmin,
+            playerSubmissions
+        );
     }
 
-    function getAddress(bytes32 salt) external view onlyIfFactory returns (address) {
+    function getAddress(
+        bytes32 salt
+    ) external view onlyIfFactory returns (address) {
         return
             Clones.predictDeterministicAddress(
                 address(this),
@@ -158,14 +183,22 @@ contract BasicAlliance {
     bytes internal constant hexAlphabet = "0123456789abcdef";
     bytes internal constant decimalAlphabet = "0123456789";
 
-    function _writeUintAsHex(bytes memory data, uint256 endPos, uint256 num) internal pure {
+    function _writeUintAsHex(
+        bytes memory data,
+        uint256 endPos,
+        uint256 num
+    ) internal pure {
         while (num != 0) {
             data[endPos--] = bytes1(hexAlphabet[num % 16]);
             num /= 16;
         }
     }
 
-    function _writeUintAsDecimal(bytes memory data, uint256 endPos, uint256 num) internal pure {
+    function _writeUintAsDecimal(
+        bytes memory data,
+        uint256 endPos,
+        uint256 num
+    ) internal pure {
         while (num != 0) {
             data[endPos--] = bytes1(decimalAlphabet[num % 10]);
             num /= 10;

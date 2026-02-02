@@ -4,7 +4,10 @@ pragma solidity 0.8.9;
 import "./OuterSpaceFacetBase.sol";
 import "../interfaces/IOuterSpaceFleetsRead.sol";
 
-contract OuterSpaceFleetsReadFacet is OuterSpaceFacetBase, IOuterSpaceFleetsRead {
+contract OuterSpaceFleetsReadFacet is
+    OuterSpaceFacetBase,
+    IOuterSpaceFleetsRead
+{
     // solhint-disable-next-line no-empty-blocks
     constructor(Config memory config) OuterSpaceFacetBase(config) {}
 
@@ -32,7 +35,10 @@ contract OuterSpaceFleetsReadFacet is OuterSpaceFacetBase, IOuterSpaceFleetsRead
         flyingAtLaunch = _inFlight[from][timeSlot].flying;
     }
 
-    function getFleetData(uint256 fleetId, uint256 from) external view returns (FleetData memory) {
+    function getFleetData(
+        uint256 fleetId,
+        uint256 from
+    ) external view returns (FleetData memory) {
         Fleet memory fleet = _fleets[fleetId];
         uint256 timeSlot = fleet.launchTime / (_frontrunningDelay / 2);
 

@@ -1,13 +1,22 @@
-export/
-deployments/
-artifacts/
+# -----------------
+# .gitignore
+# -----------------
 cache/
-coverage/
+artifacts/
+
 node_modules/
-package.json
-typechain/
+.env
+
+generated/
+
+deployments/hardhat
+deployments/localhost
+
+# -----------------
+deployments/
 src/import
-dapp_test/test.sol
-_lib/
-.dappp
 *.json
+_lib/
+.gitignore
+*.md
+.prettierignore

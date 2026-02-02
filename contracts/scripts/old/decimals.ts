@@ -6,15 +6,15 @@ import {formatEther} from '@ethersproject/units';
 const args = process.argv.slice(2);
 
 if (args.length !== 1) {
-  throw new Error(`<name>`);
+	throw new Error(`<name>`);
 }
 const deploymentName = args[0];
 
 async function func(hre: HardhatRuntimeEnvironment): Promise<void> {
-  const {read} = hre.deployments;
-  const value = await read(deploymentName, 'decimals');
-  console.log(value);
+	const {read} = hre.deployments;
+	const value = await read(deploymentName, 'decimals');
+	console.log(value);
 }
 if (require.main === module) {
-  func(hre);
+	func(hre);
 }

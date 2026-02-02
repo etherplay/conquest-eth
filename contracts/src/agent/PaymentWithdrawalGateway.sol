@@ -9,7 +9,10 @@ import "./PaymentGateway.sol";
 contract PaymentWithdrawalGateway {
     using ECDSA for bytes32;
 
-    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+    event OwnershipTransferred(
+        address indexed previousOwner,
+        address indexed newOwner
+    );
     event Signer(address indexed signerAddress, bool active);
 
     uint256 public immutable MSG_EXPIRY;
@@ -65,10 +68,17 @@ contract PaymentWithdrawalGateway {
         require(amount <= maxAmount, "TOO_MANY_REQUESTED");
         require(block.timestamp < msgTimestamp + MSG_EXPIRY, "EXPIRED");
         uint256 lastWithdrawalTime = lastWithdrawalTimestamp[msg.sender];
-        require(block.timestamp > lastWithdrawalTime + MSG_EXPIRY + EXTRA_INTERVAL, "INTERVAL_NOT_RESPECTED");
+        require(
+            block.timestamp > lastWithdrawalTime + MSG_EXPIRY + EXTRA_INTERVAL,
+            "INTERVAL_NOT_RESPECTED"
+        );
 
-        bytes32 dataHash = keccak256(abi.encode(msgTimestamp, msg.sender, maxAmount));
-        bytes32 digest = keccak256(abi.encodePacked("\x19Ethereum Signed Message:\n32", dataHash));
+        bytes32 dataHash = keccak256(
+            abi.encode(msgTimestamp, msg.sender, maxAmount)
+        );
+        bytes32 digest = keccak256(
+            abi.encodePacked("\x19Ethereum Signed Message:\n32", dataHash)
+        );
         address msgSigner = digest.recover(signature);
 
         require(signer[msgSigner], "UNAUTHORIZED_SIGNER");

@@ -58,7 +58,10 @@ abstract contract UsingERC20Base is IERC20, ERC20BaseInternal {
         return _balances[owner];
     }
 
-    function allowance(address owner, address spender) external view override returns (uint256) {
+    function allowance(
+        address owner,
+        address spender
+    ) external view override returns (uint256) {
         if (owner == address(this)) {
             // see transferFrom: address(this) allows anyone
             return Constants.UINT256_MAX;
@@ -70,22 +73,27 @@ abstract contract UsingERC20Base is IERC20, ERC20BaseInternal {
         return uint8(18);
     }
 
-    function transfer(address to, uint256 amount) external override returns (bool) {
+    function transfer(
+        address to,
+        uint256 amount
+    ) external override returns (bool) {
         _transfer(msg.sender, to, amount);
         return true;
     }
 
-    function transferAlongWithETH(address payable to, uint256 amount) external payable returns (bool) {
+    function transferAlongWithETH(
+        address payable to,
+        uint256 amount
+    ) external payable returns (bool) {
         _transfer(msg.sender, to, amount);
         to.transfer(msg.value);
         return true;
     }
 
-    function distributeAlongWithETH(address payable[] calldata tos, uint256 totalAmount)
-        external
-        payable
-        returns (bool)
-    {
+    function distributeAlongWithETH(
+        address payable[] calldata tos,
+        uint256 totalAmount
+    ) external payable returns (bool) {
         uint256 val = msg.value / tos.length;
         require(msg.value == val * tos.length, "INVALID_MSG_VALUE");
         uint256 amount = totalAmount / tos.length;
@@ -97,11 +105,10 @@ abstract contract UsingERC20Base is IERC20, ERC20BaseInternal {
         return true;
     }
 
-    function distributeVariousAmountsAlongWithETH(address payable[] calldata tos, uint256[] calldata amounts)
-        external
-        payable
-        returns (bool)
-    {
+    function distributeVariousAmountsAlongWithETH(
+        address payable[] calldata tos,
+        uint256[] calldata amounts
+    ) external payable returns (bool) {
         uint256 val = msg.value / tos.length;
         require(msg.value == val * tos.length, "INVALID_MSG_VALUE");
         require(tos.length == amounts.length, "NOT_SAME_LENGTH");
@@ -159,7 +166,13 @@ abstract contract UsingERC20Base is IERC20, ERC20BaseInternal {
         bytes calldata data
     ) external returns (bool) {
         _transfer(msg.sender, to, amount);
-        return IPaidForReceiver(to).onTokenPaidFor(msg.sender, forAddress, amount, data);
+        return
+            IPaidForReceiver(to).onTokenPaidFor(
+                msg.sender,
+                forAddress,
+                amount,
+                data
+            );
     }
 
     // TODO ?
@@ -183,7 +196,10 @@ abstract contract UsingERC20Base is IERC20, ERC20BaseInternal {
         return true;
     }
 
-    function approve(address spender, uint256 amount) external override returns (bool) {
+    function approve(
+        address spender,
+        uint256 amount
+    ) external override returns (bool) {
         // TODO support metatx ?
         _approveFor(msg.sender, spender, amount);
         return true;
@@ -195,7 +211,12 @@ abstract contract UsingERC20Base is IERC20, ERC20BaseInternal {
         bytes calldata data
     ) external returns (bool) {
         _approveFor(msg.sender, spender, amount);
-        return IApprovalReceiver(spender).onTokenApproval(msg.sender, amount, data);
+        return
+            IApprovalReceiver(spender).onTokenApproval(
+                msg.sender,
+                amount,
+                data
+            );
     }
 
     function _approveFor(
@@ -203,16 +224,15 @@ abstract contract UsingERC20Base is IERC20, ERC20BaseInternal {
         address spender,
         uint256 amount
     ) internal override {
-        require(owner != address(0) && spender != address(0), "INVALID_ZERO_ADDRESS");
+        require(
+            owner != address(0) && spender != address(0),
+            "INVALID_ZERO_ADDRESS"
+        );
         _allowances[owner][spender] = amount;
         emit Approval(owner, spender, amount);
     }
 
-    function _transferFrom(
-        address from,
-        address to,
-        uint256 amount
-    ) internal {
+    function _transferFrom(address from, address to, uint256 amount) internal {
         // anybody can transfer from this
         // this allow mintAndApprovedCall without gas overhead
         if (msg.sender != from && from != address(this)) {

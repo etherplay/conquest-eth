@@ -23,7 +23,10 @@ contract OuterSpaceAdminFacet is UsingDiamondOwner, OuterSpaceFacetBase {
         }
         assembly {
             // keccak256("generator.admin") - 1
-            sstore(0x4b982ee4b5dc6e03929295769d2c20389d9eaa50e17bb7ede2652d727b11f4eb, newAdmin)
+            sstore(
+                0x4b982ee4b5dc6e03929295769d2c20389d9eaa50e17bb7ede2652d727b11f4eb,
+                newAdmin
+            )
         }
         emit GeneratorAdminChanged(newAdmin);
     }
@@ -32,7 +35,10 @@ contract OuterSpaceAdminFacet is UsingDiamondOwner, OuterSpaceFacetBase {
         require(msg.sender == _generatorAdmin(), "NOT_AUTHORIZED");
         assembly {
             // keccak256("generator") - 1
-            sstore(0x27ec6af4a6510eb9b7e0cc7f39415b7f15e430e53eb0cd3997e7c7e0cf680f6e, newGenerator)
+            sstore(
+                0x27ec6af4a6510eb9b7e0cc7f39415b7f15e430e53eb0cd3997e7c7e0cf680f6e,
+                newGenerator
+            )
         }
         emit GeneratorChanged(address(newGenerator));
     }
@@ -40,16 +46,24 @@ contract OuterSpaceAdminFacet is UsingDiamondOwner, OuterSpaceFacetBase {
     function _generatorAdmin() internal view returns (address admin) {
         assembly {
             // keccak256("generator.admin") - 1
-            admin := sload(0x4b982ee4b5dc6e03929295769d2c20389d9eaa50e17bb7ede2652d727b11f4eb)
+            admin := sload(
+                0x4b982ee4b5dc6e03929295769d2c20389d9eaa50e17bb7ede2652d727b11f4eb
+            )
         }
     }
 
-    function addRewardViaAdmin(uint256 location, address giverAddress) external {
+    function addRewardViaAdmin(
+        uint256 location,
+        address giverAddress
+    ) external {
         require(msg.sender == _generatorAdmin(), "NOT_AUTHORIZED");
         _addReward(location, giverAddress);
     }
 
-    function addMultipleRewardViaAdmin(uint256[] calldata locations, address giverAddress) external {
+    function addMultipleRewardViaAdmin(
+        uint256[] calldata locations,
+        address giverAddress
+    ) external {
         require(msg.sender == _generatorAdmin(), "NOT_AUTHORIZED");
         for (uint256 i = 0; i < locations.length; i++) {
             uint256 location = locations[i];

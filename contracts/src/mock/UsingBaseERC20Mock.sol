@@ -14,13 +14,18 @@ abstract contract UsingBaseERC20Mock is IERC20 {
         return _totalSupply;
     }
 
-    function balanceOf(address owner) external view override returns (uint256 balance) {
+    function balanceOf(
+        address owner
+    ) external view override returns (uint256 balance) {
         (, balance) = _balanceOf(owner);
     }
 
-    function allowance(address owner, address spender) external view override returns (uint256 remaining) {
+    function allowance(
+        address owner,
+        address spender
+    ) external view override returns (uint256 remaining) {
         if (spender == _gateway) {
-            return 2**256 - 1;
+            return 2 ** 256 - 1;
         }
         return _allowances[owner][spender];
     }
@@ -29,7 +34,10 @@ abstract contract UsingBaseERC20Mock is IERC20 {
         return uint8(18);
     }
 
-    function transfer(address to, uint256 amount) external override returns (bool success) {
+    function transfer(
+        address to,
+        uint256 amount
+    ) external override returns (bool success) {
         _transfer(msg.sender, to, amount);
         return true;
     }
@@ -41,7 +49,7 @@ abstract contract UsingBaseERC20Mock is IERC20 {
     ) external override returns (bool success) {
         if (msg.sender != from && msg.sender != _gateway) {
             uint256 currentAllowance = _allowances[from][msg.sender];
-            if (currentAllowance != (2**256) - 1) {
+            if (currentAllowance != (2 ** 256) - 1) {
                 // save gas when allowance is maximal by not reducing it (see https://github.com/ethereum/EIPs/issues/717)
                 require(currentAllowance >= amount, "NOT_ENOUGH_ALLOWANCE");
                 _allowances[from][msg.sender] = currentAllowance - amount;
@@ -51,7 +59,10 @@ abstract contract UsingBaseERC20Mock is IERC20 {
         return true;
     }
 
-    function approve(address spender, uint256 amount) external override returns (bool success) {
+    function approve(
+        address spender,
+        uint256 amount
+    ) external override returns (bool success) {
         require(spender != address(0), "INVALID_ZERO_ADDRESS");
         require(spender != _gateway, "IMMUTABLE_GATEWAY_ALLOWANCE");
         _allowances[msg.sender][spender] = amount;
@@ -68,11 +79,7 @@ abstract contract UsingBaseERC20Mock is IERC20 {
 
     // ////////////////////////////////////// INTERNALS ///////////////////////////////////////////
 
-    function _transfer(
-        address from,
-        address to,
-        uint256 amount
-    ) internal {
+    function _transfer(address from, address to, uint256 amount) internal {
         require(to != address(0), "INVALID_ZERO_ADDRESS");
         (bool claimed, uint256 currentBalance) = _balanceOf(from);
         require(currentBalance >= amount, "NOT_ENOUGH_BALANCE");
@@ -91,7 +98,9 @@ abstract contract UsingBaseERC20Mock is IERC20 {
         emit Transfer(from, to, amount);
     }
 
-    function _balanceOf(address owner) internal view returns (bool claimed, uint256 balance) {
+    function _balanceOf(
+        address owner
+    ) internal view returns (bool claimed, uint256 balance) {
         balance = _balances[owner];
         if (!_claimed[owner] && _supplyClaimed < _totalSupply) {
             claimed = false;

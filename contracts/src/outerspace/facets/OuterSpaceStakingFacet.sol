@@ -11,7 +11,11 @@ contract OuterSpaceStakingFacet is OuterSpaceFacetBase, IOuterSpaceStaking {
     // STAKING / PRODUCTION CAPTURE
     // ---------------------------------------------------------------------------------------------------------------
 
-    function onTokenTransfer(address, uint256 amount, bytes calldata data) public returns (bool) {
+    function onTokenTransfer(
+        address,
+        uint256 amount,
+        bytes calldata data
+    ) public returns (bool) {
         bool freegift;
         if (msg.sender == address(_freeStakingToken)) {
             freegift = true;
@@ -21,22 +25,34 @@ contract OuterSpaceStakingFacet is OuterSpaceFacetBase, IOuterSpaceStaking {
 
         // adhoc support for multiple claim at once
         if (data.length > 64) {
-            (address acquirer, uint256[] memory locations) = abi.decode(data, (address, uint256[]));
+            (address acquirer, uint256[] memory locations) = abi.decode(
+                data,
+                (address, uint256[])
+            );
             uint256 total = 0;
             for (uint256 i = 0; i < locations.length; i++) {
-                uint256 stake = uint256(_stake(_planetData(locations[i]))) * (DECIMALS_14);
+                uint256 stake = uint256(_stake(_planetData(locations[i]))) *
+                    (DECIMALS_14);
                 _acquire(acquirer, stake, locations[i], freegift); // we do not care of who the payer is
                 total += stake;
             }
             require(amount == total, "INVALID_AMOUNT");
         } else {
-            (address acquirer, uint256 location) = abi.decode(data, (address, uint256));
+            (address acquirer, uint256 location) = abi.decode(
+                data,
+                (address, uint256)
+            );
             _acquire(acquirer, amount, location, freegift); // we do not care of who the payer is
         }
         return true;
     }
 
-    function onTokenPaidFor(address, address forAddress, uint256 amount, bytes calldata data) external returns (bool) {
+    function onTokenPaidFor(
+        address,
+        address forAddress,
+        uint256 amount,
+        bytes calldata data
+    ) external returns (bool) {
         bool freegift;
         if (msg.sender == address(_freeStakingToken)) {
             freegift = true;
@@ -54,7 +70,10 @@ contract OuterSpaceStakingFacet is OuterSpaceFacetBase, IOuterSpaceStaking {
         _stakingToken.transferFrom(sender, address(this), amount);
     }
 
-    function acquireViaFreeTokenTransferFrom(uint256 location, uint256 amount) public {
+    function acquireViaFreeTokenTransferFrom(
+        uint256 location,
+        uint256 amount
+    ) public {
         address sender = _msgSender();
         _acquire(sender, amount, location, true);
         _freeStakingToken.transferFrom(sender, address(this), amount);
@@ -85,7 +104,8 @@ contract OuterSpaceStakingFacet is OuterSpaceFacetBase, IOuterSpaceStaking {
         address sender = msg.sender;
         uint256 total = 0;
         for (uint256 i = 0; i < locations.length; i++) {
-            uint256 stake = uint256(_stake(_planetData(locations[i]))) * (DECIMALS_14);
+            uint256 stake = uint256(_stake(_planetData(locations[i]))) *
+                (DECIMALS_14);
             _acquire(sender, stake, locations[i], false);
             total += stake;
         }
@@ -106,7 +126,10 @@ contract OuterSpaceStakingFacet is OuterSpaceFacetBase, IOuterSpaceStaking {
         _unsafe_exit_for(owner, location);
     }
 
-    function exitMultipleFor(address owner, uint256[] calldata locations) external {
+    function exitMultipleFor(
+        address owner,
+        uint256[] calldata locations
+    ) external {
         address operator = _msgSender();
         if (operator != owner) {
             require(_operators[owner][operator], "NOT_AUTHORIZED_TO_SEND");
@@ -117,7 +140,10 @@ contract OuterSpaceStakingFacet is OuterSpaceFacetBase, IOuterSpaceStaking {
         }
     }
 
-    function fetchAndWithdrawFor(address owner, uint256[] calldata locations) external {
+    function fetchAndWithdrawFor(
+        address owner,
+        uint256[] calldata locations
+    ) external {
         _fetchAndWithdrawFor(owner, locations);
     }
 

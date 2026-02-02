@@ -5,7 +5,10 @@ pragma solidity 0.8.9;
 import "../../interfaces/IERC165.sol";
 
 contract UsingOwner is IERC165 {
-    event OwnershipTransferred(address indexed previousOwner, address indexed newOwner);
+    event OwnershipTransferred(
+        address indexed previousOwner,
+        address indexed newOwner
+    );
 
     address public owner;
 
@@ -22,7 +25,9 @@ contract UsingOwner is IERC165 {
         _;
     }
 
-    function supportsInterface(bytes4 interfaceID) external pure virtual override returns (bool) {
+    function supportsInterface(
+        bytes4 interfaceID
+    ) external pure virtual override returns (bool) {
         return interfaceID == 0x7f5828d0 || interfaceID == 0x01ffc9a7;
     }
 

@@ -17,55 +17,66 @@ import {formatEther} from '@ethersproject/units';
 // (-116,73)
 
 const clusters = [
-  {
-    main: {x: -92, y: -90},
-    satellites: [
-      {x: -94, y: -90},
-      {x: -91, y: -88},
-      {x: -90, y: -88},
-      {x: -89, y: -92},
-      {x: -93, y: -94},
-    ],
-  },
+	{
+		main: {x: -92, y: -90},
+		satellites: [
+			{x: -94, y: -90},
+			{x: -91, y: -88},
+			{x: -90, y: -88},
+			{x: -89, y: -92},
+			{x: -93, y: -94},
+		],
+	},
 ];
 
 async function func(hre: HardhatRuntimeEnvironment): Promise<void> {
-  const {execute, read, get} = hre.deployments;
-  const {deployer} = await hre.getNamedAccounts();
-  const OuterSpace = await get('OuterSpace');
-  const BrainLess = await get('BrainLess');
-  const spaceInfo = new SpaceInfo(OuterSpace.linkedData);
+	const {execute, read, get} = hre.deployments;
+	const {deployer} = await hre.getNamedAccounts();
+	const OuterSpace = await get('OuterSpace');
+	const BrainLess = await get('BrainLess');
+	const spaceInfo = new SpaceInfo(OuterSpace.linkedData);
 
-  const cluster = clusters[0]; // TODO i ?
+	const cluster = clusters[0]; // TODO i ?
 
-  const planet = spaceInfo.getPlanetInfo(cluster.main.x, cluster.main.y) as PlanetInfo;
-  const stake = BigNumber.from(planet.stats.stake).mul('100000000000000');
+	const planet = spaceInfo.getPlanetInfo(
+		cluster.main.x,
+		cluster.main.y,
+	) as PlanetInfo;
+	const stake = BigNumber.from(planet.stats.stake).mul('100000000000000');
 
-  const locations = [xyToLocation(cluster.main.x, cluster.main.y)];
-  let totalStake = stake;
-  for (const satellite of cluster.satellites) {
-    const satellitePlanet = spaceInfo.getPlanetInfo(satellite.x, satellite.y) as PlanetInfo;
-    const satelliteStake = BigNumber.from(satellitePlanet.stats.stake).mul('100000000000000');
-    totalStake = totalStake.add(satelliteStake);
-    locations.push(xyToLocation(satellite.x, satellite.y));
-  }
+	const locations = [xyToLocation(cluster.main.x, cluster.main.y)];
+	let totalStake = stake;
+	for (const satellite of cluster.satellites) {
+		const satellitePlanet = spaceInfo.getPlanetInfo(
+			satellite.x,
+			satellite.y,
+		) as PlanetInfo;
+		const satelliteStake = BigNumber.from(satellitePlanet.stats.stake).mul(
+			'100000000000000',
+		);
+		totalStake = totalStake.add(satelliteStake);
+		locations.push(xyToLocation(satellite.x, satellite.y));
+	}
 
-  console.log(`totalStake : ${formatEther(totalStake)}`);
+	console.log(`totalStake : ${formatEther(totalStake)}`);
 
-  await execute(
-    'PlayToken',
-    {from: deployer, log: true},
-    'transferAndCall',
-    OuterSpace.address,
-    totalStake,
-    defaultAbiCoder.encode(['address', 'uint256[]'], [BrainLess.address, locations])
-  );
+	await execute(
+		'PlayToken',
+		{from: deployer, log: true},
+		'transferAndCall',
+		OuterSpace.address,
+		totalStake,
+		defaultAbiCoder.encode(
+			['address', 'uint256[]'],
+			[BrainLess.address, locations],
+		),
+	);
 
-  const points = await read('RewardsGenerator', 'balanceOf', BrainLess.address);
-  console.log({
-    points: formatEther(points),
-  });
+	const points = await read('RewardsGenerator', 'balanceOf', BrainLess.address);
+	console.log({
+		points: formatEther(points),
+	});
 }
 if (require.main === module) {
-  func(hre);
+	func(hre);
 }

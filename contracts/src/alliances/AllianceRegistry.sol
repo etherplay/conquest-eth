@@ -27,12 +27,20 @@ contract AllianceRegistry is Proxied {
     }
     mapping(address => Alliances) internal _alliances;
 
-    event AllianceLink(IAlliance indexed alliance, address indexed player, bool joining);
+    event AllianceLink(
+        IAlliance indexed alliance,
+        address indexed player,
+        bool joining
+    );
 
     function getAllianceDataAtSlot(
         address player,
         uint8 slot
-    ) external view returns (IAlliance alliance, uint96 joinTime, uint256 nonce) {
+    )
+        external
+        view
+        returns (IAlliance alliance, uint96 joinTime, uint256 nonce)
+    {
         Alliances storage alliances = _alliances[player];
         if (slot == 0) {
             alliance = alliances.alliance0.alliance;
@@ -51,7 +59,10 @@ contract AllianceRegistry is Proxied {
         nonce = _allianceNonces[player][alliance];
     }
 
-    function getAllianceData(address player, IAlliance alliance) public view returns (uint96 joinTime, uint256 nonce) {
+    function getAllianceData(
+        address player,
+        IAlliance alliance
+    ) public view returns (uint96 joinTime, uint256 nonce) {
         nonce = _allianceNonces[player][alliance];
 
         Alliances storage alliances = _alliances[player];
@@ -117,10 +128,18 @@ contract AllianceRegistry is Proxied {
                     player2Alliances[num2++] = allianceRow;
                 }
 
-                if (player1Alliances[i].alliance == player2Alliances[j].alliance) {
-                    if (player1Alliances[i].joinTime >= player2Alliances[j].joinTime) {
+                if (
+                    player1Alliances[i].alliance == player2Alliances[j].alliance
+                ) {
+                    if (
+                        player1Alliances[i].joinTime >=
+                        player2Alliances[j].joinTime
+                    ) {
                         if (player1Alliances[i].joinTime < timestamp) {
-                            return (player1Alliances[i].alliance, player1Alliances[i].joinTime);
+                            return (
+                                player1Alliances[i].alliance,
+                                player1Alliances[i].joinTime
+                            );
                         } else {
                             // TODO check greater ?
                             alliance = player1Alliances[i].alliance;
@@ -128,7 +147,10 @@ contract AllianceRegistry is Proxied {
                         }
                     } else {
                         if (player2Alliances[j].joinTime < timestamp) {
-                            return (player2Alliances[j].alliance, player2Alliances[j].joinTime);
+                            return (
+                                player2Alliances[j].alliance,
+                                player2Alliances[j].joinTime
+                            );
                         } else {
                             // TODO check greater ?
                             alliance = player2Alliances[j].alliance;
@@ -146,7 +168,10 @@ contract AllianceRegistry is Proxied {
     // FROM PLAYER
     // -----------------------------------------------------------------------------------------------------
 
-    function joinAlliance(IAlliance alliance, bytes calldata data) external returns (bool joined) {
+    function joinAlliance(
+        IAlliance alliance,
+        bytes calldata data
+    ) external returns (bool joined) {
         Alliances storage alliances = _alliances[msg.sender];
         uint256 slot = 0;
         if (address(alliances.alliance0.alliance) != address(0)) {
@@ -158,7 +183,10 @@ contract AllianceRegistry is Proxied {
         if (address(alliances.alliance2.alliance) != address(0)) {
             slot++;
         }
-        require(address(alliances.alliance3.alliance) == address(0), "MAX_NUM_ALLIANCES_REACHED");
+        require(
+            address(alliances.alliance3.alliance) == address(0),
+            "MAX_NUM_ALLIANCES_REACHED"
+        );
 
         joined = alliance.requestToJoin(msg.sender, data);
         if (joined) {
@@ -190,7 +218,11 @@ contract AllianceRegistry is Proxied {
     // FROM ALLIANCE
     // -----------------------------------------------------------------------------------------------------
 
-    function addPlayerToAlliance(address player, uint32 nonce, bytes calldata signature) external {
+    function addPlayerToAlliance(
+        address player,
+        uint32 nonce,
+        bytes calldata signature
+    ) external {
         _addPlayerToAlliance(player, nonce, signature);
     }
 
@@ -200,9 +232,15 @@ contract AllianceRegistry is Proxied {
         bytes signature;
     }
 
-    function addMultiplePlayersToAlliance(PlayerSubmission[] calldata playerSubmissions) external {
+    function addMultiplePlayersToAlliance(
+        PlayerSubmission[] calldata playerSubmissions
+    ) external {
         for (uint256 i = 0; i < playerSubmissions.length; i++) {
-            _addPlayerToAlliance(playerSubmissions[i].addr, playerSubmissions[i].nonce, playerSubmissions[i].signature);
+            _addPlayerToAlliance(
+                playerSubmissions[i].addr,
+                playerSubmissions[i].nonce,
+                playerSubmissions[i].signature
+            );
         }
     }
 
@@ -214,7 +252,11 @@ contract AllianceRegistry is Proxied {
     // INTERNAL
     // -----------------------------------------------------------------------------------------------------
 
-    function _addPlayerToAlliance(address player, uint32 nonce, bytes calldata signature) internal {
+    function _addPlayerToAlliance(
+        address player,
+        uint32 nonce,
+        bytes calldata signature
+    ) internal {
         IAlliance alliance = IAlliance(msg.sender);
 
         Alliances storage alliances = _alliances[player];
@@ -232,7 +274,10 @@ contract AllianceRegistry is Proxied {
             slot++;
         }
         require(alliances.alliance3.alliance != alliance, "ALREADY_JOINED");
-        require(address(alliances.alliance3.alliance) == address(0), "MAX_NUM_ALLIANCES_REACHED");
+        require(
+            address(alliances.alliance3.alliance) == address(0),
+            "MAX_NUM_ALLIANCES_REACHED"
+        );
 
         uint256 currentNonce = _allianceNonces[player][alliance];
         require(currentNonce == nonce, "INVALID_NONCE");
@@ -277,21 +322,41 @@ contract AllianceRegistry is Proxied {
 
         emit AllianceLink(alliance, player, true);
 
-        _checkERC1155AndCallSafeTransfer(msg.sender, address(0), player, uint256(uint160(address(alliance))), 1);
-        emit TransferSingle(msg.sender, address(0), player, uint256(uint160(address(alliance))), 1);
+        _checkERC1155AndCallSafeTransfer(
+            msg.sender,
+            address(0),
+            player,
+            uint256(uint160(address(alliance))),
+            1
+        );
+        emit TransferSingle(
+            msg.sender,
+            address(0),
+            player,
+            uint256(uint160(address(alliance))),
+            1
+        );
     }
 
     bytes internal constant hexAlphabet = "0123456789abcdef";
     bytes internal constant decimalAlphabet = "0123456789";
 
-    function _writeUintAsHex(bytes memory data, uint256 endPos, uint256 num) internal pure {
+    function _writeUintAsHex(
+        bytes memory data,
+        uint256 endPos,
+        uint256 num
+    ) internal pure {
         while (num != 0) {
             data[endPos--] = bytes1(hexAlphabet[num % 16]);
             num /= 16;
         }
     }
 
-    function _writeUintAsDecimal(bytes memory data, uint256 endPos, uint256 num) internal pure {
+    function _writeUintAsDecimal(
+        bytes memory data,
+        uint256 endPos,
+        uint256 num
+    ) internal pure {
         while (num != 0) {
             data[endPos--] = bytes1(decimalAlphabet[num % 10]);
             num /= 10;
@@ -304,7 +369,10 @@ contract AllianceRegistry is Proxied {
         IAlliance lastSlotAlliance;
         uint96 lastSlotJoinTime;
 
-        require(address(alliances.alliance0.alliance) != address(0), "NOT_PART_OF_ANY_ALLIANCE");
+        require(
+            address(alliances.alliance0.alliance) != address(0),
+            "NOT_PART_OF_ANY_ALLIANCE"
+        );
 
         if (address(alliances.alliance1.alliance) == address(0)) {
             lastSlotAlliance = alliances.alliance0.alliance;
@@ -348,7 +416,13 @@ contract AllianceRegistry is Proxied {
         }
 
         emit AllianceLink(alliance, player, false);
-        emit TransferSingle(msg.sender, player, address(0), uint256(uint160(address(alliance))), 1);
+        emit TransferSingle(
+            msg.sender,
+            player,
+            address(0),
+            uint256(uint160(address(alliance))),
+            1
+        );
     }
 
     function _msgSender() internal view returns (address) {
@@ -359,11 +433,23 @@ contract AllianceRegistry is Proxied {
     // Support For ERC-1155
     // ---------------------------------------------------------------------
 
-    event TransferSingle(address indexed operator, address indexed from, address indexed to, uint256 id, uint256 value);
+    event TransferSingle(
+        address indexed operator,
+        address indexed from,
+        address indexed to,
+        uint256 id,
+        uint256 value
+    );
 
-    function balanceOf(address owner, uint256 id) external view returns (uint256 balance) {
+    function balanceOf(
+        address owner,
+        uint256 id
+    ) external view returns (uint256 balance) {
         require(id == uint160(id), "INVALID_ID");
-        (uint96 joinTime, ) = getAllianceData(owner, IAlliance(address(uint160(id))));
+        (uint96 joinTime, ) = getAllianceData(
+            owner,
+            IAlliance(address(uint160(id)))
+        );
         if (joinTime > 0) {
             return 1;
         } else {
@@ -378,7 +464,10 @@ contract AllianceRegistry is Proxied {
         balances = new uint256[](owners.length);
         for (uint256 i = 0; i < owners.length; i++) {
             require(ids[i] == uint160(ids[i]), "INVALID_ID");
-            (uint96 joinTime, ) = getAllianceData(owners[i], IAlliance(address(uint160(ids[i]))));
+            (uint96 joinTime, ) = getAllianceData(
+                owners[i],
+                IAlliance(address(uint160(ids[i])))
+            );
             if (joinTime > 0) {
                 balances[i] = 1;
             } else {
@@ -391,7 +480,9 @@ contract AllianceRegistry is Proxied {
         return false;
     }
 
-    function supportsInterface(bytes4 interfaceID) external pure returns (bool) {
+    function supportsInterface(
+        bytes4 interfaceID
+    ) external pure returns (bool) {
         return interfaceID == 0xd9b67a26 || interfaceID == 0x01ffc9a7;
     }
 
@@ -406,7 +497,14 @@ contract AllianceRegistry is Proxied {
             return true;
         }
 
-        return ERC1155TokenReceiver(to).onERC1155Received(operator, from, id, value, "") == 0xf23a6e61;
+        return
+            ERC1155TokenReceiver(to).onERC1155Received(
+                operator,
+                from,
+                id,
+                value,
+                ""
+            ) == 0xf23a6e61;
     }
 }
 

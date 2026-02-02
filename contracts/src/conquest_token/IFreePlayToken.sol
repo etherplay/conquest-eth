@@ -6,7 +6,10 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 interface IFreePlayToken is IERC20 {
     function mintViaNativeToken(address to, uint256 amount) external payable;
 
-    function mintViaNativeTokenPlusSendExtraNativeTokens(address payable to, uint256 amount) external payable;
+    function mintViaNativeTokenPlusSendExtraNativeTokens(
+        address payable to,
+        uint256 amount
+    ) external payable;
 
     function mintMultipleViaNativeTokenPlusSendExtraNativeTokens(
         address payable[] calldata tos,
@@ -14,17 +17,9 @@ interface IFreePlayToken is IERC20 {
         uint256[] calldata nativeTokenAmounts
     ) external payable;
 
-    function mint(
-        address from,
-        address to,
-        uint256 amount
-    ) external;
+    function mint(address from, address to, uint256 amount) external;
 
-    function burn(
-        address from,
-        address to,
-        uint256 amount
-    ) external;
+    function burn(address from, address to, uint256 amount) external;
 
     struct BurnFrom {
         address from;

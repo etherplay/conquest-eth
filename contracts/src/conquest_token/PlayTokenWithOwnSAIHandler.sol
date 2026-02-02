@@ -11,13 +11,21 @@ import "./SDAIHandler.sol";
 // TODO remove
 import "hardhat/console.sol";
 
-contract PlayTokenWithOwnSAIHandler is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
+contract PlayTokenWithOwnSAIHandler is
+    UsingERC20Base,
+    WithPermitAndFixedDomain,
+    Proxied
+{
     uint256 internal constant DECIMALS_18 = 1000000000000000000;
     uint256 public immutable numTokensPerNativeTokenAt18Decimals;
 
     SDAIHandler public sdaiHandler;
 
-    constructor(uint256 _numTokensPerNativeTokenAt18Decimals, WXDAI _wxdai, SDAI _sdai) WithPermitAndFixedDomain("1") {
+    constructor(
+        uint256 _numTokensPerNativeTokenAt18Decimals,
+        WXDAI _wxdai,
+        SDAI _sdai
+    ) WithPermitAndFixedDomain("1") {
         numTokensPerNativeTokenAt18Decimals = _numTokensPerNativeTokenAt18Decimals;
         _postUpgrade(_numTokensPerNativeTokenAt18Decimals, _wxdai, _sdai);
     }
@@ -46,7 +54,11 @@ contract PlayTokenWithOwnSAIHandler is UsingERC20Base, WithPermitAndFixedDomain,
 
     function mint(address to, uint256 amount) external payable {
         uint256 xdaiAmount = msg.value;
-        require((xdaiAmount * numTokensPerNativeTokenAt18Decimals) / DECIMALS_18 == amount, "INVALID_AMOUNT");
+        require(
+            (xdaiAmount * numTokensPerNativeTokenAt18Decimals) / DECIMALS_18 ==
+                amount,
+            "INVALID_AMOUNT"
+        );
 
         if (address(sdaiHandler) != address(0)) {
             sdaiHandler.deposit{value: xdaiAmount}();
@@ -57,19 +69,23 @@ contract PlayTokenWithOwnSAIHandler is UsingERC20Base, WithPermitAndFixedDomain,
 
     function burn(address payable to, uint256 amount) external {
         _burnFrom(msg.sender, amount);
-        uint256 xDaiAmount = (amount * DECIMALS_18) / numTokensPerNativeTokenAt18Decimals;
+        uint256 xDaiAmount = (amount * DECIMALS_18) /
+            numTokensPerNativeTokenAt18Decimals;
 
         if (address(sdaiHandler) != address(0)) {
             sdaiHandler.withdraw(to, amount);
         } else {
-            to.transfer((amount * DECIMALS_18) / numTokensPerNativeTokenAt18Decimals);
+            to.transfer(
+                (amount * DECIMALS_18) / numTokensPerNativeTokenAt18Decimals
+            );
         }
     }
 
     function redeemInterest(address payable to) external returns (uint256) {
         // TODO only admin
         if (address(sdaiHandler) != address(0)) {
-            uint256 expectedTotalAmount = (_totalSupply * DECIMALS_18) / numTokensPerNativeTokenAt18Decimals;
+            uint256 expectedTotalAmount = (_totalSupply * DECIMALS_18) /
+                numTokensPerNativeTokenAt18Decimals;
             // TODO remove
             console.log("expectedTotalAmount");
             console.log(expectedTotalAmount);

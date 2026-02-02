@@ -62,7 +62,8 @@ contract RewardsGenerator is IERC20, Proxied, IOnStakeChange {
     ) {
         reward = rewardAddress;
         REWARD_RATE_millionth = config.rewardRateMillionth;
-        FIXED_REWARD_RATE_thousands_millionth = config.fixedRewardRateThousandsMillionth;
+        FIXED_REWARD_RATE_thousands_millionth = config
+            .fixedRewardRateThousandsMillionth;
 
         _postUpgrade(rewardAddress, config, initialGames, initialAccounts);
     }
@@ -118,18 +119,25 @@ contract RewardsGenerator is IERC20, Proxied, IOnStakeChange {
             return;
         }
 
-        (uint256 totalPointsSoFar, uint256 accountPointsSoFar) = _update(account);
+        (uint256 totalPointsSoFar, uint256 accountPointsSoFar) = _update(
+            account
+        );
 
         unchecked {
             // update total points and the account's point, their reward will be counted on next interaction.
             _global.totalPoints = uint112(totalPointsSoFar + amount);
-            _sharedRateRewardPerAccount[account].points = uint112(accountPointsSoFar + amount);
+            _sharedRateRewardPerAccount[account].points = uint112(
+                accountPointsSoFar + amount
+            );
         }
         emit Transfer(address(0), account, amount);
     }
 
     /// @inheritdoc IOnStakeChange
-    function remove(address account, uint256 amount) external override onlyGames {
+    function remove(
+        address account,
+        uint256 amount
+    ) external override onlyGames {
         _remove(account, amount);
     }
 
@@ -139,18 +147,26 @@ contract RewardsGenerator is IERC20, Proxied, IOnStakeChange {
         }
 
         // update the amount generated, store it in
-        (uint256 totalPointsSoFar, uint256 accountPointsSoFar) = _update(account);
+        (uint256 totalPointsSoFar, uint256 accountPointsSoFar) = _update(
+            account
+        );
 
         unchecked {
             // update total points and the account's point, their reward will be counted on next interaction.
             _global.totalPoints = uint112(totalPointsSoFar - amount);
-            _sharedRateRewardPerAccount[account].points = uint112(accountPointsSoFar - amount);
+            _sharedRateRewardPerAccount[account].points = uint112(
+                accountPointsSoFar - amount
+            );
         }
         emit Transfer(account, address(0), amount);
     }
 
     /// @inheritdoc IOnStakeChange
-    function move(address from, address to, uint256 amount) external override onlyGames {
+    function move(
+        address from,
+        address to,
+        uint256 amount
+    ) external override onlyGames {
         _remove(from, amount);
         _add(to, amount);
     }
@@ -163,7 +179,10 @@ contract RewardsGenerator is IERC20, Proxied, IOnStakeChange {
         return _sharedRateRewardPerAccount[owner].points;
     }
 
-    function allowance(address, address) external pure override returns (uint256) {
+    function allowance(
+        address,
+        address
+    ) external pure override returns (uint256) {
         return 0;
     }
 
@@ -199,7 +218,8 @@ contract RewardsGenerator is IERC20, Proxied, IOnStakeChange {
     /// @notice claim the rewards earned so far in the shared pool
     function claimSharedPoolRewards(address to) external {
         address account = msg.sender;
-        uint256 accountPointsSoFar = _sharedRateRewardPerAccount[account].points;
+        uint256 accountPointsSoFar = _sharedRateRewardPerAccount[account]
+            .points;
 
         (, uint256 totalRewardPerPoint) = _updateGlobal();
         uint256 amount = _computeRewardsEarned(
@@ -208,7 +228,8 @@ contract RewardsGenerator is IERC20, Proxied, IOnStakeChange {
             totalRewardPerPoint,
             _sharedRateRewardPerAccount[account].rewardsToWithdraw
         );
-        _sharedRateRewardPerAccount[account].totalRewardPerPointAccounted = uint104(totalRewardPerPoint);
+        _sharedRateRewardPerAccount[account]
+            .totalRewardPerPointAccounted = uint104(totalRewardPerPoint);
 
         if (amount > 0) {
             _sharedRateRewardPerAccount[account].rewardsToWithdraw = 0;
@@ -221,7 +242,9 @@ contract RewardsGenerator is IERC20, Proxied, IOnStakeChange {
         address account = msg.sender;
         uint256 amount = earnedFromFixedRate(account);
         if (amount > 0) {
-            _fixedRateRewardPerAccount[account].lastTime = uint40(block.timestamp);
+            _fixedRateRewardPerAccount[account].lastTime = uint40(
+                block.timestamp
+            );
             _fixedRateRewardPerAccount[account].toWithdraw = 0;
             reward.reward(to, amount);
         }
@@ -232,7 +255,11 @@ contract RewardsGenerator is IERC20, Proxied, IOnStakeChange {
     // ---------------------------------------------------------------------------------------------------------------
 
     /// @notice The amount of reward each point has earned so far
-    function getTotalRewardPerPointWithPrecision24() external view returns (uint256) {
+    function getTotalRewardPerPointWithPrecision24()
+        external
+        view
+        returns (uint256)
+    {
         return
             _global.totalRewardPerPointAtLastUpdate +
             _computeExtraTotalRewardPerPointSinceLastTime(
@@ -243,10 +270,13 @@ contract RewardsGenerator is IERC20, Proxied, IOnStakeChange {
     }
 
     /// @notice The amount of reward an account has accrued so far. Does not include already withdrawn rewards.
-    function earnedFromPoolRate(address account) external view returns (uint256) {
+    function earnedFromPoolRate(
+        address account
+    ) external view returns (uint256) {
         return
             _computeRewardsEarned(
-                _sharedRateRewardPerAccount[account].totalRewardPerPointAccounted,
+                _sharedRateRewardPerAccount[account]
+                    .totalRewardPerPointAccounted,
                 _sharedRateRewardPerAccount[account].points,
                 _global.totalRewardPerPointAtLastUpdate +
                     _computeExtraTotalRewardPerPointSinceLastTime(
@@ -259,7 +289,9 @@ contract RewardsGenerator is IERC20, Proxied, IOnStakeChange {
     }
 
     /// @notice The amount of reward an account has accrued so far. Does not include already withdrawn rewards.
-    function earnedFromFixedRate(address account) public view returns (uint256) {
+    function earnedFromFixedRate(
+        address account
+    ) public view returns (uint256) {
         uint256 lastTime = _fixedRateRewardPerAccount[account].lastTime;
         if (lastTime < 1739550865) {
             lastTime = 1739550865;
@@ -282,7 +314,9 @@ contract RewardsGenerator is IERC20, Proxied, IOnStakeChange {
     ) internal pure returns (uint256) {
         return
             accountRewardsSoFar +
-            (((accountPoints * (currentTotalRewardPerPoint - totalRewardPerPointAccountedSoFar)) *
+            (((accountPoints *
+                (currentTotalRewardPerPoint -
+                    totalRewardPerPointAccountedSoFar)) *
                 DECIMALS_18_MILLIONTH) / PRECISION);
     }
 
@@ -294,21 +328,33 @@ contract RewardsGenerator is IERC20, Proxied, IOnStakeChange {
         if (totalPoints == 0) {
             return 0;
         }
-        return ((block.timestamp - lastUpdateTime) * rewardRateMillionth * PRECISION) / totalPoints;
+        return
+            ((block.timestamp - lastUpdateTime) *
+                rewardRateMillionth *
+                PRECISION) / totalPoints;
     }
 
-    function _updateGlobal() internal returns (uint256 totalPointsSoFar, uint256 totalRewardPerPointAllocatedSoFar) {
+    function _updateGlobal()
+        internal
+        returns (
+            uint256 totalPointsSoFar,
+            uint256 totalRewardPerPointAllocatedSoFar
+        )
+    {
         totalPointsSoFar = _global.totalPoints;
 
         uint256 extraTotalRewardPerPoint = _computeExtraTotalRewardPerPointSinceLastTime(
-            totalPointsSoFar,
-            REWARD_RATE_millionth,
-            _global.lastUpdateTime
+                totalPointsSoFar,
+                REWARD_RATE_millionth,
+                _global.lastUpdateTime
+            );
+
+        totalRewardPerPointAllocatedSoFar =
+            _global.totalRewardPerPointAtLastUpdate + extraTotalRewardPerPoint;
+
+        _global.totalRewardPerPointAtLastUpdate = uint104(
+            totalRewardPerPointAllocatedSoFar
         );
-
-        totalRewardPerPointAllocatedSoFar = _global.totalRewardPerPointAtLastUpdate + extraTotalRewardPerPoint;
-
-        _global.totalRewardPerPointAtLastUpdate = uint104(totalRewardPerPointAllocatedSoFar);
         _global.lastUpdateTime = uint40(block.timestamp);
     }
 
@@ -322,14 +368,18 @@ contract RewardsGenerator is IERC20, Proxied, IOnStakeChange {
         _sharedRateRewardPerAccount[account].rewardsToWithdraw = uint112(
             _computeRewardsEarned(
                 // last checkpoint : when was the account last updated
-                _sharedRateRewardPerAccount[account].totalRewardPerPointAccounted,
+                _sharedRateRewardPerAccount[account]
+                    .totalRewardPerPointAccounted,
                 accountPointsSoFar,
                 totalRewardPerPointAllocatedSoFar,
                 // rewards already registered
                 _sharedRateRewardPerAccount[account].rewardsToWithdraw
             )
         );
-        _sharedRateRewardPerAccount[account].totalRewardPerPointAccounted = uint104(totalRewardPerPointAllocatedSoFar);
+        _sharedRateRewardPerAccount[account]
+            .totalRewardPerPointAccounted = uint104(
+            totalRewardPerPointAllocatedSoFar
+        );
 
         uint256 lastTime = _fixedRateRewardPerAccount[account].lastTime;
         if (lastTime < 1739550865) {
@@ -343,8 +393,14 @@ contract RewardsGenerator is IERC20, Proxied, IOnStakeChange {
     }
 
     function _update(address account) internal returns (uint256, uint256) {
-        (uint256 totalPointsSoFar, uint256 totalRewardPerPointAllocatedSoFar) = _updateGlobal();
-        uint256 accountPointsSoFar = _updateAccount(account, totalRewardPerPointAllocatedSoFar);
+        (
+            uint256 totalPointsSoFar,
+            uint256 totalRewardPerPointAllocatedSoFar
+        ) = _updateGlobal();
+        uint256 accountPointsSoFar = _updateAccount(
+            account,
+            totalRewardPerPointAllocatedSoFar
+        );
         return (totalPointsSoFar, accountPointsSoFar);
     }
 

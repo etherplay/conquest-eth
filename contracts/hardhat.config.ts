@@ -81,20 +81,22 @@ const config: HardhatUserConfig = {
 						accounts: {
 							mnemonic: process.env.MNEMONIC || undefined,
 						},
-					}
+					},
 				},
 			),
 		),
 	),
 	paths: {
-  		sources: ['src'],
- 	},
- 	generateTypedArtifacts: {
-  		destinations: [{
-			folder: './generated',
-			mode: 'typescript',
-		}],
-	}
+		sources: ['src'],
+	},
+	generateTypedArtifacts: {
+		destinations: [
+			{
+				folder: './generated',
+				mode: 'typescript',
+			},
+		],
+	},
 };
 
 export default config;
