@@ -3,7 +3,7 @@ pragma solidity 0.8.9;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import "hardhat-deploy/solc_0.8/proxy/Proxied.sol";
+import "@rocketh/proxy/solc_0_8/ERC1967/Proxied.sol";
 import "../outerspace/interfaces/IOnStakeChange.sol";
 import "./IReward.sol";
 

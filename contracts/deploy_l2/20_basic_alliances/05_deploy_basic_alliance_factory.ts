@@ -4,7 +4,7 @@ export default deployScript(
   async (env) => {
     const {deployer} = env.namedAccounts;
 
-    const networkName = await env.getNetworkName();
+    const networkName = await env.name;
 
     // TODO use network tags ?
     const localTesting = networkName === 'hardhat' || networkName === 'localhost';

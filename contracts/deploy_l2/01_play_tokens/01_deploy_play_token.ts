@@ -1,16 +1,13 @@
 import {deployScript, artifacts} from '../../rocketh/deploy.js';
-import {formatEther, parseEther} from 'viem';
-import {increaseTime, zeroAddress} from '../../test/test-utils.js';
-import {PlanetInfo, SpaceInfo, xyToLocation} from 'conquest-eth-common';
-import {BigNumber} from 'ethers';
-import {defaultAbiCoder} from '@ethersproject/abi';
+import {formatEther, parseEther, zeroAddress} from 'viem';
+
 
 export default deployScript(
   async (env) => {
     const {deployer, playerAccount3, playerAccount4} = env.namedAccounts;
 
-    const chainId = await env.getChainId();
-    const networkName = await env.getNetworkName();
+    const chainId = await env.viem.publicClient.getChainId();
+    const networkName = await env.name;
   // TODO use network tags ?
   const localTesting = networkName === 'hardhat' || networkName === 'localhost'; // chainId === '1337' || chainId === '31337';
 
@@ -30,7 +27,7 @@ export default deployScript(
 
   const PlayTokenBefore = await env.getOrNull('PlayToken');
   if (PlayTokenBefore) {
-    const PlayTokenNativeBalamce = formatEther(await env.publicClient.getBalance({address: PlayTokenBefore.address as `0x${string}`}));
+    const PlayTokenNativeBalamce = formatEther(await env.viem.publicClient.getBalance({address: PlayTokenBefore.address as `0x${string}`}));
     console.log({PlayTokenNativeBalamce});
   }
 
@@ -44,14 +41,13 @@ export default deployScript(
     {
       proxyDisabled: false,
       execute: 'postUpgrade',
-    },
-    linkedData: {
-      numTokensPerNativeTokenAt18Decimals: numTokensPerNativeTokenAt18Decimals.toString(),
-    },
-  });
+      linkedData: {
+        numTokensPerNativeTokenAt18Decimals: numTokensPerNativeTokenAt18Decimals.toString(),
+      }
+    });
 
   {
-    const PlayTokenNativeBalamce = formatEther(await env.publicClient.getBalance({address: PlayToken.address as `0x${string}`}));
+    const PlayTokenNativeBalamce = formatEther(await env.viem.publicClient.getBalance({address: PlayToken.address as `0x${string}`}));
     console.log({PlayTokenNativeBalamce});
   }
 

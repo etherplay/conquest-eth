@@ -2,7 +2,7 @@
 
 pragma solidity 0.8.9;
 
-import "hardhat-deploy/solc_0.8/proxy/Proxied.sol";
+import "@rocketh/proxy/solc_0_8/ERC1967/Proxied.sol";
 import "../interfaces/IAlliance.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
@@ -29,15 +29,10 @@ contract AllianceRegistry is Proxied {
 
     event AllianceLink(IAlliance indexed alliance, address indexed player, bool joining);
 
-    function getAllianceDataAtSlot(address player, uint8 slot)
-        external
-        view
-        returns (
-            IAlliance alliance,
-            uint96 joinTime,
-            uint256 nonce
-        )
-    {
+    function getAllianceDataAtSlot(
+        address player,
+        uint8 slot
+    ) external view returns (IAlliance alliance, uint96 joinTime, uint256 nonce) {
         Alliances storage alliances = _alliances[player];
         if (slot == 0) {
             alliance = alliances.alliance0.alliance;
@@ -195,11 +190,7 @@ contract AllianceRegistry is Proxied {
     // FROM ALLIANCE
     // -----------------------------------------------------------------------------------------------------
 
-    function addPlayerToAlliance(
-        address player,
-        uint32 nonce,
-        bytes calldata signature
-    ) external {
+    function addPlayerToAlliance(address player, uint32 nonce, bytes calldata signature) external {
         _addPlayerToAlliance(player, nonce, signature);
     }
 
@@ -223,11 +214,7 @@ contract AllianceRegistry is Proxied {
     // INTERNAL
     // -----------------------------------------------------------------------------------------------------
 
-    function _addPlayerToAlliance(
-        address player,
-        uint32 nonce,
-        bytes calldata signature
-    ) internal {
+    function _addPlayerToAlliance(address player, uint32 nonce, bytes calldata signature) internal {
         IAlliance alliance = IAlliance(msg.sender);
 
         Alliances storage alliances = _alliances[player];
@@ -297,22 +284,14 @@ contract AllianceRegistry is Proxied {
     bytes internal constant hexAlphabet = "0123456789abcdef";
     bytes internal constant decimalAlphabet = "0123456789";
 
-    function _writeUintAsHex(
-        bytes memory data,
-        uint256 endPos,
-        uint256 num
-    ) internal pure {
+    function _writeUintAsHex(bytes memory data, uint256 endPos, uint256 num) internal pure {
         while (num != 0) {
             data[endPos--] = bytes1(hexAlphabet[num % 16]);
             num /= 16;
         }
     }
 
-    function _writeUintAsDecimal(
-        bytes memory data,
-        uint256 endPos,
-        uint256 num
-    ) internal pure {
+    function _writeUintAsDecimal(bytes memory data, uint256 endPos, uint256 num) internal pure {
         while (num != 0) {
             data[endPos--] = bytes1(decimalAlphabet[num % 10]);
             num /= 10;
@@ -392,11 +371,10 @@ contract AllianceRegistry is Proxied {
         }
     }
 
-    function balanceOfBatch(address[] calldata owners, uint256[] calldata ids)
-        external
-        view
-        returns (uint256[] memory balances)
-    {
+    function balanceOfBatch(
+        address[] calldata owners,
+        uint256[] calldata ids
+    ) external view returns (uint256[] memory balances) {
         balances = new uint256[](owners.length);
         for (uint256 i = 0; i < owners.length; i++) {
             require(ids[i] == uint160(ids[i]), "INVALID_ID");

@@ -1,6 +1,5 @@
-import {deployScript} from '../../rocketh/deploy.js';
-import {ethers, network} from 'hardhat';
-import {xyToLocation} from 'conquest-eth-common';
+import { Abi_IOuterSpace } from '../../generated/abis/IOuterSpace.js';
+import {deployScript, artifacts} from '../../rocketh/deploy.js';
 
 function hours(num: number): number {
   return num * 3600;
@@ -10,15 +9,15 @@ export default deployScript(
   async (env) => {
     const {deployer} = env.namedAccounts;
 
-    const networkName = await env.getNetworkName();
+    const networkName = await env.name;
 
     const PlayToken = env.get('PlayToken');
     const FreePlayToken = env.get('FreePlayToken');
 
     let deploymentTimestamp = Math.floor(Date.now() / 1000);
-    const outerspaceDeployment = await env.getOrNull('OuterSpace');
+    const outerspaceDeployment = env.getOrNull<Abi_IOuterSpace>('OuterSpace');
     if (outerspaceDeployment) {
-      const previousValue = outerspaceDeployment.linkedData.deploymentTimestamp;
+      const previousValue = Number(outerspaceDeployment.linkedData?.deploymentTimestamp);
       if (!previousValue) {
         console.error(`was deployed without deploymentTimestamp`);
       } else {
@@ -30,7 +29,7 @@ export default deployScript(
 
     let chainGenesisHash = '';
     if (networkName === 'hardhat' || networkName === 'localhost') {
-      const earliestBlock = await ethers.provider.getBlock('earliest');
+      const earliestBlock = await env.viem.publicClient.getBlock({blockTag: 'earliest'});
       chainGenesisHash = earliestBlock.hash;
     }
     let genesisHash = '0xcce77b122615b6093c0df0c7392bec6f537eb7a0595c337a573ee6d96d1107c8';
@@ -184,10 +183,72 @@ export default deployScript(
       infinityStartTime,
     });
 
-    // Diamond deployment needs to use the rocketh diamond deployment pattern
-    // This is a placeholder - the actual diamond deployment logic needs to be adapted
-    // For now, we'll skip the complex diamond deployment and note it needs migration
-    console.log('Diamond deployment for OuterSpace needs manual migration to v2 diamond pattern');
+    await env.diamond('OuterSpace', {
+    account: deployer,
+  } , {
+     linkedData: {
+      genesisHash,
+      resolveWindow,
+      timePerDistance,
+      exitDuration,
+      acquireNumSpaceships,
+      productionSpeedUp,
+      chainGenesisHash,
+      frontrunningDelay,
+      productionCapAsDuration,
+      upkeepProductionDecreaseRatePer10000th,
+      fleetSizeFactor6,
+      initialSpaceExpansion,
+      expansionDelta,
+      giftTaxPer10000,
+      stakeRange,
+      stakeMultiplier10000th,
+      bootstrapSessionEndTime,
+      infinityStartTime,
+      deploymentTimestamp,
+    },
+    facets: [
+      {artifact: artifacts.OuterSpaceInitializationFacet, deterministic: true},
+      {artifact: artifacts.OuterSpaceAdminFacet, deterministic: true},
+      {artifact: artifacts.OuterSpaceGenericReadFacet, deterministic: true},
+      {artifact: artifacts.OuterSpaceFleetsReadFacet, deterministic: true},
+      {artifact: artifacts.OuterSpaceFleetsCommitFacet, deterministic: true},
+      {artifact: artifacts.OuterSpaceFleetsRevealFacet, deterministic: true},
+      {artifact: artifacts.OuterSpacePlanetsFacet, deterministic: true},
+      {artifact: artifacts.OuterSpaceInformationFacet, deterministic: true},
+      {artifact: artifacts.OuterSpaceStakingFacet, deterministic: true},
+      {artifact: artifacts.OuterSpaceRewardFacet, deterministic: true},
+    ],
+    facetsArgs: [
+      {
+        stakingToken: PlayToken.address,
+        freeStakingToken: FreePlayToken.address,
+        allianceRegistry: allianceRegistry.address,
+        genesis: genesisHash,
+        resolveWindow,
+        timePerDistance,
+        exitDuration,
+        acquireNumSpaceships,
+        productionSpeedUp,
+        frontrunningDelay,
+        productionCapAsDuration,
+        upkeepProductionDecreaseRatePer10000th,
+        fleetSizeFactor6,
+        initialSpaceExpansion,
+        expansionDelta,
+        giftTaxPer10000,
+        stakeRange,
+        stakeMultiplier10000th,
+        bootstrapSessionEndTime,
+        infinityStartTime,
+      },
+    ],
+    execute: {
+      type: 'facet',
+      functionName: 'init',
+      args: [],
+    },
+  });
   },
   {
     tags: ['OuterSpace', 'OuterSpace_deploy'],

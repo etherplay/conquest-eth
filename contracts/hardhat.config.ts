@@ -12,28 +12,6 @@ import {
 	addNetworksFromKnownList,
 } from 'hardhat-deploy/helpers';
 
-import 'hardhat-gas-reporter';
-import 'hardhat-contract-sizer';
-import './utils/metadata';
-const l1_deployments: string[] = [];
-const l1_deployments_dev: string[] = [];
-const l2_deployments: string[] = [
-  // 'deploy_l2/00_block_upgrades',
-  'deploy_l2/01_play_tokens',
-  'deploy_l2/02_alliance_registry',
-  'deploy_l2/03_outerspace',
-];
-const l2_deployments_dev: string[] = [
-  // 'deploy_l2/00_block_upgrades',
-  'deploy_l2/04_setup',
-  'deploy_l2/10_agent_service',
-  'deploy_l2/20_basic_alliances',
-  'deploy_l2/30_plugins',
-];
-
-const hardhatNetworkDeploymentFolders = l1_deployments.concat(l1_deployments_dev, l2_deployments, l2_deployments_dev);
-// console.log({hardhatNetworkDeploymentFolders});
-
 const config: HardhatUserConfig = {
 	plugins: [
 		HardhatNodeTestRunner,
@@ -103,34 +81,20 @@ const config: HardhatUserConfig = {
 						accounts: {
 							mnemonic: process.env.MNEMONIC || undefined,
 						},
-					},
-					localhost: {
-						url: 'http://127.0.0.1:8545',
-					},
+					}
 				},
 			),
 		),
 	),
-  }),
- paths: {
-  sources: ['src'],
-  deploy: ['deploy_l1'],
- },
- generateTypedArtifacts: {
-  destinations: [
-  	{
-  		folder: './generated',
-  		mode: 'typescript',
-  	},
-  ],
- },
- gasReporter: {
-  currency: 'USD',
-  gasPrice: 100,
-  enabled: process.env.REPORT_GAS ? true : false,
-  coinmarketcap: process.env.COINMARKETCAP_API_KEY,
-  maxMethodDiff: 10,
- },
+	paths: {
+  		sources: ['src'],
+ 	},
+ 	generateTypedArtifacts: {
+  		destinations: [{
+			folder: './generated',
+			mode: 'typescript',
+		}],
+	}
 };
 
 export default config;

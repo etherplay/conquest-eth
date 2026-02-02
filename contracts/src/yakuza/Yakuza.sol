@@ -5,7 +5,7 @@ import "../conquest_token/RewardsGenerator.sol";
 import "../conquest_token/PlayToken.sol";
 import "../outerspace/interfaces/IOuterSpace.sol";
 import "../outerspace/types/ImportingOuterSpaceTypes.sol";
-import "hardhat-deploy/solc_0.8/proxy/Proxied.sol";
+import "@rocketh/proxy/solc_0_8/ERC1967/Proxied.sol";
 import "../base/erc20/UsingERC20Base.sol";
 import "../base/erc20/WithPermitAndFixedDomain.sol";
 import "../libraries/Extraction.sol";

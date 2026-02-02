@@ -7,7 +7,6 @@ export default deployScript(
     await env.deploy('PaymentGateway', {
       account: deployer as `0x${string}`,
       artifact: artifacts.PaymentGateway,
-      contractName: 'src/agent/PaymentGateway.sol:PaymentGateway',
       args: [deployer], // TODO
     });
   },

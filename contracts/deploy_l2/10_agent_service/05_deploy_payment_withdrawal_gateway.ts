@@ -8,8 +8,8 @@ export default deployScript(
     const paymentGateway = env.get('PaymentGateway');
 
     const withdrawalSigner = agentService || zeroAddress;
-    const expiryInSeconds = 15 * 60;
-    const extraIntervalInSeconds = 15 * 60;
+    const expiryInSeconds = 15n * 60n;
+    const extraIntervalInSeconds = 15n * 60n;
 
     const linkedData = {
       expiryInSeconds,

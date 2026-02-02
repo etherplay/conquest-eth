@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "../base/erc20/UsingERC20Base.sol";
 import "../base/erc20/WithPermitAndFixedDomain.sol";
-import "hardhat-deploy/solc_0.8/proxy/Proxied.sol";
+import "@rocketh/proxy/solc_0_8/ERC1967/Proxied.sol";
 import "./PlayToken.sol";
 
 contract FreePlayToken is UsingERC20Base, IFreePlayToken, WithPermitAndFixedDomain, Proxied {

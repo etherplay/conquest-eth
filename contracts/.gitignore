@@ -1,29 +1,11 @@
 cache/
 artifacts/
-export/
-
-coverage*
-typechain/
-
-.vscode/*
-!.vscode/settings.json.default
-!.vscode/launch.json.default
-!.vscode/extensions.json.default
 
 node_modules/
 .env
 
-.yalc
-yalc.lock
+generated/
 
-contractsInfo.json
 deployments/hardhat
 deployments/localhost
-saved-networks/
 
-metadata/
-
-# ignore stats as they are big files
-.player_stats.json
-.stats.json
-.free_token_list.json

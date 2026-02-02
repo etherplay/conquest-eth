@@ -10,6 +10,27 @@ import type {
 // this one provide a protocol supporting private key as account
 import {privateKey} from '@rocketh/signer';
 
+
+const l1_deployments: string[] = [];
+const l1_deployments_dev: string[] = [];
+const l2_deployments: string[] = [
+  // 'deploy_l2/00_block_upgrades',
+  'deploy_l2/01_play_tokens',
+  'deploy_l2/02_alliance_registry',
+  'deploy_l2/03_outerspace',
+];
+const l2_deployments_dev: string[] = [
+  // 'deploy_l2/00_block_upgrades',
+  'deploy_l2/04_setup',
+  'deploy_l2/10_agent_service',
+  'deploy_l2/20_basic_alliances',
+  'deploy_l2/30_plugins',
+];
+
+const deploymentsFolder = l1_deployments.concat(l1_deployments_dev, l2_deployments, l2_deployments_dev);
+// console.log({hardhatNetworkDeploymentFolders});
+
+
 // we define our config and export it as "config"
 export const config = {
 	accounts: {
@@ -19,12 +40,14 @@ export const config = {
 		playerAccount3: '0x283aFaad5c345680144f20F3910EA95e5F0bA932',
 		playerAccount4: '0x7fCe02BB66c0D9396fb9bC60a80d45462E60fdfF',
 		agentService: {
+			default: 1,
 			hardhat: 1,
 			localhost: '0x3bfa2f0888E7d87f9bb044EAE82CEb62290337B4', // see ../agent-service/.env(.default)
 			1337: '0x3bfa2f0888E7d87f9bb044EAE82CEb62290337B4', // see ../agent-service/.env(.default)
 			defcon: '0x52F0a4CdE745D46212Fb1CBBc44721238036030a',
 		},
 		claimKeyDistributor: {
+			default: 0,
 			hardhat: 0,
 			1337: 0,
 			31337: 0,
@@ -32,8 +55,8 @@ export const config = {
 			5: 2,
 			100: 2,
 		},
-		player: process.env.PLAYER,
 	},
+	scripts: deploymentsFolder,
 	data: {},
 	signerProtocols: {
 		privateKey,
@@ -51,6 +74,8 @@ import * as readExecuteExtension from '@rocketh/read-execute';
 import * as deployProxyExtension from '@rocketh/proxy';
 // this one provide a viem handle to clients and contracts
 import * as viemExtension from '@rocketh/viem';
+// this one provide a function to deploy diamond contracts
+import * as diamondExtension from '@rocketh/diamond';
 
 // and export them as a unified object
 const extensions = {
@@ -58,6 +83,7 @@ const extensions = {
 	...readExecuteExtension,
 	...deployProxyExtension,
 	...viemExtension,
+	...diamondExtension
 };
 export {extensions};
 

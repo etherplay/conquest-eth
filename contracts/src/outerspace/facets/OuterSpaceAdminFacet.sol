@@ -2,7 +2,7 @@
 pragma solidity 0.8.9;
 
 import "./OuterSpaceFacetBase.sol";
-import "hardhat-deploy/solc_0.8/diamond/UsingDiamondOwner.sol";
+import "@rocketh/diamond/solc_0_8/UsingDiamondOwner.sol";
 
 contract OuterSpaceAdminFacet is UsingDiamondOwner, OuterSpaceFacetBase {
     // solhint-disable-next-line no-empty-blocks
