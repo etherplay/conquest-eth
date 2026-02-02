@@ -92,9 +92,9 @@ export async function acquire(
 	ConquestToken: any,
 	playerAddress: `0x${string}`,
 	planet: PlanetInfo,
-): Promise<`0x${string}`> {
+) {
 	const amount = BigInt(planet.stats.stake) * 1000000000000000000n;
-	const hash = await env.execute(ConquestToken, {
+	const receipt = await env.execute(ConquestToken, {
 		functionName: 'transferAndCall',
 		args: [
 			OuterSpace.address,
@@ -106,7 +106,7 @@ export async function acquire(
 		],
 		account: playerAddress,
 	});
-	return hash;
+	return receipt;
 }
 
 /**

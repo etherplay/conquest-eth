@@ -1,11 +1,21 @@
 import type {EthereumProvider} from 'hardhat/types/providers';
 import {loadAndExecuteDeploymentsFromFiles} from '../../rocketh/environment.js';
 import {SpaceInfo} from 'conquest-eth-common';
-import {parseEther} from 'viem';
+import {Abi, parseEther} from 'viem';
 
 // Import ABIs
 import type {Abi_PaymentGateway} from '../../generated/abis/PaymentGateway.js';
 import type {Abi_PaymentWithdrawalGateway} from '../../generated/abis/PaymentWithdrawalGateway.js';
+import { Abi_BasicAlliance } from '../../generated/abis/BasicAlliance.js';
+import { Abi_AllianceRegistry } from '../../generated/abis/AllianceRegistry.js';
+import { Abi_BasicSpaceshipMarket } from '../../generated/abis/BasicSpaceshipMarket.js';
+import { Abi_BrainLess } from '../../generated/abis/BrainLess.js';
+import { Abi_ConquestCredits } from '../../generated/abis/ConquestCredits.js';
+import { Abi_FreePlayToken } from '../../generated/abis/FreePlayToken.js';
+import { Abi_FreePlayTokenClaim } from '../../generated/abis/FreePlayTokenClaim.js';
+import { Abi_PlayToken } from '../../generated/abis/PlayToken.js';
+import { Abi_RewardsGenerator } from '../../generated/abis/RewardsGenerator.js';
+import { Abi_Yakuza } from '../../generated/abis/Yakuza.js';
 
 
 
@@ -22,16 +32,16 @@ export function setupFixtures(provider: EthereumProvider) {
 				'PaymentWithdrawalGateway',
 			);
 			const OuterSpace = env.get('OuterSpace');
-			const AllianceRegistry = env.get('AllianceRegistry');
-			const BasicAllianceFactory = env.get('BasicAllianceFactory');
-			const BasicSpaceshipMarket = env.get('BasicSpaceshipMarket');
-			const BrainLess = env.get('BrainLess');
-			const ConquestCredits = env.get('ConquestCredits'); // This is the ConquestToken
-			const FreePlayTokenClaim = env.get('FreePlayTokenClaim');
-			const FreePlayToken = env.get('FreePlayToken');
-			const PlayToken = env.get('PlayToken');
-			const RewardsGenerator = env.get('RewardsGenerator');
-			const Yakuza = env.get('Yakuza');
+			const AllianceRegistry = env.get<Abi_AllianceRegistry>('AllianceRegistry');
+			const BasicAllianceFactory = env.get<Abi_BasicAlliance>('BasicAllianceFactory');
+			const BasicSpaceshipMarket = env.get<Abi_BasicSpaceshipMarket>('BasicSpaceshipMarket');
+			const BrainLess = env.get<Abi_BrainLess>('BrainLess');
+			const ConquestCredits = env.get<Abi_ConquestCredits>('ConquestCredits'); // This is the ConquestToken
+			const FreePlayTokenClaim = env.get<Abi_FreePlayTokenClaim>('FreePlayTokenClaim');
+			const FreePlayToken = env.get<Abi_FreePlayToken>('FreePlayToken');
+			const PlayToken = env.get<Abi_PlayToken>('PlayToken');
+			const RewardsGenerator = env.get<Abi_RewardsGenerator>('RewardsGenerator');
+			const Yakuza = env.get<Abi_Yakuza>('Yakuza');
 
 			// Distribute tokens to players
 			const {claimKeyDistributor} = env.namedAccounts;

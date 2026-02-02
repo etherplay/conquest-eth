@@ -3,23 +3,20 @@ import {describe, it, before} from 'node:test';
 import assert from 'node:assert';
 import {encodeAbiParameters} from 'viem';
 import {network} from 'hardhat';
-import {setupOuterSpaceFixtures} from '../fixtures/setupFixtures.js';
 import {
 	sendInSecret,
 	fetchPlanetState,
 	convertPlanetCallData,
 } from './utils.js';
 
-describe('OuterSpace Basic', function () {
-	let deployAll: any;
-	let networkHelpers: any;
+import { setupFixtures } from '../fixtures/setupFixtures.js';
 
-	before(async function () {
-		const {provider, networkHelpers: nh} = await network.connect();
-		networkHelpers = nh;
-		const fixtures = setupOuterSpaceFixtures(provider);
-		deployAll = fixtures.deployAll;
-	});
+const {provider, networkHelpers} = await network.connect();
+const {deployAll} = setupFixtures(provider);
+
+
+describe('OuterSpace Basic', function () {
+	
 
 	it('user can acquire virgin planet', async function () {
 		const {env, OuterSpace, ConquestCredits, spaceInfo, unnamedAccounts} =
@@ -29,7 +26,7 @@ describe('OuterSpace Basic', function () {
 		const player = unnamedAccounts[0];
 
 		const amount = BigInt(pointer.data.stats.stake) * 1000000000000000000n;
-		const hash = await env.execute(ConquestCredits, {
+		const receipt = await env.execute(ConquestCredits, {
 			functionName: 'transferAndCall',
 			args: [
 				OuterSpace.address,
@@ -41,9 +38,7 @@ describe('OuterSpace Basic', function () {
 			],
 			account: player,
 		});
-		const receipt = await env.viem.publicClient.waitForTransactionReceipt({
-			hash,
-		});
+		
 
 		assert.ok(receipt, 'Transaction receipt should exist');
 	});
@@ -59,7 +54,7 @@ describe('OuterSpace Basic', function () {
 		const amount = BigInt(pointer.data.stats.stake) * 1000000000000000000n;
 
 		// First player acquires planet
-		const hash1 = await env.execute(ConquestCredits, {
+		const receipt1 = await env.execute(ConquestCredits, {
 			functionName: 'transferAndCall',
 			args: [
 				OuterSpace.address,
@@ -71,7 +66,6 @@ describe('OuterSpace Basic', function () {
 			],
 			account: player0,
 		});
-		await env.viem.publicClient.waitForTransactionReceipt({hash: hash1});
 
 		// Second player tries to acquire same planet
 		await assert.rejects(
@@ -108,7 +102,7 @@ describe('OuterSpace Basic', function () {
 		);
 
 		const amount0 = BigInt(planet0.stats.stake) * 1000000000000000000n;
-		const hash0 = await env.execute(ConquestCredits, {
+		const receipt0 = await env.execute(ConquestCredits, {
 			functionName: 'transferAndCall',
 			args: [
 				OuterSpace.address,
@@ -120,10 +114,9 @@ describe('OuterSpace Basic', function () {
 			],
 			account: player0,
 		});
-		await env.viem.publicClient.waitForTransactionReceipt({hash: hash0});
 
 		const amount1 = BigInt(planet1.stats.stake) * 1000000000000000000n;
-		const hash1 = await env.execute(ConquestCredits, {
+		const receipt1 = await env.execute(ConquestCredits, {
 			functionName: 'transferAndCall',
 			args: [
 				OuterSpace.address,
@@ -135,7 +128,6 @@ describe('OuterSpace Basic', function () {
 			],
 			account: player1,
 		});
-		await env.viem.publicClient.waitForTransactionReceipt({hash: hash1});
 
 		planet0 = await fetchPlanetState(env, OuterSpace, planet0);
 		planet1 = await fetchPlanetState(env, OuterSpace, planet1);
@@ -160,7 +152,7 @@ describe('OuterSpace Basic', function () {
 
 		const allianceAddress = '0x0000000000000000000000000000000000000000';
 
-		const hash = await env.execute(OuterSpace, {
+		const receipt = await env.execute(OuterSpace, {
 			functionName: 'resolveFleet',
 			args: [
 				BigInt(from),
@@ -171,9 +163,7 @@ describe('OuterSpace Basic', function () {
 			],
 			account: player1,
 		});
-		const receipt = await env.viem.publicClient.waitForTransactionReceipt({
-			hash,
-		});
+		
 
 		assert.ok(receipt, 'Fleet resolution should succeed');
 	});
@@ -191,7 +181,7 @@ describe('OuterSpace Basic', function () {
 		);
 
 		const amount = BigInt(planet.stats.stake) * 1000000000000000000n;
-		const hash = await env.execute(ConquestCredits, {
+		const receipt = await env.execute(ConquestCredits, {
 			functionName: 'transferAndCall',
 			args: [
 				OuterSpace.address,
@@ -203,7 +193,6 @@ describe('OuterSpace Basic', function () {
 			],
 			account: player,
 		});
-		await env.viem.publicClient.waitForTransactionReceipt({hash});
 
 		planet = await fetchPlanetState(env, OuterSpace, planet);
 

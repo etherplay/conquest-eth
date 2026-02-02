@@ -4,19 +4,15 @@ import assert from 'node:assert';
 import {objMap} from '../test-utils.js';
 import {convertPlanetCallData} from './utils.js';
 import {network} from 'hardhat';
-import {setupOuterSpaceFixtures} from '../fixtures/setupFixtures.js';
 import {fetchPlanetState} from './utils.js';
+import { setupFixtures } from '../fixtures/setupFixtures.js';
+
+const {provider, networkHelpers} = await network.connect();
+const {deployAll} = setupFixtures(provider);
+
 
 describe('JS <-> Solidity equivalence', function () {
-	let deployAll: any;
-	let networkHelpers: any;
-
-	before(async function () {
-		const {provider, networkHelpers: nh} = await network.connect();
-		networkHelpers = nh;
-		const fixtures = setupOuterSpaceFixtures(provider);
-		deployAll = fixtures.deployAll;
-	});
+	
 
 	it('planet stats computed from js equal stats from the contract', async function () {
 		const {env, OuterSpace, spaceInfo} =

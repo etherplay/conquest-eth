@@ -3,18 +3,13 @@ import {describe, it, before} from 'node:test';
 import assert from 'node:assert';
 import {parseEther, encodeAbiParameters, keccak256, toBytes} from 'viem';
 import {network} from 'hardhat';
-import {setupPaymentFixtures} from '../fixtures/setupFixtures.js';
+import { setupFixtures } from '../fixtures/setupFixtures.js';
+
+const {provider, networkHelpers} = await network.connect();
+const {deployAll} = setupFixtures(provider);
 
 describe('PaymentWithdrawalGateway', function () {
-	let deployAll: any;
-	let networkHelpers: any;
-
-	before(async function () {
-		const {provider, networkHelpers: nh} = await network.connect();
-		networkHelpers = nh;
-		const fixtures = setupPaymentFixtures(provider);
-		deployAll = fixtures.deployAll;
-	});
+	
 
 	it('player can withdraw ETH via message and emit the corresponding event', async function () {
 		const {
@@ -33,8 +28,8 @@ describe('PaymentWithdrawalGateway', function () {
 		const maxAmount = parseEther('1');
 
 		// Fund PaymentGateway first
-		await env.execute(PaymentGateway, {
-			functionName: 'fallback',
+		await env.tx({
+			to: PaymentGateway.address,
 			value: maxAmount,
 			account: player,
 		});
@@ -47,22 +42,19 @@ describe('PaymentWithdrawalGateway', function () {
 			[timestamp, player, maxAmount],
 		);
 		const dataHash = keccak256(data);
-		const signature = await env.viem.walletClient.account!.signMessage({
+		const signature = await env.viem.walletClient.signMessage({account: player,
 			message: {raw: toBytes(dataHash)},
 		});
 
 		// Note: We need to use agentService wallet for signing, but env.viem.walletClient
 		// uses the default deployer. For now, let's use the deployer as signer.
 
-		const hash = await env.execute(PaymentWithdrawalGateway, {
+		const receipt = await env.execute(PaymentWithdrawalGateway, {
 			functionName: 'withdraw',
 			args: [player, maxAmount, timestamp, signature, amount],
 			account: player,
 		});
-		const receipt = await env.viem.publicClient.waitForTransactionReceipt({
-			hash,
-		});
-
+		
 		assert.ok(receipt, 'Transaction receipt should exist');
 	});
 
@@ -82,8 +74,8 @@ describe('PaymentWithdrawalGateway', function () {
 		const maxAmount = parseEther('1');
 
 		// Fund PaymentGateway first
-		await env.execute(PaymentGateway, {
-			functionName: 'fallback',
+		await env.tx({
+			to: PaymentGateway.address,
 			value: maxAmount,
 			account: player,
 		});
@@ -96,7 +88,8 @@ describe('PaymentWithdrawalGateway', function () {
 			[timestamp, player, maxAmount],
 		);
 		const dataHash = keccak256(data);
-		const signature = await env.viem.walletClient.account!.signMessage({
+		const signature = await env.viem.walletClient.signMessage({
+			account: player,
 			message: {raw: toBytes(dataHash)},
 		});
 
@@ -128,8 +121,8 @@ describe('PaymentWithdrawalGateway', function () {
 		const maxAmount = parseEther('1');
 
 		// Fund PaymentGateway first
-		await env.execute(PaymentGateway, {
-			functionName: 'fallback',
+		await env.tx({
+			to: PaymentGateway.address,
 			value: maxAmount,
 			account: player,
 		});
@@ -142,7 +135,8 @@ describe('PaymentWithdrawalGateway', function () {
 			[timestamp, player, maxAmount],
 		);
 		const dataHash = keccak256(data);
-		const signature = await env.viem.walletClient.account!.signMessage({
+		const signature = await env.viem.walletClient.signMessage({
+			account: player,
 			message: {raw: toBytes(dataHash)},
 		});
 
@@ -163,18 +157,17 @@ describe('PaymentWithdrawalGateway', function () {
 			[timestamp2, player, maxAmount],
 		);
 		const dataHash2 = keccak256(data2);
-		const signature2 = await env.viem.walletClient.account!.signMessage({
+		const signature2 = await env.viem.walletClient.signMessage({
+			account: player,
 			message: {raw: toBytes(dataHash2)},
 		});
 
-		const hash = await env.execute(PaymentWithdrawalGateway, {
+		const receipt = await env.execute(PaymentWithdrawalGateway, {
 			functionName: 'withdraw',
 			args: [player, maxAmount, timestamp2, signature2, amount],
 			account: player,
 		});
-		const receipt = await env.viem.publicClient.waitForTransactionReceipt({
-			hash,
-		});
+		
 
 		assert.ok(receipt, 'Second withdrawal should succeed past interval');
 	});
@@ -190,8 +183,8 @@ describe('PaymentWithdrawalGateway', function () {
 		const maxAmount = parseEther('1');
 
 		// Fund PaymentGateway first
-		await env.execute(PaymentGateway, {
-			functionName: 'fallback',
+		await env.tx({
+			to: PaymentGateway.address,	
 			value: maxAmount,
 			account: player,
 		});
@@ -204,7 +197,8 @@ describe('PaymentWithdrawalGateway', function () {
 			[timestamp, player, maxAmount],
 		);
 		const dataHash = keccak256(data);
-		const signature = await env.viem.walletClient.account!.signMessage({
+		const signature = await env.viem.walletClient.signMessage({
+			account: player,
 			message: {raw: toBytes(dataHash)},
 		});
 
@@ -225,7 +219,8 @@ describe('PaymentWithdrawalGateway', function () {
 			[timestamp2, player, maxAmount],
 		);
 		const dataHash2 = keccak256(data2);
-		const signature2 = await env.viem.walletClient.account!.signMessage({
+		const signature2 = await env.viem.walletClient.signMessage({
+			account: player,
 			message: {raw: toBytes(dataHash2)},
 		});
 

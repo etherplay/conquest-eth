@@ -3,18 +3,12 @@ import {describe, it, before} from 'node:test';
 import assert from 'node:assert';
 import {pad} from 'viem';
 import {network} from 'hardhat';
-import {setupOuterSpaceFixtures} from '../fixtures/setupFixtures.js';
+import { setupFixtures } from '../fixtures/setupFixtures.js';
+
+const {provider, networkHelpers} = await network.connect();
+const {deployAll} = setupFixtures(provider);
 
 describe('Basic Alliance', function () {
-	let deployAll: any;
-	let networkHelpers: any;
-
-	before(async function () {
-		const {provider, networkHelpers: nh} = await network.connect();
-		networkHelpers = nh;
-		const fixtures = setupOuterSpaceFixtures(provider);
-		deployAll = fixtures.deployAll;
-	});
 
 	it('create alliance', async function () {
 		const {env, BasicAllianceFactory, unnamedAccounts} =
@@ -32,36 +26,38 @@ describe('Basic Alliance', function () {
 		});
 
 		const nonce0 = 0;
-		const message0 = `Join Alliance ${pad(allianceAddress.toLowerCase(), {size: 20})}${
+		const message0 = `Join Alliance ${pad(allianceAddress.toLowerCase() as `0x${string}`, {size: 20})}${
 			nonce0 === 0 ? '' : ` (nonce: ${String(nonce0).padStart(10)})`
 		}`;
-		const signature0 = await env.viem.walletClient.account!.signMessage({
+		const signature0 = await env.viem.walletClient.signMessage({
+			account: player0,
 			message: message0,
 		});
 
 		const nonce1 = 0;
-		const message1 = `Join Alliance ${pad(allianceAddress.toLowerCase(), {size: 20})}${
+		const message1 = `Join Alliance ${pad(allianceAddress.toLowerCase() as `0x${string}`, {size: 20})}${
 			nonce1 === 0 ? '' : ` (nonce: ${String(nonce0).padStart(10)})`
 		}`;
-		const signature1 = await env.viem.walletClient.account!.signMessage({
+		const signature1 = await env.viem.walletClient.signMessage({
+			account: player1,
 			message: message1,
 		});
 
 		console.log({message0, message1});
 
-		const hash = await env.execute(BasicAllianceFactory, {
+		const receipt = await env.execute(BasicAllianceFactory, {
 			functionName: 'instantiate',
 			args: [
 				player0,
 				[
 					{
 						addr: player0,
-						nonce: BigInt(nonce0),
+						nonce: nonce0,
 						signature: signature0,
 					},
 					{
 						addr: player1,
-						nonce: BigInt(nonce1),
+						nonce: nonce1,
 						signature: signature1,
 					},
 				],
@@ -69,9 +65,7 @@ describe('Basic Alliance', function () {
 			],
 			account: player0,
 		});
-		const receipt = await env.viem.publicClient.waitForTransactionReceipt({
-			hash,
-		});
+		
 
 		assert.ok(receipt, 'Alliance should be created');
 	});

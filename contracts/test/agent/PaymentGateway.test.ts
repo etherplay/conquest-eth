@@ -14,14 +14,12 @@ describe('PaymentGateway', function () {
 			await networkHelpers.loadFixture(deployAll);
 		const deployer = namedAccounts.deployer;
 
-		const hash = await env.tx({
+		const receipt = await env.tx({
 			to: PaymentGateway.address,
 			value: parseEther('1'),
 			account: deployer,
 		});
-		const receipt = await env.viem.publicClient.waitForTransactionReceipt({
-			hash,
-		});
+	
 
 		assert.ok(receipt, 'Transaction receipt should exist');
 		assert.ok(receipt.logs, 'Transaction should have logs');
