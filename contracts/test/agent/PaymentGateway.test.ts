@@ -14,12 +14,14 @@ describe('PaymentGateway', function () {
 			await networkHelpers.loadFixture(deployAll);
 		const deployer = namedAccounts.deployer;
 
-		const receipt = await env.tx({
+		const hash = await env.tx({
 			to: PaymentGateway.address,
 			value: parseEther('1'),
 			account: deployer,
 		});
-	
+		const receipt = await env.viem.publicClient.waitForTransactionReceipt({
+			hash,
+		});
 
 		assert.ok(receipt, 'Transaction receipt should exist');
 		assert.ok(receipt.logs, 'Transaction should have logs');
@@ -36,15 +38,19 @@ describe('PaymentGateway', function () {
 		console.log({owner, deployer});
 
 		// Fund the gateway first
-		await env.tx({
+		const hash0 = await env.tx({
 			to: PaymentGateway.address,
 			value: parseEther('1'),
 			account: deployer,
 		});
+		const receipt0 = await env.viem.publicClient.waitForTransactionReceipt({
+			hash:hash0,
+		});
+
 
 		const receipt = await env.execute(PaymentGateway, {
 			account: deployer,
-			functionName: 'withdrawForRefund',
+			functionName: 'withdraw',
 			args: [deployer, parseEther('1')],
 		});
 
