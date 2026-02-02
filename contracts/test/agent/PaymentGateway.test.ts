@@ -3,15 +3,15 @@ import {describe, it, before} from 'node:test';
 import assert from 'node:assert';
 import {parseEther} from 'viem';
 import {network} from 'hardhat';
-import {setupPaymentFixtures} from '../fixtures/setupFixtures.js';
+import { setupFixtures } from '../fixtures/setupFixtures.js';
 
 const {provider, networkHelpers} = await network.connect();
-const fixtures = setupPaymentFixtures(provider);
+const {deployAll} = setupFixtures(provider);
 
 describe('PaymentGateway', function () {
 	it('PaymentGateway can receive ETH and emit the corresponding event', async function () {
 		const {env, PaymentGateway, namedAccounts} =
-			await networkHelpers.loadFixture(fixtures.deployAll);
+			await networkHelpers.loadFixture(deployAll);
 		const deployer = namedAccounts.deployer;
 
 		const hash = await env.tx({
@@ -29,7 +29,7 @@ describe('PaymentGateway', function () {
 
 	it('gatewayOwner can refund ETH', async function () {
 		const {env, PaymentGateway, namedAccounts} =
-			await networkHelpers.loadFixture(fixtures.deployAll);
+			await networkHelpers.loadFixture(deployAll);
 		const deployer = namedAccounts.deployer;
 
 		const owner = await env.read(PaymentGateway, {
@@ -56,7 +56,7 @@ describe('PaymentGateway', function () {
 
 	it('gatewayOwner can change ownership', async function () {
 		const {env, PaymentGateway, namedAccounts, unnamedAccounts} =
-			await networkHelpers.loadFixture(fixtures.deployAll);
+			await networkHelpers.loadFixture(deployAll);
 		const deployer = namedAccounts.deployer;
 		const player1 = unnamedAccounts[0];
 
@@ -82,7 +82,7 @@ describe('PaymentGateway', function () {
 
 	it('random account cannot change ownership', async function () {
 		const {env, PaymentGateway, unnamedAccounts} =
-			await networkHelpers.loadFixture(fixtures.deployAll);
+			await networkHelpers.loadFixture(deployAll);
 		const player1 = unnamedAccounts[0];
 		const player2 = unnamedAccounts[1];
 

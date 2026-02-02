@@ -7,6 +7,8 @@ import {parseEther} from 'viem';
 import type {Abi_PaymentGateway} from '../../generated/abis/PaymentGateway.js';
 import type {Abi_PaymentWithdrawalGateway} from '../../generated/abis/PaymentWithdrawalGateway.js';
 
+
+
 export function setupFixtures(provider: EthereumProvider) {
 	return {
 		async deployAll() {
@@ -14,46 +16,11 @@ export function setupFixtures(provider: EthereumProvider) {
 				provider: provider,
 			});
 
-			return {
-				env,
-				namedAccounts: env.namedAccounts,
-				unnamedAccounts: env.unnamedAccounts,
-			};
-		},
-	};
-}
-
-export function setupPaymentFixtures(provider: EthereumProvider) {
-	return {
-		async deployAll() {
-			const env = await loadAndExecuteDeploymentsFromFiles({
-				provider: provider,
-			});
-
+			// Get deployments
 			const PaymentGateway = env.get<Abi_PaymentGateway>('PaymentGateway');
 			const PaymentWithdrawalGateway = env.get<Abi_PaymentWithdrawalGateway>(
 				'PaymentWithdrawalGateway',
 			);
-
-			return {
-				env,
-				PaymentGateway,
-				PaymentWithdrawalGateway,
-				namedAccounts: env.namedAccounts,
-				unnamedAccounts: env.unnamedAccounts,
-			};
-		},
-	};
-}
-
-export function setupOuterSpaceFixtures(provider: EthereumProvider) {
-	return {
-		async deployAll() {
-			const env = await loadAndExecuteDeploymentsFromFiles({
-				provider: provider,
-			});
-
-			// Get deployments
 			const OuterSpace = env.get('OuterSpace');
 			const AllianceRegistry = env.get('AllianceRegistry');
 			const BasicAllianceFactory = env.get('BasicAllianceFactory');
@@ -102,6 +69,8 @@ export function setupOuterSpaceFixtures(provider: EthereumProvider) {
 				RewardsGenerator,
 				Yakuza,
 				spaceInfo,
+				PaymentGateway,
+				PaymentWithdrawalGateway,
 				namedAccounts: env.namedAccounts,
 				unnamedAccounts: env.unnamedAccounts,
 			};
