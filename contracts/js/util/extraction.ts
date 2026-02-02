@@ -22,10 +22,9 @@ export function value8(data: string, leastSignificantBit: number): number {
 }
 
 export function normal8(data: string, leastSignificantBit: number): number {
-	const index = value8Mod(data, leastSignificantBit, 64);
-	// Matches Solidity's uint8(n_m7_5_sd3[index])
-	const byteHex = n_m7_5_sd3.substring(2 + index * 2, 4 + index * 2);
-	return parseInt(byteHex, 16);
+	// Matches the old working implementation from common-lib
+	const index = value8Mod(data, leastSignificantBit, 64) + 2;
+	return Number(BigInt('0x' + n_m7_5_sd3[index]));
 }
 
 export function normal16(
@@ -33,9 +32,15 @@ export function normal16(
 	leastSignificantBit: number,
 	selection: string,
 ): number {
+	// Matches the old working implementation from common-lib
 	const index = normal8(data, leastSignificantBit);
-	// Matches Solidity's selection[index * 2] and selection[index * 2 + 1]
-	const start = 2 + index * 4;
-	const hexPart = selection.substring(start, start + 4);
-	return parseInt(hexPart, 16);
+	return Number(
+		BigInt(
+			'0x' +
+				selection[index * 4 + 2] +
+				selection[index * 4 + 3] +
+				selection[index * 4 + 4] +
+				selection[index * 4 + 5],
+		),
+	);
 }
