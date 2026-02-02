@@ -29,7 +29,7 @@
     "@nomicfoundation/hardhat-viem": "^3.0.1",
     "@openzeppelin/contracts": "^4.3.2",
     "@rocketh/deploy": "^0.17.17",
-    "@rocketh/diamond": "^0.17.21",
+    "@rocketh/diamond": "^0.17.22",
     "@rocketh/node": "^0.17.26",
     "@rocketh/proxy": "^0.17.21",
     "@rocketh/read-execute": "^0.17.17",

@@ -83,6 +83,7 @@ contract PaymentWithdrawalGateway {
 
         require(signer[msgSigner], "UNAUTHORIZED_SIGNER");
 
+        // TODO this will always fail as paymentGateway owner is not this contract
         paymentGateway.withdrawForRefund(to, amount);
         lastWithdrawalTimestamp[msg.sender] = block.timestamp;
     }

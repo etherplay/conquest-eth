@@ -9,15 +9,12 @@ import {
 	convertPlanetCallData,
 } from './utils.js';
 
-import { setupFixtures } from '../fixtures/setupFixtures.js';
+import {setupFixtures} from '../fixtures/index.js';
 
 const {provider, networkHelpers} = await network.connect();
 const {deployAll} = setupFixtures(provider);
 
-
 describe('OuterSpace Basic', function () {
-	
-
 	it('user can acquire virgin planet', async function () {
 		const {env, OuterSpace, ConquestCredits, spaceInfo, unnamedAccounts} =
 			await networkHelpers.loadFixture(deployAll);
@@ -38,7 +35,6 @@ describe('OuterSpace Basic', function () {
 			],
 			account: player,
 		});
-		
 
 		assert.ok(receipt, 'Transaction receipt should exist');
 	});
@@ -163,7 +159,6 @@ describe('OuterSpace Basic', function () {
 			],
 			account: player1,
 		});
-		
 
 		assert.ok(receipt, 'Fleet resolution should succeed');
 	});
@@ -188,7 +183,7 @@ describe('OuterSpace Basic', function () {
 				amount,
 				encodeAbiParameters(
 					[{type: 'address'}, {type: 'uint256'}],
-					[player, planet.location.id],
+					[player, BigInt(planet.location.id)],
 				),
 			],
 			account: player,

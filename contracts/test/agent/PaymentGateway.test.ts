@@ -3,7 +3,7 @@ import {describe, it, before} from 'node:test';
 import assert from 'node:assert';
 import {parseEther} from 'viem';
 import {network} from 'hardhat';
-import { setupFixtures } from '../fixtures/setupFixtures.js';
+import {setupFixtures} from '../fixtures/index.js';
 
 const {provider, networkHelpers} = await network.connect();
 const {deployAll} = setupFixtures(provider);
@@ -44,9 +44,8 @@ describe('PaymentGateway', function () {
 			account: deployer,
 		});
 		const receipt0 = await env.viem.publicClient.waitForTransactionReceipt({
-			hash:hash0,
+			hash: hash0,
 		});
-
 
 		const receipt = await env.execute(PaymentGateway, {
 			account: deployer,

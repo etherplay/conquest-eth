@@ -3,13 +3,12 @@ import {describe, it, before} from 'node:test';
 import assert from 'node:assert';
 import {pad} from 'viem';
 import {network} from 'hardhat';
-import { setupFixtures } from '../fixtures/setupFixtures.js';
+import {setupFixtures} from '../fixtures/index.js';
 
 const {provider, networkHelpers} = await network.connect();
 const {deployAll} = setupFixtures(provider);
 
 describe('Basic Alliance', function () {
-
 	it('create alliance', async function () {
 		const {env, BasicAllianceFactory, unnamedAccounts} =
 			await networkHelpers.loadFixture(deployAll);
@@ -23,6 +22,7 @@ describe('Basic Alliance', function () {
 			args: [
 				'0x0000000000000000000000000000000000000000000000000000000000000000',
 			],
+			account: player0,
 		});
 
 		const nonce0 = 0;
@@ -65,7 +65,6 @@ describe('Basic Alliance', function () {
 			],
 			account: player0,
 		});
-		
 
 		assert.ok(receipt, 'Alliance should be created');
 	});

@@ -2,6 +2,10 @@
 import {keccak256, encodeAbiParameters} from 'viem';
 import type {SpaceInfo} from 'conquest-eth-common';
 import type {PlanetInfo} from 'conquest-eth-common/';
+import {Abi_IOuterSpace} from '../../generated/abis/IOuterSpace.js';
+import {Deployment} from 'rocketh/types';
+import {Abi_PlayToken} from '../../generated/abis/PlayToken.js';
+import {Environment} from '../../rocketh/config.js';
 
 export type PlanetState = PlanetInfo & {
 	state: any;
@@ -87,24 +91,23 @@ export async function fetchPlanetState(
  * Acquire a virgin planet for a player using env API
  */
 export async function acquire(
-	env: any,
-	OuterSpace: any,
-	ConquestToken: any,
+	env: Environment,
+	OuterSpace: Deployment<Abi_IOuterSpace>,
+	PlayToken: Deployment<Abi_PlayToken>,
 	playerAddress: `0x${string}`,
 	planet: PlanetInfo,
 ) {
-	const amount = BigInt(planet.stats.stake) * 1000000000000000000n;
-	const receipt = await env.execute(ConquestToken, {
-		functionName: 'transferAndCall',
-		args: [
-			OuterSpace.address,
-			amount,
-			encodeAbiParameters(
-				[{type: 'address'}, {type: 'uint256'}],
-				[playerAddress, BigInt(planet.location.id)],
-			),
-		],
+	const amount = BigInt(planet.stats.stake) * 100000000000000n;
+
+	const nativeTokenAmount =
+		(amount * 1000000000000000000n) /
+		BigInt((PlayToken.linkedData as any).numTokensPerNativeTokenAt18Decimals);
+
+	const receipt = await env.execute(OuterSpace, {
+		functionName: 'acquireViaNativeTokenAndStakingToken',
+		args: [BigInt(planet.location.id), amount, 0n],
 		account: playerAddress,
+		value: nativeTokenAmount,
 	});
 	return receipt;
 }

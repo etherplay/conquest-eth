@@ -5,15 +5,12 @@ import {objMap} from '../test-utils.js';
 import {convertPlanetCallData} from './utils.js';
 import {network} from 'hardhat';
 import {fetchPlanetState} from './utils.js';
-import { setupFixtures } from '../fixtures/setupFixtures.js';
+import {setupFixtures} from '../fixtures/index.js';
 
 const {provider, networkHelpers} = await network.connect();
 const {deployAll} = setupFixtures(provider);
 
-
 describe('JS <-> Solidity equivalence', function () {
-	
-
 	it('planet stats computed from js equal stats from the contract', async function () {
 		const {env, OuterSpace, spaceInfo} =
 			await networkHelpers.loadFixture(deployAll);
