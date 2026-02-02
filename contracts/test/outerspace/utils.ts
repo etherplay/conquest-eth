@@ -1,5 +1,5 @@
 // Outerspace test utilities using viem and env API
-import {keccak256, encodeAbiParameters} from 'viem';
+import {keccak256, encodeAbiParameters, zeroAddress, encodePacked} from 'viem';
 import type {SpaceInfo} from 'conquest-eth-common';
 import type {PlanetInfo} from 'conquest-eth-common/';
 import {Abi_IOuterSpace} from '../../generated/abis/IOuterSpace.js';
@@ -12,59 +12,44 @@ export type PlanetState = PlanetInfo & {
 	getNumSpaceships: (time: bigint) => number;
 };
 
-/**
- * Convert planet call data from contract to JS types
- */
-export function convertPlanetCallData(
-	o: string | number | bigint,
-): string | number {
-	if (typeof o === 'number') {
-		return o;
-	}
-	if (typeof o === 'string') {
-		return o;
-	}
-	if (typeof o === 'bigint') {
-		if (o >= -2147483647n && o <= 2147483647n) {
-			return Number(o);
-		}
-		return o.toString();
-	}
-	return String(o);
-}
-
 export async function fetchPlanetState(
-	env: any,
-	OuterSpace: any,
+	env: Environment,
+	OuterSpace: Deployment<Abi_IOuterSpace>,
 	planet: PlanetInfo,
 ): Promise<PlanetState> {
 	const planetData = await env.read(OuterSpace, {
 		functionName: 'getPlanet',
-		args: [planet.location.id],
+		args: [BigInt(planet.location.id)],
 	});
-	const statsFromContract = Object.fromEntries(
-		Object.entries(planet.stats).map(([key, value]) => [
-			key,
-			convertPlanetCallData((planetData.stats as any)[key]),
-		]),
-	);
+	const stateFromContract = planetData[0];
+	const state = {
+		owner:
+			stateFromContract.owner === zeroAddress
+				? undefined
+				: stateFromContract.owner,
+		ownershipStartTime: stateFromContract.ownershipStartTime,
+		exitStartTime: stateFromContract.exitStartTime,
+		numSpaceships: stateFromContract.numSpaceships,
+		overflow: stateFromContract.overflow,
+		lastUpdated: stateFromContract.lastUpdated,
+		active: stateFromContract.active ? 'true' : 'false',
+		reward: stateFromContract.reward,
+	};
+
+	const statsFromContract = planetData[1];
+	const stats = {
+		...statsFromContract,
+	};
 
 	// Check validity assertion
-	for (const key of Object.keys(statsFromContract)) {
-		const value = statsFromContract[key];
+	for (const key of Object.keys(stats)) {
+		const value = (stats as any)[key];
 		if (value !== (planet as any).stats[key]) {
 			throw new Error(
 				`${key}: ${(planet as any).stats[key]} not equal to contract stats : ${value} `,
 			);
 		}
 	}
-
-	const state = Object.fromEntries(
-		Object.entries((planetData as any).state).map(([key, value]) => [
-			key,
-			convertPlanetCallData(value as any),
-		]),
-	);
 
 	return {
 		...planet,
@@ -122,31 +107,44 @@ export async function sendInSecret(
 	playerAddress: `0x${string}`,
 	{from, quantity, to}: {from: PlanetInfo; quantity: number; to: PlanetInfo},
 ): Promise<{
-	hash: `0x${string}`;
+	receipt: {hahs: `0x${string}`}; // TODO reciept type
 	timeRequired: number;
 	distance: number;
 	fleetId: string;
 	from: string;
 	to: string;
-	secret: string;
+	secret: `0x${string}`;
+	gift: boolean;
+	specific: `0x${string}`;
+	arrivalTimeWanted: bigint;
+	fleetSender: `0x${string}`;
+	operator: `0x${string}`;
 }> {
 	// Use viem's generatePrivateKey equivalent from viem/accounts
 	const {generatePrivateKey} = await import('viem/accounts');
 	const secret = generatePrivateKey();
+
+	const gift = false;
+	const specific = zeroAddress;
+	const arrivalTimeWanted = 0n;
+	const fleetSender = playerAddress;
+	const operator = playerAddress;
+
 	const toHash = keccak256(
-		encodeAbiParameters(
-			[{type: 'bytes32'}, {type: 'uint256'}],
-			[secret, BigInt(to.location.id)],
-		),
-	);
-	const fleetId = keccak256(
-		encodeAbiParameters(
-			[{type: 'bytes32'}, {type: 'uint256'}],
-			[toHash, BigInt(from.location.id)],
+		encodePacked(
+			['bytes32', 'uint256', 'bool', 'address', 'uint256'],
+			[secret, BigInt(to.location.id), gift, specific, arrivalTimeWanted],
 		),
 	);
 
-	const hash = await env.execute(OuterSpace, {
+	const fleetId = keccak256(
+		encodePacked(
+			['bytes32', 'uint256', 'address', 'address'],
+			[toHash, BigInt(from.location.id), fleetSender, operator],
+		),
+	);
+
+	const receipt = await env.execute(OuterSpace, {
 		functionName: 'send',
 		args: [BigInt(from.location.id), BigInt(quantity), toHash],
 		account: playerAddress,
@@ -162,12 +160,17 @@ export async function sendInSecret(
 	);
 
 	return {
-		hash,
+		receipt,
 		timeRequired,
 		distance,
 		fleetId,
 		from: from.location.id,
 		to: to.location.id,
 		secret,
+		gift,
+		specific,
+		arrivalTimeWanted,
+		fleetSender,
+		operator,
 	};
 }

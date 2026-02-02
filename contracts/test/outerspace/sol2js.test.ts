@@ -1,8 +1,6 @@
 // Test for JS <-> Solidity equivalence of planet stats
 import {describe, it, before} from 'node:test';
 import assert from 'node:assert';
-import {objMap} from '../test-utils.js';
-import {convertPlanetCallData} from './utils.js';
 import {network} from 'hardhat';
 import {fetchPlanetState} from './utils.js';
 import {setupFixtures} from '../fixtures/index.js';
@@ -23,15 +21,10 @@ describe('JS <-> Solidity equivalence', function () {
 		// Remove 'name' from stats as it's only in JS
 		delete (stats as any).name;
 
-		const statsFromContract = objMap(planet.state, convertPlanetCallData);
-
-		console.log({stats});
-		console.log({statsFromContract});
-
 		// Compare stats
-		for (const key of Object.keys(stats)) {
+		for (const key of Object.keys(planet.stats)) {
 			assert.strictEqual(
-				String(statsFromContract[key]),
+				String((planet.stats as any)[key]),
 				String((stats as any)[key]),
 				`Stat ${key} should match between JS and contract`,
 			);
