@@ -9,7 +9,8 @@
     "./artifacts/*": "./dist/generated/artifacts/*",
     "./abis/*": "./dist/generated/abis/*",
     "./deployments/*": "./deployments/*",
-    "./src/*": "./src/*"
+    "./src/*": "./src/*",
+    ".": {"import":"./dist/js/index.js", "types": "./dist/js/index.d.ts"}
   },
   "files": [
     "dist",
