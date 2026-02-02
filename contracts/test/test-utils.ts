@@ -37,9 +37,9 @@ export async function increaseTime(
 /**
  * Get the current timestamp (requires networkHelpers from test)
  */
-export async function getTime(
-	networkHelpers: {time: {latest: () => Promise<number>}},
-): Promise<bigint> {
+export async function getTime(networkHelpers: {
+	time: {latest: () => Promise<number>};
+}): Promise<bigint> {
 	const timestamp = await networkHelpers.time.latest();
 	return BigInt(timestamp);
 }
@@ -60,7 +60,12 @@ export function objMap<T>(
 		const keyAsNumber = parseInt(key, 10);
 		if (Number.isNaN(keyAsNumber) || keyAsNumber >= (obj as any).length) {
 			let item = obj[key];
-			if (options && options.depth > 0 && typeof item === 'object' && item !== null) {
+			if (
+				options &&
+				options.depth > 0 &&
+				typeof item === 'object' &&
+				item !== null
+			) {
 				item = objMap(item as any, func, {depth: options.depth - 1}) as T;
 			} else {
 				item = func(item, index);

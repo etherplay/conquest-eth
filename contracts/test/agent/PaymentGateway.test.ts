@@ -5,41 +5,38 @@ import {parseEther} from 'viem';
 import {network} from 'hardhat';
 import {setupPaymentFixtures} from '../fixtures/setupFixtures.js';
 
+const {provider, networkHelpers} = await network.connect();
+const fixtures = setupPaymentFixtures(provider);
+
 describe('PaymentGateway', function () {
-	let deployAll: any;
-	let networkHelpers: any;
-
-	before(async function () {
-		const { provider, networkHelpers: nh } = await network.connect();
-		networkHelpers = nh;
-		const fixtures = setupPaymentFixtures(provider);
-		deployAll = fixtures.deployAll;
-	});
-
 	it('PaymentGateway can receive ETH and emit the corresponding event', async function () {
-		const { env, PaymentGateway, namedAccounts } = await networkHelpers.loadFixture(deployAll);
+		const {env, PaymentGateway, namedAccounts} =
+			await networkHelpers.loadFixture(fixtures.deployAll);
 		const deployer = namedAccounts.deployer;
-		
+
 		const hash = await env.tx({
 			to: PaymentGateway.address,
 			value: parseEther('1'),
 			account: deployer,
 		});
-		const receipt = await env.viem.publicClient.waitForTransactionReceipt({hash});
+		const receipt = await env.viem.publicClient.waitForTransactionReceipt({
+			hash,
+		});
 
 		assert.ok(receipt, 'Transaction receipt should exist');
 		assert.ok(receipt.logs, 'Transaction should have logs');
 	});
 
 	it('gatewayOwner can refund ETH', async function () {
-		const { env, PaymentGateway, namedAccounts } = await networkHelpers.loadFixture(deployAll);
+		const {env, PaymentGateway, namedAccounts} =
+			await networkHelpers.loadFixture(fixtures.deployAll);
 		const deployer = namedAccounts.deployer;
-		
+
 		const owner = await env.read(PaymentGateway, {
 			functionName: 'owner',
 		});
-		console.log({owner, deployer})
-		
+		console.log({owner, deployer});
+
 		// Fund the gateway first
 		await env.tx({
 			to: PaymentGateway.address,
@@ -58,14 +55,15 @@ describe('PaymentGateway', function () {
 	});
 
 	it('gatewayOwner can change ownership', async function () {
-		const { env, PaymentGateway, namedAccounts, unnamedAccounts } = await networkHelpers.loadFixture(deployAll);
+		const {env, PaymentGateway, namedAccounts, unnamedAccounts} =
+			await networkHelpers.loadFixture(fixtures.deployAll);
 		const deployer = namedAccounts.deployer;
 		const player1 = unnamedAccounts[0];
-		
+
 		const owner = await env.read(PaymentGateway, {
 			functionName: 'owner',
 		});
-		
+
 		await env.execute(PaymentGateway, {
 			account: owner,
 			functionName: 'transferOwnership',
@@ -75,14 +73,19 @@ describe('PaymentGateway', function () {
 		const newOwner = await env.read(PaymentGateway, {
 			functionName: 'owner',
 		});
-		assert.strictEqual(newOwner.toLowerCase(), player1.toLowerCase(), 'New owner should be set');
+		assert.strictEqual(
+			newOwner.toLowerCase(),
+			player1.toLowerCase(),
+			'New owner should be set',
+		);
 	});
 
 	it('random account cannot change ownership', async function () {
-		const { env, PaymentGateway, unnamedAccounts } = await networkHelpers.loadFixture(deployAll);
+		const {env, PaymentGateway, unnamedAccounts} =
+			await networkHelpers.loadFixture(fixtures.deployAll);
 		const player1 = unnamedAccounts[0];
 		const player2 = unnamedAccounts[1];
-		
+
 		await assert.rejects(
 			env.execute(PaymentGateway, {
 				account: player2,

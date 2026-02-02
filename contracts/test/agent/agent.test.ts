@@ -9,17 +9,17 @@ describe('Agent', function () {
 	let networkHelpers: any;
 
 	before(async function () {
-		const { provider, networkHelpers: nh } = await network.connect();
+		const {provider, networkHelpers: nh} = await network.connect();
 		networkHelpers = nh;
 		const fixtures = setupFixtures(provider);
 		deployAll = fixtures.deployAll;
 	});
 
 	it('Agent can be deployed deterministically', async function () {
-		const { env, namedAccounts } = await networkHelpers.loadFixture(deployAll);
+		const {env, namedAccounts} = await networkHelpers.loadFixture(deployAll);
 		const deployer = namedAccounts.deployer;
 		const OuterSpace = env.get('OuterSpace');
-		
+
 		// Deploy Agent contract deterministically
 		const deployment = await env.deploy({
 			name: 'AgentTest',
@@ -33,6 +33,9 @@ describe('Agent', function () {
 		});
 
 		assert.ok(deployment.address, 'Agent should be deployed');
-		assert.ok(deployment.address.startsWith('0x'), 'Address should be a valid EVM address');
+		assert.ok(
+			deployment.address.startsWith('0x'),
+			'Address should be a valid EVM address',
+		);
 	});
 });

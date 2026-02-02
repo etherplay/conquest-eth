@@ -11,23 +11,31 @@ describe('OuterSpace', function () {
 	let networkHelpers: any;
 
 	before(async function () {
-		const { provider, networkHelpers: nh } = await network.connect();
+		const {provider, networkHelpers: nh} = await network.connect();
 		networkHelpers = nh;
 		const fixtures = setupOuterSpaceFixtures(provider);
 		deployAll = fixtures.deployAll;
 	});
 
 	it('user can acquire virgin planet', async function () {
-		const { env, OuterSpace, ConquestCredits, unnamedAccounts } = 
+		const {env, OuterSpace, ConquestCredits, unnamedAccounts} =
 			await networkHelpers.loadFixture(deployAll);
-		
+
 		const spaceInfo = new SpaceInfo();
 		const pointer = spaceInfo.findNextPlanet();
 		const player = unnamedAccounts[0];
-		
-		const hash = await acquire(env, OuterSpace, ConquestCredits, player, pointer.data);
-		
-		const receipt = await env.viem.publicClient.waitForTransactionReceipt({hash});
+
+		const hash = await acquire(
+			env,
+			OuterSpace,
+			ConquestCredits,
+			player,
+			pointer.data,
+		);
+
+		const receipt = await env.viem.publicClient.waitForTransactionReceipt({
+			hash,
+		});
 
 		assert.ok(receipt, 'Transaction receipt should exist');
 		assert.ok(receipt.logs, 'Transaction should have logs');

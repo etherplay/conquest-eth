@@ -117,11 +117,7 @@ export async function sendInSecret(
 	OuterSpace: any,
 	spaceInfo: SpaceInfo,
 	playerAddress: `0x${string}`,
-	{
-		from,
-		quantity,
-		to,
-	}: {from: PlanetInfo; quantity: number; to: PlanetInfo},
+	{from, quantity, to}: {from: PlanetInfo; quantity: number; to: PlanetInfo},
 ): Promise<{
 	hash: `0x${string}`;
 	timeRequired: number;
@@ -157,7 +153,10 @@ export async function sendInSecret(
 		Math.pow(to.location.globalX - from.location.globalX, 2) +
 		Math.pow(to.location.globalY - from.location.globalY, 2);
 	const distance = Math.floor(Math.sqrt(distanceSquared));
-	const timeRequired = Number((BigInt(distance) * BigInt(1 * spaceInfo.timePerDistance * 10000)) / BigInt(from.stats.speed));
+	const timeRequired = Number(
+		(BigInt(distance) * BigInt(1 * spaceInfo.timePerDistance * 10000)) /
+			BigInt(from.stats.speed),
+	);
 
 	return {
 		hash,

@@ -10,23 +10,28 @@ describe('PaymentWithdrawalGateway', function () {
 	let networkHelpers: any;
 
 	before(async function () {
-		const { provider, networkHelpers: nh } = await network.connect();
+		const {provider, networkHelpers: nh} = await network.connect();
 		networkHelpers = nh;
 		const fixtures = setupPaymentFixtures(provider);
 		deployAll = fixtures.deployAll;
 	});
 
 	it('player can withdraw ETH via message and emit the corresponding event', async function () {
-		const { env, PaymentGateway, PaymentWithdrawalGateway, namedAccounts, unnamedAccounts } = 
-			await networkHelpers.loadFixture(deployAll);
-		
-		const { agentService } = namedAccounts;
+		const {
+			env,
+			PaymentGateway,
+			PaymentWithdrawalGateway,
+			namedAccounts,
+			unnamedAccounts,
+		} = await networkHelpers.loadFixture(deployAll);
+
+		const {agentService} = namedAccounts;
 		const player = unnamedAccounts[0];
-		
+
 		const block = await env.viem.publicClient.getBlock({blockTag: 'latest'});
 		const timestamp = block!.timestamp;
 		const maxAmount = parseEther('1');
-		
+
 		// Fund PaymentGateway first
 		await env.execute(PaymentGateway, {
 			functionName: 'fallback',
@@ -35,7 +40,7 @@ describe('PaymentWithdrawalGateway', function () {
 		});
 
 		const amount = maxAmount;
-		
+
 		// Create withdrawal signature
 		const data = encodeAbiParameters(
 			[{type: 'uint256'}, {type: 'address'}, {type: 'uint256'}],
@@ -54,21 +59,28 @@ describe('PaymentWithdrawalGateway', function () {
 			args: [player, maxAmount, timestamp, signature, amount],
 			account: player,
 		});
-		const receipt = await env.viem.publicClient.waitForTransactionReceipt({hash});
+		const receipt = await env.viem.publicClient.waitForTransactionReceipt({
+			hash,
+		});
 
 		assert.ok(receipt, 'Transaction receipt should exist');
 	});
 
 	it('player cannot withdraw ETH via same message', async function () {
-		const { env, PaymentGateway, PaymentWithdrawalGateway, namedAccounts, unnamedAccounts } = 
-			await networkHelpers.loadFixture(deployAll);
-		
+		const {
+			env,
+			PaymentGateway,
+			PaymentWithdrawalGateway,
+			namedAccounts,
+			unnamedAccounts,
+		} = await networkHelpers.loadFixture(deployAll);
+
 		const player = unnamedAccounts[0];
-		
+
 		const block = await env.viem.publicClient.getBlock({blockTag: 'latest'});
 		const timestamp = block!.timestamp;
 		const maxAmount = parseEther('1');
-		
+
 		// Fund PaymentGateway first
 		await env.execute(PaymentGateway, {
 			functionName: 'fallback',
@@ -77,7 +89,7 @@ describe('PaymentWithdrawalGateway', function () {
 		});
 
 		const amount = maxAmount / 2n;
-		
+
 		// Create withdrawal signature
 		const data = encodeAbiParameters(
 			[{type: 'uint256'}, {type: 'address'}, {type: 'uint256'}],
@@ -106,15 +118,15 @@ describe('PaymentWithdrawalGateway', function () {
 	});
 
 	it('player can withdraw ETH twice past the interval', async function () {
-		const { env, PaymentGateway, PaymentWithdrawalGateway, unnamedAccounts } = 
+		const {env, PaymentGateway, PaymentWithdrawalGateway, unnamedAccounts} =
 			await networkHelpers.loadFixture(deployAll);
-		
+
 		const player = unnamedAccounts[0];
-		
+
 		const block = await env.viem.publicClient.getBlock({blockTag: 'latest'});
 		const timestamp = block!.timestamp;
 		const maxAmount = parseEther('1');
-		
+
 		// Fund PaymentGateway first
 		await env.execute(PaymentGateway, {
 			functionName: 'fallback',
@@ -123,7 +135,7 @@ describe('PaymentWithdrawalGateway', function () {
 		});
 
 		const amount = maxAmount / 2n;
-		
+
 		// Create withdrawal signature
 		const data = encodeAbiParameters(
 			[{type: 'uint256'}, {type: 'address'}, {type: 'uint256'}],
@@ -160,21 +172,23 @@ describe('PaymentWithdrawalGateway', function () {
 			args: [player, maxAmount, timestamp2, signature2, amount],
 			account: player,
 		});
-		const receipt = await env.viem.publicClient.waitForTransactionReceipt({hash});
+		const receipt = await env.viem.publicClient.waitForTransactionReceipt({
+			hash,
+		});
 
 		assert.ok(receipt, 'Second withdrawal should succeed past interval');
 	});
 
 	it('player cannot withdraw ETH twice in the interval', async function () {
-		const { env, PaymentGateway, PaymentWithdrawalGateway, unnamedAccounts } = 
+		const {env, PaymentGateway, PaymentWithdrawalGateway, unnamedAccounts} =
 			await networkHelpers.loadFixture(deployAll);
-		
+
 		const player = unnamedAccounts[0];
-		
+
 		const block = await env.viem.publicClient.getBlock({blockTag: 'latest'});
 		const timestamp = block!.timestamp;
 		const maxAmount = parseEther('1');
-		
+
 		// Fund PaymentGateway first
 		await env.execute(PaymentGateway, {
 			functionName: 'fallback',
@@ -183,7 +197,7 @@ describe('PaymentWithdrawalGateway', function () {
 		});
 
 		const amount = maxAmount / 2n;
-		
+
 		// Create withdrawal signature
 		const data = encodeAbiParameters(
 			[{type: 'uint256'}, {type: 'address'}, {type: 'uint256'}],
@@ -227,14 +241,14 @@ describe('PaymentWithdrawalGateway', function () {
 	});
 
 	it('gatewayOwner can change ownership of PaymentWithdrawalGateway', async function () {
-		const { env, PaymentWithdrawalGateway, unnamedAccounts } = 
+		const {env, PaymentWithdrawalGateway, unnamedAccounts} =
 			await networkHelpers.loadFixture(deployAll);
-		
+
 		const owner = await env.read(PaymentWithdrawalGateway, {
 			functionName: 'owner',
 		});
 		const player = unnamedAccounts[0];
-		
+
 		await env.execute(PaymentWithdrawalGateway, {
 			functionName: 'transferOwnership',
 			args: [player],
@@ -252,12 +266,12 @@ describe('PaymentWithdrawalGateway', function () {
 	});
 
 	it('random account cannot change ownership', async function () {
-		const { env, PaymentWithdrawalGateway, unnamedAccounts } = 
+		const {env, PaymentWithdrawalGateway, unnamedAccounts} =
 			await networkHelpers.loadFixture(deployAll);
-		
+
 		const player1 = unnamedAccounts[0];
 		const player2 = unnamedAccounts[1];
-		
+
 		await assert.rejects(
 			env.execute(PaymentWithdrawalGateway, {
 				functionName: 'transferOwnership',

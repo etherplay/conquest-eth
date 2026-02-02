@@ -18,7 +18,9 @@ export type OuterSpacePlayerFixture = {
 /**
  * Setup fixture for Outerspace tests - must be called with provider from test
  */
-export async function setupOuterSpaceFixture(provider: any): Promise<OuterSpacePlayerFixture> {
+export async function setupOuterSpaceFixture(
+	provider: any,
+): Promise<OuterSpacePlayerFixture> {
 	const env = await loadAndExecuteDeploymentsFromFiles({provider});
 	const {claimKeyDistributor} = env.namedAccounts;
 	const unnamedAccounts = env.unnamedAccounts;

@@ -88,11 +88,7 @@ export async function sendInSecret(
 	OuterSpace: any,
 	spaceInfo: SpaceInfo,
 	playerAddress: `0x${string}`,
-	{
-		from,
-		quantity,
-		to,
-	}: {from: PlanetInfo; quantity: number; to: PlanetInfo},
+	{from, quantity, to}: {from: PlanetInfo; quantity: number; to: PlanetInfo},
 ): Promise<{
 	hash: `0x${string}`;
 	timeRequired: number;

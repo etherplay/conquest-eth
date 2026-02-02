@@ -12,12 +12,12 @@ describe('conversion solidity', function () {
 	let networkHelpers: any;
 
 	before(async function () {
-		const { provider, networkHelpers: nh } = await network.connect();
+		const {provider, networkHelpers: nh} = await network.connect();
 		networkHelpers = nh;
 		deployAll = async () => {
 			const env = await loadAndExecuteDeploymentsFromFiles({provider});
 			const TestConversion = env.get<TestConversion>('TestConversion');
-			return { env, TestConversion };
+			return {env, TestConversion};
 		};
 	});
 
@@ -35,14 +35,16 @@ describe('conversion solidity', function () {
 
 	for (const testCase of testCases) {
 		it(`conversion for ${testCase}`, async function () {
-			const { env, TestConversion } = await networkHelpers.loadFixture(deployAll);
+			const {env, TestConversion} = await networkHelpers.loadFixture(deployAll);
 			const hash = await env.execute(TestConversion, {
 				functionName: 'testConversion',
 				args: [testCase as `0x${string}`],
 				account: env.namedAccounts.deployer,
 			});
-			const receipt = await env.viem.publicClient.waitForTransactionReceipt({hash});
-			
+			const receipt = await env.viem.publicClient.waitForTransactionReceipt({
+				hash,
+			});
+
 			assert.ok(receipt, 'Transaction receipt should exist');
 			console.log('-----------------------------------------');
 		});

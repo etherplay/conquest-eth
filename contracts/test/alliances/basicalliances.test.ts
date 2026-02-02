@@ -10,14 +10,14 @@ describe('Basic Alliance', function () {
 	let networkHelpers: any;
 
 	before(async function () {
-		const { provider, networkHelpers: nh } = await network.connect();
+		const {provider, networkHelpers: nh} = await network.connect();
 		networkHelpers = nh;
 		const fixtures = setupOuterSpaceFixtures(provider);
 		deployAll = fixtures.deployAll;
 	});
 
 	it('create alliance', async function () {
-		const { env, BasicAllianceFactory, unnamedAccounts } = 
+		const {env, BasicAllianceFactory, unnamedAccounts} =
 			await networkHelpers.loadFixture(deployAll);
 
 		const player0 = unnamedAccounts[0];
@@ -26,20 +26,26 @@ describe('Basic Alliance', function () {
 		// Get the predicted alliance address for the given data
 		const allianceAddress = await env.read(BasicAllianceFactory, {
 			functionName: 'getAddress',
-			args: ['0x0000000000000000000000000000000000000000000000000000000000000000'],
+			args: [
+				'0x0000000000000000000000000000000000000000000000000000000000000000',
+			],
 		});
 
 		const nonce0 = 0;
 		const message0 = `Join Alliance ${pad(allianceAddress.toLowerCase(), {size: 20})}${
 			nonce0 === 0 ? '' : ` (nonce: ${String(nonce0).padStart(10)})`
 		}`;
-		const signature0 = await env.viem.walletClient.account!.signMessage({message: message0});
+		const signature0 = await env.viem.walletClient.account!.signMessage({
+			message: message0,
+		});
 
 		const nonce1 = 0;
 		const message1 = `Join Alliance ${pad(allianceAddress.toLowerCase(), {size: 20})}${
 			nonce1 === 0 ? '' : ` (nonce: ${String(nonce0).padStart(10)})`
 		}`;
-		const signature1 = await env.viem.walletClient.account!.signMessage({message: message1});
+		const signature1 = await env.viem.walletClient.account!.signMessage({
+			message: message1,
+		});
 
 		console.log({message0, message1});
 
@@ -63,7 +69,9 @@ describe('Basic Alliance', function () {
 			],
 			account: player0,
 		});
-		const receipt = await env.viem.publicClient.waitForTransactionReceipt({hash});
+		const receipt = await env.viem.publicClient.waitForTransactionReceipt({
+			hash,
+		});
 
 		assert.ok(receipt, 'Alliance should be created');
 	});
