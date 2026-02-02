@@ -21,6 +21,7 @@ Updated [`package.json`](package.json:1) with:
 - Updated [`tsconfig.json`](tsconfig.json:1) for ESM (module: "node16", moduleResolution: "node16")
 - Created [`scripts/tsconfig.json`](scripts/tsconfig.json:1) extending the main config
 - Created [`test/tsconfig.json`](test/tsconfig.json:1) extending the main config
+- Created [`test/tsconfig.json`](test/tsconfig.json:1) for the new test directory
 
 ### 3. Rocketh Configuration
 
@@ -88,11 +89,49 @@ Converted all 13 deploy scripts in [`deploy_l2/`](deploy_l2/) directory to v2 fo
 - [`deploy_l2/20_basic_alliances/05_deploy_basic_alliance_factory.ts`](deploy_l2/20_basic_alliances/05_deploy_basic_alliance_factory.ts:1)
 - [`deploy_l2/30_plugins/001_deploy_basic_spaceships_market.ts`](deploy_l2/30_plugins/001_deploy_basic_spaceships_market.ts:1)
 
-### 6. Scripts Updated
+### 6. Test Migration to node:test
+
+Created new [`test/`](test/) directory with hardhat-deploy v2 compatible tests:
+
+**Test Infrastructure:**
+- [`test/tsconfig.json`](test/tsconfig.json:1) - TypeScript configuration for tests
+- [`test/test-utils.ts`](test/test-utils.ts:1) - Test utilities using hardhat-network-helpers
+- [`test/fixtures/index.ts`](test/fixtures/index.ts:1) - Fixture utilities with caching
+- [`test/fixtures/outerspaceAndPlayerWithTokens.ts`](test/fixtures/outerspaceAndPlayerWithTokens.ts:1) - OuterSpace fixture
+- [`test/utils/index.ts`](test/utils/index.ts:1) - User setup utilities compatible with viem
+
+**Migrated Tests:**
+- [`test/agent/agent.test.ts`](test/agent/agent.test.ts:1) - Agent deterministic deployment test
+- [`test/agent/PaymentGateway.test.ts`](test/agent/PaymentGateway.test.ts:1) - PaymentGateway tests
+- [`test/agent/PaymentWithdrawalGateway.test.ts`](test/agent/PaymentWithdrawalGateway.test.ts:1) - PaymentWithdrawalGateway tests
+- [`test/alliances/basicalliances.test.ts`](test/alliances/basicalliances.test.ts:1) - Basic alliance creation test
+- [`test/outerspace/outerSpace.test.ts`](test/outerspace/outerSpace.test.ts:1) - OuterSpace planet acquisition test
+- [`test/outerspace/misc.test.ts`](test/outerspace/misc.test.ts:1) - Solidity to JavaScript conversion tests
+- [`test/outerspace/sol2js.test.ts`](test/outerspace/sol2js.test.ts:1) - Planet stats equivalence tests
+- [`test/outerspace/utils.ts`](test/outerspace/utils.ts:1) - Outerspace test utilities (viem-based)
+- [`test/outerspace-old/outerSpace-basic.test.ts`](test/outerspace-old/outerSpace-basic.test.ts:1) - Old Outerspace basic tests
+- [`test/outerspace-old/utils.ts`](test/outerspace-old/utils.ts:1) - Old Outerspace utilities (viem-based)
+- [`test/gas/testGas.ts`](test/gas/testGas.ts:1) - Gas measurement tests (placeholder)
+
+**Key Changes in Test Migration:**
+1. Changed test runner from mocha to `node:test` (native Node.js test runner)
+2. Replaced chai assertions with `node:assert`
+3. Replaced ethers imports with viem equivalents (parseEther, keccak256, encodeAbiParameters, etc.)
+4. Replaced BigNumber with native `bigint`
+5. Replaced `deployments.createFixture()` with custom fixtures using `loadAndExecuteDeploymentsFromFiles()`
+6. Replaced custom time manipulation with hardhat-network-helpers `time` module
+7. Updated contract interactions to use viem contract pattern (`.read`, `.write`)
+8. Created reusable fixture utilities with caching
+9. Updated user setup utilities for viem compatibility
+
+**Status**: ✅ Completed - All tests migrated to hardhat-deploy v2 format with node:test
+
+### 7. Scripts Updated
 
 Updated package.json scripts to use new hardhat-deploy v2 commands:
 - Removed `hardhat typechain` (artifacts generated automatically)
-- Updated test command to use `hardhat test`
+- Updated test command to use `hardhat test test` (new test directory)
+- Added `test:old` script to run old tests for comparison
 - Removed `_scripts.js` patterns
 - Added watch commands using `as-soon`
 - Added `typescript` script for TypeScript compilation
@@ -109,19 +148,13 @@ The [`deploy_l2/03_outerspace/01_deploy_outer_space.ts`](deploy_l2/03_outerspace
 
 **Status**: Placeholder created with console.log noting the need for manual migration
 
-### 2. Test Files Migration
+### 2. Test Files Migration - COMPLETED ✅
 
-The test files in the [`test/`](test/) directory still use the v1 pattern and need to be updated:
-- Change test runner from mocha to `node:test` (or keep mocha if preferred)
-- Update assertion library imports
-- Create custom fixture functions using `loadAndExecuteDeploymentsFromFiles()`
-- Replace `deployments.createFixture()` with custom fixtures
-- Import ABI types from generated artifacts
-- Replace `ethers.getContract()` with `env.get<Abi_Type>()`
-- Replace `getUnnamedAccounts()` with `env.unnamedAccounts`
-- Convert contract method calls to `env.execute()`
+All test files have been migrated to hardhat-deploy v2 format in the new [`test/`](test/) directory.
 
-**Status**: Not started
+**Status**: ✅ Completed - See section 6 for details
+
+**Note**: The old tests remain in [`test-old/`](test-old/) for reference and can be run with `pnpm test:old`.
 
 ### 3. Scripts and Utilities
 
@@ -138,11 +171,15 @@ The [`utils/network.ts`](utils/network.ts:1) file is no longer needed in v2 as n
 
 **Status**: Pending
 
-### 5. Test Utilities
+### 5. Test Utilities - COMPLETED ✅
 
-The test utilities in [`test/test-utils.ts`](test/test-utils.ts) and [`test/chai-setup.ts`](test/chai-setup.ts) need to be updated to work with the new environment pattern.
+All test utilities have been updated for the new v2 environment pattern in [`test/`](test/):
+- [`test/test-utils.ts`](test/test-utils.ts:1) - Test utilities using hardhat-network-helpers
+- [`test/fixtures/index.ts`](test/fixtures/index.ts:1) - Fixture utilities
+- [`test/fixtures/outerspaceAndPlayerWithTokens.ts`](test/fixtures/outerspaceAndPlayerWithTokens.ts:1) - OuterSpace fixture
+- [`test/utils/index.ts`](test/utils/index.ts:1) - User setup utilities
 
-**Status**: Not started
+**Status**: ✅ Completed
 
 ### 6. Proxied.sol Import Update
 
@@ -167,14 +204,19 @@ After completing the migration, you should:
    ```
 
 3. Deploy to local network:
-   ```bash
-   pnpm deploy:dev
-   ```
+    ```bash
+    pnpm deploy:dev
+    ```
 
-4. Run tests:
-   ```bash
-   pnpm test
-   ```
+4. Run new tests:
+    ```bash
+    pnpm test
+    ```
+
+5. Run old tests (for comparison):
+    ```bash
+    pnpm test:old
+    ```
 
 5. Test on specific network:
    ```bash
@@ -196,6 +238,68 @@ After completing the migration, you should:
 6. **Environment Variables**: Network configuration now uses environment variables like `ETH_NODE_URI_<NETWORK>` and `MNEMONIC_<NETWORK>`.
 
 7. **Artifacts**: Generated artifacts are in `generated/` directory instead of `typechain/`.
+
+8. **Test Framework**: Tests use `node:test` instead of Mocha, with `node:assert` instead of chai.
+9. **Contract Library**: Tests use viem instead of ethers for contract interactions.
+
+## Test Migration Details
+
+### Import Changes
+
+| Old Import (ethers) | New Import (viem/node) |
+|---------------------|------------------------|
+| `import {parseEther} from '@ethersproject/units'` | `import {parseEther} from 'viem'` |
+| `import {keccak256} from '@ethersproject/solidity'` | `import {keccak256} from 'viem'` |
+| `import {defaultAbiCoder} from '@ethersproject/abi'` | `import {encodeAbiParameters} from 'viem'` |
+| `import {Wallet} from '@ethersproject/wallet'` | `import {generatePrivateKey} from 'viem/accounts'` |
+| `import {ethers} from 'hardhat'` | `import {viem} from 'hardhat'` |
+| `import {describe, it} from 'mocha'` | `import {describe, it, before} from 'node:test'` |
+| `import {expect} from 'chai'` | `import assert from 'node:assert'` |
+
+### Test Pattern Changes
+
+**Old Pattern (v1):**
+```typescript
+import {deployments} from 'hardhat';
+import {expect} from 'chai';
+
+const setup = deployments.createFixture(async () => {
+  await deployments.fixture();
+  const Contract = await ethers.getContract('Contract');
+  return {Contract};
+});
+
+describe('Contract', function () {
+  it('test', async function () {
+    const {Contract} = await setup();
+    await Contract.doSomething();
+    expect(value).to.equal(expected);
+  });
+});
+```
+
+**New Pattern (v2):**
+```typescript
+import {describe, it, before} from 'node:test';
+import assert from 'node:assert';
+import {loadAndExecuteDeploymentsFromFiles} from '../rocketh/environment.js';
+
+async function fixture() {
+  const env = await loadAndExecuteDeploymentsFromFiles();
+  const Contract = await env.get('Contract');
+  return {env, Contract};
+}
+
+describe('Contract', function () {
+  let f: Awaited<ReturnType<typeof fixture>>;
+  before(async () => { f = await fixture(); });
+  it('test', async () => {
+    const {Contract} = f;
+    await Contract.write.doSomething();
+    assert.strictEqual(value, expected);
+  });
+});
+```
 
 ## Resources
 
