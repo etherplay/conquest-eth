@@ -1,19 +1,24 @@
-import {HardhatRuntimeEnvironment} from 'hardhat/types';
-import {DeployFunction} from 'hardhat-deploy/types';
+import {deployScript, artifacts} from '../../rocketh/deploy.js';
 
-const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  const {deployer} = await hre.getNamedAccounts();
-  const {deploy} = hre.deployments;
+export default deployScript(
+  async (env) => {
+    const {deployer} = env.namedAccounts;
 
-  const OuterSpace = await hre.deployments.get('OuterSpace');
+    const OuterSpace = env.get('OuterSpace');
 
-  await deploy('BasicSpaceshipMarket', {
-    from: deployer,
-    proxy: true, // TODO remove
-    args: [OuterSpace.address],
-    log: true,
-    autoMine: true,
-  });
-};
-export default func;
-func.tags = ['BasicSpaceshipMarket'];
+    await env.deployViaProxy(
+      'BasicSpaceshipMarket',
+      {
+        account: deployer as `0x${string}`,
+        artifact: artifacts.BasicSpaceshipMarket,
+        args: [OuterSpace.address],
+      },
+      {
+        proxyDisabled: false,
+      },
+    );
+  },
+  {
+    tags: ['BasicSpaceshipMarket'],
+  },
+);

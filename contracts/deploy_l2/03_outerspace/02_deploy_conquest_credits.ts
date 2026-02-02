@@ -1,16 +1,16 @@
-import {HardhatRuntimeEnvironment} from 'hardhat/types';
-import {DeployFunction} from 'hardhat-deploy/types';
+import {deployScript, artifacts} from '../../rocketh/deploy.js';
 
-const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  const {deployer} = await hre.getNamedAccounts();
-  const {deploy} = hre.deployments;
+export default deployScript(
+  async (env) => {
+    const {deployer} = env.namedAccounts;
 
-  await deploy('ConquestCredits', {
-    from: deployer,
-    args: [deployer],
-    log: true,
-    autoMine: true,
-  });
-};
-export default func;
-func.tags = ['ConquestCredits', 'ConquestCredits_deploy'];
+    await env.deploy('ConquestCredits', {
+      account: deployer as `0x${string}`,
+      artifact: artifacts.ConquestCredits,
+      args: [deployer],
+    });
+  },
+  {
+    tags: ['ConquestCredits', 'ConquestCredits_deploy'],
+  },
+);

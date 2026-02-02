@@ -1,17 +1,16 @@
-import {HardhatRuntimeEnvironment} from 'hardhat/types';
-import {DeployFunction} from 'hardhat-deploy/types';
-import {formatEther, parseEther} from '@ethersproject/units';
-import {increaseTime, zeroAddress} from '../../test/test-utils';
+import {deployScript, artifacts} from '../../rocketh/deploy.js';
+import {formatEther, parseEther} from 'viem';
+import {increaseTime, zeroAddress} from '../../test/test-utils.js';
 import {PlanetInfo, SpaceInfo, xyToLocation} from 'conquest-eth-common';
 import {BigNumber} from 'ethers';
 import {defaultAbiCoder} from '@ethersproject/abi';
 
-const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  const {deployer, playerAccount3, playerAccount4} = await hre.getNamedAccounts();
-  const {deploy, read, execute, get, getOrNull} = hre.deployments;
+export default deployScript(
+  async (env) => {
+    const {deployer, playerAccount3, playerAccount4} = env.namedAccounts;
 
-  const chainId = await hre.getChainId();
-  const networkName = await hre.deployments.getNetworkName();
+    const chainId = await env.getChainId();
+    const networkName = await env.getNetworkName();
   // TODO use network tags ?
   const localTesting = networkName === 'hardhat' || networkName === 'localhost'; // chainId === '1337' || chainId === '31337';
 
@@ -25,30 +24,34 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     numTokensPerNativeTokenAt18Decimals = parseEther('1');
   }
 
-  let WXDAI = (await getOrNull('WXDAI')) || {address: zeroAddress};
-  let SDAI = (await getOrNull('SDAI')) || {address: zeroAddress};
-  let SavingsXDaiAdapter = (await getOrNull('SavingsXDaiAdapter')) || {address: zeroAddress};
+  let WXDAI = (await env.getOrNull('WXDAI')) || {address: zeroAddress};
+  let SDAI = (await env.getOrNull('SDAI')) || {address: zeroAddress};
+  let SavingsXDaiAdapter = (await env.getOrNull('SavingsXDaiAdapter')) || {address: zeroAddress};
 
-  const PlayTokenBefore = await getOrNull('PlayToken');
+  const PlayTokenBefore = await env.getOrNull('PlayToken');
   if (PlayTokenBefore) {
-    const PlayTokenNativeBalamce = formatEther(await hre.ethers.provider.getBalance(PlayTokenBefore.address));
+    const PlayTokenNativeBalamce = formatEther(await env.publicClient.getBalance({address: PlayTokenBefore.address as `0x${string}`}));
     console.log({PlayTokenNativeBalamce});
   }
 
-  const PlayToken = await deploy('PlayToken', {
-    from: deployer,
-    contract: 'PlayToken',
-    args: [deployer, numTokensPerNativeTokenAt18Decimals, SDAI.address, SavingsXDaiAdapter.address],
-    proxy: hre.network.name !== 'mainnet' ? 'postUpgrade' : undefined, // TODO l2 network mainnet
-    log: true,
-    autoMine: true,
+  const PlayToken = await env.deployViaProxy(
+    'PlayToken',
+    {
+      account: deployer as `0x${string}`,
+      artifact: artifacts.PlayToken,
+      args: [deployer, numTokensPerNativeTokenAt18Decimals, SDAI.address, SavingsXDaiAdapter.address],
+    },
+    {
+      proxyDisabled: false,
+      execute: 'postUpgrade',
+    },
     linkedData: {
       numTokensPerNativeTokenAt18Decimals: numTokensPerNativeTokenAt18Decimals.toString(),
     },
   });
 
   {
-    const PlayTokenNativeBalamce = formatEther(await hre.ethers.provider.getBalance(PlayToken.address));
+    const PlayTokenNativeBalamce = formatEther(await env.publicClient.getBalance({address: PlayToken.address as `0x${string}`}));
     console.log({PlayTokenNativeBalamce});
   }
 
@@ -191,6 +194,8 @@ const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
   //   const maxWidthdraw = formatEther(await read('SDAI', 'maxWithdraw', PlayToken.address));
   //   console.log({SDAIBalance, maxWidthdraw});
   // }
-};
-export default func;
-func.tags = ['PlayToken', 'PlayToken_deploy'];
+  },
+  {
+    tags: ['PlayToken', 'PlayToken_deploy'],
+  },
+);

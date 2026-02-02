@@ -1,29 +1,38 @@
-import {HardhatRuntimeEnvironment} from 'hardhat/types';
-import {DeployFunction} from 'hardhat-deploy/types';
-import {deployments} from 'hardhat';
+import {deployScript} from '../../rocketh/deploy.js';
 
-const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  const {deployer, claimKeyDistributor} = await hre.getNamedAccounts();
-  const {read, execute} = hre.deployments;
+export default deployScript(
+  async (env) => {
+    const {deployer, claimKeyDistributor} = env.namedAccounts;
 
-  const OuterSpaceDeployment = await deployments.get('OuterSpace');
+    const OuterSpaceDeployment = env.get('OuterSpace');
+    const FreePlayToken = env.get('FreePlayToken');
 
-  const isMinter = await read('FreePlayToken', 'minters', deployer);
-  if (!isMinter) {
-    await execute('FreePlayToken', {from: deployer, log: true, autoMine: true}, 'setMinter', deployer, true);
-  }
+    const isMinter = await env.read(FreePlayToken, {
+      functionName: 'minters',
+      args: [deployer],
+    });
+    if (!isMinter) {
+      await env.execute(FreePlayToken, {
+        account: deployer as `0x${string}`,
+        functionName: 'setMinter',
+        args: [deployer, true],
+      });
+    }
 
-  const isBurner = await read('FreePlayToken', 'burners', OuterSpaceDeployment.address);
-  if (!isBurner) {
-    await execute(
-      'FreePlayToken',
-      {from: deployer, log: true, autoMine: true},
-      'setBurner',
-      OuterSpaceDeployment.address,
-      true
-    );
-  }
-};
-export default func;
-func.tags = ['FreePlayToken', 'FreePlayToken_setup'];
-func.dependencies = ['FreePlayToken_deploy'];
+    const isBurner = await env.read(FreePlayToken, {
+      functionName: 'burners',
+      args: [OuterSpaceDeployment.address],
+    });
+    if (!isBurner) {
+      await env.execute(FreePlayToken, {
+        account: deployer as `0x${string}`,
+        functionName: 'setBurner',
+        args: [OuterSpaceDeployment.address, true],
+      });
+    }
+  },
+  {
+    tags: ['FreePlayToken', 'FreePlayToken_setup'],
+    dependencies: ['FreePlayToken_deploy'],
+  },
+);

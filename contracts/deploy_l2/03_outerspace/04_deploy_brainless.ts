@@ -1,19 +1,19 @@
-import {HardhatRuntimeEnvironment} from 'hardhat/types';
-import {DeployFunction} from 'hardhat-deploy/types';
-const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  const {deployer} = await hre.getNamedAccounts();
-  const {deploy} = hre.deployments;
+import {deployScript, artifacts} from '../../rocketh/deploy.js';
 
-  const RewardsGenerator = await hre.deployments.get('RewardsGenerator');
+export default deployScript(
+  async (env) => {
+    const {deployer} = env.namedAccounts;
 
-  await deploy('BrainLess', {
-    from: deployer,
-    skipIfAlreadyDeployed: true,
-    args: [deployer, RewardsGenerator.address],
-    log: true,
-    autoMine: true,
-  });
-};
-export default func;
-func.tags = ['BrainLess', 'BrainLess_deploy'];
-func.dependencies = ['RewardsGenerator_deploy'];
+    const RewardsGenerator = env.get('RewardsGenerator');
+
+    await env.deploy('BrainLess', {
+      account: deployer as `0x${string}`,
+      artifact: artifacts.BrainLess,
+      args: [deployer, RewardsGenerator.address],
+    });
+  },
+  {
+    tags: ['BrainLess', 'BrainLess_deploy'],
+    dependencies: ['RewardsGenerator_deploy'],
+  },
+);

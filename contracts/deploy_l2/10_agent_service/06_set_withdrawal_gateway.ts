@@ -1,22 +1,28 @@
-import {HardhatRuntimeEnvironment} from 'hardhat/types';
-import {DeployFunction} from 'hardhat-deploy/types';
+import {deployScript} from '../../rocketh/deploy.js';
 
-const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  const {execute, read} = hre.deployments;
+export default deployScript(
+  async (env) => {
+    const paymentWithdrwalGateway = env.get('PaymentWithdrawalGateway');
+    const paymentGateway = env.get('PaymentGateway');
 
-  const paymentWithdrwalGateway = await hre.deployments.get('PaymentWithdrawalGateway');
-
-  const currentOwner = await read('PaymentGateway', 'owner');
-  // TODO ?
-  // if (currentOwner.toLowerCase() !== paymentWithdrwalGateway.address.toLowerCase()) {
-  //   await execute(
-  //     'PaymentGateway',
-  //     {from: currentOwner, log: true},
-  //     'transferOwnership',
-  //     paymentWithdrwalGateway.address
-  //   );
-  // }
-};
-export default func;
-func.tags = ['PaymentWithdrawalGateway', 'PaymentGateway'];
-func.dependencies = ['PaymentGateway_deploy', 'PaymentWithdrawalGateway_deploy'];
+    const currentOwner = await env.read(paymentGateway, {
+      functionName: 'owner',
+      args: [],
+    });
+    // TODO ?
+    // if (currentOwner.toLowerCase() !== paymentWithdrwalGateway.address.toLowerCase()) {
+    //   await env.execute(
+    //     paymentGateway,
+    //     {
+    //       account: currentOwner as `0x${string}`,
+    //       functionName: 'transferOwnership',
+    //       args: [paymentWithdrwalGateway.address],
+    //     },
+    //   );
+    // }
+  },
+  {
+    tags: ['PaymentWithdrawalGateway', 'PaymentGateway'],
+    dependencies: ['PaymentGateway_deploy', 'PaymentWithdrawalGateway_deploy'],
+  },
+);

@@ -1,17 +1,17 @@
-import {HardhatRuntimeEnvironment} from 'hardhat/types';
-import {DeployFunction} from 'hardhat-deploy/types';
+import {deployScript, artifacts} from '../../rocketh/deploy.js';
 
-const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  const {deployer} = await hre.getNamedAccounts();
-  const {deploy} = hre.deployments;
+export default deployScript(
+  async (env) => {
+    const {deployer} = env.namedAccounts;
 
-  await deploy('PaymentGateway', {
-    from: deployer,
-    contract: 'src/agent/PaymentGateway.sol:PaymentGateway',
-    args: [deployer], // TODO
-    log: true,
-    autoMine: true,
-  });
-};
-export default func;
-func.tags = ['PaymentGateway', 'PaymentGateway_deploy'];
+    await env.deploy('PaymentGateway', {
+      account: deployer as `0x${string}`,
+      artifact: artifacts.PaymentGateway,
+      contractName: 'src/agent/PaymentGateway.sol:PaymentGateway',
+      args: [deployer], // TODO
+    });
+  },
+  {
+    tags: ['PaymentGateway', 'PaymentGateway_deploy'],
+  },
+);

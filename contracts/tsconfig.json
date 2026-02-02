@@ -1,20 +1,17 @@
 {
-  "compilerOptions": {
-    "target": "es2020",
-    "module": "commonjs",
-    "strict": true,
-    "esModuleInterop": true,
-    "moduleResolution": "node",
-    "forceConsistentCasingInFileNames": true,
-    "outDir": "dist"
-  },
-  "include": [
-    "hardhat.config.ts",
-    "./scripts",
-    "./deploy_l1",
-    "./deploy_l2",
-    "./test",
-    "./utils/**/*",
-    "typechain/**/*"
-  ]
+	"compilerOptions": {
+		"lib": ["es2023"],
+		"module": "node16",
+		"target": "es2022",
+		"moduleResolution": "node16",
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"sourceMap": true,
+		"declaration": true,
+		"declarationMap": true,
+		"outDir": "dist",
+		"rootDir": "."
+	},
+	"include": ["deploy_l2", "generated", "hardhat.config.ts"]
 }

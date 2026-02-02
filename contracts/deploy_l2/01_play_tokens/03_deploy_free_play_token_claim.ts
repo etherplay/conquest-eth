@@ -1,39 +1,32 @@
-import {HardhatRuntimeEnvironment} from 'hardhat/types';
-import {DeployFunction} from 'hardhat-deploy/types';
-import {deployments} from 'hardhat';
+import {deployScript, artifacts} from '../../rocketh/deploy.js';
 
-const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  const {deployer} = await hre.getNamedAccounts();
-  const {deploy, execute, read} = hre.deployments;
+export default deployScript(
+  async (env) => {
+    const {deployer} = env.namedAccounts;
 
-  const PlayToken = await deployments.get('PlayToken');
-  const FreePlayToken = await deployments.get('FreePlayToken');
+    const PlayToken = env.get('PlayToken');
+    const FreePlayToken = env.get('FreePlayToken');
 
-  const FreePlayTokenClaim = await deploy('FreePlayTokenClaim', {
-    from: deployer,
-    contract: 'FreePlayTokenClaim',
-    skipIfAlreadyDeployed: true,
-    args: [deployer, PlayToken.address, FreePlayToken.address],
-    // proxy: hre.network.name !== 'mainnet' ? 'postUpgrade' : undefined, // TODO l2 network mainnet
-    log: true,
-    autoMine: true,
-  });
+    const FreePlayTokenClaim = await env.deploy('FreePlayTokenClaim', {
+      account: deployer as `0x${string}`,
+      artifact: artifacts.FreePlayTokenClaim,
+      args: [deployer, PlayToken.address, FreePlayToken.address],
+    });
 
-  const isMinter = await read('FreePlayToken', 'minters', FreePlayTokenClaim.address);
-  if (!isMinter) {
-    await execute(
-      'FreePlayToken',
-      {
-        from: deployer,
-        log: true,
-        autoMine: true,
-      },
-      'setMinter',
-      FreePlayTokenClaim.address,
-      true
-    );
-  }
-};
-export default func;
-func.tags = ['FreePlayTokenClaim', 'FreePlayTokenClaim_deploy'];
-func.dependencies = ['PlayToken_deploy', 'FreePlayToken_deploy'];
+    const isMinter = await env.read(FreePlayToken, {
+      functionName: 'minters',
+      args: [FreePlayTokenClaim.address],
+    });
+    if (!isMinter) {
+      await env.execute(FreePlayToken, {
+        account: deployer as `0x${string}`,
+        functionName: 'setMinter',
+        args: [FreePlayTokenClaim.address, true],
+      });
+    }
+  },
+  {
+    tags: ['FreePlayTokenClaim', 'FreePlayTokenClaim_deploy'],
+    dependencies: ['PlayToken_deploy', 'FreePlayToken_deploy'],
+  },
+);

@@ -1,32 +1,30 @@
-import {HardhatRuntimeEnvironment} from 'hardhat/types';
-import {DeployFunction} from 'hardhat-deploy/types';
+import {deployScript, artifacts} from '../../rocketh/deploy.js';
 
-const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  const {deployer} = await hre.getNamedAccounts();
-  const {deploy} = hre.deployments;
+export default deployScript(
+  async (env) => {
+    const {deployer} = env.namedAccounts;
 
-  const networkName = hre.deployments.getNetworkName();
+    const networkName = await env.getNetworkName();
 
-  // TODO use network tags ?
-  const localTesting = networkName === 'hardhat' || networkName === 'localhost'; // chainId === '1337' || chainId === '31337';
+    // TODO use network tags ?
+    const localTesting = networkName === 'hardhat' || networkName === 'localhost';
 
-  const allianceRegistry = await hre.deployments.get('AllianceRegistry');
+    const allianceRegistry = env.get('AllianceRegistry');
 
-  const frontendBaseURI = localTesting
-    ? 'http://localhost:3000/basic-alliances/alliances/#'
-    : `https://${
-        networkName === 'mainnet' ? '' : networkName.replace('_', '-')
-      }.conquest.game/basic-alliances/alliances/#`;
+    const frontendBaseURI = localTesting
+      ? 'http://localhost:3000/basic-alliances/alliances/#'
+      : `https://${
+          networkName === 'mainnet' ? '' : networkName.replace('_', '-')
+        }.conquest.game/basic-alliances/alliances/#`;
 
-  await deploy('BasicAllianceFactory', {
-    contract: 'BasicAlliance',
-    from: deployer,
-    args: [allianceRegistry.address, deployer, frontendBaseURI],
-    log: true,
-    autoMine: true,
-    skipIfAlreadyDeployed: true,
-  });
-};
-export default func;
-func.dependencies = ['AllianceRegistry_deploy'];
-func.tags = ['BasicAllianceFactory', 'BasicAllianceFactory_deploy'];
+    await env.deploy('BasicAllianceFactory', {
+      account: deployer as `0x${string}`,
+      artifact: artifacts.BasicAlliance,
+      args: [allianceRegistry.address, deployer, frontendBaseURI],
+    });
+  },
+  {
+    dependencies: ['AllianceRegistry_deploy'],
+    tags: ['BasicAllianceFactory', 'BasicAllianceFactory_deploy'],
+  },
+);

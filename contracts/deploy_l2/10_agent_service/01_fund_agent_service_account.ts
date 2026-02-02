@@ -1,25 +1,24 @@
-import {HardhatRuntimeEnvironment} from 'hardhat/types';
-import {DeployFunction} from 'hardhat-deploy/types';
-import {parseEther} from '@ethersproject/units';
+import {deployScript} from '../../rocketh/deploy.js';
+import {parseEther} from 'viem';
 
-const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  const {deployer, agentService} = await hre.getNamedAccounts();
-  const {rawTx} = hre.deployments;
-  if (agentService) {
-    console.log(`FUNDING AGENT SERVICE (${agentService}) ...`);
-    const currentBalance = await hre.ethers.provider.getBalance(agentService);
-    if (currentBalance.lt(parseEther('1'))) {
-      await rawTx({
-        from: deployer,
-        log: true,
-        autoMine: true,
-        to: agentService,
-        value: parseEther('10'),
-      });
+export default deployScript(
+  async (env) => {
+    const {deployer, agentService} = env.namedAccounts;
+    if (agentService) {
+      console.log(`FUNDING AGENT SERVICE (${agentService}) ...`);
+      const currentBalance = await env.publicClient.getBalance({address: agentService as `0x${string}`});
+      if (currentBalance < parseEther('1')) {
+        await env.sendTransaction({
+          account: deployer as `0x${string}`,
+          to: agentService as `0x${string}`,
+          value: parseEther('10'),
+        });
+      }
+    } else {
+      console.log(`NO AGENT SERVICE CONFIGURED`);
     }
-  } else {
-    console.log(`NO AGENT SERVICE CONFIGURED`);
-  }
-};
-export default func;
-func.tags = ['agentService'];
+  },
+  {
+    tags: ['agentService'],
+  },
+);

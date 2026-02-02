@@ -1,22 +1,26 @@
-import {HardhatRuntimeEnvironment} from 'hardhat/types';
-import {DeployFunction} from 'hardhat-deploy/types';
-import {deployments} from 'hardhat';
+import {deployScript, artifacts} from '../../rocketh/deploy.js';
 
-const func: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
-  const {deployer} = await hre.getNamedAccounts();
-  const {deploy} = hre.deployments;
+export default deployScript(
+  async (env) => {
+    const {deployer} = env.namedAccounts;
 
-  const PlayToken = await deployments.get('PlayToken');
+    const PlayToken = env.get('PlayToken');
 
-  await deploy('FreePlayToken', {
-    from: deployer,
-    contract: 'FreePlayToken',
-    args: [PlayToken.address, deployer],
-    proxy: hre.network.name !== 'mainnet' ? 'postUpgrade' : undefined, // TODO l2 network mainnet
-    log: true,
-    autoMine: true,
-  });
-};
-export default func;
-func.tags = ['FreePlayToken', 'FreePlayToken_deploy'];
-func.dependencies = ['PlayToken_deploy'];
+    await env.deployViaProxy(
+      'FreePlayToken',
+      {
+        account: deployer as `0x${string}`,
+        artifact: artifacts.FreePlayToken,
+        args: [PlayToken.address, deployer],
+      },
+      {
+        proxyDisabled: false,
+        execute: 'postUpgrade',
+      },
+    );
+  },
+  {
+    tags: ['FreePlayToken', 'FreePlayToken_deploy'],
+    dependencies: ['PlayToken_deploy'],
+  },
+);
