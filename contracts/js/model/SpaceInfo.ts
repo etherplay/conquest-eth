@@ -131,80 +131,6 @@ export class SpaceInfo {
 		// console.log({stakeRangeArray});
 	}
 
-	// subscribe(run: (value: PlanetInfo[]) => void, invalidate?: (value?: PlanetInfo[]) => void): () => void {
-	//   return this.store.subscribe(run, invalidate);
-	// }
-
-	// computeArea(areaId: string): void {
-	//   if (this.planetIdsInArea[areaId]) {
-	//     return;
-	//   }
-	//   const {x: tlx, y: tly} = topleftLocationFromArea(areaId);
-	//   const idList = [];
-	//   // TODO x,y = zone top left corner
-	//   for (let x = tlx; x < tlx + 24; x++) {
-	//     for (let y = tly; y < tly + 24; y++) {
-	//       const planet = this.getPlanetInfo(x, y);
-	//       if (planet) {
-	//         idList.push(xyToLocation(x, y));
-	//       }
-	//     }
-	//   }
-	//   this.planetIdsInArea[areaId] = idList;
-	// }
-
-	// planetIdsFromArea(area: string): string[] {
-	//   this.computeArea(area);
-	//   return this.planetIdsInArea[area];
-	// }
-
-	// planetIdsArroundLocation(locationX: number, locationY: number): string[] {
-	//   const areas = areasArroundLocation(locationX, locationY);
-	//   const ids = [];
-	//   for (const area of areas) {
-	//     ids.push(...this.planetIdsFromArea(area));
-	//   }
-	//   return ids;
-	// }
-
-	// *yieldPlanetIdsFromArea(areaId: string): Generator<string, void> {
-	//   const {x: tlx, y: tly} = topleftLocationFromArea(areaId);
-
-	//   // TODO x,y = zone top left corner
-	//   for (let x = tlx; x < tlx + 24; x++) {
-	//     for (let y = tly; y < tly + 24; y++) {
-	//       const planet = this.getPlanetInfo(x, y);
-	//       if (planet) {
-	//         yield xyToLocation(x, y);
-	//       }
-	//     }
-	//   }
-	// }
-
-	// async asyncComputeArea(areaId: string): Promise<void> {
-	//   if (this.planetIdsInArea[areaId]) {
-	//     return;
-	//   }
-	//   const idList = [];
-	//   let i = 0;
-	//   for (const id of this.yieldPlanetIdsFromArea(areaId)) {
-	//     idList.push(id);
-	//     i++;
-	//     if (i % 3 == 0) {
-	//       await skip(); // TODO use worker instead
-	//     }
-	//   }
-
-	//   this.planetIdsInArea[areaId] = idList;
-	// }
-
-	// async asyncPlanetIdsFromArea(area: string): Promise<string[]> {
-	//   if (!this.planetIdsInArea[area]) {
-	//     await this.asyncComputeArea(area);
-	//   }
-	//   return this.planetIdsInArea[area];
-	// }
-
 	syncFromRect(x0: number, y0: number, x1: number, y1: number): bigint[] {
 		const ids = [];
 		for (let x = x0; x <= x1; x++) {
@@ -217,30 +143,6 @@ export class SpaceInfo {
 		}
 		return ids;
 	}
-
-	// *yieldPlanetIdsFromRect(x0: number, y0: number, x1: number, y1: number): Generator<string, void> {
-	//   for (let x = x0; x <= x1; x++) {
-	//     for (let y = y0; y <= y1; y++) {
-	//       const planet = this.getPlanetInfo(x, y);
-	//       if (planet) {
-	//         yield xyToLocation(x, y);
-	//       }
-	//     }
-	//   }
-	// }
-
-	// async asyncPlanetIdsFromRect(x0: number, y0: number, x1: number, y1: number): Promise<string[]> {
-	//   const idList = [];
-	//   let i = 0;
-	//   for (const id of this.yieldPlanetIdsFromRect(x0, y0, x1, y1)) {
-	//     idList.push(id);
-	//     i++;
-	//     if (i % 6 == 0) {
-	//       await skip(); // TODO use worker instead
-	//     }
-	//   }
-	//   return idList;
-	// }
 
 	*yieldPlanetsFromRect(
 		x0: number,
@@ -293,30 +195,6 @@ export class SpaceInfo {
 	}
 
 	getPlanetInfo(x: number, y: number): PlanetInfo | undefined {
-		// if (x === 0 && y === 0) {
-		//   return {
-		//     location: {
-		//       id: xyToLocation(x, y),
-		//       x,
-		//       y,
-		//       globalX: x * 4 + 1,
-		//       globalY: y * 4 + 0,
-		//     },
-		//     type: 1,
-		//     stats: {
-		//       name: 'zero',
-		//       stake: 1,
-		//       production: 1,
-		//       attack: 1,
-		//       defense: 1,
-		//       speed: 1,
-		//       natives: 1,
-		//       // subX: 0,
-		//       // subY: 0,
-		//     },
-		//   };
-		// }
-
 		const id = '' + x + ',' + y; // TODO optimize ?
 		const inCache = this.cache.get(id);
 		if (typeof inCache !== 'undefined') {
@@ -342,15 +220,7 @@ export class SpaceInfo {
 		const subY = 1 - value8Mod(data, 2, 3);
 
 		const productionIndex = normal8(data, 12);
-		// const offset = normal16(data, 4, '0x0000000100010002000200030003000400040005000500060006000700070008');
-		// let stakeIndex = productionIndex + offset;
-		// if (stakeIndex < 4) {
-		//   stakeIndex = 0;
-		// } else if (stakeIndex > 19) {
-		//   stakeIndex = 15;
-		// } else {
-		//   stakeIndex -= 4;
-		// }
+
 		const stakeIndex = productionIndex;
 		const stake = this.roundTo1Decimal
 			? Math.floor(
