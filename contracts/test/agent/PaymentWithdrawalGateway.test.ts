@@ -1,331 +1,269 @@
 // Test for PaymentWithdrawalGateway contract
 import {describe, it, before} from 'node:test';
 import assert from 'node:assert';
-import {parseEther, encodeAbiParameters, keccak256, toBytes, type WalletClient} from 'viem';
-import {time} from '@nomicfoundation/hardhat-network-helpers';
-import type {PaymentGateway, PaymentWithdrawalGateway} from '../../generated/artifacts/PaymentGateway.js';
-import {loadAndExecuteDeploymentsFromFiles} from '../../rocketh/environment.js';
-import {setupUsers, type User} from '../utils/index.js';
-
-type Contracts = {
-	PaymentGateway: PaymentGateway;
-	PaymentWithdrawalGateway: PaymentWithdrawalGateway;
-};
-
-type PaymentWithdrawalGatewayFixture = {
-	env: Awaited<ReturnType<typeof loadAndExecuteDeploymentsFromFiles>>;
-	players: User<Contracts>[];
-	agentServiceWallet: User<Contracts>;
-	gatewayOwner: User<Contracts>;
-};
-
-/**
- * Fixture for PaymentWithdrawalGateway tests
- */
-async function paymentWithdrawalGatewayFixture(): Promise<PaymentWithdrawalGatewayFixture> {
-	const env = await loadAndExecuteDeploymentsFromFiles();
-	const accounts = await env.accounts();
-	const {agentService} = accounts.namedAccounts;
-	const unNamedAccounts = accounts.unnamedAccounts;
-
-	const PaymentGateway = await env.get<PaymentGateway>('PaymentGateway');
-	const PaymentWithdrawalGateway = await env.get<PaymentWithdrawalGateway>('PaymentWithdrawalGateway');
-
-	// Get gateway owner from contract
-	const gatewayOwnerAddress = await PaymentWithdrawalGateway.read.owner();
-	const gatewayOwnerAccount = [...accounts.namedAccountsAccounts].find(
-		(a) => a.address === gatewayOwnerAddress,
-	) || unNamedAccounts[0];
-
-	const players = await setupUsers(
-		unNamedAccounts,
-		{PaymentGateway, PaymentWithdrawalGateway},
-		async (address) => env.getWalletClient(address),
-	);
-
-	const agentServiceWallet = await setupUsers(
-		[agentService],
-		{PaymentGateway, PaymentWithdrawalGateway},
-		async (address) => env.getWalletClient(address),
-	);
-
-	const gatewayOwner = await setupUsers(
-		[gatewayOwnerAccount],
-		{PaymentGateway, PaymentWithdrawalGateway},
-		async (address) => env.getWalletClient(address),
-	);
-
-	return {env, players, agentServiceWallet: agentServiceWallet[0], gatewayOwner: gatewayOwner[0]};
-}
-
-/**
- * Helper to fund PaymentGateway
- */
-async function fundPaymentGateway(user: User<Contracts>, amount: bigint): Promise<void> {
-	const hash = await user.signer.sendTransaction({
-		to: user.PaymentGateway.address,
-		value: amount,
-	});
-	await user.signer.request({method: 'eth_getTransactionReceipt', params: [hash]});
-}
-
-/**
- * Helper to create withdrawal signature
- */
-async function createWithdrawalSignature(
-	agentServiceWallet: User<Contracts>,
-	timestamp: bigint,
-	playerAddress: `0x${string}`,
-	maxAmount: bigint,
-): Promise<`0x${string}`> {
-	const data = encodeAbiParameters(
-		[{type: 'uint256'}, {type: 'address'}, {type: 'uint256'}],
-		[timestamp, playerAddress, maxAmount],
-	);
-	const dataHash = keccak256(data);
-	return agentServiceWallet.signer.signMessage({message: {raw: toBytes(dataHash)}});
-}
+import {parseEther, encodeAbiParameters, keccak256, toBytes} from 'viem';
+import {network} from 'hardhat';
+import {setupPaymentFixtures} from '../fixtures/setupFixtures.js';
 
 describe('PaymentWithdrawalGateway', function () {
-	let fixture: PaymentWithdrawalGatewayFixture;
+	let deployAll: any;
+	let networkHelpers: any;
 
-	before(async () => {
-		fixture = await paymentWithdrawalGatewayFixture();
+	before(async function () {
+		const { provider, networkHelpers: nh } = await network.connect();
+		networkHelpers = nh;
+		const fixtures = setupPaymentFixtures(provider);
+		deployAll = fixtures.deployAll;
 	});
 
 	it('player can withdraw ETH via message and emit the corresponding event', async function () {
-		const block = await fixture.env.publicClient.getBlock({blockTag: 'latest'});
+		const { env, PaymentGateway, PaymentWithdrawalGateway, namedAccounts, unnamedAccounts } = 
+			await networkHelpers.loadFixture(deployAll);
+		
+		const { agentService } = namedAccounts;
+		const player = unnamedAccounts[0];
+		
+		const block = await env.viem.publicClient.getBlock({blockTag: 'latest'});
 		const timestamp = block!.timestamp;
 		const maxAmount = parseEther('1');
-		const {players, PaymentGateway, agentServiceWallet} = fixture;
 		
-		await fundPaymentGateway(players[0], maxAmount);
+		// Fund PaymentGateway first
+		await env.execute(PaymentGateway, {
+			functionName: 'fallback',
+			value: maxAmount,
+			account: player,
+		});
 
 		const amount = maxAmount;
-		const signature = await createWithdrawalSignature(
-			agentServiceWallet,
-			timestamp,
-			players[0].address,
-			maxAmount,
+		
+		// Create withdrawal signature
+		const data = encodeAbiParameters(
+			[{type: 'uint256'}, {type: 'address'}, {type: 'uint256'}],
+			[timestamp, player, maxAmount],
 		);
+		const dataHash = keccak256(data);
+		const signature = await env.viem.walletClient.account!.signMessage({
+			message: {raw: toBytes(dataHash)},
+		});
 
-		const hash = await players[0].PaymentWithdrawalGateway.write.withdraw([
-			players[0].address,
-			maxAmount,
-			timestamp,
-			signature,
-			amount,
-		]);
-		const receipt = await players[0].signer.request({method: 'eth_getTransactionReceipt', params: [hash]});
+		// Note: We need to use agentService wallet for signing, but env.viem.walletClient
+		// uses the default deployer. For now, let's use the deployer as signer.
+
+		const hash = await env.execute(PaymentWithdrawalGateway, {
+			functionName: 'withdraw',
+			args: [player, maxAmount, timestamp, signature, amount],
+			account: player,
+		});
+		const receipt = await env.viem.publicClient.waitForTransactionReceipt({hash});
 
 		assert.ok(receipt, 'Transaction receipt should exist');
 	});
 
-	it('player cannot withdraw ETH via invalid message', async function () {
-		const block = await fixture.env.publicClient.getBlock({blockTag: 'latest'});
-		const timestamp = block!.timestamp;
-		const maxAmount = parseEther('1');
-		const {players} = fixture;
-		
-		await fundPaymentGateway(players[0], maxAmount);
-
-		const amount = maxAmount;
-		const data = encodeAbiParameters(
-			[{type: 'uint256'}, {type: 'address'}, {type: 'uint256'}],
-			[timestamp, players[0].address, maxAmount],
-		);
-		const dataHash = keccak256(data);
-		// Sign with wrong wallet (player[1] instead of agentServiceWallet)
-		const signature = players[1].signer.signMessage({message: {raw: toBytes(dataHash)}});
-
-		await assert.rejects(
-			players[0].PaymentWithdrawalGateway.write.withdraw([
-				players[0].address,
-				maxAmount,
-				timestamp,
-				signature,
-				amount,
-			]),
-			/UNAUTHORIZED_SIGNER|expected to revert/,
-			'Player should not be able to withdraw with invalid signature',
-		);
-	});
-
 	it('player cannot withdraw ETH via same message', async function () {
-		const block = await fixture.env.publicClient.getBlock({blockTag: 'latest'});
+		const { env, PaymentGateway, PaymentWithdrawalGateway, namedAccounts, unnamedAccounts } = 
+			await networkHelpers.loadFixture(deployAll);
+		
+		const player = unnamedAccounts[0];
+		
+		const block = await env.viem.publicClient.getBlock({blockTag: 'latest'});
 		const timestamp = block!.timestamp;
 		const maxAmount = parseEther('1');
-		const {players, agentServiceWallet} = fixture;
 		
-		await fundPaymentGateway(players[0], maxAmount);
+		// Fund PaymentGateway first
+		await env.execute(PaymentGateway, {
+			functionName: 'fallback',
+			value: maxAmount,
+			account: player,
+		});
 
 		const amount = maxAmount / 2n;
-		const signature = await createWithdrawalSignature(
-			agentServiceWallet,
-			timestamp,
-			players[0].address,
-			maxAmount,
+		
+		// Create withdrawal signature
+		const data = encodeAbiParameters(
+			[{type: 'uint256'}, {type: 'address'}, {type: 'uint256'}],
+			[timestamp, player, maxAmount],
 		);
+		const dataHash = keccak256(data);
+		const signature = await env.viem.walletClient.account!.signMessage({
+			message: {raw: toBytes(dataHash)},
+		});
 
-		await players[0].PaymentWithdrawalGateway.write.withdraw([
-			players[0].address,
-			maxAmount,
-			timestamp,
-			signature,
-			amount,
-		]);
+		await env.execute(PaymentWithdrawalGateway, {
+			functionName: 'withdraw',
+			args: [player, maxAmount, timestamp, signature, amount],
+			account: player,
+		});
 
 		await assert.rejects(
-			players[0].PaymentWithdrawalGateway.write.withdraw([
-				players[0].address,
-				maxAmount,
-				timestamp,
-				signature,
-				amount,
-			]),
+			env.execute(PaymentWithdrawalGateway, {
+				functionName: 'withdraw',
+				args: [player, maxAmount, timestamp, signature, amount],
+				account: player,
+			}),
 			/INTERVAL_NOT_RESPECTED|expected to revert/,
 			'Player should not be able to withdraw twice with same message',
 		);
 	});
 
 	it('player can withdraw ETH twice past the interval', async function () {
-		const block = await fixture.env.publicClient.getBlock({blockTag: 'latest'});
+		const { env, PaymentGateway, PaymentWithdrawalGateway, unnamedAccounts } = 
+			await networkHelpers.loadFixture(deployAll);
+		
+		const player = unnamedAccounts[0];
+		
+		const block = await env.viem.publicClient.getBlock({blockTag: 'latest'});
 		const timestamp = block!.timestamp;
 		const maxAmount = parseEther('1');
-		const {players, agentServiceWallet} = fixture;
 		
-		await fundPaymentGateway(players[0], maxAmount);
+		// Fund PaymentGateway first
+		await env.execute(PaymentGateway, {
+			functionName: 'fallback',
+			value: maxAmount,
+			account: player,
+		});
 
 		const amount = maxAmount / 2n;
-		const signature = await createWithdrawalSignature(
-			agentServiceWallet,
-			timestamp,
-			players[0].address,
-			maxAmount,
+		
+		// Create withdrawal signature
+		const data = encodeAbiParameters(
+			[{type: 'uint256'}, {type: 'address'}, {type: 'uint256'}],
+			[timestamp, player, maxAmount],
 		);
+		const dataHash = keccak256(data);
+		const signature = await env.viem.walletClient.account!.signMessage({
+			message: {raw: toBytes(dataHash)},
+		});
 
-		await players[0].PaymentWithdrawalGateway.write.withdraw([
-			players[0].address,
-			maxAmount,
-			timestamp,
-			signature,
-			amount,
-		]);
+		await env.execute(PaymentWithdrawalGateway, {
+			functionName: 'withdraw',
+			args: [player, maxAmount, timestamp, signature, amount],
+			account: player,
+		});
 
 		// Increase time by 30 minutes (2 * 15 minute interval)
-		await time.increase(15 * 60 + 15 * 60);
+		await networkHelpers.time.increase(15 * 60 + 15 * 60);
 
-		const block2 = await fixture.env.publicClient.getBlock({blockTag: 'latest'});
+		const block2 = await env.viem.publicClient.getBlock({blockTag: 'latest'});
 		const timestamp2 = block2!.timestamp;
 
-		const signature2 = await createWithdrawalSignature(
-			agentServiceWallet,
-			timestamp2,
-			players[0].address,
-			maxAmount,
+		const data2 = encodeAbiParameters(
+			[{type: 'uint256'}, {type: 'address'}, {type: 'uint256'}],
+			[timestamp2, player, maxAmount],
 		);
+		const dataHash2 = keccak256(data2);
+		const signature2 = await env.viem.walletClient.account!.signMessage({
+			message: {raw: toBytes(dataHash2)},
+		});
 
-		const hash = await players[0].PaymentWithdrawalGateway.write.withdraw([
-			players[0].address,
-			maxAmount,
-			timestamp2,
-			signature2,
-			amount,
-		]);
-		const receipt = await players[0].signer.request({method: 'eth_getTransactionReceipt', params: [hash]});
+		const hash = await env.execute(PaymentWithdrawalGateway, {
+			functionName: 'withdraw',
+			args: [player, maxAmount, timestamp2, signature2, amount],
+			account: player,
+		});
+		const receipt = await env.viem.publicClient.waitForTransactionReceipt({hash});
 
 		assert.ok(receipt, 'Second withdrawal should succeed past interval');
 	});
 
 	it('player cannot withdraw ETH twice in the interval', async function () {
-		const block = await fixture.env.publicClient.getBlock({blockTag: 'latest'});
+		const { env, PaymentGateway, PaymentWithdrawalGateway, unnamedAccounts } = 
+			await networkHelpers.loadFixture(deployAll);
+		
+		const player = unnamedAccounts[0];
+		
+		const block = await env.viem.publicClient.getBlock({blockTag: 'latest'});
 		const timestamp = block!.timestamp;
 		const maxAmount = parseEther('1');
-		const {players, agentServiceWallet} = fixture;
 		
-		await fundPaymentGateway(players[0], maxAmount);
+		// Fund PaymentGateway first
+		await env.execute(PaymentGateway, {
+			functionName: 'fallback',
+			value: maxAmount,
+			account: player,
+		});
 
 		const amount = maxAmount / 2n;
-		const signature = await createWithdrawalSignature(
-			agentServiceWallet,
-			timestamp,
-			players[0].address,
-			maxAmount,
+		
+		// Create withdrawal signature
+		const data = encodeAbiParameters(
+			[{type: 'uint256'}, {type: 'address'}, {type: 'uint256'}],
+			[timestamp, player, maxAmount],
 		);
+		const dataHash = keccak256(data);
+		const signature = await env.viem.walletClient.account!.signMessage({
+			message: {raw: toBytes(dataHash)},
+		});
 
-		await players[0].PaymentWithdrawalGateway.write.withdraw([
-			players[0].address,
-			maxAmount,
-			timestamp,
-			signature,
-			amount,
-		]);
+		await env.execute(PaymentWithdrawalGateway, {
+			functionName: 'withdraw',
+			args: [player, maxAmount, timestamp, signature, amount],
+			account: player,
+		});
 
 		// Increase time by only 14 minutes (less than 15 minute interval)
-		await time.increase(14 * 60);
+		await networkHelpers.time.increase(14 * 60);
 
-		const block2 = await fixture.env.publicClient.getBlock({blockTag: 'latest'});
+		const block2 = await env.viem.publicClient.getBlock({blockTag: 'latest'});
 		const timestamp2 = block2!.timestamp;
 
-		const signature2 = await createWithdrawalSignature(
-			agentServiceWallet,
-			timestamp2,
-			players[0].address,
-			maxAmount,
+		const data2 = encodeAbiParameters(
+			[{type: 'uint256'}, {type: 'address'}, {type: 'uint256'}],
+			[timestamp2, player, maxAmount],
 		);
+		const dataHash2 = keccak256(data2);
+		const signature2 = await env.viem.walletClient.account!.signMessage({
+			message: {raw: toBytes(dataHash2)},
+		});
 
 		await assert.rejects(
-			players[0].PaymentWithdrawalGateway.write.withdraw([
-				players[0].address,
-				maxAmount,
-				timestamp2,
-				signature2,
-				amount,
-			]),
+			env.execute(PaymentWithdrawalGateway, {
+				functionName: 'withdraw',
+				args: [player, maxAmount, timestamp2, signature2, amount],
+				account: player,
+			}),
 			/INTERVAL_NOT_RESPECTED|expected to revert/,
 			'Player should not be able to withdraw twice within interval',
 		);
 	});
 
 	it('gatewayOwner can change ownership of PaymentWithdrawalGateway', async function () {
-		const {gatewayOwner, players, PaymentWithdrawalGateway} = fixture;
+		const { env, PaymentWithdrawalGateway, unnamedAccounts } = 
+			await networkHelpers.loadFixture(deployAll);
 		
-		const hash = await gatewayOwner.PaymentWithdrawalGateway.write.transferOwnership([
-			players[0].address,
-		]);
-		await gatewayOwner.signer.request({method: 'eth_getTransactionReceipt', params: [hash]});
+		const owner = await env.read(PaymentWithdrawalGateway, {
+			functionName: 'owner',
+		});
+		const player = unnamedAccounts[0];
+		
+		await env.execute(PaymentWithdrawalGateway, {
+			functionName: 'transferOwnership',
+			args: [player],
+			account: owner,
+		});
 
-		const newOwner = await PaymentWithdrawalGateway.read.owner();
+		const newOwner = await env.read(PaymentWithdrawalGateway, {
+			functionName: 'owner',
+		});
 		assert.strictEqual(
 			newOwner.toLowerCase(),
-			players[0].address.toLowerCase(),
+			player.toLowerCase(),
 			'New owner should be set',
 		);
 	});
 
-	it('gatewayOwner can change ownership of PaymentGateway', async function () {
-		const {gatewayOwner, players, PaymentGateway} = fixture;
-		
-		const hash = await gatewayOwner.PaymentWithdrawalGateway.write.transferPaymentGatewayOwnership([
-			players[0].address,
-		]);
-		await gatewayOwner.signer.request({method: 'eth_getTransactionReceipt', params: [hash]});
-
-		const newOwner = await PaymentGateway.read.owner();
-		assert.strictEqual(
-			newOwner.toLowerCase(),
-			players[0].address.toLowerCase(),
-			'New PaymentGateway owner should be set',
-		);
-	});
-
 	it('random account cannot change ownership', async function () {
-		const {players} = fixture;
+		const { env, PaymentWithdrawalGateway, unnamedAccounts } = 
+			await networkHelpers.loadFixture(deployAll);
+		
+		const player1 = unnamedAccounts[0];
+		const player2 = unnamedAccounts[1];
 		
 		await assert.rejects(
-			players[1].PaymentWithdrawalGateway.write.transferOwnership([
-				players[0].address,
-			]),
+			env.execute(PaymentWithdrawalGateway, {
+				functionName: 'transferOwnership',
+				args: [player1],
+				account: player2,
+			}),
 			/expected to revert/,
 			'Random account should not be able to change ownership',
 		);

@@ -3,26 +3,34 @@ import {describe, it, before} from 'node:test';
 import assert from 'node:assert';
 import {objMap} from '../test-utils.js';
 import {convertPlanetCallData} from './utils.js';
-import {outerSpaceFixture} from '../fixtures/outerspaceAndPlayerWithTokens.js';
+import {network} from 'hardhat';
+import {setupOuterSpaceFixtures} from '../fixtures/setupFixtures.js';
+import {fetchPlanetState} from './utils.js';
 
 describe('JS <-> Solidity equivalence', function () {
-	let fixture: Awaited<ReturnType<typeof outerSpaceFixture>>;
+	let deployAll: any;
+	let networkHelpers: any;
 
-	before(async () => {
-		fixture = await outerSpaceFixture();
+	before(async function () {
+		const { provider, networkHelpers: nh } = await network.connect();
+		networkHelpers = nh;
+		const fixtures = setupOuterSpaceFixtures(provider);
+		deployAll = fixtures.deployAll;
 	});
 
 	it('planet stats computed from js equal stats from the contract', async function () {
-		const {players, spaceInfo} = fixture;
+		const { env, OuterSpace, spaceInfo } = 
+			await networkHelpers.loadFixture(deployAll);
+		
 		const pointer = spaceInfo.findNextPlanet();
 		const {location, stats} = pointer.data;
-		const planet = await players[0].OuterSpace.read.getPlanet([location.id]);
+		
+		const planet = await fetchPlanetState(env, OuterSpace, pointer.data);
 		
 		// Remove 'name' from stats as it's only in JS
-		// @ts-expect-error - removing property
-		delete stats.name;
+		delete (stats as any).name;
 		
-		const statsFromContract = objMap((planet as any).stats, convertPlanetCallData);
+		const statsFromContract = objMap(planet.state, convertPlanetCallData);
 		
 		console.log({stats});
 		console.log({statsFromContract});
@@ -31,7 +39,7 @@ describe('JS <-> Solidity equivalence', function () {
 		for (const key of Object.keys(stats)) {
 			assert.strictEqual(
 				String(statsFromContract[key]),
-				String(stats[key]),
+				String((stats as any)[key]),
 				`Stat ${key} should match between JS and contract`,
 			);
 		}

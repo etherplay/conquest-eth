@@ -1,5 +1,4 @@
 // Test utilities using hardhat-network-helpers and native assertions
-import {time} from '@nomicfoundation/hardhat-network-helpers';
 import assert from 'node:assert';
 
 /**
@@ -26,19 +25,23 @@ export async function expectRevert(
 }
 
 /**
- * Increase time by given number of seconds
- * Wraps hardhat-network-helpers time.increase
+ * Increase time by given number of seconds (requires networkHelpers from test)
  */
-export async function increaseTime(numSec: number): Promise<void> {
-	await time.increase(numSec);
+export async function increaseTime(
+	networkHelpers: {time: {increase: (seconds: number) => Promise<number>}},
+	numSec: number,
+): Promise<void> {
+	await networkHelpers.time.increase(numSec);
 }
 
 /**
- * Get the current timestamp
- * Wraps hardhat-network-helpers time.latest
+ * Get the current timestamp (requires networkHelpers from test)
  */
-export async function getTime(): Promise<bigint> {
-	return await time.latest();
+export async function getTime(
+	networkHelpers: {time: {latest: () => Promise<number>}},
+): Promise<bigint> {
+	const timestamp = await networkHelpers.time.latest();
+	return BigInt(timestamp);
 }
 
 /**
@@ -58,7 +61,7 @@ export function objMap<T>(
 		if (Number.isNaN(keyAsNumber) || keyAsNumber >= (obj as any).length) {
 			let item = obj[key];
 			if (options && options.depth > 0 && typeof item === 'object' && item !== null) {
-				item = objMap(item as any, func, {depth: options.depth - 1});
+				item = objMap(item as any, func, {depth: options.depth - 1}) as T;
 			} else {
 				item = func(item, index);
 			}

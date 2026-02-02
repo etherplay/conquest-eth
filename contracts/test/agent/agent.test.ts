@@ -1,25 +1,30 @@
 // Test for Agent deterministic deployment
 import {describe, it, before} from 'node:test';
 import assert from 'node:assert';
-import {outerSpaceFixture} from '../fixtures/outerspaceAndPlayerWithTokens.js';
+import {network} from 'hardhat';
+import {setupFixtures} from '../fixtures/setupFixtures.js';
 
 describe('Agent', function () {
-	let fixture: Awaited<ReturnType<typeof outerSpaceFixture>>;
+	let deployAll: any;
+	let networkHelpers: any;
 
-	before(async () => {
-		fixture = await outerSpaceFixture();
+	before(async function () {
+		const { provider, networkHelpers: nh } = await network.connect();
+		networkHelpers = nh;
+		const fixtures = setupFixtures(provider);
+		deployAll = fixtures.deployAll;
 	});
 
 	it('Agent can be deployed deterministically', async function () {
-		const {env, players, OuterSpace} = fixture;
+		const { env, namedAccounts } = await networkHelpers.loadFixture(deployAll);
+		const deployer = namedAccounts.deployer;
+		const OuterSpace = env.get('OuterSpace');
 		
 		// Deploy Agent contract deterministically
-		// In v2, we use env.deploy() for contract deployment
 		const deployment = await env.deploy({
 			name: 'AgentTest',
-			account: players[0].address,
-			artifact: 'Agent',
-			args: [players[0].address, OuterSpace.address],
+			account: deployer,
+			args: [deployer, OuterSpace.address],
 		});
 
 		console.log({

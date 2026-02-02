@@ -1,72 +1,59 @@
 // Fixture for setting up OuterSpace with players and tokens
-import {createFixture} from './index.js';
-import {parseEther} from 'viem';
 import type {Environment} from '../../rocketh/config.js';
-import type {AllianceRegistry, BasicAlliance, ConquestToken} from '../../generated/artifacts/ConquestToken.js';
-import {setupUsers} from '../utils/index.js';
 import {SpaceInfo} from 'conquest-eth-common';
+import {parseEther} from 'viem';
+import {loadAndExecuteDeploymentsFromFiles} from '../../rocketh/environment.js';
 
 export type OuterSpacePlayerFixture = {
 	env: Environment;
-	players: ReturnType<typeof setupUsers> extends Promise<infer T> ? T : never;
-	BasicAllianceFactory: any;
-	AllianceRegistry: any;
-	OuterSpace: any;
-	ConquestToken: any;
+	namedAccounts: Record<string, `0x${string}`>;
+	unnamedAccounts: `0x${string}`[];
+	BasicAllianceFactory: {address: `0x${string}`};
+	AllianceRegistry: {address: `0x${string}`};
+	OuterSpace: {address: `0x${string}`};
+	ConquestToken: {address: `0x${string}`};
 	spaceInfo: SpaceInfo;
 };
 
 /**
- * Fixture that deploys all contracts and distributes tokens to players
+ * Setup fixture for Outerspace tests - must be called with provider from test
  */
-export const outerSpaceFixture = createFixture(async (): Promise<OuterSpacePlayerFixture> => {
-	const env = await (await import('../../rocketh/environment.js')).loadAndExecuteDeploymentsFromFiles();
-	const accounts = await env.accounts();
-	const {claimKeyDistributor} = accounts.namedAccounts;
-	const unNamedAccounts = accounts.unnamedAccounts;
+export async function setupOuterSpaceFixture(provider: any): Promise<OuterSpacePlayerFixture> {
+	const env = await loadAndExecuteDeploymentsFromFiles({provider});
+	const {claimKeyDistributor} = env.namedAccounts;
+	const unnamedAccounts = env.unnamedAccounts;
 
 	// Distribute tokens to players
 	const distribution = [1000n, 500n, 3000n, 100n];
 	for (let i = 0; i < distribution.length; i++) {
-		const account = unNamedAccounts[i];
+		const account = unnamedAccounts[i];
 		const amount = distribution[i];
-		await env.execute({
-			account: claimKeyDistributor.address,
-			contract: 'ConquestToken',
+		const ConquestToken = env.get('ConquestToken');
+		await env.execute(ConquestToken, {
+			account: claimKeyDistributor,
 			functionName: 'transfer',
-			args: [account.address, parseEther(String(amount))],
+			args: [account, parseEther(String(amount))],
 		});
 	}
 
-	// Get contracts
-	const BasicAllianceFactory = await env.get('BasicAllianceFactory');
-	const AllianceRegistry = await env.get('AllianceRegistry');
-	const OuterSpace = await env.get('OuterSpace');
-	const ConquestToken = await env.get('ConquestToken');
+	// Get deployments
+	const BasicAllianceFactory = env.get('BasicAllianceFactory');
+	const AllianceRegistry = env.get('AllianceRegistry');
+	const OuterSpace = env.get('OuterSpace');
+	const ConquestToken = env.get('ConquestToken');
 
 	// Get OuterSpace deployment for linked data
-	const outerSpaceDeployment = await env.getDeployment('OuterSpace');
+	const outerSpaceDeployment = env.getDeployment('OuterSpace');
 	const spaceInfo = new SpaceInfo(outerSpaceDeployment.linkedData);
-
-	// Setup users with contracts
-	const players = await setupUsers(
-		unNamedAccounts,
-		{
-			BasicAllianceFactory,
-			AllianceRegistry,
-			OuterSpace,
-			ConquestToken,
-		},
-		async (address) => env.getWalletClient(address),
-	);
 
 	return {
 		env,
-		players,
+		namedAccounts: env.namedAccounts,
+		unnamedAccounts,
 		BasicAllianceFactory,
 		AllianceRegistry,
 		OuterSpace,
 		ConquestToken,
 		spaceInfo,
 	};
-});
+}

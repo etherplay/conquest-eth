@@ -4,43 +4,21 @@ import assert from 'node:assert';
 import {objMap} from '../test-utils.js';
 import {convertPlanetCallData} from './utils.js';
 import type {TestConversion} from '../../generated/artifacts/TestConversion.js';
+import {network} from 'hardhat';
 import {loadAndExecuteDeploymentsFromFiles} from '../../rocketh/environment.js';
-import {setupUsers, type User} from '../utils/index.js';
-
-type Contracts = {
-	TestConversion: TestConversion;
-};
-
-type TestConversionFixture = {
-	env: Awaited<ReturnType<typeof loadAndExecuteDeploymentsFromFiles>>;
-	players: User<Contracts>[];
-};
-
-/**
- * Fixture for TestConversion tests
- */
-async function testConversionFixture(): Promise<TestConversionFixture> {
-	const env = await loadAndExecuteDeploymentsFromFiles();
-	const accounts = await env.accounts();
-	const unNamedAccounts = accounts.unnamedAccounts;
-
-	// Deploy TestConversion contract
-	const TestConversion = await env.get<TestConversion>('TestConversion');
-
-	const players = await setupUsers(
-		unNamedAccounts,
-		{TestConversion},
-		async (address) => env.getWalletClient(address),
-	);
-
-	return {env, players};
-}
 
 describe('conversion solidity', function () {
-	let fixture: TestConversionFixture;
+	let deployAll: any;
+	let networkHelpers: any;
 
-	before(async () => {
-		fixture = await testConversionFixture();
+	before(async function () {
+		const { provider, networkHelpers: nh } = await network.connect();
+		networkHelpers = nh;
+		deployAll = async () => {
+			const env = await loadAndExecuteDeploymentsFromFiles({provider});
+			const TestConversion = env.get<TestConversion>('TestConversion');
+			return { env, TestConversion };
+		};
 	});
 
 	const testCases = [
@@ -57,9 +35,13 @@ describe('conversion solidity', function () {
 
 	for (const testCase of testCases) {
 		it(`conversion for ${testCase}`, async function () {
-			const {TestConversion} = fixture;
-			const hash = await TestConversion.write.testConversion([testCase as `0x${string}`]);
-			const receipt = await fixture.env.publicClient.waitForTransactionReceipt({hash});
+			const { env, TestConversion } = await networkHelpers.loadFixture(deployAll);
+			const hash = await env.execute(TestConversion, {
+				functionName: 'testConversion',
+				args: [testCase as `0x${string}`],
+				account: env.namedAccounts.deployer,
+			});
+			const receipt = await env.viem.publicClient.waitForTransactionReceipt({hash});
 			
 			assert.ok(receipt, 'Transaction receipt should exist');
 			console.log('-----------------------------------------');

@@ -24,7 +24,8 @@ export function createFixture<T>(fn: FixtureFn<T>): FixtureFn<T> {
 
 /**
  * Base fixture that loads deployments from files
+ * Note: This must be called with provider from the test
  */
-export const baseFixture = createFixture(async (): Promise<Environment> => {
-	return await loadAndExecuteDeploymentsFromFiles();
-});
+export async function loadDeployments(provider: any): Promise<Environment> {
+	return await loadAndExecuteDeploymentsFromFiles({provider});
+}
