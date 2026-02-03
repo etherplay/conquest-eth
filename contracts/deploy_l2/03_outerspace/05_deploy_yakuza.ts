@@ -17,7 +17,7 @@ export default deployScript(
 		//const numSecondsPerTokens = 259200; // 12$ gives you 36 days
 		const numSecondsPerTokens = 302400n; // 2$ gives you 1 week
 		const config = {
-			genesis: linkedData.genesisHash,
+			genesis: linkedData.genesis,
 			acquireNumSpaceships: linkedData.acquireNumSpaceships,
 			productionCapAsDuration: linkedData.productionCapAsDuration,
 			frontrunningDelay: linkedData.frontrunningDelay,

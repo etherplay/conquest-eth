@@ -89,7 +89,7 @@ export class SpaceInfo {
 	// private store: Writable<PlanetInfo[]>;
 
 	constructor(config: {
-		genesisHash: `0x${string}`;
+		genesis: `0x${string}`;
 		resolveWindow: number;
 		timePerDistance: number;
 		exitDuration: number;
@@ -114,7 +114,7 @@ export class SpaceInfo {
 		this.upkeepProductionDecreaseRatePer10000th =
 			config.upkeepProductionDecreaseRatePer10000th;
 		this.fleetSizeFactor6 = config.fleetSizeFactor6;
-		this.genesis = config.genesisHash;
+		this.genesis = config.genesis;
 		this.giftTaxPer10000 = config.giftTaxPer10000;
 		this.stakeRange = config.stakeRange;
 		this.stakeMultiplier10000th = config.stakeMultiplier10000th;

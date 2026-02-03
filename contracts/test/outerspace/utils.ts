@@ -1,11 +1,10 @@
 // Outerspace test utilities using viem and env API
 import {keccak256, encodeAbiParameters, zeroAddress, encodePacked} from 'viem';
-import type {SpaceInfo} from 'conquest-eth-common';
-import type {PlanetInfo} from 'conquest-eth-common/';
 import {Abi_IOuterSpace} from '../../generated/abis/IOuterSpace.js';
 import {Deployment} from 'rocketh/types';
 import {Abi_PlayToken} from '../../generated/abis/PlayToken.js';
 import {Environment} from '../../rocketh/config.js';
+import {PlanetInfo, SpaceInfo} from '../../js/index.js';
 
 export type PlanetState = PlanetInfo & {
 	state: any;
@@ -110,9 +109,9 @@ export async function sendInSecret(
 	receipt: {hahs: `0x${string}`}; // TODO reciept type
 	timeRequired: number;
 	distance: number;
-	fleetId: string;
-	from: string;
-	to: string;
+	fleetId: `0x${string}`;
+	from: bigint;
+	to: bigint;
 	secret: `0x${string}`;
 	gift: boolean;
 	specific: `0x${string}`;

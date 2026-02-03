@@ -1,6 +1,5 @@
 import type {EthereumProvider} from 'hardhat/types/providers';
 import {loadAndExecuteDeploymentsFromFiles} from '../../rocketh/environment.js';
-import {SpaceInfo} from 'conquest-eth-common';
 import {Abi, parseEther} from 'viem';
 
 // Import ABIs
@@ -17,6 +16,7 @@ import {Abi_PlayToken} from '../../generated/abis/PlayToken.js';
 import {Abi_RewardsGenerator} from '../../generated/abis/RewardsGenerator.js';
 import {Abi_Yakuza} from '../../generated/abis/Yakuza.js';
 import {Abi_IOuterSpace} from '../../generated/abis/IOuterSpace.js';
+import {SpaceInfo} from '../../js/index.js';
 
 export function setupFixtures(provider: EthereumProvider) {
 	return {

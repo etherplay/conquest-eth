@@ -178,11 +178,11 @@ export default deployScript(
 				'0x21B25FA48DFAF94F6FC5D7C14C206CC0F716AAE46A5EA817445EA411E3299543';
 		}
 
-		console.log({
-			PlayToken: PlayToken.address,
-			FreePlayToken: FreePlayToken.address,
+		const config = {
+			stakingToken: PlayToken.address,
+			freeStakingToken: FreePlayToken.address,
 			allianceRegistry: allianceRegistry.address,
-			genesisHash,
+			genesis: genesisHash,
 			resolveWindow,
 			timePerDistance,
 			exitDuration,
@@ -199,7 +199,13 @@ export default deployScript(
 			stakeMultiplier10000th,
 			bootstrapSessionEndTime,
 			infinityStartTime,
-		});
+		};
+
+		const linkedData = {
+			...config,
+			chainGenesisHash,
+			deploymentTimestamp,
+		};
 
 		await env.diamond(
 			'OuterSpace',
@@ -207,27 +213,7 @@ export default deployScript(
 				account: deployer,
 			},
 			{
-				linkedData: {
-					genesisHash,
-					resolveWindow,
-					timePerDistance,
-					exitDuration,
-					acquireNumSpaceships,
-					productionSpeedUp,
-					chainGenesisHash,
-					frontrunningDelay,
-					productionCapAsDuration,
-					upkeepProductionDecreaseRatePer10000th,
-					fleetSizeFactor6,
-					initialSpaceExpansion,
-					expansionDelta,
-					giftTaxPer10000,
-					stakeRange,
-					stakeMultiplier10000th,
-					bootstrapSessionEndTime,
-					infinityStartTime,
-					deploymentTimestamp,
-				},
+				linkedData,
 				facets: [
 					{
 						artifact: artifacts.OuterSpaceInitializationFacet,
@@ -249,30 +235,7 @@ export default deployScript(
 					{artifact: artifacts.OuterSpaceStakingFacet, deterministic: true},
 					{artifact: artifacts.OuterSpaceRewardFacet, deterministic: true},
 				],
-				facetsArgs: [
-					{
-						stakingToken: PlayToken.address,
-						freeStakingToken: FreePlayToken.address,
-						allianceRegistry: allianceRegistry.address,
-						genesis: genesisHash,
-						resolveWindow,
-						timePerDistance,
-						exitDuration,
-						acquireNumSpaceships,
-						productionSpeedUp,
-						frontrunningDelay,
-						productionCapAsDuration,
-						upkeepProductionDecreaseRatePer10000th,
-						fleetSizeFactor6,
-						initialSpaceExpansion,
-						expansionDelta,
-						giftTaxPer10000,
-						stakeRange,
-						stakeMultiplier10000th,
-						bootstrapSessionEndTime,
-						infinityStartTime,
-					},
-				],
+				facetsArgs: [config],
 				execute: {
 					type: 'facet',
 					functionName: 'init',

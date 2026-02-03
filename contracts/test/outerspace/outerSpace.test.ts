@@ -2,10 +2,9 @@
 import {describe, it, before} from 'node:test';
 import assert from 'node:assert';
 import {network} from 'hardhat';
-import {SpaceInfo} from 'conquest-eth-common';
 import {acquire, fetchPlanetState, sendInSecret} from './utils.js';
 import {setupFixtures} from '../fixtures/index.js';
-import {encodeAbiParameters, zeroAddress} from 'viem';
+import {SpaceInfo} from '../../js/index.js';
 
 const {provider, networkHelpers} = await network.connect();
 const {deployAll} = setupFixtures(provider);
