@@ -2,6 +2,7 @@ import {describe, it} from 'node:test';
 import {network} from 'hardhat';
 import {setupFixtures} from '../fixtures/index.js';
 import {artifacts} from '../../rocketh/deploy.js';
+import assert from 'node:assert';
 
 const {provider, networkHelpers} = await network.connect();
 const {deployAll} = setupFixtures(provider);
@@ -22,5 +23,7 @@ describe('Combat: testing complex combat mechanics with real Solidity', function
 			account: namedAccounts.deployer,
 			args: [outerSpaceLinkedData as any],
 		});
+
+		assert.ok(Combat.address);
 	});
 });
