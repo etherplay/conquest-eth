@@ -21,7 +21,6 @@ const l2_deployments: string[] = [
 const l2_deployments_dev: string[] = [
 	// 'deploy_l2/00_block_upgrades',
 	'deploy_l2/04_setup',
-	'deploy_l2/10_agent_service',
 	'deploy_l2/20_basic_alliances',
 	'deploy_l2/30_plugins',
 ];
