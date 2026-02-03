@@ -1,7 +1,7 @@
 {
-  "name": "conquest-eth-contracts",
-  "version": "0.1.1",
-  "description": "conquest-eth ethereum smart contracts",
+  "name": "conquest-eth-v0-contracts",
+  "version": "0.0.0",
+  "description": "conquest-eth v0 ethereum smart contracts",
   "type": "module",
   "exports": {
     "./deploy/*": "./dist/deploy/*",
