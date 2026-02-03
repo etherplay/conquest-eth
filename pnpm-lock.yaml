@@ -164,9 +164,6 @@ importers:
       chai-ethers:
         specifier: ^0.0.1
         version: 0.0.1(bufferutil@4.0.8)(utf-8-validate@5.0.8)
-      conquest-eth-common:
-        specifier: workspace:*
-        version: link:../common-lib
       cross-var:
         specifier: ^1.1.0
         version: 1.1.0
@@ -198,8 +195,8 @@ importers:
         specifier: ^2.5.0
         version: 2.5.0(hardhat@3.1.5(bufferutil@4.0.8)(utf-8-validate@5.0.8))
       hardhat-deploy:
-        specifier: ^2.0.0-next.72
-        version: 2.0.0-next.73(@rocketh/node@0.17.26(bufferutil@4.0.8)(rocketh@0.17.23(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(hardhat@3.1.5(bufferutil@4.0.8)(utf-8-validate@5.0.8))
+        specifier: ^2.0.0-next.74
+        version: 2.0.0-next.74(@rocketh/node@0.17.26(bufferutil@4.0.8)(rocketh@0.17.23(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(hardhat@3.1.5(bufferutil@4.0.8)(utf-8-validate@5.0.8))
       ldenv:
         specifier: ^0.3.16
         version: 0.3.16
@@ -5266,8 +5263,8 @@ packages:
     peerDependencies:
       hardhat: ^2.0.0
 
-  hardhat-deploy@2.0.0-next.73:
-    resolution: {integrity: sha512-baOobQB74udPkuZJvCFqtb8rx+pv7+sNi+LDw2Wxage+BNM3ryvpzSJ3niW+rkg2gRnS6ADhY9url7tf/h3X1Q==}
+  hardhat-deploy@2.0.0-next.74:
+    resolution: {integrity: sha512-j5JIdPyObX6VzeJVJndl6Frf2I4VXGUMaRuS60orhHd/gviAW13ffSFP0o8BGDcFiA1y/QtqvOupSKd1cHihzw==}
     engines: {node: '>=22.0.0'}
     hasBin: true
     peerDependencies:
@@ -15466,7 +15463,7 @@ snapshots:
       cli-table3: 0.6.1
       hardhat: 3.1.5(bufferutil@4.0.8)(utf-8-validate@5.0.8)
 
-  hardhat-deploy@2.0.0-next.73(@rocketh/node@0.17.26(bufferutil@4.0.8)(rocketh@0.17.23(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(hardhat@3.1.5(bufferutil@4.0.8)(utf-8-validate@5.0.8)):
+  hardhat-deploy@2.0.0-next.74(@rocketh/node@0.17.26(bufferutil@4.0.8)(rocketh@0.17.23(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(hardhat@3.1.5(bufferutil@4.0.8)(utf-8-validate@5.0.8)):
     dependencies:
       '@nomicfoundation/hardhat-zod-utils': 3.0.1(zod@4.3.6)
       '@rocketh/node': 0.17.26(bufferutil@4.0.8)(rocketh@0.17.23(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
