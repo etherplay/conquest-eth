@@ -919,9 +919,9 @@ export class SpaceInfo {
 		}
 
 		const attackFactor =
-			numAttack * 1000000n -
-			BigInt(this.fleetSizeFactor6) +
-			(numAttack * BigInt(this.fleetSizeFactor6)) / numDefense;
+			numAttack *
+			(1000000n - BigInt(this.fleetSizeFactor6) +
+				(numAttack * BigInt(this.fleetSizeFactor6)) / numDefense);
 
 		const attackDamage =
 			(attackFactor * BigInt(attack)) / BigInt(defense) / 1000000n;
@@ -936,9 +936,9 @@ export class SpaceInfo {
 		} else {
 			// attack succeed
 			const defenseFactor =
-				numDefense * 1000000n -
-				BigInt(this.fleetSizeFactor6) +
-				(numDefense * BigInt(this.fleetSizeFactor6)) / numAttack;
+				numDefense *
+				(1000000n - BigInt(this.fleetSizeFactor6) +
+					(numDefense * BigInt(this.fleetSizeFactor6)) / numAttack);
 			let defenseDamage =
 				(defenseFactor * BigInt(defense)) / BigInt(attack) / 1000000n;
 			if (defenseDamage >= numAttack) {

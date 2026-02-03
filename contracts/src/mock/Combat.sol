@@ -7,12 +7,12 @@ contract Combat is OuterSpaceFacetBase {
     // solhint-disable-next-line no-empty-blocks
     constructor(Config memory config) OuterSpaceFacetBase(config) {}
 
-    function computeResolutionResult(
-        ResolutionState memory rState,
-        PlanetUpdateState memory toPlanetUpdate
-    ) external view returns (ResolutionState memory, PlanetUpdateState memory) {
-        _computeResolutionResult(rState, toPlanetUpdate);
-
-        return (rState, toPlanetUpdate);
+    function computeFight(
+        uint256 numAttack,
+        uint256 numDefense,
+        uint256 attack,
+        uint256 defense
+    ) external view returns (uint32 attackerLoss, uint32 defenderLoss) {
+        return _computeFight(numAttack, numDefense, attack, defense);
     }
 }
