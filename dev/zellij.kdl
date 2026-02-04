@@ -1,44 +1,52 @@
 layout {
-	pane {
-		pane {}
-		pane split_direction="vertical" {
-			pane name="CONTRACTS:WATCH" command="bash"  {
-				args "-c" "pnpm contracts:dev; cd contracts; ${SHELL-bash}"
-			}
-
-			pane name="NODE" command="bash"  {
-				args "-c" "pnpm local_node; ${SHELL-bash}"
-			}
+	pane split_direction="vertical" {
+		
+	}
+	pane split_direction="vertical" {
+		pane name="web" command="pnpm"  {
+			args "web:dev"
 		}
-		pane split_direction="vertical" {
-			pane name="COMMON" command="bash"  {
-				args "-c" "pnpm common:dev; cd common-lib; ${SHELL-bash}"
-			}
-			pane name="WEB" command="bash"  {
-				args "-c" "pnpm web:dev; cd web; ${SHELL-bash}"
-			}
+		pane name="COMMON" command="pnpm"  {
+			args "common:dev"
 		}
-		pane name="helper-services"  split_direction="vertical" {
-			pane name="FUZD"  command="bash"  {
-				args "-c" "pnpm fuzd:dev; cd helper-services/fuzd; ${SHELL-bash}"
-			}
-			pane name="SYNC"  command="bash"  {
-				args "-c" "pnpm sync:dev; cd helper-services/secp256k1-db; ${SHELL-bash}"
-			}
-			pane name="MISSIV"  command="bash"  {
-				args "-c" "pnpm missiv:dev; cd helper-services/missiv; ${SHELL-bash}"
-			}
+		// pane name="svelte-check" command="pnpm"  {
+		// 	args "--filter" "./web" "check:watch"
+		// }
+	}
+	pane split_direction="vertical" {
+		pane name="local node" command="pnpm"  {
+			args "--filter" "./contracts" "local_node"
 		}
-		pane name="externals"  split_direction="vertical" {
-			pane name="EXTERNAL"  command="bash"  {
-				args "-c" "pnpm externals"
-			}
-			pane name="SUBGRAPH DEPLOY"  command="bash"  {
-				args "-c" "pnpm subgraph:deploy:local:watch; cd subgraph; ${SHELL-bash}"
-			}
-			pane name="SUBGRAPH SCHEMA"  command="bash"  {
-				args "-c" "pnpm subgraph:schema:watch; cd subgraph; ${SHELL-bash}"
-			}
+		pane name="watch and compile" command="pnpm"  {
+			args "--filter" "./contracts" "compile:watch"
+		}
+		pane name="watch and deploy" command="pnpm"  {
+			args "--filter" "./contracts" "deploy:watch" "localhost" "--json" "../web/src/lib/contracts.json"
+		}
+		pane name="watch and build typescript" command="pnpm"  {
+			args "--filter" "./contracts" "typescript:watch"
+		}
+	}
+	pane name="helper-services"  split_direction="vertical" {
+		pane name="FUZD"  command="bash"  {
+			args "-c" "pnpm fuzd:dev; cd helper-services/fuzd; ${SHELL-bash}"
+		}
+		pane name="SYNC"  command="bash"  {
+			args "-c" "pnpm sync:dev; cd helper-services/secp256k1-db; ${SHELL-bash}"
+		}
+		pane name="MISSIV"  command="bash"  {
+			args "-c" "pnpm missiv:dev; cd helper-services/missiv; ${SHELL-bash}"
+		}
+	}
+	pane name="externals"  split_direction="vertical" {
+		pane name="EXTERNAL"  command="bash"  {
+			args "-c" "pnpm externals"
+		}
+		pane name="SUBGRAPH DEPLOY"  command="bash"  {
+			args "-c" "pnpm subgraph:deploy:local:watch; cd subgraph; ${SHELL-bash}"
+		}
+		pane name="SUBGRAPH SCHEMA"  command="bash"  {
+			args "-c" "pnpm subgraph:schema:watch; cd subgraph; ${SHELL-bash}"
 		}
 	}
 

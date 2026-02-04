@@ -54,6 +54,7 @@
     "bech32": "^2.0.0",
     "bn.js": "^5.2.0",
     "conquest-eth-common": "workspace:*",
+    "conquest-eth-v0-contracts": "workspace:*",
     "cssnano": "^5.0.14",
     "eslint": "^8.6.0",
     "eslint-config-prettier": "^8.3.0",

@@ -32,7 +32,16 @@ const chainNames = {
 const stat = fs.statSync(pathArg);
 let contractsInfo;
 if (stat.isDirectory()) {
-  const chainId = fs.readFileSync(path.join(pathArg, '.chainId')).toString();
+  console.log(`reading from a folder: ${pathArg}`);
+  const chainStr = fs.readFileSync(path.join(pathArg, '.chain'), 'utf-8');
+  let chainId;
+  if (chainStr) {
+    const chain = JSON.parse(chainStr);
+    chainId = chain.chainId;
+  } else {
+    chainId = fs.readFileSync(path.join(pathArg, '.chainId')).toString();
+  }
+
   const chainName = chainNames[chainId];
   if (!chainName) {
     throw new Error(`chainId ${chainId} not known`);
@@ -52,9 +61,10 @@ if (stat.isDirectory()) {
     }
   }
 } else {
+  console.log(`reading from a single file: ${pathArg}`);
   const contractsInfoFile = JSON.parse(fs.readFileSync(pathArg).toString());
 
-  const chainId = contractsInfoFile.chainId;
+  const chainId = contractsInfoFile.chainId || contractsInfoFile.chain.id.toString();
   const chainName = chainNames[chainId];
   if (!chainName) {
     throw new Error(`chainId ${chainId} not known`);

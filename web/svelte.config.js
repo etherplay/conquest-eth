@@ -25,7 +25,7 @@ console.log(`VERSION: ${VERSION}`);
 if (!process.env.VITE_CHAIN_ID) {
   try {
     const contractsInfo = JSON.parse(fs.readFileSync('./src/lib/contracts.json'));
-    process.env.VITE_CHAIN_ID = contractsInfo.chainId;
+    process.env.VITE_CHAIN_ID = contractsInfo.chain.id.toString();
   } catch (e) {
     console.error(e);
   }

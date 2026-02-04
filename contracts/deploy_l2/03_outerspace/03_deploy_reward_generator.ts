@@ -96,6 +96,10 @@ export default deployScript(
 			{
 				proxyDisabled: false,
 				execute: 'postUpgrade',
+				linkedData: {
+					rewardRateMillionth,
+					fixedRewardRateThousandsMillionth,
+				},
 			},
 		);
 

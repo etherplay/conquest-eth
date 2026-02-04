@@ -10,7 +10,10 @@
     "./abis/*": "./dist/generated/abis/*",
     "./deployments/*": "./deployments/*",
     "./src/*": "./src/*",
-    ".": {"import":"./dist/js/index.js", "types": "./dist/js/index.d.ts"}
+    ".": {
+      "import": "./dist/js/index.js",
+      "types": "./dist/js/index.d.ts"
+    }
   },
   "files": [
     "dist",
@@ -31,6 +34,7 @@
     "@openzeppelin/contracts": "^4.3.2",
     "@rocketh/deploy": "^0.17.17",
     "@rocketh/diamond": "^0.17.22",
+    "@rocketh/export": "^0.17.26",
     "@rocketh/node": "^0.17.26",
     "@rocketh/proxy": "^0.17.21",
     "@rocketh/read-execute": "^0.17.17",
@@ -78,13 +82,14 @@
     "---------------------- INTERNAL ----------------------": "",
     ":deploy+export": "cross-var pnpm hardhat --network $MODE deploy --skip-prompts && cross-var rocketh-export -e $MODE",
     "---------------------- DEV ---------------------- ": "",
-    "local_node": "ldenv -d localhost hardhat node",
+    "old:local_node": "ldenv -d localhost hardhat node",
+    "local_node": "anvil",
     "compile": "hardhat compile",
     "compile:watch": "as-soon -w src pnpm compile",
     "fork:execute": "ldenv tsx @=HARDHAT_FORK=@@MODE @@",
     "fork:deploy": "pnpm compile --build-profile production && ldenv hardhat @=HARDHAT_FORK=@@MODE deploy @@",
-    "deploy:dev": "ldenv -d localhost pnpm :deploy+export @@",
-    "deploy:watch": "wait-on ./generated && ldenv -m localhost pnpm as-soon -w generated -w deploy pnpm run deploy:dev @@MODE @@",
+    "deploy:dev": "ldenv --verbose -d localhost pnpm :deploy+export @@",
+    "deploy:watch": "wait-on ./generated && ldenv --verbose -m localhost pnpm as-soon -w generated -w deploy pnpm run deploy:dev @@MODE @@",
     "test": "hardhat test",
     "test:watch": "wait-on ./generated && as-soon -w generated -w test hardhat test --no-compile",
     "typescript:watch": "as-soon -w js pnpm typescript",
@@ -96,7 +101,7 @@
     "execute": "ldenv -n HARDHAT_NETWORK tsx @@",
     "deploy": "pnpm compile --build-profile production && ldenv hardhat --network @@MODE deploy @@",
     "verify": "ldenv rocketh-verify -e @@MODE @@",
-    "export": "ldenv rocketh-export -e @@MODE @@",
+    "export": "ldenv --verbose rocketh-export -e @@MODE @@",
     "typescript": "tsc",
     "---------------------- START ---------------------- ": "",
     "stop": "zellij kill-session $npm_package_name",

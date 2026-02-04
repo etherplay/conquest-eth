@@ -1,7 +1,7 @@
 import {initWeb3W} from 'web3w';
 // import {WalletConnectModuleLoader} from 'web3w-walletconnect-loader';
 // import {PortisModuleLoader} from 'web3w-portis-loader';
-import {contractsInfos} from '$lib/blockchain/contracts';
+import {contractsInfos, initialContractsInfos} from '$lib/blockchain/contracts';
 import {notifications} from '../web/notifications';
 import {
   webWalletURL,
@@ -20,8 +20,17 @@ import {chainTempo} from '$lib/blockchain/chainTempo';
 import * as Sentry from '@sentry/browser';
 import {get} from 'svelte/store';
 
+// convert to old format
+function convertContractsInfo(contractsInfo: typeof initialContractsInfos) {
+  return {
+    chainId: contractsInfo.chain.id.toString(),
+    name: contractsInfo.chain.name,
+    contracts: contractsInfo.contracts,
+  };
+}
+
 const walletStores = initWeb3W({
-  chainConfigs: get(contractsInfos),
+  chainConfigs: convertContractsInfo(get(contractsInfos)),
   builtin: {autoProbe: true},
   transactions: {
     autoDelete: true,
@@ -133,7 +142,7 @@ if (typeof window !== 'undefined') {
 chainTempo.startOrUpdateProvider(wallet.provider);
 
 contractsInfos.subscribe(async ($contractsInfo) => {
-  await chain.updateContracts($contractsInfo);
+  await chain.updateContracts(convertContractsInfo($contractsInfo));
 });
 
 export async function switchChain() {
