@@ -15,11 +15,7 @@ export async function handleExitPlanets(
 	planetManager: PlanetManager,
 ): Promise<CallToolResult> {
 	try {
-		const parsed = z
-			.object({
-				planetIds: z.array(z.union([z.string(), z.number()])),
-			})
-			.parse(args);
+		const parsed = exitPlanetsSchema.parse(args);
 		const {planetIds} = parsed;
 
 		// Convert planet IDs to BigInt
@@ -68,8 +64,8 @@ export async function handleExitPlanets(
 /**
  * Tool schema for exiting planets (ZodRawShapeCompat format)
  */
-export const exitPlanetsSchema = {
+export const exitPlanetsSchema = z.object({
 	planetIds: z
 		.array(z.union([z.string(), z.number()]))
 		.describe('Array of planet location IDs to exit (as hex strings or numbers)'),
-};
+});

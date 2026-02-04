@@ -15,13 +15,7 @@ export async function handleAcquirePlanets(
 	planetManager: PlanetManager,
 ): Promise<CallToolResult> {
 	try {
-		const parsed = z
-			.object({
-				planetIds: z.array(z.union([z.string(), z.number()])),
-				amountToMint: z.number().optional(),
-				tokenAmount: z.number().optional(),
-			})
-			.parse(args);
+		const parsed = acquirePlanetsSchema.parse(args);
 		const {planetIds, amountToMint, tokenAmount} = parsed;
 
 		// Convert planet IDs to BigInt
@@ -29,7 +23,12 @@ export async function handleAcquirePlanets(
 			typeof id === 'string' ? BigInt(id) : BigInt(id),
 		);
 
-		let result: {hash: `0x${string}`; planetsAcquired: bigint[]; amountToMint: bigint; tokenAmount: bigint};
+		let result: {
+			hash: `0x${string}`;
+			planetsAcquired: bigint[];
+			amountToMint: bigint;
+			tokenAmount: bigint;
+		};
 
 		// If BOTH amounts are provided, use them; otherwise use auto-calculation
 		if (amountToMint !== undefined && tokenAmount !== undefined) {
@@ -98,7 +97,7 @@ export async function handleAcquirePlanets(
 /**
  * Tool schema for acquiring planets (ZodRawShapeCompat format)
  */
-export const acquirePlanetsSchema = {
+export const acquirePlanetsSchema = z.object({
 	planetIds: z
 		.array(z.union([z.string(), z.number()]))
 		.describe('Array of planet location IDs to acquire (as hex strings or numbers)'),
@@ -114,4 +113,4 @@ export const acquirePlanetsSchema = {
 		.describe(
 			'Amount of staking token to spend to acquire the planets. If not provided, will be calculated automatically based on planet stats.',
 		),
-};
+});

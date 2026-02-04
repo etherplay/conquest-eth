@@ -15,11 +15,7 @@ export async function handleResolveFleet(
 	fleetManager: FleetManager,
 ): Promise<CallToolResult> {
 	try {
-		const parsed = z
-			.object({
-				fleetId: z.string(),
-			})
-			.parse(args);
+		const parsed = resolveFleetSchema.parse(args);
 		const {fleetId} = parsed;
 
 		const result = await fleetManager.resolve(fleetId);
@@ -84,6 +80,6 @@ export async function handleResolveFleet(
 /**
  * Tool schema for resolving fleet (ZodRawShapeCompat format)
  */
-export const resolveFleetSchema = {
+export const resolveFleetSchema = z.object({
 	fleetId: z.string().describe('Fleet ID to resolve'),
-};
+});

@@ -1,5 +1,6 @@
 import type {CallToolResult} from '@modelcontextprotocol/sdk/types.js';
 import {FleetManager} from '../fleet/manager.js';
+import z from 'zod';
 
 /**
  * Tool handler for getting pending fleets
@@ -10,10 +11,11 @@ import {FleetManager} from '../fleet/manager.js';
  * @returns The tool result with list of pending fleets, or error details
  */
 export async function handleGetPendingFleets(
-	_args: unknown,
+	args: unknown,
 	fleetManager: FleetManager,
 ): Promise<CallToolResult> {
 	try {
+		const _parsed = getPendingFleetsSchema.parse(args);
 		const fleets = await fleetManager.getMyPendingFleets();
 
 		return {
@@ -69,6 +71,6 @@ export async function handleGetPendingFleets(
 /**
  * Tool schema for getting pending fleets (ZodRawShapeCompat format)
  */
-export const getPendingFleetsSchema = {
+export const getPendingFleetsSchema = z.object({
 	// No properties needed for this tool
-};
+});

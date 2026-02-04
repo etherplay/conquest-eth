@@ -11,10 +11,11 @@ import {PlanetManager} from '../planet/manager.js';
  * @returns The tool result with list of pending exits, or error details
  */
 export async function handleGetPendingExits(
-	_args: unknown,
+	args: unknown,
 	planetManager: PlanetManager,
 ): Promise<CallToolResult> {
 	try {
+		const _parsed = getPendingExitsSchema.parse(args);
 		const exits = await planetManager.getMyPendingExits();
 
 		return {
@@ -66,6 +67,6 @@ export async function handleGetPendingExits(
 /**
  * Tool schema for getting pending exits (ZodRawShapeCompat format)
  */
-export const getPendingExitsSchema = {
+export const getPendingExitsSchema = z.object({
 	// No properties needed for this tool
-};
+});

@@ -15,11 +15,7 @@ export async function handleVerifyExitStatus(
 	planetManager: PlanetManager,
 ): Promise<CallToolResult> {
 	try {
-		const parsed = z
-			.object({
-				planetId: z.union([z.string(), z.number()]),
-			})
-			.parse(args);
+		const parsed = verifyExitStatusSchema.parse(args);
 		const {planetId} = parsed;
 
 		const result = await planetManager.verifyExitStatus(
@@ -76,8 +72,8 @@ export async function handleVerifyExitStatus(
 /**
  * Tool schema for verifying exit status (ZodRawShapeCompat format)
  */
-export const verifyExitStatusSchema = {
+export const verifyExitStatusSchema = z.object({
 	planetId: z
 		.union([z.string(), z.number()])
 		.describe('Planet location ID to verify (as hex string or number)'),
-};
+});

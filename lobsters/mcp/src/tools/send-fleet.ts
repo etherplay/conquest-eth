@@ -15,16 +15,7 @@ export async function handleSendFleet(
 	fleetManager: FleetManager,
 ): Promise<CallToolResult> {
 	try {
-		const parsed = z
-			.object({
-				fromPlanetId: z.union([z.string(), z.number()]),
-				toPlanetId: z.union([z.string(), z.number()]),
-				quantity: z.number(),
-				arrivalTimeWanted: z.number().optional(),
-				gift: z.boolean().optional(),
-				specific: z.string().optional(),
-			})
-			.parse(args);
+		const parsed = sendFleetSchema.parse(args);
 		const {fromPlanetId, toPlanetId, quantity, arrivalTimeWanted, gift, specific} = parsed;
 
 		const result = await fleetManager.send(
@@ -82,13 +73,13 @@ export async function handleSendFleet(
 /**
  * Tool schema for sending fleet (ZodRawShapeCompat format)
  */
-export const sendFleetSchema = {
+export const sendFleetSchema = z.object({
 	fromPlanetId: z
-		.union([z.string(), z.number()])
-		.describe('Source planet location ID (as hex string or number)'),
+		.union([z.string(), z.bigint()])
+		.describe('Source planet location ID (as string or bigint)'),
 	toPlanetId: z
-		.union([z.string(), z.number()])
-		.describe('Destination planet location ID (as hex string or number)'),
+		.union([z.string(), z.bigint()])
+		.describe('Destination planet location ID (as string or bigint)'),
 	quantity: z.number().describe('Number of spaceships to send'),
 	arrivalTimeWanted: z
 		.number()
@@ -101,4 +92,4 @@ export const sendFleetSchema = {
 		.optional()
 		.describe('Whether the fleet is a gift (sent without requiring arrival)'),
 	specific: z.string().optional().describe('Additional specific data for the fleet'),
-};
+});

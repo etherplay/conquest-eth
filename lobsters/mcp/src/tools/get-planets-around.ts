@@ -15,13 +15,7 @@ export async function handleGetPlanetsAround(
 	planetManager: PlanetManager,
 ): Promise<CallToolResult> {
 	try {
-		const parsed = z
-			.object({
-				centerX: z.number(),
-				centerY: z.number(),
-				radius: z.number(),
-			})
-			.parse(args);
+		const parsed = getPlanetsAroundSchema.parse(args);
 		const {centerX, centerY, radius} = parsed;
 
 		const planets = await planetManager.getPlanetsAround(centerX, centerY, radius);
@@ -80,8 +74,8 @@ export async function handleGetPlanetsAround(
 /**
  * Tool schema for getting planets around (ZodRawShapeCompat format)
  */
-export const getPlanetsAroundSchema = {
+export const getPlanetsAroundSchema = z.object({
 	centerX: z.number().describe('X coordinate of the center point'),
 	centerY: z.number().describe('Y coordinate of the center point'),
 	radius: z.number().describe('Radius in distance units to search around the center point'),
-};
+});

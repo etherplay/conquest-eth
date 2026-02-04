@@ -15,11 +15,7 @@ export async function handleGetMyPlanets(
 	planetManager: PlanetManager,
 ): Promise<CallToolResult> {
 	try {
-		const parsed = z
-			.object({
-				radius: z.number().optional(),
-			})
-			.parse(args);
+		const parsed = getMyPlanetsSchema.parse(args);
 		const radius = parsed.radius ?? 100;
 		const planets = await planetManager.getMyPlanets(radius);
 
@@ -69,6 +65,6 @@ export async function handleGetMyPlanets(
 /**
  * Tool schema for getting my planets (ZodRawShapeCompat format)
  */
-export const getMyPlanetsSchema = {
+export const getMyPlanetsSchema = z.object({
 	radius: z.number().optional().describe('Search radius around origin (0,0) to find planets'),
-};
+});
