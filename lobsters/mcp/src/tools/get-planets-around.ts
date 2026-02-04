@@ -37,12 +37,8 @@ export async function handleGetPlanetsAround(
 								distance: Math.sqrt(
 									Math.pow(info.location.x - centerX, 2) + Math.pow(info.location.y - centerY, 2),
 								),
-								owner: state?.owner || null,
-								location: {
-									x: info.location.x,
-									y: info.location.y,
-								},
-								numSpaceships: state?.numSpaceships || 0,
+								location: info.location,
+								...state,
 							})),
 						},
 						null,

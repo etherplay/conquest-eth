@@ -75,9 +75,6 @@ export async function sendFleet(
 		account: fleetSender,
 	});
 
-	// Send the transaction
-	const hash = await clients.walletClient.writeContract(simulation.request);
-
 	// Compute fleet ID
 	const fleetId = computeFleetId(toHash, fromPlanetId, fleetSender, operator);
 
@@ -98,8 +95,13 @@ export async function sendFleet(
 		resolved: false,
 	};
 
-	// Save to storage
+	// we always save to storage first in case an error happen while the tx is still broadcasted
 	await storage.saveFleet(pendingFleet);
+
+	// Send the transaction
+	const hash = await clients.walletClient.writeContract(simulation.request);
+
+	// TODO save hash in pending fleet to track
 
 	return pendingFleet;
 }

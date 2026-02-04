@@ -3,6 +3,7 @@ import path from 'path';
 import type {Address} from 'viem';
 import type {FleetStorage} from './interface.js';
 import {PendingExit, PendingFleet} from '../types.js';
+import {stringifyWithBigInt} from '../helpers/index.js';
 
 interface StorageData {
 	fleets: Record<string, PendingFleet>;
@@ -54,7 +55,7 @@ export class JsonFleetStorage implements FleetStorage {
 	}
 
 	private async save(): Promise<void> {
-		await fs.writeFile(this.dataPath, JSON.stringify(this.data, null, 2));
+		await fs.writeFile(this.dataPath, stringifyWithBigInt(this.data, 2));
 	}
 
 	// Fleet operations

@@ -144,7 +144,7 @@ export class PlanetManager {
 		centerX: number,
 		centerY: number,
 		radius: number,
-	): Promise<{info: PlanetInfo; state?: PlanetState}[]> {
+	): Promise<{info: PlanetInfo; state: PlanetState}[]> {
 		// Get planet infos from SpaceInfo within the bounding box
 		const planetsInRect: PlanetInfo[] = [];
 		for (const planet of this.spaceInfo.yieldPlanetsFromRect(
@@ -179,36 +179,30 @@ export class PlanetManager {
 		// Combine info with states and compute latest state
 		return planetsInRect.map((planet, index) => {
 			const rawState = states[index];
-			if (rawState) {
-				// Create a mutable copy of the state to compute updates
-				const stateCopy = {
-					owner: rawState.owner === zeroAddress ? undefined : rawState.owner,
-					ownerYakuzaSubscriptionEndTime: 0, // TODO
-					lastUpdatedSaved: rawState.lastUpdated,
-					startExitTime: rawState.exitStartTime,
-					numSpaceships: rawState.numSpaceships,
-					flagTime: 0, // TODO
-					travelingUpkeep: 0, // TODO
-					overflow: 0, // TODO
-					active: rawState.active,
-					exiting: false, // will be populated
-					exitTimeLeft: 0, // will be populated
-					natives: false, // will be populated
-					capturing: false, // will be populated
-					inReach: false, // will be populated
-					rewardGiver: '', // will be populated
-					metadata: {},
-				};
-				// Compute the latest state using SpaceInfo
-				this.spaceInfo.computePlanetUpdateForTimeElapsed(stateCopy, planet, currentTime);
-				return {
-					info: planet,
-					state: stateCopy,
-				};
-			}
+			// Create a mutable copy of the state to compute updates
+			const stateCopy = {
+				owner: rawState.owner === zeroAddress ? undefined : rawState.owner,
+				ownerYakuzaSubscriptionEndTime: 0, // TODO
+				lastUpdatedSaved: rawState.lastUpdated,
+				startExitTime: rawState.exitStartTime,
+				numSpaceships: rawState.numSpaceships,
+				flagTime: 0, // TODO
+				travelingUpkeep: 0, // TODO
+				overflow: 0, // TODO
+				active: rawState.active,
+				exiting: false, // will be populated
+				exitTimeLeft: 0, // will be populated
+				natives: false, // will be populated
+				capturing: false, // will be populated
+				inReach: false, // will be populated
+				rewardGiver: '', // will be populated
+				metadata: {},
+			};
+			// Compute the latest state using SpaceInfo
+			this.spaceInfo.computePlanetUpdateForTimeElapsed(stateCopy, planet, currentTime);
 			return {
 				info: planet,
-				state: undefined,
+				state: stateCopy,
 			};
 		});
 	}

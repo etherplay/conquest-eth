@@ -23,15 +23,7 @@ import {handleGetMyPlanets, getMyPlanetsSchema} from './tools/get-my-planets.js'
 import {handleGetPlanetsAround, getPlanetsAroundSchema} from './tools/get-planets-around.js';
 import {handleGetPendingFleets, getPendingFleetsSchema} from './tools/get-pending-fleets.js';
 import {Abi_IOuterSpace} from 'conquest-eth-v0-contracts/abis/IOuterSpace.js';
-
-// Helper function to handle BigInt serialization in JSON.stringify
-function stringifyWithBigInt(obj: any, space?: number): string {
-	return JSON.stringify(
-		obj,
-		(_key, value) => (typeof value === 'bigint' ? value.toString() : value),
-		space,
-	);
-}
+import {stringifyWithBigInt} from './helpers/index.js';
 
 /**
  * Create and configure an MCP server for Conquest.eth game interactions
