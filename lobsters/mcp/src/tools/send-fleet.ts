@@ -1,5 +1,6 @@
 import type {CallToolResult} from '@modelcontextprotocol/sdk/types.js';
 import {z} from 'zod';
+import {zeroAddress} from 'viem';
 import {FleetManager} from '../fleet/manager.js';
 import {PlanetManager} from '../planet/manager.js';
 import {stringifyWithBigInt} from '../helpers/index.js';
@@ -65,7 +66,7 @@ export async function handleSendFleet(
 			arrivalTimeWanted:
 				typeof arrivalTimeWanted === 'undefined' ? undefined : BigInt(arrivalTimeWanted),
 			gift: gift ?? false,
-			specific: (specific as `0x${string}`) ?? '0x',
+			specific: (specific as `0x${string}`) ?? zeroAddress,
 		});
 
 		return {
