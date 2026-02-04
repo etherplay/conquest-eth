@@ -166,7 +166,10 @@ export function createServer(
 				if (!fleetManager) {
 					throw new Error('Fleet manager not initialized');
 				}
-				return await handleSendFleet(args, fleetManager);
+				if (!planetManager) {
+					throw new Error('Planet manager not initialized');
+				}
+				return await handleSendFleet(args, fleetManager, planetManager);
 			} catch (error) {
 				return {
 					content: [

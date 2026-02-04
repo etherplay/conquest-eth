@@ -4,4 +4,4 @@ tmp/
 
 *.local
 
-conquest-eth-v0-contracts/generated
+data/

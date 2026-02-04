@@ -1,6 +1,7 @@
 import type {CallToolResult} from '@modelcontextprotocol/sdk/types.js';
 import {z} from 'zod';
 import {FleetManager} from '../fleet/manager.js';
+import {PlanetManager} from '../planet/manager.js';
 
 /**
  * Tool handler for sending fleet
@@ -8,27 +9,65 @@ import {FleetManager} from '../fleet/manager.js';
  *
  * @param args - The tool arguments (will be validated against the schema)
  * @param fleetManager - The FleetManager instance to perform the fleet send
+ * @param planetManager - The PlanetManager instance to convert coordinates to planet IDs
  * @returns The tool result with fleet details, or error details
  */
 export async function handleSendFleet(
 	args: unknown,
 	fleetManager: FleetManager,
+	planetManager: PlanetManager,
 ): Promise<CallToolResult> {
 	try {
 		const parsed = sendFleetSchema.parse(args);
-		const {fromPlanetId, toPlanetId, quantity, arrivalTimeWanted, gift, specific} = parsed;
+		const {from, to, quantity, arrivalTimeWanted, gift, specific} = parsed;
 
-		const result = await fleetManager.send(
-			typeof fromPlanetId === 'string' ? BigInt(fromPlanetId) : BigInt(fromPlanetId),
-			typeof toPlanetId === 'string' ? BigInt(toPlanetId) : BigInt(toPlanetId),
-			quantity,
-			{
-				arrivalTimeWanted:
-					typeof arrivalTimeWanted === 'undefined' ? undefined : BigInt(arrivalTimeWanted),
-				gift: gift ?? false,
-				specific: (specific as `0x${string}`) ?? '0x',
-			},
-		);
+		// Convert coordinates to planet IDs
+		const fromPlanetId = planetManager.getPlanetIdByCoordinates(from.x, from.y);
+		if (!fromPlanetId) {
+			return {
+				content: [
+					{
+						type: 'text',
+						text: JSON.stringify(
+							{
+								success: false,
+								error: `No planet found at source coordinates (${from.x}, ${from.y})`,
+							},
+							null,
+							2,
+						),
+					},
+				],
+				isError: true,
+			};
+		}
+
+		const toPlanetId = planetManager.getPlanetIdByCoordinates(to.x, to.y);
+		if (!toPlanetId) {
+			return {
+				content: [
+					{
+						type: 'text',
+						text: JSON.stringify(
+							{
+								success: false,
+								error: `No planet found at destination coordinates (${to.x}, ${to.y})`,
+							},
+							null,
+							2,
+						),
+					},
+				],
+				isError: true,
+			};
+		}
+
+		const result = await fleetManager.send(fromPlanetId, toPlanetId, quantity, {
+			arrivalTimeWanted:
+				typeof arrivalTimeWanted === 'undefined' ? undefined : BigInt(arrivalTimeWanted),
+			gift: gift ?? false,
+			specific: (specific as `0x${string}`) ?? '0x',
+		});
 
 		return {
 			content: [
@@ -38,8 +77,8 @@ export async function handleSendFleet(
 						{
 							success: true,
 							fleetId: result.fleetId,
-							fromPlanetId: result.fromPlanetId.toString(),
-							toPlanetId: result.toPlanetId.toString(),
+							from: result.fromPlanetId.toString(),
+							to: result.toPlanetId.toString(),
 							quantity: result.quantity,
 							arrivalTimeWanted: result.arrivalTimeWanted.toString(),
 							secret: result.secret,
@@ -74,12 +113,8 @@ export async function handleSendFleet(
  * Tool schema for sending fleet (ZodRawShapeCompat format)
  */
 export const sendFleetSchema = z.object({
-	fromPlanetId: z
-		.union([z.string(), z.bigint()])
-		.describe('Source planet location ID (as string or bigint)'),
-	toPlanetId: z
-		.union([z.string(), z.bigint()])
-		.describe('Destination planet location ID (as string or bigint)'),
+	from: z.object({x: z.number(), y: z.number()}).describe('Source planet coordinates {x, y}'),
+	to: z.object({x: z.number(), y: z.number()}).describe('Destination planet coordinates {x, y}'),
 	quantity: z.number().describe('Number of spaceships to send'),
 	arrivalTimeWanted: z
 		.number()

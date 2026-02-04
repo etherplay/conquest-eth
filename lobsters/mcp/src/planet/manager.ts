@@ -120,6 +120,17 @@ export class PlanetManager {
 	}
 
 	/**
+	 * Get planet ID by x,y coordinates
+	 * @param x - X coordinate
+	 * @param y - Y coordinate
+	 * @returns Planet location ID as bigint, or undefined if no planet exists at coordinates
+	 */
+	getPlanetIdByCoordinates(x: number, y: number): bigint | undefined {
+		const planet = this.spaceInfo.getPlanetInfo(x, y);
+		return planet?.location.id;
+	}
+
+	/**
 	 * Get multiple planet infos
 	 */
 	getPlanetInfos(planetIds: bigint[]): (PlanetInfo | undefined)[] {
