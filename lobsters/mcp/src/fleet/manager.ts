@@ -9,7 +9,7 @@ import type {
 	PendingFleet,
 } from '../types.js';
 import {getResolvableFleets, resolveFleetWithSpaceInfo} from './resolve.js';
-import {sendFleet, sendFleetFor} from './send.js';
+import {sendFleet} from './send.js';
 /**
  * FleetManager manages the lifecycle of fleets in the Conquest game
  * including sending new fleets and resolving existing ones
@@ -53,37 +53,6 @@ export class FleetManager {
 		return sendFleet(
 			this.requireWalletClient(),
 			this.gameContract,
-			fromPlanetId,
-			toPlanetId,
-			quantity,
-			this.spaceInfo,
-			this.contractConfig,
-			this.storage,
-			options,
-		);
-	}
-
-	/**
-	 * Send a fleet for another address (advanced feature)
-	 */
-	async sendFor(
-		fleetSender: Address,
-		fleetOwner: Address,
-		fromPlanetId: bigint,
-		toPlanetId: bigint,
-		quantity: number,
-		options?: {
-			gift?: boolean;
-			specific?: Address;
-			arrivalTimeWanted?: bigint;
-			secret?: `0x${string}`;
-		},
-	): Promise<PendingFleet> {
-		return sendFleetFor(
-			this.requireWalletClient(),
-			this.gameContract,
-			fleetSender,
-			fleetOwner,
 			fromPlanetId,
 			toPlanetId,
 			quantity,

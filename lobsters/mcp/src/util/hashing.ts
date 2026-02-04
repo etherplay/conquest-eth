@@ -1,5 +1,5 @@
 import type {Address} from 'viem';
-import {encodeAbiParameters, keccak256} from 'viem';
+import {encodeAbiParameters, encodePacked, keccak256, zeroAddress} from 'viem';
 
 /**
  * Compute the toHash used in fleet commit phase
@@ -9,16 +9,18 @@ import {encodeAbiParameters, keccak256} from 'viem';
  * @param secret - The secret value to commit to
  * @returns The hash commitment (keccak256 hash)
  */
-export function computeToHash(toPlanetId: bigint, secret: `0x${string}`): `0x${string}` {
-	return keccak256(
-		encodeAbiParameters(
-			[
-				{name: 'to', type: 'uint256'},
-				{name: 'secret', type: 'bytes32'},
-			],
-			[toPlanetId, secret],
+export function computeToHash(
+	toPlanetId: bigint,
+	secret: `0x${string}`,
+	options: {gift: boolean; specific: Address; arrivalTimeWanted: bigint},
+): `0x${string}` {
+	const toHash = keccak256(
+		encodePacked(
+			['bytes32', 'uint256', 'bool', 'address', 'uint256'],
+			[secret, toPlanetId, options.gift, options.specific, options.arrivalTimeWanted],
 		),
 	);
+	return toHash;
 }
 
 /**
@@ -39,14 +41,9 @@ export function computeFleetId(
 	operator: Address,
 ): `0x${string}` {
 	return keccak256(
-		encodeAbiParameters(
-			[
-				{name: 'toHash', type: 'bytes32'},
-				{name: 'from', type: 'uint256'},
-				{name: 'fleetSender', type: 'address'},
-				{name: 'operator', type: 'address'},
-			],
-			[toHash, fromPlanetId, fleetSender, operator],
+		encodePacked(
+			['bytes32', 'uint256', 'address', 'address'],
+			[toHash, BigInt(fromPlanetId), fleetSender, operator],
 		),
 	);
 }

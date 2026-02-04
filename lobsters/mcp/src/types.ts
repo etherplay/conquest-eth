@@ -77,6 +77,7 @@ export interface PlanetWithDistance {
 }
 
 export interface PendingFleet {
+	hash?: `0x${string}`; // Hash of the fleet (toHash)
 	fleetId: string; // Computed from toHash, from, fleetSender, operator
 	fromPlanetId: bigint; // Source planet location
 	toPlanetId: bigint; // Destination planet location (hidden during commit)

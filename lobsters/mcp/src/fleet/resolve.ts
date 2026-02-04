@@ -144,7 +144,7 @@ export async function resolveFleetWithSpaceInfo(
 		address: gameContract.address,
 		abi: gameContract.abi,
 		functionName: 'resolveFleet',
-		args: [BigInt('0x' + fleetId), resolution],
+		args: [BigInt(fleetId), resolution],
 		account: operator,
 	});
 

@@ -2,7 +2,7 @@
 export {FleetManager} from './manager.js';
 
 // Send functions
-export {sendFleet, sendFleetFor} from './send.js';
+export {sendFleet} from './send.js';
 
 // Resolve functions
 export {resolveFleet, resolveFleetWithSpaceInfo, getResolvableFleets} from './resolve.js';
