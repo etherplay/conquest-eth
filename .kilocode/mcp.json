@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "mcp-conquest-eth-v0": {
+      "command": "node",
+      "args": ["lobsters/mcp/dist/cli.js", "--rpc-url", "http://localhost:8545"]
+    }
+  }
+}

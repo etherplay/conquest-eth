@@ -12,9 +12,10 @@
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
 		"outDir": "dist",
-		"rootDir": "./",
-		"allowImportingTsExtensions": false
+		"rootDir": "./src",
+		"allowImportingTsExtensions": false,
+		"resolveJsonModule": true
 	},
-	"include": ["src/**/*.ts", "conquest-eth-v0-contracts/generated/**/*.ts", "conquest-eth-v0-contracts/js/**/*.ts"],
+	"include": ["src/**/*.ts"],
 	"exclude": ["node_modules", "dist"]
 }

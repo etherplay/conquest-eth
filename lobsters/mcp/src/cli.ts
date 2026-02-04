@@ -4,6 +4,9 @@ import {createServer} from './index.js';
 import {Command} from 'commander';
 import pkg from '../package.json' with {type: 'json'};
 import {getChain} from 'mcp-ethereum/helpers';
+import {loadEnv} from 'ldenv';
+
+loadEnv();
 
 const program = new Command();
 

@@ -290,6 +290,9 @@ importers:
       eip-1193:
         specifier: ^0.6.5
         version: 0.6.5
+      ldenv:
+        specifier: ^0.3.16
+        version: 0.3.16
       mcp-ethereum:
         specifier: ^0.0.3
         version: 0.0.3(@types/node@25.2.0)(bufferutil@4.0.8)(hono@4.6.14)(typescript@5.7.2)(utf-8-validate@5.0.8)
@@ -315,9 +318,6 @@ importers:
       as-soon:
         specifier: ^0.1.5
         version: 0.1.5
-      ldenv:
-        specifier: ^0.3.16
-        version: 0.3.16
       prettier:
         specifier: ^3.8.0
         version: 3.8.1
