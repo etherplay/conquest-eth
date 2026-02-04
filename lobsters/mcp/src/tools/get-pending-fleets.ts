@@ -3,6 +3,11 @@ import {FleetManager} from '../fleet/manager.js';
 
 /**
  * Tool handler for getting pending fleets
+ * Handles the MCP tool request to retrieve all pending fleets sent from the current player's planets
+ *
+ * @param _args - The tool arguments (none required for this tool)
+ * @param fleetManager - The FleetManager instance to query pending fleets
+ * @returns The tool result with list of pending fleets, or error details
  */
 export async function handleGetPendingFleets(
 	_args: unknown,

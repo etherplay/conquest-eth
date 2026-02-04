@@ -4,6 +4,11 @@ import {PlanetManager} from '../planet/manager.js';
 
 /**
  * Tool handler for acquiring planets
+ * Handles the MCP tool request to acquire (stake) multiple planets in the Conquest game
+ *
+ * @param args - The tool arguments (will be validated against the schema)
+ * @param planetManager - The PlanetManager instance to perform the acquisition
+ * @returns The tool result with transaction hash and acquired planet IDs, or error details
  */
 export async function handleAcquirePlanets(
 	args: unknown,

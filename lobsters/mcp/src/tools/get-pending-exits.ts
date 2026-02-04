@@ -4,6 +4,11 @@ import {PlanetManager} from '../planet/manager.js';
 
 /**
  * Tool handler for getting pending exits
+ * Handles the MCP tool request to retrieve all pending exit (unstake) operations for the current player
+ *
+ * @param _args - The tool arguments (none required for this tool)
+ * @param planetManager - The PlanetManager instance to query pending exits
+ * @returns The tool result with list of pending exits, or error details
  */
 export async function handleGetPendingExits(
 	_args: unknown,

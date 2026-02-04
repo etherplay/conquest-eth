@@ -3,8 +3,14 @@ import type {FleetStorage} from '../storage/interface.js';
 import {Clients, GameContract, PendingExit} from '../types.js';
 
 /**
- * Exit (unstake) multiple planets
+ * Exit (unstake) multiple planets to retrieve staked tokens
  *
+ * @param clients - Viem clients (publicClient and walletClient)
+ * @param gameContract - The game contract instance with address and ABI
+ * @param planetIds - Array of planet location IDs to exit
+ * @param exitDuration - Duration of the exit process in seconds (from contract config)
+ * @param storage - Storage instance for tracking pending exits
+ * @returns Transaction hash and list of planet IDs for which exits were initiated
  */
 export async function exitPlanets(
 	clients: Clients,

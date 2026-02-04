@@ -8,9 +8,8 @@ import {calculateEstimatedArrivalTime, getCurrentTimestamp} from '../util/time.j
 /**
  * Send a fleet to a destination planet
  *
- * @param walletClient - Viem wallet client for signing transactions
- * @param contractAddress - The game contract address
- * @param fleetsCommitContract - The fleets commit contract instance
+ * @param clients - Viem clients (publicClient and walletClient)
+ * @param gameContract - The game contract instance with address and ABI
  * @param fromPlanetId - Source planet location ID
  * @param toPlanetId - Destination planet location ID
  * @param quantity - Number of spaceships to send
@@ -18,6 +17,10 @@ import {calculateEstimatedArrivalTime, getCurrentTimestamp} from '../util/time.j
  * @param contractConfig - Contract config for time calculations
  * @param storage - Storage instance for tracking pending fleets
  * @param options - Optional parameters
+ * @param options.gift - Whether the fleet is a gift (no combat)
+ * @param options.specific - Specific target address (advanced feature)
+ * @param options.arrivalTimeWanted - Preferred arrival time (advanced feature)
+ * @param options.secret - Random secret for hash commitment (auto-generated if not provided)
  * @returns The pending fleet information
  */
 export async function sendFleet(
@@ -104,9 +107,8 @@ export async function sendFleet(
 /**
  * Send a fleet for another address (advanced feature)
  *
- * @param walletClient - Viem wallet client for signing transactions
- * @param contractAddress - The game contract address
- * @param fleetsCommitContract - The fleets commit contract instance
+ * @param clients - Viem clients (publicClient and walletClient)
+ * @param gameContract - The game contract instance with address and ABI
  * @param fleetSender - The address that owns the fleet
  * @param fleetOwner - The address that owns the planet (may be different)
  * @param fromPlanetId - Source planet location ID
@@ -116,6 +118,10 @@ export async function sendFleet(
  * @param contractConfig - Contract config for time calculations
  * @param storage - Storage instance for tracking pending fleets
  * @param options - Optional parameters
+ * @param options.gift - Whether the fleet is a gift (no combat)
+ * @param options.specific - Specific target address (advanced feature)
+ * @param options.arrivalTimeWanted - Preferred arrival time (advanced feature)
+ * @param options.secret - Random secret for hash commitment (auto-generated if not provided)
  * @returns The pending fleet information
  */
 export async function sendFleetFor(

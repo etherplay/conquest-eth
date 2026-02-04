@@ -4,6 +4,11 @@ import {PlanetManager} from '../planet/manager.js';
 
 /**
  * Tool handler for verifying exit status
+ * Handles the MCP tool request to check and update the status of a planet's exit operation
+ *
+ * @param args - The tool arguments (will be validated against the schema)
+ * @param planetManager - The PlanetManager instance to verify the exit status
+ * @returns The tool result with exit status details, or error details
  */
 export async function handleVerifyExitStatus(
 	args: unknown,

@@ -4,6 +4,11 @@ import {FleetManager} from '../fleet/manager.js';
 
 /**
  * Tool handler for resolving fleet
+ * Handles the MCP tool request to resolve (reveal) a previously sent fleet
+ *
+ * @param args - The tool arguments (will be validated against the schema)
+ * @param fleetManager - The FleetManager instance to perform the resolution
+ * @returns The tool result with resolved fleet details or reason for failure
  */
 export async function handleResolveFleet(
 	args: unknown,

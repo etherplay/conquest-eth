@@ -4,6 +4,11 @@ import {PlanetManager} from '../planet/manager.js';
 
 /**
  * Tool handler for getting planets around
+ * Handles the MCP tool request to retrieve planets within a specific radius of a center point
+ *
+ * @param args - The tool arguments (will be validated against the schema)
+ * @param planetManager - The PlanetManager instance to query planets
+ * @returns The tool result with list of planets in the specified area, or error details
  */
 export async function handleGetPlanetsAround(
 	args: unknown,

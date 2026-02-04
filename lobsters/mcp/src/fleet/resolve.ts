@@ -8,10 +8,10 @@ import {getCurrentTimestamp} from '../util/time.js';
  * Resolve (reveal) a fleet to complete its journey and trigger combat
  *
  * @param walletClient - Viem wallet client for signing transactions
- * @param fleetsRevealContract - The fleets reveal contract instance
+ * @param fleetsRevealContract - The fleets reveal contract instance with address, abi, and clients
  * @param fleetId - The fleet ID to resolve
  * @param storage - Storage instance for tracking pending fleets
- * @returns The resolution result
+ * @returns The resolution result with either resolved fleet or reason for failure
  */
 export async function resolveFleet(
 	walletClient: WalletClient,
@@ -84,12 +84,12 @@ export async function resolveFleet(
 /**
  * Resolve a fleet with custom SpaceInfo for distance calculation
  *
- * @param clients - Viem public and wallet client
- * @param gameContract - game contract instance
+ * @param clients - Viem clients (publicClient and walletClient)
+ * @param gameContract - The game contract instance with address and ABI
  * @param spaceInfo - SpaceInfo instance for distance calculation
  * @param fleetId - The fleet ID to resolve
  * @param storage - Storage instance for tracking pending fleets
- * @returns The resolution result
+ * @returns The resolution result with either resolved fleet or reason for failure
  */
 export async function resolveFleetWithSpaceInfo(
 	clients: Clients,

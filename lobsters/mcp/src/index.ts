@@ -33,6 +33,23 @@ function stringifyWithBigInt(obj: any, space?: number): string {
 	);
 }
 
+/**
+ * Create and configure an MCP server for Conquest.eth game interactions
+ *
+ * @param params - Configuration parameters for the server
+ * @param params.chain - The blockchain chain to connect to
+ * @param params.privateKey - Optional private key for signing transactions (wallet operations)
+ * @param params.gameContract - The game contract address
+ * @param options - Optional server configuration
+ * @param options.ethereum - Whether to include Ethereum MCP tools (default: false)
+ * @param options.rpcURL - Optional custom RPC URL
+ * @param options.serverOptions - Optional MCP server options
+ * @param options.serverInfo - Optional server metadata to override defaults
+ * @param options.storageConfig - Storage configuration for fleets and exits
+ * @param options.storageConfig.type - Storage type ('json' or 'sqlite')
+ * @param options.storageConfig.dataDir - Optional data directory path
+ * @returns Configured MCP server instance with Conquest game tools registered
+ */
 export function createServer(
 	params: {chain: Chain; privateKey?: `0x${string}`; gameContract: `0x${string}`},
 	options?: {

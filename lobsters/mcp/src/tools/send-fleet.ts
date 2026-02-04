@@ -4,6 +4,11 @@ import {FleetManager} from '../fleet/manager.js';
 
 /**
  * Tool handler for sending fleet
+ * Handles the MCP tool request to send a fleet from one planet to another
+ *
+ * @param args - The tool arguments (will be validated against the schema)
+ * @param fleetManager - The FleetManager instance to perform the fleet send
+ * @returns The tool result with fleet details, or error details
  */
 export async function handleSendFleet(
 	args: unknown,

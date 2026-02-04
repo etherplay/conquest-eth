@@ -4,6 +4,11 @@ import {PlanetManager} from '../planet/manager.js';
 
 /**
  * Tool handler for getting my planets
+ * Handles the MCP tool request to retrieve all planets owned by the current wallet address
+ *
+ * @param args - The tool arguments (will be validated against the schema)
+ * @param planetManager - The PlanetManager instance to query owned planets
+ * @returns The tool result with list of owned planets, or error details
  */
 export async function handleGetMyPlanets(
 	args: unknown,

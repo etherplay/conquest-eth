@@ -4,6 +4,11 @@ import {PlanetManager} from '../planet/manager.js';
 
 /**
  * Tool handler for exiting planets
+ * Handles the MCP tool request to exit (unstake) multiple planets to retrieve staked tokens
+ *
+ * @param args - The tool arguments (will be validated against the schema)
+ * @param planetManager - The PlanetManager instance to perform the exit
+ * @returns The tool result with transaction hash and exited planet IDs, or error details
  */
 export async function handleExitPlanets(
 	args: unknown,
