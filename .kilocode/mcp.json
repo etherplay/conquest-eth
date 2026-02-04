@@ -1,8 +1,1 @@
-{
-  "mcpServers": {
-    "mcp-conquest-eth-v0": {
-      "command": "node",
-      "args": ["lobsters/mcp/dist/cli.js", "--rpc-url", "http://localhost:8545"]
-    }
-  }
-}
+{"mcpServers":{"mcp-conquest-eth-v0":{"command":"node","args":["lobsters/mcp/dist/cli.js","--rpc-url","http://localhost:8545","--game-contract","0x322813fd9a801c5507c9de605d63cea4f2ce6c44","--ethereum"],"alwaysAllow":["get-contract-logs","wait-for-transaction-confirmation","get-transaction-logs","get-latest-block","get_pending_exits","get_my_planets","get_planets_around","get_pending_fleets"]}}}
