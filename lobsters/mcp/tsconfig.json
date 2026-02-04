@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "NodeNext",
+		"moduleResolution": "nodenext",
+		"lib": ["ES2022"],
+		"declaration": true,
+		"declarationMap": true,
+		"sourceMap": true,
+		"strict": true,
+		"esModuleInterop": true,
+		"skipLibCheck": true,
+		"forceConsistentCasingInFileNames": true,
+		"outDir": "dist",
+		"rootDir": "./",
+		"allowImportingTsExtensions": false
+	},
+	"include": ["src/**/*.ts", "conquest-eth-v0-contracts/generated/**/*.ts", "conquest-eth-v0-contracts/js/**/*.ts"],
+	"exclude": ["node_modules", "dist"]
+}

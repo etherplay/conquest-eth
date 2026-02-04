@@ -1,0 +1,73 @@
+{
+	"name": "mcp-conquest-eth-v0",
+	"version": "0.0.0",
+	"description": "MCP for Conquest.eth v0",
+	"author": "Ronan Sandford",
+	"license": "MIT",
+	"keywords": [
+		"mcp",
+		"ethereum",
+		"conquest.eth"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/wighawag/mcp-conquest-eth.git"
+	},
+	"homepage": "https://github.com/wighawag/mcp-conquest-eth#readme",
+	"bugs": {
+		"url": "https://github.com/wighawag/mcp-conquest-eth/issues"
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"type": "module",
+	"main": "./dist/index.js",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"bin": {
+		"mcp-conquest-eth": "dist/cli.js"
+	},
+	"files": [
+		"dist",
+		"src"
+	],
+	"sideEffects": false,
+	"dependencies": {
+		"@modelcontextprotocol/sdk": "^1.25.3",
+		"commander": "^14.0.3",
+		"conquest-eth-v0-contracts": "workspace:*",
+		"eip-1193": "^0.6.5",
+		"mcp-ethereum": "^0.0.3",
+		"remote-procedure-call": "^0.1.1",
+		"viem": "^2.45.1",
+		"zod": "^4.3.6"
+	},
+	"devDependencies": {
+		"@changesets/cli": "^2.29.8",
+		"@modelcontextprotocol/inspector": "^0.19.0",
+		"@types/node": "^25.2.0",
+		"as-soon": "^0.1.5",
+		"ldenv": "^0.3.16",
+		"prettier": "^3.8.0",
+		"tsx": "^4.21.0",
+		"typescript": "^5.3.3",
+		"vitest": "^4.0.18"
+	},
+	"scripts": {
+		"prepublishOnly": "pnpm format:check && pnpm build",
+		"release": "pnpm prepublishOnly && git push --all && pnpm changeset publish && git push --tags",
+		"format": "prettier --write .",
+		"format:check": "prettier --check .",
+		"build": "tsc",
+		"dev": "as-soon -w src pnpm build",
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"mcp:inspector": "mcp-inspector"
+	}
+}
