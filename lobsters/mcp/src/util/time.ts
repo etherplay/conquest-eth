@@ -13,13 +13,14 @@ export function getCurrentTimestamp(): number {
  * @param genesis - Genesis timestamp from contract config
  * @returns Estimated arrival time in seconds
  */
-export function calculateEstimatedArrivalTime(
-	distance: bigint,
-	timePerDistance: bigint,
-	genesis: bigint,
-): number {
+export function calculateEstimatedArrivalTime(params: {
+	startTime: bigint;
+	distance: bigint;
+	timePerDistance: bigint;
+}): number {
+	const {startTime, distance, timePerDistance} = params;
 	const travelTime = Number(distance) * Number(timePerDistance);
-	return Number(genesis) + travelTime;
+	return Number(startTime) + travelTime;
 }
 
 /**

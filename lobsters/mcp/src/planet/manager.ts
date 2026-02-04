@@ -332,17 +332,4 @@ export class PlanetManager {
 
 		return this.spaceInfo.distance(fromPlanet, toPlanet);
 	}
-
-	/**
-	 * Calculate estimated arrival time for a fleet
-	 */
-	calculateEstimatedArrivalTime(fromPlanetId: bigint, toPlanetId: bigint): number | undefined {
-		const distance = this.calculateDistance(fromPlanetId, toPlanetId);
-		if (distance === undefined) {
-			return undefined;
-		}
-
-		const travelTime = distance * Number(this.contractConfig.timePerDistance);
-		return Number(this.contractConfig.genesis) + travelTime;
-	}
 }

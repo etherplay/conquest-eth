@@ -57,11 +57,11 @@ export async function sendFleet(
 	const secret = options?.secret || generateSecret();
 
 	// Calculate estimated arrival time using contract config
-	const estimatedArrivalTime = calculateEstimatedArrivalTime(
-		BigInt(distance),
-		contractConfig.timePerDistance,
-		contractConfig.genesis,
-	);
+	const estimatedArrivalTime = calculateEstimatedArrivalTime({
+		startTime: BigInt(getCurrentTimestamp()),
+		distance: BigInt(distance),
+		timePerDistance: contractConfig.timePerDistance,
+	});
 
 	const parameters = {
 		gift: options?.gift ?? false,
