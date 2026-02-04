@@ -1,6 +1,7 @@
 import type {CallToolResult} from '@modelcontextprotocol/sdk/types.js';
 import {z} from 'zod';
 import {PlanetManager} from '../planet/manager.js';
+import {stringifyWithBigInt} from '../helpers/index.js';
 
 /**
  * Tool handler for getting pending exits
@@ -22,11 +23,11 @@ export async function handleGetPendingExits(
 			content: [
 				{
 					type: 'text',
-					text: JSON.stringify(
+					text: stringifyWithBigInt(
 						{
 							success: true,
 							exits: exits.map((exit) => ({
-								planetId: exit.planetId.toString(),
+								planetId: exit.planetId,
 								player: exit.player,
 								exitStartTime: exit.exitStartTime,
 								exitDuration: exit.exitDuration,
@@ -38,7 +39,6 @@ export async function handleGetPendingExits(
 								lastCheckedAt: exit.lastCheckedAt,
 							})),
 						},
-						null,
 						2,
 					),
 				},
@@ -49,12 +49,11 @@ export async function handleGetPendingExits(
 			content: [
 				{
 					type: 'text',
-					text: JSON.stringify(
+					text: stringifyWithBigInt(
 						{
 							success: false,
 							error: error instanceof Error ? error.message : String(error),
 						},
-						null,
 						2,
 					),
 				},

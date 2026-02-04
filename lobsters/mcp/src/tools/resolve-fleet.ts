@@ -1,6 +1,7 @@
 import type {CallToolResult} from '@modelcontextprotocol/sdk/types.js';
 import {z} from 'zod';
 import {FleetManager} from '../fleet/manager.js';
+import {stringifyWithBigInt} from '../helpers/index.js';
 
 /**
  * Tool handler for resolving fleet
@@ -25,15 +26,14 @@ export async function handleResolveFleet(
 				content: [
 					{
 						type: 'text',
-						text: JSON.stringify(
+						text: stringifyWithBigInt(
 							{
 								success: true,
 								fleetId: result.fleet.fleetId,
-								fromPlanetId: result.fleet.fromPlanetId.toString(),
-								toPlanetId: result.fleet.toPlanetId.toString(),
+								fromPlanetId: result.fleet.fromPlanetId,
+								toPlanetId: result.fleet.toPlanetId,
 								quantity: result.fleet.quantity,
 							},
-							null,
 							2,
 						),
 					},
@@ -44,12 +44,11 @@ export async function handleResolveFleet(
 				content: [
 					{
 						type: 'text',
-						text: JSON.stringify(
+						text: stringifyWithBigInt(
 							{
 								success: false,
 								reason: result.reason,
 							},
-							null,
 							2,
 						),
 					},
@@ -62,12 +61,11 @@ export async function handleResolveFleet(
 			content: [
 				{
 					type: 'text',
-					text: JSON.stringify(
+					text: stringifyWithBigInt(
 						{
 							success: false,
 							error: error instanceof Error ? error.message : String(error),
 						},
-						null,
 						2,
 					),
 				},

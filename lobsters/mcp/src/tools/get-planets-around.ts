@@ -1,6 +1,7 @@
 import type {CallToolResult} from '@modelcontextprotocol/sdk/types.js';
 import {z} from 'zod';
 import {PlanetManager} from '../planet/manager.js';
+import {stringifyWithBigInt} from '../helpers/index.js';
 
 /**
  * Tool handler for getting planets around
@@ -24,7 +25,7 @@ export async function handleGetPlanetsAround(
 			content: [
 				{
 					type: 'text',
-					text: JSON.stringify(
+					text: stringifyWithBigInt(
 						{
 							success: true,
 							center: {
@@ -33,7 +34,7 @@ export async function handleGetPlanetsAround(
 							},
 							radius,
 							planets: planets.map(({info, state}) => ({
-								planetId: info.location.id.toString(),
+								planetId: info.location.id,
 								distance: Math.sqrt(
 									Math.pow(info.location.x - centerX, 2) + Math.pow(info.location.y - centerY, 2),
 								),
@@ -41,7 +42,6 @@ export async function handleGetPlanetsAround(
 								...state,
 							})),
 						},
-						null,
 						2,
 					),
 				},
@@ -52,12 +52,11 @@ export async function handleGetPlanetsAround(
 			content: [
 				{
 					type: 'text',
-					text: JSON.stringify(
+					text: stringifyWithBigInt(
 						{
 							success: false,
 							error: error instanceof Error ? error.message : String(error),
 						},
-						null,
 						2,
 					),
 				},
@@ -73,5 +72,5 @@ export async function handleGetPlanetsAround(
 export const getPlanetsAroundSchema = z.object({
 	centerX: z.number().describe('X coordinate of the center point'),
 	centerY: z.number().describe('Y coordinate of the center point'),
-	radius: z.number().describe('Radius in distance units to search around the center point'),
+	radius: z.number().max(50).describe('Radius in distance units to search around the center point'),
 });

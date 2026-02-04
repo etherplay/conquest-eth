@@ -1,6 +1,8 @@
 import type {CallToolResult} from '@modelcontextprotocol/sdk/types.js';
 import {z} from 'zod';
 import {PlanetManager} from '../planet/manager.js';
+import {stringify} from 'node:querystring';
+import {stringifyWithBigInt} from '../helpers/index.js';
 
 /**
  * Tool handler for getting my planets
@@ -16,27 +18,22 @@ export async function handleGetMyPlanets(
 ): Promise<CallToolResult> {
 	try {
 		const parsed = getMyPlanetsSchema.parse(args);
-		const radius = parsed.radius ?? 100;
+		const radius = parsed.radius;
 		const planets = await planetManager.getMyPlanets(radius);
 
 		return {
 			content: [
 				{
 					type: 'text',
-					text: JSON.stringify(
+					text: stringifyWithBigInt(
 						{
 							success: true,
 							planets: planets.map(({info, state}) => ({
 								planetId: info.location.id.toString(),
-								owner: state.owner,
-								location: {
-									x: info.location.x,
-									y: info.location.y,
-								},
-								numSpaceships: state.numSpaceships,
+								location: info.location,
+								...state,
 							})),
 						},
-						null,
 						2,
 					),
 				},
@@ -47,12 +44,11 @@ export async function handleGetMyPlanets(
 			content: [
 				{
 					type: 'text',
-					text: JSON.stringify(
+					text: stringifyWithBigInt(
 						{
 							success: false,
 							error: error instanceof Error ? error.message : String(error),
 						},
-						null,
 						2,
 					),
 				},
@@ -66,5 +62,5 @@ export async function handleGetMyPlanets(
  * Tool schema for getting my planets (ZodRawShapeCompat format)
  */
 export const getMyPlanetsSchema = z.object({
-	radius: z.number().optional().describe('Search radius around origin (0,0) to find planets'),
+	radius: z.number().max(50).describe('Search radius around origin (0,0) to find planets'),
 });

@@ -1,6 +1,7 @@
 import type {CallToolResult} from '@modelcontextprotocol/sdk/types.js';
 import {z} from 'zod';
 import {PlanetManager} from '../planet/manager.js';
+import {stringifyWithBigInt} from '../helpers/index.js';
 
 /**
  * Tool handler for verifying exit status
@@ -32,10 +33,10 @@ export async function handleVerifyExitStatus(
 			content: [
 				{
 					type: 'text',
-					text: JSON.stringify(
+					text: stringifyWithBigInt(
 						{
 							success: true,
-							planetId: result.exit.planetId.toString(),
+							planetId: result.exit.planetId,
 							status,
 							completed,
 							interrupted: result.interrupted,
@@ -43,7 +44,6 @@ export async function handleVerifyExitStatus(
 							exitStartTime: result.exit.exitStartTime,
 							exitCompleteTime: result.exit.exitCompleteTime,
 						},
-						null,
 						2,
 					),
 				},
@@ -54,12 +54,11 @@ export async function handleVerifyExitStatus(
 			content: [
 				{
 					type: 'text',
-					text: JSON.stringify(
+					text: stringifyWithBigInt(
 						{
 							success: false,
 							error: error instanceof Error ? error.message : String(error),
 						},
-						null,
 						2,
 					),
 				},

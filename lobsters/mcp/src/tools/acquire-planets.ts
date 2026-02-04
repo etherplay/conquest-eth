@@ -1,6 +1,7 @@
 import type {CallToolResult} from '@modelcontextprotocol/sdk/types.js';
 import {z} from 'zod';
 import {PlanetManager} from '../planet/manager.js';
+import {stringifyWithBigInt} from '../helpers/index.js';
 
 /**
  * Tool handler for acquiring planets
@@ -60,15 +61,14 @@ export async function handleAcquirePlanets(
 			content: [
 				{
 					type: 'text',
-					text: JSON.stringify(
+					text: stringifyWithBigInt(
 						{
 							success: true,
 							transactionHash: result.hash,
-							planetsAcquired: result.planetsAcquired.map((id) => id.toString()),
-							amountToMint: result.amountToMint.toString(),
-							tokenAmount: result.tokenAmount.toString(),
+							planetsAcquired: result.planetsAcquired,
+							amountToMint: result.amountToMint,
+							tokenAmount: result.tokenAmount,
 						},
-						null,
 						2,
 					),
 				},
@@ -79,12 +79,11 @@ export async function handleAcquirePlanets(
 			content: [
 				{
 					type: 'text',
-					text: JSON.stringify(
+					text: stringifyWithBigInt(
 						{
 							success: false,
 							error: error instanceof Error ? error.message : String(error),
 						},
-						null,
 						2,
 					),
 				},

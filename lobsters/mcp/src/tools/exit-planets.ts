@@ -1,6 +1,7 @@
 import type {CallToolResult} from '@modelcontextprotocol/sdk/types.js';
 import {z} from 'zod';
 import {PlanetManager} from '../planet/manager.js';
+import {stringifyWithBigInt} from '../helpers/index.js';
 
 /**
  * Tool handler for exiting planets
@@ -29,13 +30,12 @@ export async function handleExitPlanets(
 			content: [
 				{
 					type: 'text',
-					text: JSON.stringify(
+					text: stringifyWithBigInt(
 						{
 							success: true,
 							transactionHash: result.hash,
-							exitsInitiated: result.exitsInitiated.map((id) => id.toString()),
+							exitsInitiated: result.exitsInitiated,
 						},
-						null,
 						2,
 					),
 				},
@@ -46,12 +46,11 @@ export async function handleExitPlanets(
 			content: [
 				{
 					type: 'text',
-					text: JSON.stringify(
+					text: stringifyWithBigInt(
 						{
 							success: false,
 							error: error instanceof Error ? error.message : String(error),
 						},
-						null,
 						2,
 					),
 				},

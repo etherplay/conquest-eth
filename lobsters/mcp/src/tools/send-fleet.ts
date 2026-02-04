@@ -2,6 +2,7 @@ import type {CallToolResult} from '@modelcontextprotocol/sdk/types.js';
 import {z} from 'zod';
 import {FleetManager} from '../fleet/manager.js';
 import {PlanetManager} from '../planet/manager.js';
+import {stringifyWithBigInt} from '../helpers/index.js';
 
 /**
  * Tool handler for sending fleet
@@ -28,12 +29,11 @@ export async function handleSendFleet(
 				content: [
 					{
 						type: 'text',
-						text: JSON.stringify(
+						text: stringifyWithBigInt(
 							{
 								success: false,
 								error: `No planet found at source coordinates (${from.x}, ${from.y})`,
 							},
-							null,
 							2,
 						),
 					},
@@ -48,12 +48,11 @@ export async function handleSendFleet(
 				content: [
 					{
 						type: 'text',
-						text: JSON.stringify(
+						text: stringifyWithBigInt(
 							{
 								success: false,
 								error: `No planet found at destination coordinates (${to.x}, ${to.y})`,
 							},
-							null,
 							2,
 						),
 					},
@@ -73,17 +72,16 @@ export async function handleSendFleet(
 			content: [
 				{
 					type: 'text',
-					text: JSON.stringify(
+					text: stringifyWithBigInt(
 						{
 							success: true,
 							fleetId: result.fleetId,
-							from: result.fromPlanetId.toString(),
-							to: result.toPlanetId.toString(),
+							from: result.fromPlanetId,
+							to: result.toPlanetId,
 							quantity: result.quantity,
-							arrivalTimeWanted: result.arrivalTimeWanted.toString(),
+							arrivalTimeWanted: result.arrivalTimeWanted,
 							secret: result.secret,
 						},
-						null,
 						2,
 					),
 				},
@@ -94,12 +92,11 @@ export async function handleSendFleet(
 			content: [
 				{
 					type: 'text',
-					text: JSON.stringify(
+					text: stringifyWithBigInt(
 						{
 							success: false,
 							error: error instanceof Error ? error.message : String(error),
 						},
-						null,
 						2,
 					),
 				},

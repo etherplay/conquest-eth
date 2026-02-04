@@ -1,6 +1,7 @@
 import type {CallToolResult} from '@modelcontextprotocol/sdk/types.js';
 import {FleetManager} from '../fleet/manager.js';
 import z from 'zod';
+import {stringifyWithBigInt} from '../helpers/index.js';
 
 /**
  * Tool handler for getting pending fleets
@@ -22,18 +23,18 @@ export async function handleGetPendingFleets(
 			content: [
 				{
 					type: 'text',
-					text: JSON.stringify(
+					text: stringifyWithBigInt(
 						{
 							success: true,
 							fleets: fleets.map((fleet) => ({
 								fleetId: fleet.fleetId,
-								fromPlanetId: fleet.fromPlanetId.toString(),
-								toPlanetId: fleet.toPlanetId.toString(),
+								fromPlanetId: fleet.fromPlanetId,
+								toPlanetId: fleet.toPlanetId,
 								quantity: fleet.quantity,
 								secret: fleet.secret,
 								gift: fleet.gift,
 								specific: fleet.specific,
-								arrivalTimeWanted: fleet.arrivalTimeWanted.toString(),
+								arrivalTimeWanted: fleet.arrivalTimeWanted,
 								fleetSender: fleet.fleetSender,
 								operator: fleet.operator,
 								committedAt: fleet.committedAt,
@@ -42,7 +43,6 @@ export async function handleGetPendingFleets(
 								resolvedAt: fleet.resolvedAt,
 							})),
 						},
-						null,
 						2,
 					),
 				},
@@ -53,12 +53,11 @@ export async function handleGetPendingFleets(
 			content: [
 				{
 					type: 'text',
-					text: JSON.stringify(
+					text: stringifyWithBigInt(
 						{
 							success: false,
 							error: error instanceof Error ? error.message : String(error),
 						},
-						null,
 						2,
 					),
 				},
