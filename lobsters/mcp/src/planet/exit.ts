@@ -1,7 +1,6 @@
-import type {PendingExit} from '../types/planet.js';
 import {getCurrentTimestamp} from '../util/time.js';
 import type {FleetStorage} from '../storage/interface.js';
-import {Clients, GameContract} from '../types.js';
+import {Clients, GameContract, PendingExit} from '../types.js';
 
 /**
  * Exit (unstake) multiple planets

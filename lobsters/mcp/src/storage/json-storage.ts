@@ -2,8 +2,7 @@ import {promises as fs} from 'fs';
 import path from 'path';
 import type {Address} from 'viem';
 import type {FleetStorage} from './interface.js';
-import type {PendingFleet} from '../types/fleet.js';
-import type {PendingExit} from '../types/planet.js';
+import {PendingExit, PendingFleet} from '../types.js';
 
 interface StorageData {
 	fleets: Record<string, PendingFleet>;
@@ -28,18 +27,19 @@ export class JsonFleetStorage implements FleetStorage {
 		try {
 			await fs.mkdir(path.dirname(this.dataPath), {recursive: true});
 			const content = await fs.readFile(this.dataPath, 'utf-8');
-			this.data = JSON.parse(content);
+			const data = JSON.parse(content);
 			// Convert BigInt strings back to BigInt
-			for (const fleetId in this.data.fleets) {
-				const fleet = this.data.fleets[fleetId];
-				fleet.fromPlanetId = BigInt(fleet.fromPlanetId as unknown as string);
-				fleet.toPlanetId = BigInt(fleet.toPlanetId as unknown as string);
-				fleet.arrivalTimeWanted = BigInt(fleet.arrivalTimeWanted as unknown as string);
+			for (const fleetId in data.fleets) {
+				const fleet = data.fleets[fleetId];
+				fleet.fromPlanetId = BigInt(fleet.fromPlanetId);
+				fleet.toPlanetId = BigInt(fleet.toPlanetId);
+				fleet.arrivalTimeWanted = BigInt(fleet.arrivalTimeWanted);
 			}
-			for (const planetId in this.data.exits) {
-				const exit = this.data.exits[planetId];
-				exit.planetId = BigInt(exit.planetId as unknown as string);
+			for (const planetId in data.exits) {
+				const exit = data.exits[planetId];
+				exit.planetId = BigInt(exit.planetId);
 			}
+			this.data = data;
 		} catch (error) {
 			// File doesn't exist, create new
 			await this.save();

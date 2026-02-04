@@ -1,8 +1,13 @@
 import type {Address} from 'viem';
 import type {SpaceInfo} from 'conquest-eth-v0-contracts';
 import type {FleetStorage} from '../storage/interface.js';
-import type {Clients, ClientsWithOptionalWallet, ContractConfig, GameContract} from '../types.js';
-import type {PendingFleet} from '../types/fleet.js';
+import type {
+	Clients,
+	ClientsWithOptionalWallet,
+	ContractConfig,
+	GameContract,
+	PendingFleet,
+} from '../types.js';
 import {getResolvableFleets, resolveFleetWithSpaceInfo} from './resolve.js';
 import {sendFleet, sendFleetFor} from './send.js';
 /**

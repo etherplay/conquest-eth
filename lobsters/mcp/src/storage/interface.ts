@@ -1,6 +1,5 @@
 import type {Address} from 'viem';
-import type {PendingFleet} from '../types/fleet.js';
-import type {PendingExit} from '../types/planet.js';
+import {PendingExit, PendingFleet} from '../types.js';
 
 export interface FleetStorage {
 	// Fleet operations

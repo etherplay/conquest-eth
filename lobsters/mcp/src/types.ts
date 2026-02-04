@@ -32,7 +32,7 @@ export interface ContractConfig {
 }
 
 export interface ExternalPlanet {
-	owner?: string;
+	owner?: `0x${string}`;
 	ownerYakuzaSubscriptionEndTime: number;
 	lastUpdatedSaved: number;
 	startExitTime: number;
@@ -46,7 +46,7 @@ export interface ExternalPlanet {
 	natives: boolean;
 	capturing: boolean;
 	inReach: boolean;
-	rewardGiver: string;
+	rewardGiver: `0x${string}`;
 	requireClaimAcknowledgement?: string;
 	metadata: Record<string, string | number | boolean>;
 }
@@ -85,8 +85,8 @@ export interface PendingFleet {
 	gift: boolean; // Whether this is a gift (no combat)
 	specific: `0x${string}`; // Specific target address (advanced feature)
 	arrivalTimeWanted: bigint; // Preferred arrival time (advanced feature)
-	fleetSender: string; // Address that sent the fleet
-	operator: string; // Address that committed the transaction
+	fleetSender: `0x${string}`; // Address that sent the fleet
+	operator: `0x${string}`; // Address that committed the transaction
 	committedAt: number; // Timestamp of commit transaction
 	estimatedArrivalTime: number; // Estimated arrival time
 	resolved: boolean; // Whether fleet has been revealed/resolved
@@ -99,8 +99,8 @@ export interface FleetResolution {
 	distance: bigint; // Distance between planets
 	arrivalTimeWanted: bigint; // Preferred arrival time
 	gift: boolean; // Whether this is a gift
-	specific: string; // Specific target address
+	specific: `0x${string}`; // Specific target address
 	secret: `0x${string}`; // The secret used to generate the hash
-	fleetSender: string; // Address that sent the fleet
-	operator: string; // Address that committed the transaction
+	fleetSender: `0x${string}`; // Address that sent the fleet
+	operator: `0x${string}`; // Address that committed the transaction
 }

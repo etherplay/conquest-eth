@@ -1,8 +1,7 @@
 import type {Address} from 'viem';
 import type {SpaceInfo} from 'conquest-eth-v0-contracts';
 import type {FleetStorage} from '../storage/interface.js';
-import type {Clients, ContractConfig, GameContract} from '../types.js';
-import type {PendingFleet} from '../types/fleet.js';
+import type {Clients, ContractConfig, GameContract, PendingFleet} from '../types.js';
 import {computeFleetId, computeToHash, generateSecret} from '../util/hashing.js';
 import {calculateEstimatedArrivalTime, getCurrentTimestamp} from '../util/time.js';
 
@@ -87,7 +86,7 @@ export async function sendFleet(
 		quantity,
 		secret,
 		gift: options?.gift ?? false,
-		specific: options?.specific ?? ('0x0000000000000000000000000000000000000000' as Address),
+		specific: options?.specific ?? '0x0000000000000000000000000000000000000000',
 		arrivalTimeWanted: options?.arrivalTimeWanted ?? BigInt(estimatedArrivalTime),
 		fleetSender,
 		operator,
@@ -194,7 +193,7 @@ export async function sendFleetFor(
 		quantity,
 		secret,
 		gift: options?.gift ?? false,
-		specific: options?.specific ?? ('0x0000000000000000000000000000000000000000' as Address),
+		specific: options?.specific ?? '0x0000000000000000000000000000000000000000',
 		arrivalTimeWanted: options?.arrivalTimeWanted ?? BigInt(estimatedArrivalTime),
 		fleetSender,
 		operator,

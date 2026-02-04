@@ -1,13 +1,17 @@
-import {zeroAddress, type Address, type PublicClient} from 'viem';
-import type {WalletClient} from 'viem';
+import {zeroAddress, type Address} from 'viem';
 import type {SpaceInfo} from 'conquest-eth-v0-contracts';
 import type {PlanetInfo, PlanetState} from 'conquest-eth-v0-contracts';
-import type {ExternalPlanet} from '../types/planet.js';
-import type {PendingExit} from '../types/planet.js';
 import {acquirePlanets} from './acquire.js';
 import {exitPlanets} from './exit.js';
 import type {FleetStorage} from '../storage/interface.js';
-import type {Clients, ClientsWithOptionalWallet, ContractConfig, GameContract} from '../types.js';
+import type {
+	Clients,
+	ClientsWithOptionalWallet,
+	ContractConfig,
+	ExternalPlanet,
+	GameContract,
+	PendingExit,
+} from '../types.js';
 
 /**
  * PlanetManager manages planet-related operations in the Conquest game
@@ -205,7 +209,7 @@ export class PlanetManager {
 	 */
 	async getMyPendingExits(): Promise<PendingExit[]> {
 		const sender = this.requireWalletClient().walletClient.account!.address;
-		return this.storage.getPendingExitsByPlayer(sender as Address);
+		return this.storage.getPendingExitsByPlayer(sender);
 	}
 
 	/**
@@ -238,7 +242,7 @@ export class PlanetManager {
 		let interrupted = false;
 		if (currentState.owner && currentState.owner.toLowerCase() !== exit.player.toLowerCase()) {
 			interrupted = true;
-			await this.storage.markExitInterrupted(planetId, currentTime, currentState.owner as Address);
+			await this.storage.markExitInterrupted(planetId, currentTime, currentState.owner);
 		}
 
 		// Check if exit is complete
@@ -254,7 +258,7 @@ export class PlanetManager {
 		return {
 			exit: updatedExit,
 			interrupted,
-			newOwner: currentState.owner as Address,
+			newOwner: currentState.owner,
 		};
 	}
 

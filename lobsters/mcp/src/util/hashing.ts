@@ -14,7 +14,7 @@ export function computeToHash(toPlanetId: bigint, secret: `0x${string}`): `0x${s
 			],
 			[toPlanetId, secret],
 		),
-	) as `0x${string}`;
+	);
 }
 
 /**
@@ -38,7 +38,7 @@ export function computeFleetId(
 			],
 			[toHash, fromPlanetId, fleetSender, operator],
 		),
-	) as `0x${string}`;
+	);
 }
 
 /**
@@ -47,5 +47,5 @@ export function computeFleetId(
 export function generateSecret(): `0x${string}` {
 	const randomBytes = new Uint8Array(32);
 	crypto.getRandomValues(randomBytes);
-	return `0x${Buffer.from(randomBytes).toString('hex')}` as `0x${string}`;
+	return `0x${Buffer.from(randomBytes).toString('hex')}`;
 }

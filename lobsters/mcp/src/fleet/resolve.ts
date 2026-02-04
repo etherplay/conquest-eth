@@ -1,8 +1,7 @@
 import type {Address, WalletClient} from 'viem';
 import type {SpaceInfo} from 'conquest-eth-v0-contracts';
 import type {FleetStorage} from '../storage/interface.js';
-import {Clients, GameContract} from '../types.js';
-import type {FleetResolution, PendingFleet} from '../types/fleet.js';
+import {Clients, FleetResolution, GameContract, PendingFleet} from '../types.js';
 import {getCurrentTimestamp} from '../util/time.js';
 
 /**
@@ -51,14 +50,14 @@ export async function resolveFleet(
 		gift: pendingFleet.gift,
 		specific: pendingFleet.specific,
 		secret: pendingFleet.secret,
-		fleetSender: pendingFleet.fleetSender as Address,
-		operator: pendingFleet.operator as Address,
+		fleetSender: pendingFleet.fleetSender,
+		operator: pendingFleet.operator,
 	};
 
 	// Get the contract resolveFleet function signature
 	const publicClient = fleetsRevealContract.publicClient as any;
 	const request = await publicClient.simulateContract({
-		address: fleetsRevealContract.address as Address,
+		address: fleetsRevealContract.address,
 		abi: fleetsRevealContract.abi,
 		functionName: 'resolveFleet',
 		args: [BigInt('0x' + fleetId), resolution],
@@ -136,8 +135,8 @@ export async function resolveFleetWithSpaceInfo(
 		gift: pendingFleet.gift,
 		specific: pendingFleet.specific,
 		secret: pendingFleet.secret,
-		fleetSender: pendingFleet.fleetSender as Address,
-		operator: pendingFleet.operator as Address,
+		fleetSender: pendingFleet.fleetSender,
+		operator: pendingFleet.operator,
 	};
 
 	// Get the contract resolveFleet function signature
