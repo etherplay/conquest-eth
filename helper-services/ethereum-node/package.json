@@ -1,0 +1,9 @@
+{
+    "name": "ethereum-node",
+    "devDependencies": {
+        "hardhat": "^2.28.4"
+    },
+    "scripts": {
+        "local_node": "hardhat node --hostname 0.0.0.0"
+    }
+}

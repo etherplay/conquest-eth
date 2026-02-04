@@ -15,7 +15,7 @@ layout {
 	}
 	pane split_direction="vertical" {
 		pane name="local node" command="pnpm"  {
-			args "--filter" "./contracts" "local_node"
+			args "--filter" "./helper-services/ethereum-node" "local_node"
 		}
 		pane name="watch and compile" command="pnpm"  {
 			args "--filter" "./contracts" "compile:watch"
