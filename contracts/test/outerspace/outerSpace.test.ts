@@ -38,8 +38,6 @@ describe('OuterSpace', function () {
 		const player0 = unnamedAccounts[0];
 		const player1 = unnamedAccounts[1];
 
-		const amount = BigInt(pointer.data.stats.stake) * 1000000000000000000n;
-
 		// First player acquires planet
 		const receipt1 = await acquire(
 			env,

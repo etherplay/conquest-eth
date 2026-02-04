@@ -19,13 +19,19 @@ export async function acquirePlanets(
 ): Promise<{hash: `0x${string}`; planetsAcquired: bigint[]}> {
 	const sender = clients.walletClient.account!.address;
 
+	const nativeTokenAmount = (amountToMint * 1000000000000000000n) / 1000000000000000000000n; // TODO BigInt((PlayToken.linkedData as any).numTokensPerNativeTokenAt18Decimals);
+
+	console.log(
+		`Acquiring ${planetIds.length} planets with ${amountToMint} native tokens and ${tokenAmount} staking tokens using ${nativeTokenAmount} native tokens`,
+	);
+
 	// Get the contract acquireMultipleViaNativeTokenAndStakingToken function signature
 	const simulation = await clients.publicClient.simulateContract({
 		...gameContract,
 		functionName: 'acquireMultipleViaNativeTokenAndStakingToken',
 		args: [planetIds, amountToMint, tokenAmount],
 		account: sender,
-		value: BigInt(amountToMint),
+		value: nativeTokenAmount,
 	});
 
 	// Send the transaction

@@ -18,8 +18,8 @@ export async function handleAcquirePlanets(
 		const parsed = z
 			.object({
 				planetIds: z.array(z.union([z.string(), z.number()])),
-				amountToMint: z.number(),
-				tokenAmount: z.number(),
+				amountToMint: z.number().optional(),
+				tokenAmount: z.number().optional(),
 			})
 			.parse(args);
 		const {planetIds, amountToMint, tokenAmount} = parsed;
@@ -29,12 +29,33 @@ export async function handleAcquirePlanets(
 			typeof id === 'string' ? BigInt(id) : BigInt(id),
 		);
 
-		// TODO decimal handling, for now BigInt()
-		const result = await planetManager.acquire(
-			planetIdsBigInt,
-			BigInt(amountToMint),
-			BigInt(tokenAmount),
-		);
+		let result: {hash: `0x${string}`; planetsAcquired: bigint[]; amountToMint: bigint; tokenAmount: bigint};
+
+		// If BOTH amounts are provided, use them; otherwise use auto-calculation
+		if (amountToMint !== undefined && tokenAmount !== undefined) {
+			// Use provided amounts
+			// TODO decimal handling, for now BigInt()
+			const acquireResult = await planetManager.acquire(
+				planetIdsBigInt,
+				BigInt(amountToMint),
+				BigInt(tokenAmount),
+			);
+			result = {
+				hash: acquireResult.hash,
+				planetsAcquired: acquireResult.planetsAcquired,
+				amountToMint: BigInt(amountToMint),
+				tokenAmount: BigInt(tokenAmount),
+			};
+		} else {
+			// Use auto-calculation
+			const autoResult = await planetManager.acquireWithAutoCalc(planetIdsBigInt);
+			result = {
+				hash: autoResult.hash,
+				planetsAcquired: autoResult.planetsAcquired,
+				amountToMint: autoResult.costs.amountToMint,
+				tokenAmount: autoResult.costs.tokenAmount,
+			};
+		}
 
 		return {
 			content: [
@@ -45,6 +66,8 @@ export async function handleAcquirePlanets(
 							success: true,
 							transactionHash: result.hash,
 							planetsAcquired: result.planetsAcquired.map((id) => id.toString()),
+							amountToMint: result.amountToMint.toString(),
+							tokenAmount: result.tokenAmount.toString(),
 						},
 						null,
 						2,
@@ -79,6 +102,16 @@ export const acquirePlanetsSchema = {
 	planetIds: z
 		.array(z.union([z.string(), z.number()]))
 		.describe('Array of planet location IDs to acquire (as hex strings or numbers)'),
-	amountToMint: z.number().describe('Amount of native token to spend to acquire the planets'),
-	tokenAmount: z.number().describe('Amount of staking token to spend to acquire the planets'),
+	amountToMint: z
+		.number()
+		.optional()
+		.describe(
+			'Amount of native token to spend to acquire the planets. If not provided, will be calculated automatically based on planet stats.',
+		),
+	tokenAmount: z
+		.number()
+		.optional()
+		.describe(
+			'Amount of staking token to spend to acquire the planets. If not provided, will be calculated automatically based on planet stats.',
+		),
 };

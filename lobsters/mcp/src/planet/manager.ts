@@ -56,6 +56,50 @@ export class PlanetManager {
 	}
 
 	/**
+	 * Acquire (stake) multiple planets with automatic cost calculation
+	 */
+	async acquireWithAutoCalc(planetIds: bigint[]): Promise<{
+		hash: `0x${string}`;
+		planetsAcquired: bigint[];
+		costs: {amountToMint: bigint; tokenAmount: bigint};
+	}> {
+		const costs = this.calculateAcquisitionCosts(planetIds);
+		const result = await acquirePlanets(
+			this.requireWalletClient(),
+			this.gameContract,
+			planetIds,
+			costs.amountToMint,
+			costs.tokenAmount,
+		);
+		return {...result, costs};
+	}
+
+	/**
+	 * Calculate acquisition costs for planets based on their stats
+	 *
+	 * @param planetIds - Array of planet location IDs
+	 * @returns Object with total amountToMint and tokenAmount
+	 */
+	calculateAcquisitionCosts(planetIds: bigint[]): {amountToMint: bigint; tokenAmount: bigint} {
+		const DECIMAL_14 = 100000000000000n;
+		let totalTokenAmount = 0n;
+		for (const planetId of planetIds) {
+			const planet = this.getPlanetInfo(planetId);
+			if (!planet) {
+				throw new Error(`Planet ${planetId} not found`);
+			}
+			// Use the planet's stake value from its statistics
+			// Multiply by DECIMAL_14 as the contract does
+			totalTokenAmount += BigInt(planet.stats.stake) * DECIMAL_14;
+		}
+
+		const amountToMint = totalTokenAmount;
+
+		// When using native token, we set tokenAmount to 0
+		return {amountToMint, tokenAmount: 0n};
+	}
+
+	/**
 	 * Exit (unstake) multiple planets
 	 */
 	async exit(planetIds: bigint[]): Promise<{hash: `0x${string}`; exitsInitiated: bigint[]}> {
