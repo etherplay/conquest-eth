@@ -55,6 +55,7 @@
 		"@types/node": "^25.2.0",
 		"as-soon": "^0.1.5",
 		"prettier": "^3.8.0",
+		"reloaderoo": "^1.1.5",
 		"tsx": "^4.21.0",
 		"typescript": "^5.3.3",
 		"vitest": "^4.0.18"
@@ -68,6 +69,8 @@
 		"dev": "as-soon -w src pnpm build",
 		"test": "vitest run",
 		"test:watch": "vitest",
-		"mcp:inspector": "mcp-inspector"
+		"mcp:inspector": "mcp-inspector",
+		"reloaderoo": "reloaderoo",
+		"start": "reloaderoo proxy --log-level debug -- node ./dist/cli.js --rpc-url http://localhost:8545 --game-contract 0x322813fd9a801c5507c9de605d63cea4f2ce6c44 --ethereum"
 	}
 }

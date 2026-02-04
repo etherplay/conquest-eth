@@ -1,0 +1,13 @@
+diff --git a/dist/mcp-proxy.js b/dist/mcp-proxy.js
+index 3f91b0c123ec9dbefb92791c9904f5db7f80fb9d..4b54d6320070569ca3f0cb5f66a75aea76d5ea54 100644
+--- a/dist/mcp-proxy.js
++++ b/dist/mcp-proxy.js
+@@ -53,7 +53,7 @@ export class MCPProxy {
+                 tools: { listChanged: true },
+                 prompts: { listChanged: true },
+                 resources: { subscribe: true, listChanged: true },
+-                completion: { argument: true },
++                completions: {},
+                 sampling: {}
+             }
+         });
