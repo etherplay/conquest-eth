@@ -102,19 +102,16 @@ conquest get_planets_around --center-x 10 --center-y 20 --radius 25
 Stake tokens to claim ownership of unclaimed planets:
 
 ```bash
-# Using planet IDs as numbers
-conquest acquire_planets --planet-ids 1,2,3
-
-# Using planet IDs as hex strings
-conquest acquire_planets --planet-ids 0x1,0x2,0x3
+# Using coordinates
+conquest acquire_planets --coordinates 10,20 15,25 20,30
 
 # With custom amounts
-conquest acquire_planets --planet-ids 1,2,3 --amount-to-mint 1000000 --token-amount 500
+conquest acquire_planets --coordinates 10,20 15,25 --amount-to-mint 1000000 --token-amount 500
 ```
 
 **Parameters:**
 
-- `--planet-ids` (array): Planet location IDs to acquire (comma-separated)
+- `--coordinates` (array): Planet coordinates to acquire (space-separated pairs of x,y)
 - `--amount-to-mint` (number, optional): Amount of native token to spend. Auto-calculated if not provided.
 - `--token-amount` (number, optional): Amount of staking token to spend. Auto-calculated if not provided.
 
@@ -196,12 +193,12 @@ conquest resolve_fleet --fleet-id "your-fleet-id"
 Start the exit process to retrieve staked tokens:
 
 ```bash
-conquest exit_planets --planet-ids 1,2,3
+conquest exit_planets --coordinates 10,20 15,25 20,30
 ```
 
 **Parameters:**
 
-- `--planet-ids` (array): Planet location IDs to exit (comma-separated)
+- `--coordinates` (array): Planet coordinates to exit (space-separated pairs of x,y)
 
 **Returns:** JSON with transaction hash and list of exits initiated.
 
@@ -237,12 +234,13 @@ conquest get_pending_fleets
 Check if an exit has completed and can be withdrawn:
 
 ```bash
-conquest verify_exit_status --planet-id 1
+conquest verify_exit_status --x 10 --y 20
 ```
 
 **Parameters:**
 
-- `--planet-id` (number): Planet location ID to verify
+- `--x` (number): X coordinate of the planet to verify
+- `--y` (number): Y coordinate of the planet to verify
 
 **Returns:** JSON with exit status information including completion status.
 
@@ -330,21 +328,21 @@ conquest get_my_planets --radius 50
 # Find unclaimed planets
 conquest get_planets_around --center-x 0 --center-y 0 --radius 30
 
-# Acquire multiple planets
-conquest acquire_planets --planet-ids 1,2,3,4,5,6,7,8,9,10
+# Acquire multiple planets using coordinates
+conquest acquire_planets --coordinates 10,20 15,25 20,30 25,35 30,40
 ```
 
 ### Example 3: Exit Planets
 
 ```bash
 # Start exit process for multiple planets
-conquest exit_planets --planet-ids 1,2,3
+conquest exit_planets --coordinates 10,20 15,25 20,30
 
 # Check pending exits
 conquest get_pending_exits
 
 # Verify exit status (after 7 days)
-conquest verify_exit_status --planet-id 1
+conquest verify_exit_status --x 10 --y 20
 ```
 
 ### Example 4: Monitor and Attack
@@ -405,7 +403,7 @@ conquest get_my_planets --radius 10
 conquest get_planets_around --center-x 0 --center-y 0 --radius 20
 
 # These will fail without a private key:
-conquest acquire_planets --planet-ids 1,2,3
+conquest acquire_planets --coordinates 10,20 15,25
 conquest send_fleet --from-x 10 --from-y 20 --to-x 15 --to-y 25 --quantity 100
 ```
 

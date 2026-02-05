@@ -6,9 +6,14 @@ export const acquire_planets = createTool({
 	description:
 		'Acquire (stake) multiple planets in the Conquest game. This allows you to take ownership of unclaimed planets.',
 	schema: z.object({
-		planetIds: z
-			.array(z.union([z.string(), z.number()]))
-			.describe('Array of planet location IDs to acquire (as hex strings or numbers)'),
+		coordinates: z
+			.array(
+				z.object({
+					x: z.number().describe('X coordinate of the planet'),
+					y: z.number().describe('Y coordinate of the planet'),
+				}),
+			)
+			.describe('Array of planet coordinates to acquire'),
 		amountToMint: z
 			.number()
 			.optional()
@@ -22,12 +27,17 @@ export const acquire_planets = createTool({
 				'Amount of staking token to spend to acquire the planets. If not provided, will be calculated automatically based on planet stats.',
 			),
 	}),
-	execute: async (env, {planetIds, amountToMint, tokenAmount}) => {
+	execute: async (env, {coordinates, amountToMint, tokenAmount}) => {
 		try {
-			// Convert planet IDs to BigInt
-			const planetIdsBigInt = planetIds.map((id) =>
-				typeof id === 'string' ? BigInt(id) : BigInt(id),
-			);
+			// Convert x,y coordinates to planet IDs
+			const planetIdsBigInt: bigint[] = [];
+			for (const coord of coordinates) {
+				const planetId = env.planetManager.getPlanetIdByCoordinates(coord.x, coord.y);
+				if (planetId === undefined) {
+					throw new Error(`No planet found at coordinates (${coord.x}, ${coord.y})`);
+				}
+				planetIdsBigInt.push(planetId);
+			}
 
 			let result: {
 				hash: `0x${string}`;

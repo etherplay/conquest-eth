@@ -56,11 +56,11 @@ mcporter call mcp-conquest-eth-v0.get_planets_around '{"centerX": 10, "centerY":
 Stake tokens to claim ownership of unclaimed planets:
 
 ```bash
-mcporter call mcp-conquest-eth-v0.acquire_planets '{"planetIds": [1, 2, 3]}'
+mcporter call mcp-conquest-eth-v0.acquire_planets '{"coordinates": [{"x": 10, "y": 20}, {"x": 15, "y": 25}, {"x": 20, "y": 30}]}'
 ```
 
 **Parameters:**
-- `planetIds` (array of numbers/strings): Planet location IDs to acquire
+- `coordinates` (array of objects): Planet coordinates to acquire, each object with `x` and `y` properties
 - `amountToMint` (number, optional): Amount of native token to spend. Auto-calculated if not provided.
 - `tokenAmount` (number, optional): Amount of staking token to spend. Auto-calculated if not provided.
 
@@ -123,11 +123,11 @@ mcporter call mcp-conquest-eth-v0.resolve_fleet '{"fleetId": "your-fleet-id"}'
 Start the exit process to retrieve staked tokens:
 
 ```bash
-mcporter call mcp-conquest-eth-v0.exit_planets '{"planetIds": [1, 2, 3]}'
+mcporter call mcp-conquest-eth-v0.exit_planets '{"coordinates": [{"x": 10, "y": 20}, {"x": 15, "y": 25}, {"x": 20, "y": 30}]}'
 ```
 
 **Parameters:**
-- `planetIds` (array of numbers/strings): Planet location IDs to exit
+- `coordinates` (array of objects): Planet coordinates to exit, each object with `x` and `y` properties
 
 **Returns:** Transaction hash and list of exits initiated.
 
@@ -162,11 +162,12 @@ mcporter call mcp-conquest-eth-v0.get_pending_fleets '{}'
 Check if an exit has completed and can be withdrawn:
 
 ```bash
-mcporter call mcp-conquest-eth-v0.verify_exit_status '{"planetId": 1}'
+mcporter call mcp-conquest-eth-v0.verify_exit_status '{"x": 10, "y": 20}'
 ```
 
 **Parameters:**
-- `planetId` (number or string): Planet location ID to verify
+- `x` (number): X coordinate of the planet to verify
+- `y` (number): Y coordinate of the planet to verify
 
 **Returns:** Exit status information including completion status.
 

@@ -5,15 +5,16 @@ export const verify_exit_status = createTool({
 	description:
 		"Check and update the status of a planet's exit operation. Verifies if the exit has completed or been interrupted.",
 	schema: z.object({
-		planetId: z
-			.union([z.string(), z.number()])
-			.describe('Planet location ID to verify (as hex string or number)'),
+		x: z.number().describe('X coordinate of the planet'),
+		y: z.number().describe('Y coordinate of the planet'),
 	}),
-	execute: async (env, {planetId}) => {
+	execute: async (env, {x, y}) => {
 		try {
-			const result = await env.planetManager.verifyExitStatus(
-				typeof planetId === 'string' ? BigInt(planetId) : BigInt(planetId),
-			);
+			const planetId = env.planetManager.getPlanetIdByCoordinates(x, y);
+			if (planetId === undefined) {
+				throw new Error(`No planet found at coordinates (${x}, ${y})`);
+			}
+			const result = await env.planetManager.verifyExitStatus(planetId);
 
 			// Calculate status based on exit state
 			const currentTime = Math.floor(Date.now() / 1000);
