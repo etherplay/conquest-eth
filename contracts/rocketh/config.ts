@@ -57,6 +57,11 @@ export const config = {
 			100: 2,
 		},
 	},
+	chains: {
+		31337: {
+			tags: ['auto-mine'],
+		},
+	},
 	scripts: deploymentsFolder,
 	data: {},
 	signerProtocols: {
