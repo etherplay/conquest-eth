@@ -7,7 +7,10 @@ export const get_planets_around = createTool({
 	schema: z.object({
 		centerX: z.number().describe('X coordinate of the center point'),
 		centerY: z.number().describe('Y coordinate of the center point'),
-		radius: z.number().max(50).describe('Radius in distance units to search around the center point'),
+		radius: z
+			.number()
+			.max(50)
+			.describe('Radius in distance units to search around the center point'),
 	}),
 	execute: async (env, {centerX, centerY, radius}) => {
 		try {

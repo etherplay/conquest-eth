@@ -43,17 +43,17 @@ export function registerTool({
 	fleetManager: FleetManager;
 	planetManager: PlanetManager;
 }): void {
-	server.registerTool(name, {
-		description: tool.description,
-		inputSchema: tool.schema as any,
-	}, async (params: unknown) => {
-		const env = createToolEnvironment(
-			server,
-			fleetManager,
-			planetManager,
-		);
+	server.registerTool(
+		name,
+		{
+			description: tool.description,
+			inputSchema: tool.schema as any,
+		},
+		async (params: unknown) => {
+			const env = createToolEnvironment(server, fleetManager, planetManager);
 
-		const result = await tool.execute(env, params as any);
-		return convertToCallToolResult(result);
-	});
+			const result = await tool.execute(env, params as any);
+			return convertToCallToolResult(result);
+		},
+	);
 }
