@@ -1,12 +1,14 @@
 {
-	"name": "tools-conquest-eth-v0",
+	"name": "@conquest-eth/tools",
 	"version": "0.0.0",
-	"description": "MCP for Conquest.eth v0",
+	"description": "Tools for Conquest.eth, including mcp server",
 	"author": "Ronan Sandford",
 	"license": "MIT",
 	"keywords": [
 		"mcp",
 		"ethereum",
+		"tools",
+		"cli",
 		"conquest.eth"
 	],
 	"repository": {
