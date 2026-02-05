@@ -52,7 +52,7 @@ export function createServer(
 		abi: Abi_IOuterSpace,
 	};
 
-	const name = `${pkg.name}-server`;
+	const name = `mcp-conquest-eth-v0`;
 	const server = options?.ethereum
 		? createMCPEthereumServer(mcpEthereumParams, {
 				...options,
@@ -125,7 +125,7 @@ export function createServer(
 			async (args: unknown) => {
 				try {
 					const {fleetManager, planetManager} = await ensureManagersInitialized();
-					
+
 					const env = {
 						sendStatus: async (_message: string) => {
 							// TODO: Implement progress notifications when sessionId is available
@@ -135,7 +135,7 @@ export function createServer(
 					};
 
 					const result = await tool.execute(env, args as any);
-					
+
 					// Convert ToolResult to CallToolResult
 					if (result.success === false) {
 						return {

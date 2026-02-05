@@ -1,5 +1,5 @@
 {
-	"name": "mcp-conquest-eth-v0",
+	"name": "tools-conquest-eth-v0",
 	"version": "0.0.0",
 	"description": "MCP for Conquest.eth v0",
 	"author": "Ronan Sandford",
@@ -11,11 +11,11 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/wighawag/mcp-conquest-eth.git"
+		"url": "git+https://github.com/wighawag/tools-conquest-eth-v0.git"
 	},
-	"homepage": "https://github.com/wighawag/mcp-conquest-eth#readme",
+	"homepage": "https://github.com/wighawag/tools-conquest-eth-v0#readme",
 	"bugs": {
-		"url": "https://github.com/wighawag/mcp-conquest-eth/issues"
+		"url": "https://github.com/wighawag/tools-conquest-eth-v0/issues"
 	},
 	"publishConfig": {
 		"access": "public"
@@ -31,7 +31,7 @@
 		}
 	},
 	"bin": {
-		"mcp-conquest-eth": "dist/cli.js"
+		"conquest": "dist/cli.js"
 	},
 	"files": [
 		"dist",

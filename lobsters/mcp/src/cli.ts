@@ -5,69 +5,104 @@ import {Command} from 'commander';
 import pkg from '../package.json' with {type: 'json'};
 import {getChain} from 'mcp-ethereum/helpers';
 import {loadEnv} from 'ldenv';
+import * as tools from './tools/index.js';
+import {registerAllToolCommands} from './cli-tool-generator.js';
 
 loadEnv();
 
 const program = new Command();
 
+// Get the binary name from package.json
+const binName = Object.keys(pkg.bin || {})[0];
+
 program
-	.name(pkg.name)
-	.description(pkg.description)
+	.name(binName)
+	.description(pkg.description || 'Conquest.eth CLI - MCP server and direct tool execution')
 	.version(pkg.version)
-	.option('--rpc-url <url>', 'RPC URL for the Ethereum network', '')
-	.option('--ethereum', 'Whether to also provide mcp-ethereum tools', '')
-	.option('--game-contract <address>', 'Contract address of the game', '')
-	.option('--storage <type>', 'Storage backend: json or sqlite', 'json')
-	.option('--storage-path <path>', 'Path to storage directory', './data')
-	.parse(process.argv);
+	// Global options available to all commands
+	.option('--rpc-url <url>', 'RPC URL for the Ethereum network', process.env.RPC_URL || '')
+	.option(
+		'--ethereum',
+		'Whether to also provide mcp-ethereum tools',
+		process.env.ETHEREUM_TOOLS === 'true',
+	)
+	.option(
+		'--game-contract <address>',
+		'Contract address of the game',
+		process.env.GAME_CONTRACT || '',
+	)
+	.option('--storage <type>', 'Storage backend: json or sqlite', process.env.STORAGE_TYPE || 'json')
+	.option(
+		'--storage-path <path>',
+		'Path to storage directory',
+		process.env.STORAGE_PATH || './data',
+	)
+	.option(
+		'--private-key <key>',
+		'Private key for sending transactions',
+		process.env.PRIVATE_KEY || '',
+	)
+	.action(() => {
+		program.help();
+	});
 
-const options: {
-	rpcUrl?: string;
-	ethereum?: boolean;
-	gameContract?: `0x${string}`;
-	storage?: string;
-	storagePath?: string;
-} = program.opts();
+// MCP subcommand - starts the MCP server
+program
+	.command('mcp')
+	.description('Start the MCP server')
+	.action(async () => {
+		const options = program.opts();
 
-const privateKey = process.env.PRIVATE_KEY;
-if (!privateKey) {
-	console.warn('Warning: PRIVATE_KEY environment variable is required for sending transactions');
-} else if (!privateKey.startsWith('0x')) {
-	console.error('Error: PRIVATE_KEY must start with 0x');
-	process.exit(1);
-}
+		const rpcUrl = options.rpcUrl;
+		const gameContract = options.gameContract;
+		const ethereum = options.ethereum;
+		const privateKey = options.privateKey;
+		const storage = options.storage;
+		const storagePath = options.storagePath;
 
-let rpcUrl = options.rpcUrl;
-if (!rpcUrl) {
-	rpcUrl = process.env.RPC_URL;
-	if (!rpcUrl) {
-		console.error(
-			'Error: --rpc-url option is required, alternatively set RPC_URL environment variable',
+		// Validate required options
+		if (!rpcUrl) {
+			console.error('Error: --rpc-url option or RPC_URL environment variable is required');
+			process.exit(1);
+		}
+
+		if (!gameContract) {
+			console.error(
+				'Error: --game-contract option or GAME_CONTRACT environment variable is required',
+			);
+			process.exit(1);
+		}
+
+		// Warn if private key is not provided for write operations
+		if (!privateKey) {
+			console.warn(
+				'Warning: PRIVATE_KEY environment variable is required for sending transactions',
+			);
+		} else if (!privateKey.startsWith('0x')) {
+			console.error('Error: PRIVATE_KEY must start with 0x');
+			process.exit(1);
+		}
+
+		const chain = await getChain(rpcUrl);
+		const transport = new StdioServerTransport();
+		const server = createServer(
+			{
+				chain,
+				privateKey: privateKey as `0x${string}`,
+				gameContract: gameContract as `0x${string}`,
+			},
+			{
+				ethereum,
+				storageConfig: {
+					type: storage as 'json' | 'sqlite',
+					dataDir: storagePath,
+				},
+			},
 		);
-		process.exit(1);
-	}
-}
+		await server.connect(transport);
+	});
 
-if (!options.gameContract) {
-	console.error('Error: --game-contract option is required');
-	process.exit(1);
-}
+// Register all tool commands dynamically
+registerAllToolCommands(program, tools);
 
-const transport = new StdioServerTransport();
-
-const chain = await getChain(rpcUrl);
-const server = createServer(
-	{
-		chain,
-		privateKey: privateKey as `0x${string}`,
-		gameContract: options.gameContract,
-	},
-	{
-		ethereum: options.ethereum,
-		storageConfig: {
-			type: (options.storage as 'json' | 'sqlite') || 'json',
-			dataDir: options.storagePath,
-		},
-	},
-);
-await server.connect(transport);
+program.parse(process.argv);

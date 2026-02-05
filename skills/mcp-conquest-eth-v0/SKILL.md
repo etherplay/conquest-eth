@@ -18,7 +18,7 @@ mcporter list mcp-conquest-eth-v0 --schema
 Call a tool:
 
 ```bash
-mcporter call mcp-conquest-eth-v0.<Todo>
+mcporter call mcp-conquest-eth-v0.<tool>
 ```
 
 ## Common Commands
