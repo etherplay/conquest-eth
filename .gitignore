@@ -10,3 +10,4 @@ node_modules
 yalc.lock
 exec.sh
 package/
+tmp/
