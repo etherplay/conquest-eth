@@ -22,11 +22,6 @@ program
 	// Global options available to all commands
 	.option('--rpc-url <url>', 'RPC URL for the Ethereum network', process.env.RPC_URL || '')
 	.option(
-		'--ethereum',
-		'Whether to also provide mcp-ethereum tools',
-		process.env.ETHEREUM_TOOLS === 'true',
-	)
-	.option(
 		'--game-contract <address>',
 		'Contract address of the game',
 		process.env.GAME_CONTRACT || '',
@@ -50,12 +45,14 @@ program
 program
 	.command('mcp')
 	.description('Start the MCP server')
+	.option('--ethereum', 'Whether to also provide mcp-ethereum tools', process.env.ETHEREUM_TOOLS === 'true')
 	.action(async () => {
 		const options = program.opts();
+		const mcpOptions = program.commands.find(cmd => cmd.name() === 'mcp')?.opts() || {};
 
 		const rpcUrl = options.rpcUrl;
 		const gameContract = options.gameContract;
-		const ethereum = options.ethereum;
+		const ethereum = mcpOptions.ethereum ?? process.env.ETHEREUM_TOOLS === 'true';
 		const privateKey = options.privateKey;
 		const storage = options.storage;
 		const storagePath = options.storagePath;

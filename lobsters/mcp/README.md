@@ -32,10 +32,15 @@ node dist/cli.js --help
 |--------|---------------------|-------------|---------|
 | `--rpc-url <url>` | `RPC_URL` | RPC URL for the Ethereum network | (required) |
 | `--game-contract <address>` | `GAME_CONTRACT` | Game contract address | (required) |
-| `--ethereum` | `ETHEREUM_TOOLS` | Include mcp-ethereum tools | false |
 | `--storage <type>` | `STORAGE_TYPE` | Storage backend: json or sqlite | json |
 | `--storage-path <path>` | `STORAGE_PATH` | Storage directory path | ./data |
 | `--private-key <key>` | `PRIVATE_KEY` | Private key for transactions | (required for write ops) |
+
+#### MCP Server Options
+
+| Option | Environment Variable | Description | Default |
+|--------|---------------------|-------------|---------|
+| `--ethereum` | `ETHEREUM_TOOLS` | Include mcp-ethereum tools | false |
 
 #### Using Environment Variables
 

@@ -34,13 +34,13 @@ conquest --help
 ### Using Environment Variables
 
 Set up your environment:
-
 ```bash
 export RPC_URL=https://rpc.gnosischain.com
 export GAME_CONTRACT=0x322813fd9a801c5507c9de605d63cea4f2ce6c44
 export PRIVATE_KEY=0x...
 export STORAGE_TYPE=json
 export STORAGE_PATH=./data
+export ETHEREUM_TOOLS=true  # Only for MCP server mode
 ```
 
 Then run commands without repeating options:
