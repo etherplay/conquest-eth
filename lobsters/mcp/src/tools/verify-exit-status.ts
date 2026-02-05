@@ -1,78 +1,43 @@
-import type {CallToolResult} from '@modelcontextprotocol/sdk/types.js';
 import {z} from 'zod';
-import {PlanetManager} from '../planet/manager.js';
-import {stringifyWithBigInt} from '../helpers/index.js';
+import {createTool} from '../types.js';
 
-/**
- * Tool handler for verifying exit status
- * Handles the MCP tool request to check and update the status of a planet's exit operation
- *
- * @param args - The tool arguments (will be validated against the schema)
- * @param planetManager - The PlanetManager instance to verify the exit status
- * @returns The tool result with exit status details, or error details
- */
-export async function handleVerifyExitStatus(
-	args: unknown,
-	planetManager: PlanetManager,
-): Promise<CallToolResult> {
-	try {
-		const parsed = verifyExitStatusSchema.parse(args);
-		const {planetId} = parsed;
+export const verify_exit_status = createTool({
+	description:
+		"Check and update the status of a planet's exit operation. Verifies if the exit has completed or been interrupted.",
+	schema: z.object({
+		planetId: z
+			.union([z.string(), z.number()])
+			.describe('Planet location ID to verify (as hex string or number)'),
+	}),
+	execute: async (env, {planetId}) => {
+		try {
+			const result = await env.planetManager.verifyExitStatus(
+				typeof planetId === 'string' ? BigInt(planetId) : BigInt(planetId),
+			);
 
-		const result = await planetManager.verifyExitStatus(
-			typeof planetId === 'string' ? BigInt(planetId) : BigInt(planetId),
-		);
+			// Calculate status based on exit state
+			const currentTime = Math.floor(Date.now() / 1000);
+			const completed = currentTime >= result.exit.exitCompleteTime;
+			const status = result.interrupted ? 'interrupted' : completed ? 'completed' : 'in_progress';
+			const owner = result.newOwner || result.exit.player;
 
-		// Calculate status based on exit state
-		const currentTime = Math.floor(Date.now() / 1000);
-		const completed = currentTime >= result.exit.exitCompleteTime;
-		const status = result.interrupted ? 'interrupted' : completed ? 'completed' : 'in_progress';
-		const owner = result.newOwner || result.exit.player;
-
-		return {
-			content: [
-				{
-					type: 'text',
-					text: stringifyWithBigInt(
-						{
-							success: true,
-							planetId: result.exit.planetId,
-							status,
-							completed,
-							interrupted: result.interrupted,
-							owner,
-							exitStartTime: result.exit.exitStartTime,
-							exitCompleteTime: result.exit.exitCompleteTime,
-						},
-						2,
-					),
+			return {
+				success: true,
+				result: {
+					planetId: result.exit.planetId,
+					status,
+					completed,
+					interrupted: result.interrupted,
+					owner,
+					exitStartTime: result.exit.exitStartTime,
+					exitCompleteTime: result.exit.exitCompleteTime,
 				},
-			],
-		};
-	} catch (error) {
-		return {
-			content: [
-				{
-					type: 'text',
-					text: stringifyWithBigInt(
-						{
-							success: false,
-							error: error instanceof Error ? error.message : String(error),
-						},
-						2,
-					),
-				},
-			],
-			isError: true,
-		};
-	}
-}
-
-/**
- * Tool schema for verifying exit status (ZodRawShapeCompat format)
- */
-export const verifyExitStatusSchema = z.object({
-	planetId: z
-		.union([z.string(), z.number()])
-		.describe('Planet location ID to verify (as hex string or number)'),
+			};
+		} catch (error) {
+			return {
+				success: false,
+				error: error instanceof Error ? error.message : String(error),
+			};
+		}
+	},
 });

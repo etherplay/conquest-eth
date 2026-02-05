@@ -12,18 +12,10 @@ import {PlanetManager} from './planet/manager.js';
 import type {ClientsWithOptionalWallet, ContractConfig, GameContract} from './types.js';
 import {SpaceInfo} from 'conquest-eth-v0-contracts';
 
-// Tool handlers and schemas
-import {handleAcquirePlanets, acquirePlanetsSchema} from './tools/acquire-planets.js';
-import {handleSendFleet, sendFleetSchema} from './tools/send-fleet.js';
-import {handleResolveFleet, resolveFleetSchema} from './tools/resolve-fleet.js';
-import {handleExitPlanets, exitPlanetsSchema} from './tools/exit-planets.js';
-import {handleGetPendingExits, getPendingExitsSchema} from './tools/get-pending-exits.js';
-import {handleVerifyExitStatus, verifyExitStatusSchema} from './tools/verify-exit-status.js';
-import {handleGetMyPlanets, getMyPlanetsSchema} from './tools/get-my-planets.js';
-import {handleGetPlanetsAround, getPlanetsAroundSchema} from './tools/get-planets-around.js';
-import {handleGetPendingFleets, getPendingFleetsSchema} from './tools/get-pending-fleets.js';
+// Import refactored tools
+import * as tools from './tools/index.js';
+import {registerTool, stringifyWithBigInt} from './helpers/index.js';
 import {Abi_IOuterSpace} from 'conquest-eth-v0-contracts/abis/IOuterSpace.js';
-import {stringifyWithBigInt} from './helpers/index.js';
 
 /**
  * Create and configure an MCP server for Conquest.eth game interactions
@@ -108,313 +100,82 @@ export function createServer(
 		if (!planetManager && si && cc) {
 			planetManager = new PlanetManager(clients, gameContract, si, cc, storage);
 		}
+
+		if (!fleetManager) {
+			throw new Error('Fleet manager not initialized');
+		}
+		if (!planetManager) {
+			throw new Error('Planet manager not initialized');
+		}
+
+		return {fleetManager, planetManager};
 	};
 
-	// Register acquire_planets tool
-	server.registerTool(
-		'acquire_planets',
-		{
-			description:
-				'Acquire (stake) multiple planets in the Conquest game. This allows you to take ownership of unclaimed planets.',
-			inputSchema: acquirePlanetsSchema,
-		},
-		async (args: unknown) => {
-			try {
-				await ensureManagersInitialized();
-				if (!planetManager) {
-					throw new Error('Planet manager not initialized');
-				}
-				return await handleAcquirePlanets(args, planetManager);
-			} catch (error) {
-				return {
-					content: [
-						{
-							type: 'text',
-							text: stringifyWithBigInt(
-								{
-									error: error instanceof Error ? error.message : String(error),
-								},
-								2,
-							),
-						},
-					],
-					isError: true,
-				};
-			}
-		},
-	);
+	// Auto-register all tools
+	for (const [name, tool] of Object.entries(tools)) {
+		// Skip the file that's not a tool
+		if (name === 'default') continue;
 
-	// Register send_fleet tool
-	server.registerTool(
-		'send_fleet',
-		{
-			description:
-				'Send a fleet from one planet to another in the Conquest game. The fleet will travel through space and can be resolved after arrival.',
-			inputSchema: sendFleetSchema,
-		},
-		async (args: unknown) => {
-			try {
-				await ensureManagersInitialized();
-				if (!fleetManager) {
-					throw new Error('Fleet manager not initialized');
-				}
-				if (!planetManager) {
-					throw new Error('Planet manager not initialized');
-				}
-				return await handleSendFleet(args, fleetManager, planetManager);
-			} catch (error) {
-				return {
-					content: [
-						{
-							type: 'text',
-							text: stringifyWithBigInt(
-								{
-									error: error instanceof Error ? error.message : String(error),
-								},
-								2,
-							),
+		server.registerTool(
+			name,
+			{
+				description: tool.description,
+				inputSchema: tool.schema,
+			},
+			async (args: unknown) => {
+				try {
+					const {fleetManager, planetManager} = await ensureManagersInitialized();
+					
+					const env = {
+						sendStatus: async (_message: string) => {
+							// TODO: Implement progress notifications when sessionId is available
 						},
-					],
-					isError: true,
-				};
-			}
-		},
-	);
+						fleetManager,
+						planetManager,
+					};
 
-	// Register resolve_fleet tool
-	server.registerTool(
-		'resolve_fleet',
-		{
-			description:
-				'Resolve a previously sent fleet. This must be called after the fleet arrival time + resolve window to reveal the destination and secret.',
-			inputSchema: resolveFleetSchema,
-		},
-		async (args: unknown) => {
-			try {
-				await ensureManagersInitialized();
-				if (!fleetManager) {
-					throw new Error('Fleet manager not initialized');
-				}
-				return await handleResolveFleet(args, fleetManager);
-			} catch (error) {
-				return {
-					content: [
-						{
-							type: 'text',
-							text: stringifyWithBigInt(
+					const result = await tool.execute(env, args as any);
+					
+					// Convert ToolResult to CallToolResult
+					if (result.success === false) {
+						return {
+							content: [
 								{
-									error: error instanceof Error ? error.message : String(error),
+									type: 'text' as const,
+									text: stringifyWithBigInt({
+										error: result.error,
+										...(result.stack ? {stack: result.stack} : {}),
+									}),
 								},
-								2,
-							),
-						},
-					],
-					isError: true,
-				};
-			}
-		},
-	);
+							],
+							isError: true,
+						};
+					}
 
-	// Register exit_planets tool
-	server.registerTool(
-		'exit_planets',
-		{
-			description:
-				'Exit (unstake) multiple planets to retrieve staked tokens. The exit process takes time and must be completed later.',
-			inputSchema: exitPlanetsSchema,
-		},
-		async (args: unknown) => {
-			try {
-				await ensureManagersInitialized();
-				if (!planetManager) {
-					throw new Error('Planet manager not initialized');
-				}
-				return await handleExitPlanets(args, planetManager);
-			} catch (error) {
-				return {
-					content: [
-						{
-							type: 'text',
-							text: stringifyWithBigInt(
-								{
+					return {
+						content: [
+							{
+								type: 'text' as const,
+								text: stringifyWithBigInt(result.result, 2),
+							},
+						],
+					};
+				} catch (error) {
+					return {
+						content: [
+							{
+								type: 'text' as const,
+								text: stringifyWithBigInt({
 									error: error instanceof Error ? error.message : String(error),
-								},
-								2,
-							),
-						},
-					],
-					isError: true,
-				};
-			}
-		},
-	);
-
-	// Register get_pending_exits tool
-	server.registerTool(
-		'get_pending_exits',
-		{
-			description: 'Get all pending exit (unstake) operations for your planets.',
-			inputSchema: getPendingExitsSchema,
-		},
-		async (args: unknown) => {
-			try {
-				await ensureManagersInitialized();
-				if (!planetManager) {
-					throw new Error('Planet manager not initialized');
+								}),
+							},
+						],
+						isError: true,
+					};
 				}
-				return await handleGetPendingExits(args, planetManager);
-			} catch (error) {
-				return {
-					content: [
-						{
-							type: 'text',
-							text: stringifyWithBigInt(
-								{
-									error: error instanceof Error ? error.message : String(error),
-								},
-								2,
-							),
-						},
-					],
-					isError: true,
-				};
-			}
-		},
-	);
-
-	// Register verify_exit_status tool
-	server.registerTool(
-		'verify_exit_status',
-		{
-			description:
-				"Check and update the status of a planet's exit operation. Verifies if the exit has completed or been interrupted.",
-			inputSchema: verifyExitStatusSchema,
-		},
-		async (args: unknown) => {
-			try {
-				await ensureManagersInitialized();
-				if (!planetManager) {
-					throw new Error('Planet manager not initialized');
-				}
-				return await handleVerifyExitStatus(args, planetManager);
-			} catch (error) {
-				return {
-					content: [
-						{
-							type: 'text',
-							text: stringifyWithBigInt(
-								{
-									error: error instanceof Error ? error.message : String(error),
-								},
-								2,
-							),
-						},
-					],
-					isError: true,
-				};
-			}
-		},
-	);
-
-	// Register get_my_planets tool
-	server.registerTool(
-		'get_my_planets',
-		{
-			description: 'Get all planets owned by the current user address.',
-			inputSchema: getMyPlanetsSchema,
-		},
-		async (args: unknown) => {
-			try {
-				await ensureManagersInitialized();
-				if (!planetManager) {
-					throw new Error('Planet manager not initialized');
-				}
-				return await handleGetMyPlanets(args, planetManager);
-			} catch (error) {
-				return {
-					content: [
-						{
-							type: 'text',
-							text: stringifyWithBigInt(
-								{
-									error: error instanceof Error ? error.message : String(error),
-								},
-								2,
-							),
-						},
-					],
-					isError: true,
-				};
-			}
-		},
-	);
-
-	// Register get_planets_around tool
-	server.registerTool(
-		'get_planets_around',
-		{
-			description:
-				'Get planets around a specific location within a certain radius. Useful for finding targets for fleet movement.',
-			inputSchema: getPlanetsAroundSchema,
-		},
-		async (args: unknown) => {
-			try {
-				await ensureManagersInitialized();
-				if (!planetManager) {
-					throw new Error('Planet manager not initialized');
-				}
-				return await handleGetPlanetsAround(args, planetManager);
-			} catch (error) {
-				return {
-					content: [
-						{
-							type: 'text',
-							text: stringifyWithBigInt(
-								{
-									error: error instanceof Error ? error.message : String(error),
-								},
-								2,
-							),
-						},
-					],
-					isError: true,
-				};
-			}
-		},
-	);
-
-	// Register get_pending_fleets tool
-	server.registerTool(
-		'get_pending_fleets',
-		{
-			description: 'Get all pending fleets sent from your planets.',
-			inputSchema: getPendingFleetsSchema,
-		},
-		async (args: unknown) => {
-			try {
-				await ensureManagersInitialized();
-				if (!fleetManager) {
-					throw new Error('Fleet manager not initialized');
-				}
-				return await handleGetPendingFleets(args, fleetManager);
-			} catch (error) {
-				return {
-					content: [
-						{
-							type: 'text',
-							text: stringifyWithBigInt(
-								{
-									error: error instanceof Error ? error.message : String(error),
-								},
-								2,
-							),
-						},
-					],
-					isError: true,
-				};
-			}
-		},
-	);
+			},
+		);
+	}
 
 	return server;
 }
