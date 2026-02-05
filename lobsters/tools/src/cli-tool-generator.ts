@@ -1,8 +1,8 @@
 import {Command} from 'commander';
 import {z} from 'zod';
 import type {Tool, ToolEnvironment, StorageConfig} from './types.js';
-import {getClients} from 'mcp-ethereum/helpers';
-import {getChain} from 'mcp-ethereum/helpers';
+import {getClients} from 'tools-ethereum/helpers';
+import {getChain} from 'tools-ethereum/helpers';
 import {createSpaceInfo} from './contracts/space-info.js';
 import {JsonFleetStorage} from './storage/json-storage.js';
 import {FleetManager} from './fleet/manager.js';
@@ -37,7 +37,7 @@ function zodFieldToOption(name: string, field: z.ZodTypeAny): string {
  */
 function parseOptionValue(field: z.ZodTypeAny, value: any): any {
 	if (field instanceof z.ZodArray) {
-		return typeof value === 'string' ? value.split(',').map(v => v.trim()) : value;
+		return typeof value === 'string' ? value.split(',').map((v) => v.trim()) : value;
 	}
 	if (field instanceof z.ZodNumber) {
 		return Number(value);
@@ -85,7 +85,13 @@ async function createCliToolEnvironment(config: CliConfig): Promise<ToolEnvironm
 
 	// Initialize managers
 	const fleetManager = new FleetManager(clients, gameContract, spaceInfo, contractConfig, storage);
-	const planetManager = new PlanetManager(clients, gameContract, spaceInfo, contractConfig, storage);
+	const planetManager = new PlanetManager(
+		clients,
+		gameContract,
+		spaceInfo,
+		contractConfig,
+		storage,
+	);
 
 	return {
 		fleetManager,
@@ -119,11 +125,22 @@ async function parseAndValidateParams(
 /**
  * Format tool result for CLI output
  */
-function formatToolResult(result: {success: boolean; result?: any; error?: string; stack?: string}): void {
+function formatToolResult(result: {
+	success: boolean;
+	result?: any;
+	error?: string;
+	stack?: string;
+}): void {
 	if (result.success) {
 		console.log(JSON.stringify(result.result, null, 2));
 	} else {
-		console.error(JSON.stringify({error: result.error, ...(result.stack ? {stack: result.stack} : {})}, null, 2));
+		console.error(
+			JSON.stringify(
+				{error: result.error, ...(result.stack ? {stack: result.stack} : {})},
+				null,
+				2,
+			),
+		);
 		process.exit(1);
 	}
 }
@@ -172,11 +189,15 @@ export function generateToolCommand(
 
 			// Get global options
 			const rpcUrl = options.rpcUrl || globalOptions.rpcUrl || process.env.RPC_URL;
-			const gameContract = options.gameContract || globalOptions.gameContract || process.env.GAME_CONTRACT;
-			const ethereum = options.ethereum ?? globalOptions.ethereum ?? process.env.ETHEREUM_TOOLS === 'true';
+			const gameContract =
+				options.gameContract || globalOptions.gameContract || process.env.GAME_CONTRACT;
+			const ethereum =
+				options.ethereum ?? globalOptions.ethereum ?? process.env.ETHEREUM_TOOLS === 'true';
 			const privateKey = options.privateKey || globalOptions.privateKey || process.env.PRIVATE_KEY;
-			const storageType = options.storage || globalOptions.storage || process.env.STORAGE_TYPE || 'json';
-			const storagePath = options.storagePath || globalOptions.storagePath || process.env.STORAGE_PATH || './data';
+			const storageType =
+				options.storage || globalOptions.storage || process.env.STORAGE_TYPE || 'json';
+			const storagePath =
+				options.storagePath || globalOptions.storagePath || process.env.STORAGE_PATH || './data';
 
 			// Validate required options
 			if (!rpcUrl) {
@@ -184,7 +205,9 @@ export function generateToolCommand(
 				process.exit(1);
 			}
 			if (!gameContract) {
-				console.error('Error: --game-contract option or GAME_CONTRACT environment variable is required');
+				console.error(
+					'Error: --game-contract option or GAME_CONTRACT environment variable is required',
+				);
 				process.exit(1);
 			}
 
@@ -235,7 +258,13 @@ export function generateToolCommand(
 			formatToolResult(result);
 		} catch (error) {
 			if (error instanceof Error) {
-				console.error(JSON.stringify({error: error.message, ...(error.stack ? {stack: error.stack} : {})}, null, 2));
+				console.error(
+					JSON.stringify(
+						{error: error.message, ...(error.stack ? {stack: error.stack} : {})},
+						null,
+						2,
+					),
+				);
 			} else {
 				console.error(JSON.stringify({error: String(error)}, null, 2));
 			}

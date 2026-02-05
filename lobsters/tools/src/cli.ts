@@ -3,7 +3,7 @@ import {StdioServerTransport} from '@modelcontextprotocol/sdk/server/stdio.js';
 import {createServer} from './index.js';
 import {Command} from 'commander';
 import pkg from '../package.json' with {type: 'json'};
-import {getChain} from 'mcp-ethereum/helpers';
+import {getChain} from 'tools-ethereum/helpers';
 import {loadEnv} from 'ldenv';
 import * as tools from './tools/index.js';
 import {registerAllToolCommands} from './cli-tool-generator.js';
@@ -45,10 +45,14 @@ program
 program
 	.command('mcp')
 	.description('Start the MCP server')
-	.option('--ethereum', 'Whether to also provide mcp-ethereum tools', process.env.ETHEREUM_TOOLS === 'true')
+	.option(
+		'--ethereum',
+		'Whether to also provide tools-ethereum tools',
+		process.env.ETHEREUM_TOOLS === 'true',
+	)
 	.action(async () => {
 		const options = program.opts();
-		const mcpOptions = program.commands.find(cmd => cmd.name() === 'mcp')?.opts() || {};
+		const mcpOptions = program.commands.find((cmd) => cmd.name() === 'mcp')?.opts() || {};
 
 		const rpcUrl = options.rpcUrl;
 		const gameContract = options.gameContract;

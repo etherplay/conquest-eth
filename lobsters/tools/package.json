@@ -44,8 +44,8 @@
 		"conquest-eth-v0-contracts": "workspace:*",
 		"eip-1193": "^0.6.5",
 		"ldenv": "^0.3.16",
-		"mcp-ethereum": "^0.0.3",
 		"remote-procedure-call": "^0.1.1",
+		"tools-ethereum": "^0.0.1",
 		"viem": "^2.45.1",
 		"zod": "^4.3.6"
 	},

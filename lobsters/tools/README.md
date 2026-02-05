@@ -28,19 +28,19 @@ node dist/cli.js --help
 
 #### Global Options
 
-| Option | Environment Variable | Description | Default |
-|--------|---------------------|-------------|---------|
-| `--rpc-url <url>` | `RPC_URL` | RPC URL for the Ethereum network | (required) |
-| `--game-contract <address>` | `GAME_CONTRACT` | Game contract address | (required) |
-| `--storage <type>` | `STORAGE_TYPE` | Storage backend: json or sqlite | json |
-| `--storage-path <path>` | `STORAGE_PATH` | Storage directory path | ./data |
-| `--private-key <key>` | `PRIVATE_KEY` | Private key for transactions | (required for write ops) |
+| Option                      | Environment Variable | Description                      | Default                  |
+| --------------------------- | -------------------- | -------------------------------- | ------------------------ |
+| `--rpc-url <url>`           | `RPC_URL`            | RPC URL for the Ethereum network | (required)               |
+| `--game-contract <address>` | `GAME_CONTRACT`      | Game contract address            | (required)               |
+| `--storage <type>`          | `STORAGE_TYPE`       | Storage backend: json or sqlite  | json                     |
+| `--storage-path <path>`     | `STORAGE_PATH`       | Storage directory path           | ./data                   |
+| `--private-key <key>`       | `PRIVATE_KEY`        | Private key for transactions     | (required for write ops) |
 
 #### MCP Server Options
 
-| Option | Environment Variable | Description | Default |
-|--------|---------------------|-------------|---------|
-| `--ethereum` | `ETHEREUM_TOOLS` | Include mcp-ethereum tools | false |
+| Option       | Environment Variable | Description                  | Default |
+| ------------ | -------------------- | ---------------------------- | ------- |
+| `--ethereum` | `ETHEREUM_TOOLS`     | Include tools-ethereum tools | false   |
 
 #### Using Environment Variables
 
@@ -53,23 +53,24 @@ export PRIVATE_KEY=0x...
 ```
 
 Then run commands without repeating options:
+
 ```bash
 node dist/cli.js get_my_planets --radius 10
 ```
 
 #### Available Commands
 
-| Command | Description |
-|---------|-------------|
-| `acquire_planets` | Acquire/stake multiple planets |
-| `send_fleet` | Send a fleet from one planet to another |
-| `resolve_fleet` | Resolve a committed fleet |
-| `exit_planets` | Start the exit process for planets |
-| `get_my_planets` | Get all planets owned by you |
-| `get_planets_around` | Get planets near a location |
-| `get_pending_exits` | Get pending exit operations |
-| `get_pending_fleets` | Get pending fleets |
-| `verify_exit_status` | Check a planet's exit status |
+| Command              | Description                             |
+| -------------------- | --------------------------------------- |
+| `acquire_planets`    | Acquire/stake multiple planets          |
+| `send_fleet`         | Send a fleet from one planet to another |
+| `resolve_fleet`      | Resolve a committed fleet               |
+| `exit_planets`       | Start the exit process for planets      |
+| `get_my_planets`     | Get all planets owned by you            |
+| `get_planets_around` | Get planets near a location             |
+| `get_pending_exits`  | Get pending exit operations             |
+| `get_pending_fleets` | Get pending fleets                      |
+| `verify_exit_status` | Check a planet's exit status            |
 
 #### Examples
 
@@ -145,23 +146,23 @@ import {z} from 'zod';
 import {createTool} from '../types.js';
 
 export const example_tool = createTool({
-  description: 'Description of what this tool does',
-  schema: z.object({
-    param1: z.string().describe('First parameter'),
-    param2: z.number().optional().describe('Optional parameter'),
-  }),
-  execute: async (env, {param1, param2}) => {
-    // Access fleetManager and planetManager via env
-    const result = await env.planetManager.getMyPlanets(10);
-    
-    return {
-      success: true,
-      result: {
-        message: `Processed ${param1}`,
-        data: result,
-      },
-    };
-  },
+	description: 'Description of what this tool does',
+	schema: z.object({
+		param1: z.string().describe('First parameter'),
+		param2: z.number().optional().describe('Optional parameter'),
+	}),
+	execute: async (env, {param1, param2}) => {
+		// Access fleetManager and planetManager via env
+		const result = await env.planetManager.getMyPlanets(10);
+
+		return {
+			success: true,
+			result: {
+				message: `Processed ${param1}`,
+				data: result,
+			},
+		};
+	},
 });
 ```
 
@@ -170,23 +171,25 @@ export const example_tool = createTool({
 All CLI commands return JSON output:
 
 **Success:**
+
 ```json
 {
-  "planets": [
-    {
-      "planetId": "1",
-      "location": {"id": "1", "x": 10, "y": 20},
-      "numSpaceships": 500
-    }
-  ]
+	"planets": [
+		{
+			"planetId": "1",
+			"location": {"id": "1", "x": 10, "y": 20},
+			"numSpaceships": 500
+		}
+	]
 }
 ```
 
 **Error:**
+
 ```json
 {
-  "error": "No planet found at coordinates",
-  "stack": "Error: No planet found at coordinates\n    at ..."
+	"error": "No planet found at coordinates",
+	"stack": "Error: No planet found at coordinates\n    at ..."
 }
 ```
 
