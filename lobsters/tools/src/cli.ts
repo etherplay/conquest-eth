@@ -36,11 +36,6 @@ program
 		'Path to storage directory',
 		process.env.STORAGE_PATH || './data',
 	)
-	.option(
-		'--private-key <key>',
-		'Private key for sending transactions',
-		process.env.PRIVATE_KEY || '',
-	)
 	.action(() => {
 		program.help();
 	});
@@ -50,7 +45,6 @@ function gatherGlobalOptions(program: Command) {
 	const rpcUrl = globalOptions.rpcUrl;
 	const gameContract = globalOptions.gameContract;
 
-	const privateKey = globalOptions.privateKey;
 	const storage = globalOptions.storage;
 	const storagePath = globalOptions.storagePath;
 
@@ -67,6 +61,7 @@ function gatherGlobalOptions(program: Command) {
 		process.exit(1);
 	}
 
+	const privateKey = process.env.PRIVATE_KEY as `0x${string}`;
 	// Warn if private key is not provided for write operations
 	if (!privateKey) {
 		console.warn('Warning: PRIVATE_KEY environment variable is required for sending transactions');

@@ -38,7 +38,7 @@ export async function createToolEnvironmentFromFactory<TEnv extends Record<strin
 
 	return {
 		sendStatus: async (message: string) => {
-			console.log(`[Status] ${message}`);
+			console.error(`[Status] ${message}`);
 		},
 		...env,
 	};

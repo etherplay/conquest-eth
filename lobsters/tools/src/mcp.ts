@@ -52,7 +52,7 @@ export async function createServer(
 		);
 	}
 
-	registerAllMCPTools({server, name, tools, env});
+	registerAllMCPTools({server, tools, env});
 
 	return server;
 }
