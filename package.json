@@ -8,9 +8,7 @@
   },
   "pnpm": {
     "overrides": {
-      "ipfs-http-client@34.0.0>concat-stream": "github:mihirgupta0900/concat-stream#master",
-      "@rocketh/node": "link:../rocketh/packages/rocketh-node",
-      "@rocketh/core": "link:../rocketh/packages/rocketh-core"
+      "ipfs-http-client@34.0.0>concat-stream": "github:mihirgupta0900/concat-stream#master"
     },
     "patchedDependencies": {
       "reloaderoo": "patches/reloaderoo.patch"
