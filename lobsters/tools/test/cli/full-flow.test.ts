@@ -10,13 +10,22 @@
  */
 import {describe, it, expect, beforeAll, afterAll} from 'vitest';
 import {setupTestEnvironment, teardownTestEnvironment} from '../setup.js';
-import {invokeCliCommand} from '../cli-utils.js';
 import {RPC_URL, getGameContract} from '../setup.js';
 import {parseCliOutput} from './helpers.js';
-import {promises as fs} from 'node:fs';
+import {advanceTime, getCurrentTimestamp, clearTestStorage, invokeWithStorage as invokeWithStorageBase} from '../utils.js';
 
 // Test-specific storage path to avoid conflicts between test runs
 const TEST_STORAGE_PATH = './data/test-full-flow';
+
+/**
+ * Helper to invoke CLI with test-specific storage path
+ */
+function invokeWithStorage(
+	args: string[],
+	options?: {env?: Record<string, string>},
+) {
+	return invokeWithStorageBase(args, options, TEST_STORAGE_PATH);
+}
 
 // Anvil test accounts (deterministic from mnemonic)
 const ANVIL_ACCOUNTS = {
@@ -29,86 +38,6 @@ const ANVIL_ACCOUNTS = {
 		privateKey: '0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d',
 	},
 };
-
-/**
- * Helper to advance blockchain time using anvil's evm_setNextBlockTimestamp
- */
-async function advanceTime(rpcUrl: string, seconds: number): Promise<void> {
-	const currentBlock: any = await fetch(rpcUrl, {
-		method: 'POST',
-		headers: {'Content-Type': 'application/json'},
-		body: JSON.stringify({
-			jsonrpc: '2.0',
-			method: 'eth_getBlockByNumber',
-			params: ['latest', false],
-			id: 1,
-		}),
-	}).then((res) => res.json());
-
-	const currentTimestamp = parseInt(currentBlock.result.timestamp, 16);
-	const newTimestamp = currentTimestamp + seconds;
-
-	// Set the next block timestamp
-	await fetch(rpcUrl, {
-		method: 'POST',
-		headers: {'Content-Type': 'application/json'},
-		body: JSON.stringify({
-			jsonrpc: '2.0',
-			method: 'evm_setNextBlockTimestamp',
-			params: [newTimestamp],
-			id: 2,
-		}),
-	});
-
-	// Mine a block to apply the timestamp
-	await fetch(rpcUrl, {
-		method: 'POST',
-		headers: {'Content-Type': 'application/json'},
-		body: JSON.stringify({
-			jsonrpc: '2.0',
-			method: 'evm_mine',
-			params: [],
-			id: 3,
-		}),
-	});
-
-	// Verify the new block has the expected timestamp
-	const newBlock: any = await fetch(rpcUrl, {
-		method: 'POST',
-		headers: {'Content-Type': 'application/json'},
-		body: JSON.stringify({
-			jsonrpc: '2.0',
-			method: 'eth_getBlockByNumber',
-			params: ['latest', false],
-			id: 4,
-		}),
-	}).then((res) => res.json());
-
-	const actualTimestamp = parseInt(newBlock.result.timestamp, 16);
-	if (actualTimestamp < newTimestamp) {
-		console.warn(
-			`Warning: Block timestamp ${actualTimestamp} is less than expected ${newTimestamp}`,
-		);
-	}
-}
-
-/**
- * Helper to get current blockchain timestamp
- */
-async function getCurrentTimestamp(rpcUrl: string): Promise<number> {
-	const response = await fetch(rpcUrl, {
-		method: 'POST',
-		headers: {'Content-Type': 'application/json'},
-		body: JSON.stringify({
-			jsonrpc: '2.0',
-			method: 'eth_getBlockByNumber',
-			params: ['latest', false],
-			id: 1,
-		}),
-	});
-	const result: any = await response.json();
-	return parseInt(result.result.timestamp, 16);
-}
 
 /**
  * Helper to find valid planets near origin
@@ -153,28 +82,6 @@ async function findValidPlanets(
 		}));
 }
 
-/**
- * Helper to clear test storage directory
- */
-async function clearTestStorage(): Promise<void> {
-	try {
-		await fs.rm(TEST_STORAGE_PATH, {recursive: true, force: true});
-	} catch {
-		// Ignore if directory doesn't exist
-	}
-	await fs.mkdir(TEST_STORAGE_PATH, {recursive: true});
-}
-
-/**
- * Helper to invoke CLI with test storage path
- */
-async function invokeWithStorage(
-	args: string[],
-	options?: {env?: Record<string, string>},
-): ReturnType<typeof invokeCliCommand> {
-	return invokeCliCommand(['--storage-path', TEST_STORAGE_PATH, ...args], options);
-}
-
 describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 	let validPlanets: Array<{x: number; y: number; planetId: string}> = [];
 
@@ -182,7 +89,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 		await setupTestEnvironment();
 
 		// Clear test storage to ensure clean state
-		await clearTestStorage();
+		await clearTestStorage(TEST_STORAGE_PATH);
 
 		// Find valid unowned planets for testing
 		try {
