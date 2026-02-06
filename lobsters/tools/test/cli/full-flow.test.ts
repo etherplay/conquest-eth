@@ -14,7 +14,6 @@ import {invokeCliCommand} from '../cli-utils.js';
 import {RPC_URL, getGameContract} from '../setup.js';
 import {parseCliOutput} from './helpers.js';
 import {promises as fs} from 'node:fs';
-import path from 'node:path';
 
 // Test-specific storage path to avoid conflicts between test runs
 const TEST_STORAGE_PATH = './data/test-full-flow';
@@ -35,7 +34,7 @@ const ANVIL_ACCOUNTS = {
  * Helper to advance blockchain time using anvil's evm_setNextBlockTimestamp
  */
 async function advanceTime(rpcUrl: string, seconds: number): Promise<void> {
-	const currentBlock = await fetch(rpcUrl, {
+	const currentBlock: any = await fetch(rpcUrl, {
 		method: 'POST',
 		headers: {'Content-Type': 'application/json'},
 		body: JSON.stringify({
@@ -74,7 +73,7 @@ async function advanceTime(rpcUrl: string, seconds: number): Promise<void> {
 	});
 
 	// Verify the new block has the expected timestamp
-	const newBlock = await fetch(rpcUrl, {
+	const newBlock: any = await fetch(rpcUrl, {
 		method: 'POST',
 		headers: {'Content-Type': 'application/json'},
 		body: JSON.stringify({
@@ -107,7 +106,7 @@ async function getCurrentTimestamp(rpcUrl: string): Promise<number> {
 			id: 1,
 		}),
 	});
-	const result = await response.json();
+	const result: any = await response.json();
 	return parseInt(result.result.timestamp, 16);
 }
 
