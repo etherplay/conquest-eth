@@ -201,19 +201,24 @@ describe('CLI - Options and Flags', () => {
 		});
 
 		it('should validate --private-key format (must start with 0x)', async () => {
-			const result = await invokeCliCommand([
-				'--rpc-url',
-				RPC_URL,
-				'--game-contract',
-				getGameContract(),
-				'--private-key',
-				'1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
-				'acquire_planets',
-				'--coordinates-x',
-				'0',
-				'--coordinates-y',
-				'0',
-			]);
+			// Note: --private-key is not a CLI argument, it's only read from PRIVATE_KEY env var
+			// This test verifies that an invalid env var format is rejected
+			const result = await invokeCliCommand(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'acquire_planets',
+					'--coordinates',
+					'[{"x": 0, "y": 0}]',
+				],
+				{
+					env: {
+						PRIVATE_KEY: '1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
+					},
+				},
+			);
 
 			expect(result.exitCode).not.toBe(0);
 			expect(result.stderr).toContain('0x');

@@ -106,4 +106,16 @@ program
 // Register all tool commands dynamically
 registerAllToolCommands(program, tools);
 
+const args = process.argv.slice(2);
+const registeredCommands = program.commands.map((cmd) => cmd.name());
+
+// Check if the first argument is a known command or a global flag
+const isKnown = registeredCommands.includes(args[0]) || args[0]?.startsWith('-');
+
+if (args.length > 0 && !isKnown) {
+	console.error(`error: unknown command: ${args[0]}`);
+	program.outputHelp();
+	process.exit(1);
+}
+
 program.parse(process.argv);

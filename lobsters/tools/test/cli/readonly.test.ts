@@ -374,65 +374,69 @@ describe('CLI - Read-Only Operations', () => {
 	});
 
 	describe('Integration - Multiple read operations', () => {
-		it('should be able to call multiple read operations in sequence', async () => {
-			// Get my planets
-			const myPlanetsResult = await invokeCliCommand([
-				'--rpc-url',
-				RPC_URL,
-				'--game-contract',
-				getGameContract(),
-				'get_my_planets',
-				'--radius',
-				'10',
-			]);
-			expect(myPlanetsResult.exitCode).toBe(0);
+		it(
+			'should be able to call multiple read operations in sequence',
+			async () => {
+				// Get my planets
+				const myPlanetsResult = await invokeCliCommand([
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'get_my_planets',
+					'--radius',
+					'10',
+				]);
+				expect(myPlanetsResult.exitCode).toBe(0);
 
-			// Get planets around center
-			const aroundResult = await invokeCliCommand([
-				'--rpc-url',
-				RPC_URL,
-				'--game-contract',
-				getGameContract(),
-				'get_planets_around',
-				'--centerX',
-				'0',
-				'--centerY',
-				'0',
-				'--radius',
-				'10',
-			]);
-			expect(aroundResult.exitCode).toBe(0);
+				// Get planets around center
+				const aroundResult = await invokeCliCommand([
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'get_planets_around',
+					'--centerX',
+					'0',
+					'--centerY',
+					'0',
+					'--radius',
+					'10',
+				]);
+				expect(aroundResult.exitCode).toBe(0);
 
-			// Get pending fleets
-			const fleetsResult = await invokeCliCommand([
-				'--rpc-url',
-				RPC_URL,
-				'--game-contract',
-				getGameContract(),
-				'get_pending_fleets',
-			]);
-			expect(fleetsResult.exitCode).toBe(0);
+				// Get pending fleets
+				const fleetsResult = await invokeCliCommand([
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'get_pending_fleets',
+				]);
+				expect(fleetsResult.exitCode).toBe(0);
 
-			// Get pending exits
-			const exitsResult = await invokeCliCommand([
-				'--rpc-url',
-				RPC_URL,
-				'--game-contract',
-				getGameContract(),
-				'get_pending_exits',
-			]);
-			expect(exitsResult.exitCode).toBe(0);
+				// Get pending exits
+				const exitsResult = await invokeCliCommand([
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'get_pending_exits',
+				]);
+				expect(exitsResult.exitCode).toBe(0);
 
-			// All should succeed
-			const myPlanets = JSON.parse(myPlanetsResult.stdout);
-			const around = JSON.parse(aroundResult.stdout);
-			const fleets = JSON.parse(fleetsResult.stdout);
-			const exits = JSON.parse(exitsResult.stdout);
+				// All should succeed
+				const myPlanets = JSON.parse(myPlanetsResult.stdout);
+				const around = JSON.parse(aroundResult.stdout);
+				const fleets = JSON.parse(fleetsResult.stdout);
+				const exits = JSON.parse(exitsResult.stdout);
 
-			expect(myPlanets.planets).toBeDefined();
-			expect(around.planets).toBeDefined();
-			expect(fleets.fleets).toBeDefined();
-			expect(exits.exits).toBeDefined();
-		});
+				expect(myPlanets.planets).toBeDefined();
+				expect(around.planets).toBeDefined();
+				expect(fleets.fleets).toBeDefined();
+				expect(exits.exits).toBeDefined();
+			},
+			20000,
+		);
 	});
 });

@@ -4,7 +4,7 @@ import {createTool} from '../tool-handling/types.js';
 export const get_my_planets = createTool({
 	description: 'Get all planets owned by the current user address.',
 	schema: z.object({
-		radius: z.number().max(50).describe('Search radius around origin (0,0) to find planets'),
+		radius: z.number().min(1).max(50).describe('Search radius around origin (0,0) to find planets'),
 	}),
 	execute: async (env, {radius}) => {
 		try {
