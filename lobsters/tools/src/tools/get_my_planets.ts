@@ -1,5 +1,5 @@
 import {z} from 'zod';
-import {createTool} from '../types.js';
+import {createTool} from '../tool-handling/types.js';
 
 export const get_my_planets = createTool({
 	description: 'Get all planets owned by the current user address.',

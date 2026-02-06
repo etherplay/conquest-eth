@@ -1,5 +1,5 @@
 import {z} from 'zod';
-import {createTool} from '../types.js';
+import {createTool} from '../tool-handling/types.js';
 
 export const exit_planets = createTool({
 	description:

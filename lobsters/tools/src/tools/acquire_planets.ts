@@ -1,6 +1,5 @@
 import {z} from 'zod';
-import {createTool} from '../types.js';
-import {stringifyWithBigInt} from '../helpers/index.js';
+import {createTool} from '../tool-handling/types.js';
 
 export const acquire_planets = createTool({
 	description:

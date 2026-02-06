@@ -1,5 +1,5 @@
 import {z} from 'zod';
-import {createTool} from '../types.js';
+import {createTool} from '../tool-handling/types.js';
 
 export const get_pending_exits = createTool({
 	description: 'Get all pending exit (unstake) operations for your planets.',

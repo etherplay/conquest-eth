@@ -14,7 +14,7 @@ import {SpaceInfo} from 'conquest-eth-v0-contracts';
 
 // Import refactored tools
 import * as tools from './tools/index.js';
-import {registerTool, stringifyWithBigInt} from './helpers/index.js';
+import {registerTool, stringifyWithBigInt} from './tool-handling/index.js';
 import {Abi_IOuterSpace} from 'conquest-eth-v0-contracts/abis/IOuterSpace.js';
 
 /**

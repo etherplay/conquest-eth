@@ -1,10 +1,6 @@
 import type {Address, PublicClient, WalletClient} from 'viem';
 import type {PlanetInfo} from 'conquest-eth-v0-contracts';
 import type {Abi_IOuterSpace} from 'conquest-eth-v0-contracts/abis/IOuterSpace.js';
-import type {CallToolResult} from '@modelcontextprotocol/sdk/types.js';
-import {z} from 'zod';
-import type {FleetManager} from './fleet/manager.js';
-import type {PlanetManager} from './planet/manager.js';
 
 export interface StorageConfig {
 	type: 'json' | 'sqlite';
@@ -108,71 +104,4 @@ export interface FleetResolution {
 	secret: `0x${string}`; // The secret used to generate the hash
 	fleetSender: `0x${string}`; // Address that sent the fleet
 	operator: `0x${string}`; // Address that committed the transaction
-}
-
-// Tool types for MCP server refactoring
-export type ToolEnvironment = {
-	// Function to send status updates during tool execution (required)
-	sendStatus: (message: string) => Promise<void>;
-	// Fleet manager for fleet operations
-	fleetManager: FleetManager;
-	// Planet manager for planet operations
-	planetManager: PlanetManager;
-};
-
-// Result returned by tool execute functions
-export type ToolResult =
-	| {success: true; result: Record<string, any>}
-	| {success: false; error: string; stack?: string};
-
-// Tool definition with execute, schema, and description
-export type Tool<S extends z.ZodObject<any> = z.ZodObject<any>> = {
-	description: string;
-	schema: S;
-	execute: (env: ToolEnvironment, params: z.infer<S>) => Promise<ToolResult>;
-};
-
-// Helper function to create a tool with automatic type inference
-export function createTool<S extends z.ZodObject<any>>(config: {
-	description: string;
-	schema: S;
-	execute: (env: ToolEnvironment, params: z.infer<S>) => Promise<ToolResult>;
-}): Tool<S> {
-	return config;
-}
-
-// Convert ToolResult to CallToolResult format
-export function convertToCallToolResult(result: ToolResult): CallToolResult {
-	// Import stringifyWithBigInt to handle BigInt serialization
-	const stringifyWithBigInt = (obj: any, space?: number): string => {
-		return JSON.stringify(
-			obj,
-			(_key, value) => (typeof value === 'bigint' ? value.toString() : value),
-			space,
-		);
-	};
-
-	if (result.success === false) {
-		return {
-			content: [
-				{
-					type: 'text' as const,
-					text: stringifyWithBigInt({
-						error: result.error,
-						...(result.stack ? {stack: result.stack} : {}),
-					}),
-				},
-			],
-			isError: true,
-		};
-	}
-
-	return {
-		content: [
-			{
-				type: 'text' as const,
-				text: stringifyWithBigInt(result.result, 2),
-			},
-		],
-	};
 }

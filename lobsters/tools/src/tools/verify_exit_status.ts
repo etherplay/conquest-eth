@@ -1,5 +1,5 @@
 import {z} from 'zod';
-import {createTool} from '../types.js';
+import {createTool} from '../tool-handling/types.js';
 
 export const verify_exit_status = createTool({
 	description:

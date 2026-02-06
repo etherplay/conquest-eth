@@ -143,7 +143,7 @@ Tools are defined with a standardized pattern:
 
 ```typescript
 import {z} from 'zod';
-import {createTool} from '../types.js';
+import {createTool} from '../tool-handling/types.js';
 
 export const example_tool = createTool({
 	description: 'Description of what this tool does',

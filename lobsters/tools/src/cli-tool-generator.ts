@@ -1,13 +1,13 @@
 import {Command} from 'commander';
 import {z} from 'zod';
-import type {Tool, ToolEnvironment, StorageConfig} from './types.js';
+import type {Tool, ToolEnvironment} from './tool-handling/types.js';
 import {getClients} from 'tools-ethereum/helpers';
 import {getChain} from 'tools-ethereum/helpers';
 import {createSpaceInfo} from './contracts/space-info.js';
 import {JsonFleetStorage} from './storage/json-storage.js';
 import {FleetManager} from './fleet/manager.js';
 import {PlanetManager} from './planet/manager.js';
-import type {ClientsWithOptionalWallet, ContractConfig, GameContract} from './types.js';
+import type {ClientsWithOptionalWallet, GameContract, StorageConfig} from './types.js';
 import {SpaceInfo} from 'conquest-eth-v0-contracts';
 import {Abi_IOuterSpace} from 'conquest-eth-v0-contracts/abis/IOuterSpace.js';
 
