@@ -6,8 +6,9 @@ import {Clients, GameContract} from '../types.js';
  * @param clients - Viem clients (publicClient and walletClient)
  * @param gameContract - The game contract instance with address and ABI
  * @param planetIds - Array of planet location IDs to acquire
- * @param amountToMint - Amount of native token to spend
+ * @param amountToMint - Amount of play tokens to mint
  * @param tokenAmount - Amount of staking token to spend
+ * @param numTokensPerNativeToken - How many play tokens (at 18 decimals) you get per 1 native token (defaults to 1e18 meaning 1:1)
  * @returns Transaction hash and list of planets acquired
  */
 export async function acquirePlanets(
@@ -16,14 +17,13 @@ export async function acquirePlanets(
 	planetIds: bigint[],
 	amountToMint: bigint,
 	tokenAmount: bigint,
+	numTokensPerNativeToken: bigint = 1000000000000000000n, // Default: 1:1 ratio (1e18)
 ): Promise<{hash: `0x${string}`; planetsAcquired: bigint[]}> {
 	const sender = clients.walletClient.account!.address;
 
-	const nativeTokenAmount = (amountToMint * 1000000000000000000n) / 1000000000000000000000n; // TODO BigInt((PlayToken.linkedData as any).numTokensPerNativeTokenAt18Decimals);
-
-	console.log(
-		`Acquiring ${planetIds.length} planets with ${amountToMint} native tokens and ${tokenAmount} staking tokens using ${nativeTokenAmount} native tokens`,
-	);
+	// Calculate how much native token is needed to mint `amountToMint` play tokens
+	// nativeTokenAmount = amountToMint * 1e18 / numTokensPerNativeToken
+	const nativeTokenAmount = (amountToMint * 1000000000000000000n) / numTokensPerNativeToken;
 
 	// Get the contract acquireMultipleViaNativeTokenAndStakingToken function signature
 	const simulation = await clients.publicClient.simulateContract({
