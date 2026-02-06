@@ -39,7 +39,7 @@ export default deployScript(
 					address: PlayTokenBefore.address as `0x${string}`,
 				}),
 			);
-			console.log({PlayTokenNativeBalamce});
+			// console.log({PlayTokenNativeBalamce});
 		}
 
 		const PlayToken = await env.deployViaProxy(
@@ -70,7 +70,7 @@ export default deployScript(
 					address: PlayToken.address as `0x${string}`,
 				}),
 			);
-			console.log({PlayTokenNativeBalamce});
+			// console.log({PlayTokenNativeBalamce});
 		}
 
 		// console.log('========================================================');

@@ -1,5 +1,5 @@
 import {describe, it, expect, beforeAll, afterAll} from 'vitest';
-import {setupTestEnvironment, teardownTestEnvironment} from './setup.js';
+import {getTestContext, setupTestEnvironment, teardownTestEnvironment} from './setup.js';
 
 describe('CLI - Contract Tools', () => {
 	beforeAll(async () => {
@@ -11,6 +11,8 @@ describe('CLI - Contract Tools', () => {
 	});
 
 	describe('call_contract', () => {
-		it('Should call a contract', async () => {});
+		it('Should call a contract', async () => {
+			const {env} = getTestContext();
+		});
 	});
 });

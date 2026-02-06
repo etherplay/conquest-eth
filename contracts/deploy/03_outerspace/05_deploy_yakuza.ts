@@ -38,7 +38,7 @@ export default deployScript(
 			), // 5 days
 		};
 
-		console.log(config);
+		// console.log(config);
 		await env.deployViaProxy(
 			'Yakuza',
 			{

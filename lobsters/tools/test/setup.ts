@@ -1,4 +1,4 @@
-import {getChain} from '../src/helpers/index.js';
+import {getChain} from 'tools-ethereum/helpers';
 import {Chain, createPublicClient, createWalletClient, http} from 'viem';
 import {RPC_URL} from './prool/url.js';
 import DeployPlayToken from 'conquest-eth-v0-contracts/deploy/01_play_tokens/01_deploy_play_token.js';
@@ -6,7 +6,7 @@ import DeployPlayToken from 'conquest-eth-v0-contracts/deploy/01_play_tokens/01_
 import {setupEnvironmentFromFiles} from '@rocketh/node';
 import {createCurriedJSONRPC} from 'remote-procedure-call';
 import {Methods} from 'eip-1193';
-import {Environment} from 'rocketh/types';
+import type {Environment} from '@rocketh/node';
 
 // Test context type
 export type TestContext = {

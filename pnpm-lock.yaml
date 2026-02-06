@@ -377,6 +377,9 @@ importers:
       '@modelcontextprotocol/inspector':
         specifier: ^0.19.0
         version: 0.19.0(@types/node@25.2.0)(bufferutil@4.0.8)(hono@4.6.14)(typescript@5.7.2)(utf-8-validate@5.0.8)
+      '@rocketh/node':
+        specifier: link:../../../rocketh/packages/rocketh-node
+        version: link:../../../rocketh/packages/rocketh-node
       '@types/node':
         specifier: ^25.2.0
         version: 25.2.0
@@ -386,6 +389,9 @@ importers:
       prettier:
         specifier: ^3.8.0
         version: 3.8.1
+      prool:
+        specifier: ^0.2.2
+        version: 0.2.2
       reloaderoo:
         specifier: ^1.1.5
         version: 1.1.5(patch_hash=9f8c2b5054cc78de003fd6abe78ff69f92d91c60af5743947ca0ec374996a38d)(hono@4.6.14)(zod@4.3.6)
