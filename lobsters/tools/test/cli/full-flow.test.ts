@@ -150,83 +150,66 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 	});
 
 	describe('Planet Acquisition Flow', () => {
-		it(
-			'should allow Player 1 to acquire a planet',
-			{timeout: 30000},
-			async () => {
-				if (validPlanets.length < 1) {
-					console.log('Skipping test: No valid planets found');
-					return;
-				}
+		it('should allow Player 1 to acquire a planet', {timeout: 30000}, async () => {
+			// Test requires at least 1 planet available
+			expect(validPlanets.length).toBeGreaterThanOrEqual(1);
 
-				const planet = validPlanets[0];
-				// coordinates expects an array of objects with x and y, passed as JSON
-				const result = await invokeCliCommand(
-					[
-						'--rpc-url',
-						RPC_URL,
-						'--game-contract',
-						getGameContract(),
-						'acquire_planets',
-						'--coordinates',
-						JSON.stringify([{x: planet.x, y: planet.y}]),
-					],
-					{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
-				);
+			const planet = validPlanets[0];
+			// coordinates expects an array of objects with x and y, passed as JSON
+			const result = await invokeCliCommand(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'acquire_planets',
+					'--coordinates',
+					JSON.stringify([{x: planet.x, y: planet.y}]),
+				],
+				{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
+			);
 
-				if (result.exitCode === 0) {
-					// CLI outputs unwrapped result on success
-					const data = parseCliOutput<{
-						transactionHash: string;
-						planetsAcquired: string[];
-					}>(result.stdout);
+			expect(result.exitCode).toBe(0);
 
-					expect(data.transactionHash).toBeDefined();
-					expect(data.transactionHash).toMatch(/^0x[a-fA-F0-9]{64}$/);
-				} else {
-					// Parse error from stderr
-					console.warn('Player 1 acquire failed:', result.stderr || result.stdout);
-				}
-			},
-		);
+			// CLI outputs unwrapped result on success
+			const data = parseCliOutput<{
+				transactionHash: string;
+				planetsAcquired: string[];
+			}>(result.stdout);
 
-		it(
-			'should allow Player 2 to acquire a different planet',
-			{timeout: 30000},
-			async () => {
-				if (validPlanets.length < 2) {
-					console.log('Skipping test: Not enough valid planets found');
-					return;
-				}
+			expect(data.transactionHash).toBeDefined();
+			expect(data.transactionHash).toMatch(/^0x[a-fA-F0-9]{64}$/);
+		});
 
-				const planet = validPlanets[1];
-				// coordinates expects an array of objects with x and y, passed as JSON
-				const result = await invokeCliCommand(
-					[
-						'--rpc-url',
-						RPC_URL,
-						'--game-contract',
-						getGameContract(),
-						'acquire_planets',
-						'--coordinates',
-						JSON.stringify([{x: planet.x, y: planet.y}]),
-					],
-					{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_2.privateKey}},
-				);
+		it('should allow Player 2 to acquire a different planet', {timeout: 30000}, async () => {
+			// Test requires at least 2 planets available
+			expect(validPlanets.length).toBeGreaterThanOrEqual(2);
 
-				if (result.exitCode === 0) {
-					// CLI outputs unwrapped result on success
-					const data = parseCliOutput<{
-						transactionHash: string;
-						planetsAcquired: string[];
-					}>(result.stdout);
+			const planet = validPlanets[1];
+			// coordinates expects an array of objects with x and y, passed as JSON
+			const result = await invokeCliCommand(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'acquire_planets',
+					'--coordinates',
+					JSON.stringify([{x: planet.x, y: planet.y}]),
+				],
+				{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_2.privateKey}},
+			);
 
-					expect(data.transactionHash).toBeDefined();
-				} else {
-					console.warn('Player 2 acquire failed:', result.stderr || result.stdout);
-				}
-			},
-		);
+			expect(result.exitCode).toBe(0);
+
+			// CLI outputs unwrapped result on success
+			const data = parseCliOutput<{
+				transactionHash: string;
+				planetsAcquired: string[];
+			}>(result.stdout);
+
+			expect(data.transactionHash).toBeDefined();
+		});
 
 		it('should show Player 1 owns their acquired planet', async () => {
 			const result = await invokeCliCommand(
@@ -259,54 +242,45 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 	});
 
 	describe('Fleet Sending Flow', () => {
-		it(
-			"should allow Player 1 to send a fleet to Player 2's planet",
-			{timeout: 30000},
-			async () => {
-				if (validPlanets.length < 2) {
-					console.log('Skipping test: Not enough valid planets');
-					return;
-				}
+		it("should allow Player 1 to send a fleet to Player 2's planet", {timeout: 30000}, async () => {
+			// Test requires at least 2 planets available
+			expect(validPlanets.length).toBeGreaterThanOrEqual(2);
 
-				const fromPlanet = validPlanets[0];
-				const toPlanet = validPlanets[1];
+			const fromPlanet = validPlanets[0];
+			const toPlanet = validPlanets[1];
 
-				const result = await invokeCliCommand(
-					[
-						'--rpc-url',
-						RPC_URL,
-						'--game-contract',
-						getGameContract(),
-						'send_fleet',
-						'--from',
-						`${fromPlanet.x},${fromPlanet.y}`,
-						'--to',
-						`${toPlanet.x},${toPlanet.y}`,
-						'--quantity',
-						'50',
-					],
-					{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
-				);
+			const result = await invokeCliCommand(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'send_fleet',
+					'--from',
+					`${fromPlanet.x},${fromPlanet.y}`,
+					'--to',
+					`${toPlanet.x},${toPlanet.y}`,
+					'--quantity',
+					'50',
+				],
+				{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
+			);
 
-				if (result.exitCode === 0) {
-					// CLI outputs unwrapped result on success
-					const data = parseCliOutput<{
-						fleetId: string;
-						from: string;
-						to: string;
-						quantity: number;
-						secret: string;
-					}>(result.stdout);
+			expect(result.exitCode).toBe(0);
 
-					expect(data.fleetId).toBeDefined();
-					expect(data.quantity).toBe(50);
-					expect(data.secret).toMatch(/^0x[a-fA-F0-9]+$/);
-				} else {
-					// May fail if Player 1 doesn't own the planet
-					console.warn('Send fleet failed:', result.stderr || result.stdout);
-				}
-			},
-		);
+			// CLI outputs unwrapped result on success
+			const data = parseCliOutput<{
+				fleetId: string;
+				from: string;
+				to: string;
+				quantity: number;
+				secret: string;
+			}>(result.stdout);
+
+			expect(data.fleetId).toBeDefined();
+			expect(data.quantity).toBe(50);
+			expect(data.secret).toMatch(/^0x[a-fA-F0-9]+$/);
+		});
 
 		it('should show the pending fleet in get_pending_fleets', async () => {
 			const result = await invokeCliCommand(
@@ -333,91 +307,72 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 	});
 
 	describe('Time Manipulation and Fleet Resolution', () => {
-		it(
-			'should advance time and resolve fleet',
-			{timeout: 60000},
-			async () => {
-				// First get pending fleets
-				const pendingResult = await invokeCliCommand(
-					['--rpc-url', RPC_URL, '--game-contract', getGameContract(), 'get_pending_fleets'],
-					{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
-				);
+		it('should advance time and resolve fleet', {timeout: 60000}, async () => {
+			// First get pending fleets
+			const pendingResult = await invokeCliCommand(
+				['--rpc-url', RPC_URL, '--game-contract', getGameContract(), 'get_pending_fleets'],
+				{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
+			);
 
-				if (pendingResult.exitCode !== 0) {
-					console.log('No pending fleets to resolve');
-					return;
-				}
+			expect(pendingResult.exitCode).toBe(0);
 
-				// CLI outputs unwrapped result on success
-				const pendingData = parseCliOutput<{
-					fleets: Array<{
-						fleetId: string;
-						estimatedArrivalTime: number;
-						resolved: boolean;
-					}>;
-				}>(pendingResult.stdout);
+			// CLI outputs unwrapped result on success
+			const pendingData = parseCliOutput<{
+				fleets: Array<{
+					fleetId: string;
+					estimatedArrivalTime: number;
+					resolved: boolean;
+				}>;
+			}>(pendingResult.stdout);
 
-				const unresolvedFleets = pendingData.fleets.filter((f) => !f.resolved);
+			const unresolvedFleets = pendingData.fleets.filter((f) => !f.resolved);
 
-				if (unresolvedFleets.length === 0) {
-					console.log('No unresolved fleets to test');
-					return;
-				}
+			// Test requires at least one unresolved fleet
+			expect(unresolvedFleets.length).toBeGreaterThan(0);
 
-				const fleet = unresolvedFleets[0];
-				const currentTimestamp = await getCurrentTimestamp(RPC_URL);
+			const fleet = unresolvedFleets[0];
+			const currentTimestamp = await getCurrentTimestamp(RPC_URL);
 
-				// Advance time past the estimated arrival time + some buffer for resolve window
-				// The resolve window is typically around 7200 seconds (2 hours)
-				const timeToAdvance = Math.max(
-					fleet.estimatedArrivalTime - currentTimestamp + 7200 + 100,
-					0,
-				);
+			// Advance time past the estimated arrival time + 100 seconds buffer
+			const timeToAdvance = Math.max(fleet.estimatedArrivalTime - currentTimestamp + 100, 0);
 
-				if (timeToAdvance > 0) {
-					console.log(`Advancing time by ${timeToAdvance} seconds`);
-					await advanceTime(RPC_URL, timeToAdvance);
-				}
+			// Always advance time (even if 0, the call is idempotent)
+			console.log(`Advancing time by ${timeToAdvance} seconds`);
+			await advanceTime(RPC_URL, timeToAdvance);
 
-				// Now resolve the fleet
-				const resolveResult = await invokeCliCommand(
-					[
-						'--rpc-url',
-						RPC_URL,
-						'--game-contract',
-						getGameContract(),
-						'resolve_fleet',
-						'--fleetId',
-						fleet.fleetId,
-					],
-					{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
-				);
+			// Now resolve the fleet
+			const resolveResult = await invokeCliCommand(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'resolve_fleet',
+					'--fleetId',
+					fleet.fleetId,
+				],
+				{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
+			);
 
-				if (resolveResult.exitCode === 0) {
-					// CLI outputs unwrapped result on success
-					const resolveData = parseCliOutput<{
-						fleetId: string;
-						fromPlanetId: string;
-						toPlanetId: string;
-						quantity: number;
-					}>(resolveResult.stdout);
+			expect(resolveResult.exitCode).toBe(0);
 
-					expect(resolveData.fleetId).toBe(fleet.fleetId);
-					console.log('Fleet resolved successfully!');
-				} else {
-					console.warn('Resolve fleet command failed:', resolveResult.stderr || resolveResult.stdout);
-				}
-			},
-		);
+			// CLI outputs unwrapped result on success
+			const resolveData = parseCliOutput<{
+				fleetId: string;
+				fromPlanetId: string;
+				toPlanetId: string;
+				quantity: number;
+			}>(resolveResult.stdout);
+
+			expect(resolveData.fleetId).toBe(fleet.fleetId);
+		});
 
 		it('should verify planet ownership after attack', async () => {
-			if (validPlanets.length < 2) {
-				console.log('Skipping test: Not enough valid planets');
-				return;
-			}
+			// Test requires at least 2 planets available
+			expect(validPlanets.length).toBeGreaterThanOrEqual(2);
 
 			const targetPlanet = validPlanets[1];
-	
+
 			// Check the planet's current state
 			const result = await invokeCliCommand([
 				'--rpc-url',
@@ -449,11 +404,12 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 				(p) => p.location.x === targetPlanet.x && p.location.y === targetPlanet.y,
 			);
 
-			if (planet) {
-				console.log('Target planet state after attack:');
-				console.log('  Owner:', planet.owner || 'none');
-				console.log('  Spaceships:', planet.numSpaceships);
-			}
+			// The target planet should exist
+			expect(planet).toBeDefined();
+			// Log state for debugging (non-conditional)
+			console.log('Target planet state after attack:');
+			console.log('  Owner:', planet?.owner || 'none');
+			console.log('  Spaceships:', planet?.numSpaceships);
 		});
 	});
 
@@ -472,10 +428,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 
 				// Step 1: Find planets
 				const planets = await findValidPlanets(RPC_URL, getGameContract());
-				if (planets.length < 2) {
-					console.log('Not enough unowned planets for full combat scenario');
-					return;
-				}
+				expect(planets.length).toBeGreaterThanOrEqual(2);
 
 				const planetA = planets[0];
 				const planetB = planets[1];
@@ -496,10 +449,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 					{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
 				);
 
-				if (acquireAResult.exitCode !== 0) {
-					console.log('Failed to acquire planet A:', acquireAResult.stderr || acquireAResult.stdout);
-					return;
-				}
+				expect(acquireAResult.exitCode).toBe(0);
 
 				// CLI outputs unwrapped result on success
 				const acquireAData = parseCliOutput<{transactionHash: string}>(acquireAResult.stdout);
@@ -521,10 +471,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 					{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_2.privateKey}},
 				);
 
-				if (acquireBResult.exitCode !== 0) {
-					console.log('Failed to acquire planet B:', acquireBResult.stderr || acquireBResult.stdout);
-					return;
-				}
+				expect(acquireBResult.exitCode).toBe(0);
 
 				// CLI outputs unwrapped result on success
 				const acquireBData = parseCliOutput<{transactionHash: string}>(acquireBResult.stdout);
@@ -550,10 +497,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 					{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
 				);
 
-				if (sendFleetResult.exitCode !== 0) {
-					console.log('Failed to send fleet:', sendFleetResult.stderr || sendFleetResult.stdout);
-					return;
-				}
+				expect(sendFleetResult.exitCode).toBe(0);
 
 				// CLI outputs unwrapped result on success
 				const sendFleetData = parseCliOutput<{
@@ -584,18 +528,14 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 				}>(pendingResult.stdout);
 
 				const fleet = pendingData.fleets.find((f) => f.fleetId === sendFleetData.fleetId);
-
-				if (!fleet) {
-					console.log('Fleet not found in pending fleets');
-					return;
-				}
+				expect(fleet).toBeDefined();
 
 				const currentTime = await getCurrentTimestamp(RPC_URL);
 				// Need to wait for arrival time + resolve window
 				// Typical resolve window is 7200 seconds (2 hours)
 				const resolveWindowBuffer = 7200 + 300; // Extra buffer
 				const timeToAdvance = Math.max(
-					fleet.estimatedArrivalTime - currentTime + resolveWindowBuffer,
+					fleet!.estimatedArrivalTime - currentTime + resolveWindowBuffer,
 					resolveWindowBuffer,
 				);
 
@@ -617,20 +557,18 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 					{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
 				);
 
-				if (resolveResult.exitCode === 0) {
-					// CLI outputs unwrapped result on success
-					const resolveData = parseCliOutput<{
-						fleetId: string;
-						fromPlanetId: string;
-						toPlanetId: string;
-						quantity: number;
-					}>(resolveResult.stdout);
+				expect(resolveResult.exitCode).toBe(0);
 
-					console.log('Fleet resolved successfully!');
-					expect(resolveData.fleetId).toBe(sendFleetData.fleetId);
-				} else {
-					console.log('Fleet resolution command failed:', resolveResult.stderr || resolveResult.stdout);
-				}
+				// CLI outputs unwrapped result on success
+				const resolveData = parseCliOutput<{
+					fleetId: string;
+					fromPlanetId: string;
+					toPlanetId: string;
+					quantity: number;
+				}>(resolveResult.stdout);
+
+				console.log('Fleet resolved successfully!');
+				expect(resolveData.fleetId).toBe(sendFleetData.fleetId);
 
 				// Verify final state of planet B
 				console.log('Verifying final state of planet B...');
@@ -662,25 +600,22 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 					(p) => p.location.x === planetB.x && p.location.y === planetB.y,
 				);
 
-				if (finalPlanetB) {
-					console.log('Final state of planet B:');
-					console.log('  Owner:', finalPlanetB.owner);
-					console.log('  Spaceships:', finalPlanetB.numSpaceships);
+				expect(finalPlanetB).toBeDefined();
+				console.log('Final state of planet B:');
+				console.log('  Owner:', finalPlanetB?.owner);
+				console.log('  Spaceships:', finalPlanetB?.numSpaceships);
 
-					// The attack should have affected the planet
-					// If successful, Player 1 may have captured it or reduced defenders
-					expect(finalPlanetB.owner).toBeDefined();
-				}
+				// The attack should have affected the planet
+				// If successful, Player 1 may have captured it or reduced defenders
+				expect(finalPlanetB?.owner).toBeDefined();
 			},
 		);
 	});
 
 	describe('Edge Cases', () => {
-		it('should prevent sending fleet from unowned planet', async () => {
-			if (validPlanets.length < 2) {
-				console.log('Skipping test: Not enough valid planets');
-				return;
-			}
+		it('should fail to send fleet from unowned planet', async () => {
+			// Test requires at least 2 planets available
+			expect(validPlanets.length).toBeGreaterThanOrEqual(2);
 
 			// Try to send from a planet neither player owns
 			const unownedPlanet = validPlanets[validPlanets.length - 1]; // Use last planet
@@ -704,18 +639,13 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 			);
 
 			// Should fail because player doesn't own the source planet
-			// Either exitCode !== 0, or we can check the error
-			if (result.exitCode !== 0) {
-				// Expected failure - can parse error from stderr if needed
-				expect(result.stderr || result.stdout).toBeTruthy();
-			}
+			expect(result.exitCode).not.toBe(0);
+			expect(result.stderr || result.stdout).toBeTruthy();
 		});
 
-		it('should handle sending more spaceships than available', async () => {
-			if (validPlanets.length < 2) {
-				console.log('Skipping test: Not enough valid planets');
-				return;
-			}
+		it('should fail to send more spaceships than available', async () => {
+			// Test requires at least 2 planets available
+			expect(validPlanets.length).toBeGreaterThanOrEqual(2);
 
 			const fromPlanet = validPlanets[0];
 			const toPlanet = validPlanets[1];
@@ -738,14 +668,12 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 				{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
 			);
 
-			// Should fail or return error
-			// Either exitCode !== 0, or contract reverts
-			if (result.exitCode !== 0) {
-				expect(result.stderr || result.stdout).toBeTruthy();
-			}
+			// Should fail because there aren't that many spaceships available
+			expect(result.exitCode).not.toBe(0);
+			expect(result.stderr || result.stdout).toBeTruthy();
 		});
 
-		it('should handle resolving non-existent fleet', async () => {
+		it('should fail to resolve non-existent fleet', async () => {
 			const fakeFleetId = '0x' + '0'.repeat(64);
 
 			const result = await invokeCliCommand(
@@ -762,11 +690,8 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 			);
 
 			// Should fail - fleet doesn't exist
-			// Either exitCode !== 0, or error in response
-			if (result.exitCode !== 0) {
-				// Expected failure
-				expect(result.stderr || result.stdout).toBeTruthy();
-			}
+			expect(result.exitCode).not.toBe(0);
+			expect(result.stderr || result.stdout).toBeTruthy();
 		});
 	});
 });

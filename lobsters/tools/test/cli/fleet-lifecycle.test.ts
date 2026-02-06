@@ -76,13 +76,9 @@ describe('CLI - Fleet Lifecycle', () => {
 				'100',
 			]);
 
-			// May succeed or fail depending on CLI implementation
-			if (result.exitCode === 0) {
-				const data = JSON.parse(result.stdout);
-				expect(data.fleetId).toBeDefined();
-			} else {
-				expect(result.stderr || result.stdout).toBeTruthy();
-			}
+			// Invalid coordinates should result in an error
+			expect(result.exitCode).not.toBe(0);
+			expect(result.stderr || result.stdout).toBeTruthy();
 		});
 
 		it('should fail to send fleet to invalid destination coordinates', async () => {
@@ -106,12 +102,9 @@ describe('CLI - Fleet Lifecycle', () => {
 				'100',
 			]);
 
-			if (result.exitCode === 0) {
-				const data = JSON.parse(result.stdout);
-				expect(data.fleetId).toBeDefined();
-			} else {
-				expect(result.stderr || result.stdout).toBeTruthy();
-			}
+			// Invalid coordinates should result in an error
+			expect(result.exitCode).not.toBe(0);
+			expect(result.stderr || result.stdout).toBeTruthy();
 		});
 
 		it('should fail to send fleet without private key', async () => {
@@ -138,7 +131,7 @@ describe('CLI - Fleet Lifecycle', () => {
 			expect(result.exitCode).not.toBe(0);
 		});
 
-		it('should handle custom arrival time option', async () => {
+		it('should fail to send fleet with custom arrival time option when not owning planet', async () => {
 			const customArrivalTime = Math.floor(Date.now() / 1000) + 3600;
 			const result = await invokeCliCommand([
 				'--rpc-url',
@@ -162,14 +155,12 @@ describe('CLI - Fleet Lifecycle', () => {
 				customArrivalTime.toString(),
 			]);
 
-			// May fail due to ownership or CLI limitations
-			if (result.exitCode === 0) {
-				const data = JSON.parse(result.stdout);
-				expect(data.fleetId).toBeDefined();
-			}
+			// Should fail because user doesn't own the source planet
+			expect(result.exitCode).not.toBe(0);
+			expect(result.stderr || result.stdout).toBeTruthy();
 		});
 
-		it('should handle gift flag', async () => {
+		it('should fail to send fleet with gift flag when not owning planet', async () => {
 			const result = await invokeCliCommand([
 				'--rpc-url',
 				RPC_URL,
@@ -192,10 +183,9 @@ describe('CLI - Fleet Lifecycle', () => {
 				'true',
 			]);
 
-			if (result.exitCode === 0) {
-				const data = JSON.parse(result.stdout);
-				expect(data.fleetId).toBeDefined();
-			}
+			// Should fail because user doesn't own the source planet
+			expect(result.exitCode).not.toBe(0);
+			expect(result.stderr || result.stdout).toBeTruthy();
 		});
 
 		it('should verify sent fleet appears in get_pending_fleets', async () => {
@@ -245,13 +235,9 @@ describe('CLI - Fleet Lifecycle', () => {
 				'0x0000000000000000000000000000000000000000000000000000000000000000',
 			]);
 
-			// Should fail or return not resolved
-			if (result.exitCode === 0) {
-				const data = JSON.parse(result.stdout);
-				expect(data.success).toBe(false);
-			} else {
-				expect(result.stderr || result.stdout).toBeTruthy();
-			}
+			// Non-existent fleet should result in an error
+			expect(result.exitCode).not.toBe(0);
+			expect(result.stderr || result.stdout).toBeTruthy();
 		});
 
 		it('should fail to resolve fleet without private key', async () => {

@@ -46,7 +46,7 @@ describe('CLI - Read-Only Operations', () => {
 			expect(result.planets).toBeDefined();
 		});
 
-		it('should return planets with correct structure', async () => {
+		it('should return planets with correct structure when planets exist', async () => {
 			const {stdout, exitCode} = await invokeCliCommand([
 				'--rpc-url',
 				RPC_URL,
@@ -60,15 +60,19 @@ describe('CLI - Read-Only Operations', () => {
 			expect(exitCode).toBe(0);
 			const result = JSON.parse(stdout);
 
-			// Check that if there are planets, they have the expected structure
-			if (result.planets.length > 0) {
-				const planet = result.planets[0];
+			// Verify planets array structure exists
+			expect(result.planets).toBeDefined();
+			expect(Array.isArray(result.planets)).toBe(true);
+
+			// If planets exist, validate their structure
+			// This uses forEach which processes all items when present, and does nothing when empty
+			result.planets.forEach((planet: {planetId?: string; location?: {x?: number; y?: number; id?: string}}) => {
 				expect(planet).toHaveProperty('planetId');
 				expect(planet).toHaveProperty('location');
 				expect(planet.location).toHaveProperty('x');
 				expect(planet.location).toHaveProperty('y');
 				expect(planet.location).toHaveProperty('id');
-			}
+			});
 		});
 
 		it('should handle small radius (1)', async () => {
@@ -145,12 +149,16 @@ describe('CLI - Read-Only Operations', () => {
 			expect(exitCode).toBe(0);
 			const result = JSON.parse(stdout);
 
-			if (result.planets.length > 0) {
-				const planet = result.planets[0];
+			// Verify planets array exists
+			expect(result.planets).toBeDefined();
+			expect(Array.isArray(result.planets)).toBe(true);
+
+			// Validate distance information on all planets (processes all when present, none when empty)
+			result.planets.forEach((planet: {distance?: number}) => {
 				expect(planet).toHaveProperty('distance');
 				expect(typeof planet.distance).toBe('number');
 				expect(planet.distance).toBeGreaterThanOrEqual(0);
-			}
+			});
 		});
 
 		it('should handle different center points', async () => {
@@ -211,14 +219,18 @@ describe('CLI - Read-Only Operations', () => {
 			expect(exitCode).toBe(0);
 			const result = JSON.parse(stdout);
 
-			if (result.planets.length > 0) {
-				const planet = result.planets[0];
+			// Verify planets array exists
+			expect(result.planets).toBeDefined();
+			expect(Array.isArray(result.planets)).toBe(true);
+
+			// Validate structure on all planets (processes all when present, none when empty)
+			result.planets.forEach((planet: {planetId?: string; distance?: number; location?: {x?: number; y?: number}}) => {
 				expect(planet).toHaveProperty('planetId');
 				expect(planet).toHaveProperty('distance');
 				expect(planet).toHaveProperty('location');
 				expect(planet.location).toHaveProperty('x');
 				expect(planet.location).toHaveProperty('y');
-			}
+			});
 		});
 
 		it('should handle small radius (1)', async () => {
@@ -270,22 +282,42 @@ describe('CLI - Read-Only Operations', () => {
 			expect(exitCode).toBe(0);
 			const result = JSON.parse(stdout);
 
-			if (result.fleets.length > 0) {
-				const fleet = result.fleets[0];
-				expect(fleet).toHaveProperty('fleetId');
-				expect(fleet).toHaveProperty('fromPlanetId');
-				expect(fleet).toHaveProperty('toPlanetId');
-				expect(fleet).toHaveProperty('quantity');
-				expect(fleet).toHaveProperty('secret');
-				expect(fleet).toHaveProperty('gift');
-				expect(fleet).toHaveProperty('specific');
-				expect(fleet).toHaveProperty('arrivalTimeWanted');
-				expect(fleet).toHaveProperty('fleetSender');
-				expect(fleet).toHaveProperty('operator');
-				expect(fleet).toHaveProperty('committedAt');
-				expect(fleet).toHaveProperty('estimatedArrivalTime');
-				expect(fleet).toHaveProperty('resolved');
-			}
+			// Verify fleets array exists
+			expect(result.fleets).toBeDefined();
+			expect(Array.isArray(result.fleets)).toBe(true);
+
+			// Validate structure on all fleets (processes all when present, none when empty)
+			result.fleets.forEach(
+				(fleet: {
+					fleetId?: string;
+					fromPlanetId?: string;
+					toPlanetId?: string;
+					quantity?: number;
+					secret?: string;
+					gift?: boolean;
+					specific?: string;
+					arrivalTimeWanted?: number;
+					fleetSender?: string;
+					operator?: string;
+					committedAt?: number;
+					estimatedArrivalTime?: number;
+					resolved?: boolean;
+				}) => {
+					expect(fleet).toHaveProperty('fleetId');
+					expect(fleet).toHaveProperty('fromPlanetId');
+					expect(fleet).toHaveProperty('toPlanetId');
+					expect(fleet).toHaveProperty('quantity');
+					expect(fleet).toHaveProperty('secret');
+					expect(fleet).toHaveProperty('gift');
+					expect(fleet).toHaveProperty('specific');
+					expect(fleet).toHaveProperty('arrivalTimeWanted');
+					expect(fleet).toHaveProperty('fleetSender');
+					expect(fleet).toHaveProperty('operator');
+					expect(fleet).toHaveProperty('committedAt');
+					expect(fleet).toHaveProperty('estimatedArrivalTime');
+					expect(fleet).toHaveProperty('resolved');
+				},
+			);
 		});
 
 		it('should require no parameters', async () => {
@@ -331,19 +363,36 @@ describe('CLI - Read-Only Operations', () => {
 			expect(exitCode).toBe(0);
 			const result = JSON.parse(stdout);
 
-			if (result.exits.length > 0) {
-				const exit = result.exits[0];
-				expect(exit).toHaveProperty('planetId');
-				expect(exit).toHaveProperty('player');
-				expect(exit).toHaveProperty('exitStartTime');
-				expect(exit).toHaveProperty('exitDuration');
-				expect(exit).toHaveProperty('exitCompleteTime');
-				expect(exit).toHaveProperty('numSpaceships');
-				expect(exit).toHaveProperty('owner');
-				expect(exit).toHaveProperty('completed');
-				expect(exit).toHaveProperty('interrupted');
-				expect(exit).toHaveProperty('lastCheckedAt');
-			}
+			// Verify exits array exists
+			expect(result.exits).toBeDefined();
+			expect(Array.isArray(result.exits)).toBe(true);
+
+			// Validate structure on all exits (processes all when present, none when empty)
+			result.exits.forEach(
+				(exit: {
+					planetId?: string;
+					player?: string;
+					exitStartTime?: number;
+					exitDuration?: number;
+					exitCompleteTime?: number;
+					numSpaceships?: number;
+					owner?: string;
+					completed?: boolean;
+					interrupted?: boolean;
+					lastCheckedAt?: number;
+				}) => {
+					expect(exit).toHaveProperty('planetId');
+					expect(exit).toHaveProperty('player');
+					expect(exit).toHaveProperty('exitStartTime');
+					expect(exit).toHaveProperty('exitDuration');
+					expect(exit).toHaveProperty('exitCompleteTime');
+					expect(exit).toHaveProperty('numSpaceships');
+					expect(exit).toHaveProperty('owner');
+					expect(exit).toHaveProperty('completed');
+					expect(exit).toHaveProperty('interrupted');
+					expect(exit).toHaveProperty('lastCheckedAt');
+				},
+			);
 		});
 
 		it('should require no parameters', async () => {
