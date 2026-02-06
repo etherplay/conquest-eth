@@ -113,10 +113,10 @@ importers:
         specifier: ^0.18.0
         version: 0.18.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
       '@rocketh/export':
-        specifier: ^0.18.0
-        version: 0.18.0(@rocketh/node@0.18.1(bufferutil@4.0.8)(rocketh@0.18.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(bufferutil@4.0.8)(rocketh@0.18.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
+        specifier: ^0.18.1
+        version: 0.18.1(@rocketh/node@0.18.1(bufferutil@4.0.8)(rocketh@0.18.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(bufferutil@4.0.8)(rocketh@0.18.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
       '@rocketh/node':
-        specifier: ^0.18.0
+        specifier: ^0.18.1
         version: 0.18.1(bufferutil@4.0.8)(rocketh@0.18.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
       '@rocketh/proxy':
         specifier: ^0.18.0
@@ -312,7 +312,7 @@ importers:
         specifier: ^2.29.8
         version: 2.29.8(@types/node@25.2.0)
       '@rocketh/node':
-        specifier: ^0.18.0
+        specifier: ^0.18.1
         version: 0.18.1(bufferutil@4.0.8)(rocketh@0.18.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
       '@types/node':
         specifier: ^25.2.0
@@ -376,7 +376,7 @@ importers:
         specifier: ^0.19.0
         version: 0.19.0(@types/node@25.2.0)(bufferutil@4.0.8)(hono@4.6.14)(typescript@5.7.2)(utf-8-validate@5.0.8)
       '@rocketh/node':
-        specifier: ^0.18.0
+        specifier: ^0.18.1
         version: 0.18.1(bufferutil@4.0.8)(rocketh@0.18.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
       '@types/node':
         specifier: ^25.2.0
@@ -2824,11 +2824,11 @@ packages:
   '@rocketh/diamond@0.18.0':
     resolution: {integrity: sha512-j4QyyM1mOGoMLHSPlyuUHHRmCB2TOED/RIsT7YXpRVYm5AYxfYvLVWNs+HNdczqQlS96JFUrtJtCTmXk/WQijw==}
 
-  '@rocketh/export@0.18.0':
-    resolution: {integrity: sha512-4hyInunpWTajaM7hOp9ciSu2S6Nafwfg/YSabEzBeyoK0EMvsGi5bDfwHIRu64rZ3YU8yQ+I/2MN+vvpoHW3zA==}
+  '@rocketh/export@0.18.1':
+    resolution: {integrity: sha512-/GRqUkS9Y6d69T12k8z57euJHqGBrcbg0wlP53QB/S8ZjkawpQrJ928x5tYEzwFNanBrMBCoOrVa1C7nz29PIg==}
     hasBin: true
     peerDependencies:
-      '@rocketh/node': 0.18.0
+      '@rocketh/node': 0.18.1
       rocketh: 0.18.0
 
   '@rocketh/node@0.18.1':
@@ -13230,7 +13230,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@rocketh/export@0.18.0(@rocketh/node@0.18.1(bufferutil@4.0.8)(rocketh@0.18.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(bufferutil@4.0.8)(rocketh@0.18.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)':
+  '@rocketh/export@0.18.1(@rocketh/node@0.18.1(bufferutil@4.0.8)(rocketh@0.18.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(bufferutil@4.0.8)(rocketh@0.18.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)':
     dependencies:
       '@rocketh/core': 0.18.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
       '@rocketh/node': 0.18.1(bufferutil@4.0.8)(rocketh@0.18.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
@@ -13728,7 +13728,7 @@ snapshots:
   '@types/fs-extra@11.0.4':
     dependencies:
       '@types/jsonfile': 6.1.4
-      '@types/node': 22.10.7
+      '@types/node': 25.2.0
 
   '@types/fs-extra@9.0.13':
     dependencies:
@@ -13740,7 +13740,7 @@ snapshots:
 
   '@types/jsonfile@6.1.4':
     dependencies:
-      '@types/node': 22.10.7
+      '@types/node': 25.2.0
 
   '@types/keyv@3.1.2':
     dependencies:
