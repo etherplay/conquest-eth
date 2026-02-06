@@ -290,55 +290,6 @@ importers:
         specifier: ^3.60.1
         version: 3.97.0(bufferutil@4.0.8)(utf-8-validate@5.0.8)
 
-  lobsters/testing-rocketh-import:
-    dependencies:
-      conquest-eth-v0-contracts:
-        specifier: workspace:*
-        version: link:../../contracts
-      eip-1193:
-        specifier: ^0.6.5
-        version: 0.6.5
-      ldenv:
-        specifier: ^0.3.16
-        version: 0.3.16
-      remote-procedure-call:
-        specifier: ^0.1.1
-        version: 0.1.1(@types/node@25.2.0)
-      viem:
-        specifier: ^2.45.1
-        version: 2.45.1(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
-    devDependencies:
-      '@changesets/cli':
-        specifier: ^2.29.8
-        version: 2.29.8(@types/node@25.2.0)
-      '@rocketh/node':
-        specifier: ^0.18.1
-        version: 0.18.1(bufferutil@4.0.8)(rocketh@0.18.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
-      '@types/node':
-        specifier: ^25.2.0
-        version: 25.2.0
-      as-soon:
-        specifier: ^0.1.5
-        version: 0.1.5
-      prettier:
-        specifier: ^3.8.0
-        version: 3.8.1
-      prool:
-        specifier: ^0.2.2
-        version: 0.2.2
-      rocketh:
-        specifier: ^0.18.0
-        version: 0.18.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
-      tsx:
-        specifier: ^4.21.0
-        version: 4.21.0
-      typescript:
-        specifier: ^5.3.3
-        version: 5.7.2
-      vitest:
-        specifier: ^4.0.18
-        version: 4.0.18(@types/node@25.2.0)(tsx@4.21.0)(yaml@2.6.1)
-
   lobsters/tools:
     dependencies:
       '@modelcontextprotocol/sdk':
@@ -360,8 +311,8 @@ importers:
         specifier: ^0.1.1
         version: 0.1.1(@types/node@25.2.0)
       tools-ethereum:
-        specifier: ^0.0.1
-        version: 0.0.1(@types/node@25.2.0)(bufferutil@4.0.8)(hono@4.6.14)(typescript@5.7.2)(utf-8-validate@5.0.8)
+        specifier: ^0.0.4
+        version: 0.0.4(@types/node@25.2.0)(bufferutil@4.0.8)(hono@4.6.14)(typescript@5.7.2)(utf-8-validate@5.0.8)
       viem:
         specifier: ^2.45.1
         version: 2.45.1(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
@@ -9717,8 +9668,8 @@ packages:
     resolution: {integrity: sha512-6udB24Q737UD/SDsKAHI9FCRP7Bqc9D/MQUV02ORQg5iskjtLJlZJNdN4kKtcdtwCeWIwIHDGaUsTsCCAa8sFQ==}
     engines: {node: '>=10'}
 
-  tools-ethereum@0.0.1:
-    resolution: {integrity: sha512-BDWNAkySbBTtIUD72073wFolyjN1pfd8YvQVPneNR6SqxMlB448itkosl2oXy0rRuFUoc/PQl27hW5znAYY1Tg==}
+  tools-ethereum@0.0.4:
+    resolution: {integrity: sha512-Ggihtd60FovM0/fJiv0qRIsPP3i70MhzyLL0tty3pXZ1LwJxac8FHzSbkgyF03YY/ujISGk2mkOvdUFhopSqDg==}
     hasBin: true
 
   tough-cookie@2.5.0:
@@ -21650,7 +21601,7 @@ snapshots:
       '@tokenizer/token': 0.3.0
       ieee754: 1.2.1
 
-  tools-ethereum@0.0.1(@types/node@25.2.0)(bufferutil@4.0.8)(hono@4.6.14)(typescript@5.7.2)(utf-8-validate@5.0.8):
+  tools-ethereum@0.0.4(@types/node@25.2.0)(bufferutil@4.0.8)(hono@4.6.14)(typescript@5.7.2)(utf-8-validate@5.0.8):
     dependencies:
       '@modelcontextprotocol/sdk': 1.25.3(hono@4.6.14)(zod@4.3.6)
       commander: 14.0.3

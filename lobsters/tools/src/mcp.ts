@@ -2,7 +2,7 @@ import {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
 import pkg from '../package.json' with {type: 'json'};
 import {ConquestEnv} from './types.js';
 import * as tools from './tools/index.js';
-import {createServer as createMCPEthereumServer} from 'tools-ethereum';
+import {createEthereumEnv, createEthereumMPCServer} from 'tools-ethereum';
 import {ServerOptions} from '@modelcontextprotocol/sdk/server';
 import {Implementation} from '@modelcontextprotocol/sdk/types.js';
 import {getChain} from 'tools-ethereum/helpers';
@@ -24,23 +24,11 @@ export async function createServer(
 	const name = `mcp-conquest-eth-v0`;
 
 	if (options?.ethereum) {
-		// get the options to pass to ethereum
-		const {rpcUrl, privateKey} = env.options;
+		const ethereumEnv = await createEthereumEnv(env.options);
 
-		const mcpEthereumParams = {
-			chain: await getChain(rpcUrl),
-			privateKey,
-		};
-
-		const mcpEthereumOptions = {
-			rpcURL: rpcUrl,
-			serverOptions: options?.serverOptions,
-			serverInfo: options?.serverInfo,
-		};
-
-		server = createMCPEthereumServer(mcpEthereumParams, {
-			...mcpEthereumOptions,
+		server = createEthereumMPCServer(ethereumEnv, {
 			serverInfo: {name, version: pkg.version, ...options?.serverInfo},
+			serverOptions: options?.serverOptions,
 		});
 	} else {
 		server = new McpServer(
