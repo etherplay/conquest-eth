@@ -166,7 +166,7 @@ export async function resolveFleetWithSpaceInfo(
 }
 
 /**
- * Get fleets that can be resolved (not yet resolved and past resolve window)
+ * Get fleets that can be resolved (arrived and still within resolve window)
  *
  * @param storage - Storage instance for tracking pending fleets
  * @param resolveWindow - The resolve window duration in seconds from contract config
@@ -180,8 +180,9 @@ export async function getResolvableFleets(
 	const fleets = await storage.getResolvableFleets();
 
 	return fleets.filter((fleet) => {
-		// Check if fleet is past the resolve window
-		const resolveWindowOpen = fleet.estimatedArrivalTime + Number(resolveWindow);
-		return !fleet.resolved && currentTime >= resolveWindowOpen;
+		// Fleet can be resolved after arrival but before resolve window closes
+		const arrivalTime = fleet.estimatedArrivalTime;
+		const resolveWindowEnd = arrivalTime + Number(resolveWindow);
+		return !fleet.resolved && currentTime >= arrivalTime && currentTime < resolveWindowEnd;
 	});
 }
