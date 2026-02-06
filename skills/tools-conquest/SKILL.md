@@ -131,8 +131,8 @@ Send spaceships from one of your planets to another:
 
 ```bash
 conquest send_fleet \
-  --from-x 10 --from-y 20 \
-  --to-x 15 --to-y 25 \
+  --from 10,20 \
+  --to 15,25 \
   --quantity 100
 ```
 
@@ -140,8 +140,8 @@ With optional parameters:
 
 ```bash
 conquest send_fleet \
-  --from-x 10 --from-y 20 \
-  --to-x 15 --to-y 25 \
+  --from 10,20 \
+  --to 15,25 \
   --quantity 100 \
   --arrivalTimeWanted 1735123456 \
   --gift
@@ -149,8 +149,8 @@ conquest send_fleet \
 
 **Parameters:**
 
-- `--from-x`, `--from-y` (numbers): Source planet coordinates
-- `--to-x`, `--to-y` (numbers): Destination planet coordinates
+- `--from` (x,y coordinates): Source planet coordinates
+- `--to` (x,y coordinates): Destination planet coordinates
 - `--quantity` (number): Number of spaceships to send
 - `--arrivalTimeWanted` (number, optional): Desired arrival time (timestamp in seconds). Auto-calculated based on distance if not provided.
 - `--gift` (flag, optional): Whether the fleet is a gift (sent without requiring arrival).
@@ -313,7 +313,7 @@ conquest get_my_planets --radius 50
 conquest get_planets_around --center-x 10 --center-y 20 --radius 15
 
 # 3. Send a fleet to attack
-conquest send_fleet --from-x 10 --from-y 20 --to-x 12 --to-y 22 --quantity 100
+conquest send_fleet --from 10,20 --to 12,22 --quantity 100
 
 # 4. Wait for fleet to arrive, then resolve
 conquest resolve_fleet --fleet-id "your-fleet-id"
@@ -356,7 +356,7 @@ conquest get_pending_fleets
 conquest get_planets_around --center-x 50 --center-y 50 --radius 20
 
 # Send attack fleet
-conquest send_fleet --from-x 50 --from-y 50 --to-x 55 --to-y 55 --quantity 1000
+conquest send_fleet --from 50,50 --to 55,55 --quantity 1000
 
 # Monitor fleet status
 conquest get_pending_fleets
@@ -404,7 +404,7 @@ conquest get_planets_around --center-x 0 --center-y 0 --radius 20
 
 # These will fail without a private key:
 conquest acquire_planets --coordinates 10,20 15,25
-conquest send_fleet --from-x 10 --from-y 20 --to-x 15 --to-y 25 --quantity 100
+conquest send_fleet --from 10,20 --to 15,25 --quantity 100
 ```
 
 ### RPC URL

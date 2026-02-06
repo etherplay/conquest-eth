@@ -240,7 +240,7 @@ conquest get-planets-around --center-x 0 --center-y 0 --radius 20
 
 # These will fail without a private key:
 conquest acquire-planets --planet-ids 1,2,3
-conquest send-fleet --from-x 10 --from-y 20 --to-x 15 --to-y 25 --quantity 100
+conquest send-fleet --from 10,20 --to 15,25 --quantity 100
 ```
 
 #### RPC URL
