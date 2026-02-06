@@ -88,14 +88,14 @@ Send spaceships from one planet to another:
 
 ```bash
 conquest send_fleet \
-  --from-x 10 --from-y 20 \
-  --to-x 15 --to-y 25 \
+  --from 10,20 \
+  --to 15,25 \
   --quantity 100
 
 # With optional parameters
 conquest send_fleet \
-  --from-x 10 --from-y 20 \
-  --to-x 15 --to-y 25 \
+  --from 10,20 \
+  --to 15,25 \
   --quantity 100 \
   --arrivalTimeWanted 1735123456 \
   --gift
@@ -172,7 +172,7 @@ conquest get_my_planets --radius 50
 conquest get_planets_around --center-x 10 --center-y 20 --radius 15
 
 # 3. Send a fleet to attack
-conquest send_fleet --from-x 10 --from-y 20 --to-x 12 --to-y 22 --quantity 100
+conquest send_fleet --from 10,20 --to 12,22 --quantity 100
 
 # 4. Wait for fleet to arrive, then resolve
 conquest resolve_fleet --fleet-id "your-fleet-id"

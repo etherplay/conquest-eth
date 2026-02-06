@@ -84,8 +84,8 @@ node dist/cli.js get_planets_around --center-x 0 --center-y 0 --radius 20
 # Acquire planets
 node dist/cli.js acquire_planets --planet-ids 1,2,3,4,5
 
-# Send a fleet
-node dist/cli.js send_fleet --from-x 10 --from-y 20 --to-x 15 --to-y 25 --quantity 100
+# Send a fleet (coordinates use x,y format)
+node dist/cli.js send_fleet --from 10,20 --to 15,25 --quantity 100
 
 # Resolve a fleet
 node dist/cli.js resolve_fleet --fleet-id "your-fleet-id"

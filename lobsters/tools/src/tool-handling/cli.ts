@@ -10,12 +10,57 @@ import {createToolEnvironmentFromFactory} from './index.js';
 export type EnvFactory<TEnv extends Record<string, any>> = () => Promise<TEnv> | TEnv;
 
 /**
+ * Check if a Zod object schema represents a coordinate type (has only x, y and optionally z number fields)
+ */
+function isCoordinateSchema(field: z.ZodTypeAny): {type: '2d' | '3d'} | null {
+	if (!(field instanceof z.ZodObject)) {
+		return null;
+	}
+
+	const shape = field.shape;
+	const keys = Object.keys(shape);
+
+	// Check for 2D coordinates (x, y)
+	if (keys.length === 2 && keys.includes('x') && keys.includes('y')) {
+		const xField = unwrapZodType(shape.x as z.ZodTypeAny);
+		const yField = unwrapZodType(shape.y as z.ZodTypeAny);
+		if (xField instanceof z.ZodNumber && yField instanceof z.ZodNumber) {
+			return {type: '2d'};
+		}
+	}
+
+	// Check for 3D coordinates (x, y, z)
+	if (keys.length === 3 && keys.includes('x') && keys.includes('y') && keys.includes('z')) {
+		const xField = unwrapZodType(shape.x as z.ZodTypeAny);
+		const yField = unwrapZodType(shape.y as z.ZodTypeAny);
+		const zField = unwrapZodType(shape.z as z.ZodTypeAny);
+		if (
+			xField instanceof z.ZodNumber &&
+			yField instanceof z.ZodNumber &&
+			zField instanceof z.ZodNumber
+		) {
+			return {type: '3d'};
+		}
+	}
+
+	return null;
+}
+
+/**
  * Convert Zod schema field to commander.js option definition
  */
 function zodFieldToOption(name: string, field: z.ZodTypeAny): string {
 	// Handle boolean flags - no value required
 	if (field instanceof z.ZodBoolean) {
 		return `--${name}`;
+	}
+	// Handle coordinate objects - use <x,y> or <x,y,z> format
+	const coordInfo = isCoordinateSchema(field);
+	if (coordInfo) {
+		if (coordInfo.type === '3d') {
+			return `--${name} <x,y,z>`;
+		}
+		return `--${name} <x,y>`;
 	}
 	// All other types use <value> to accept explicit values
 	return `--${name} <value>`;
@@ -34,9 +79,49 @@ function unionContainsNumber(field: z.ZodUnion<any>): boolean {
 }
 
 /**
+ * Parse coordinate string (e.g., "10,20" or "10,20,30") into an object
+ */
+function parseCoordinateString(
+	value: string,
+	type: '2d' | '3d',
+): {x: number; y: number; z?: number} | null {
+	const parts = value.split(',').map((v) => v.trim());
+
+	if (type === '2d' && parts.length === 2) {
+		const x = Number(parts[0]);
+		const y = Number(parts[1]);
+		if (!isNaN(x) && !isNaN(y)) {
+			return {x, y};
+		}
+	} else if (type === '3d' && parts.length === 3) {
+		const x = Number(parts[0]);
+		const y = Number(parts[1]);
+		const z = Number(parts[2]);
+		if (!isNaN(x) && !isNaN(y) && !isNaN(z)) {
+			return {x, y, z};
+		}
+	}
+
+	return null;
+}
+
+/**
  * Parse option value based on Zod type
  */
 function parseOptionValue(field: z.ZodTypeAny, value: any): any {
+	// Handle coordinate objects - parse "x,y" or "x,y,z" format
+	const coordInfo = isCoordinateSchema(field);
+	if (coordInfo && typeof value === 'string') {
+		const parsed = parseCoordinateString(value, coordInfo.type);
+		if (parsed) {
+			return parsed;
+		}
+		// If parsing fails, throw an error with helpful message
+		throw new Error(
+			`Invalid coordinate format for value "${value}". Expected format: ${coordInfo.type === '3d' ? 'x,y,z' : 'x,y'}`,
+		);
+	}
+
 	// Handle array types - parse comma-separated values or JSON arrays
 	if (field instanceof z.ZodArray) {
 		if (typeof value === 'string') {
