@@ -6,7 +6,14 @@ import pkg from '../package.json' with {type: 'json'};
 import {getChain} from 'tools-ethereum/helpers';
 import {loadEnv} from 'ldenv';
 import * as tools from './tools/index.js';
-import {registerAllToolCommands} from './tool-handling/cli-tool-generator.js';
+import {registerAllToolCommands, type CliConfig} from './tool-handling/cli-tool-generator.js';
+import {getClients} from 'tools-ethereum/helpers';
+import {createSpaceInfo} from './contracts/space-info.js';
+import {JsonFleetStorage} from './storage/json-storage.js';
+import {FleetManager} from './fleet/manager.js';
+import {PlanetManager} from './planet/manager.js';
+import type {ClientsWithOptionalWallet, ConquestEnv, GameContract} from './types.js';
+import {Abi_IOuterSpace} from 'conquest-eth-v0-contracts/abis/IOuterSpace.js';
 
 loadEnv();
 
@@ -103,8 +110,48 @@ program
 		await server.connect(transport);
 	});
 
-// Register all tool commands dynamically
-registerAllToolCommands(program, tools);
+/**
+ * Factory function to create the ConquestEnv from CLI options
+ */
+const envFactory: CliConfig<ConquestEnv>['envFactory'] = async (cliOptions) => {
+	const rpcUrl = cliOptions.rpcUrl || process.env.RPC_URL;
+	const gameContractAddress = cliOptions.gameContract || process.env.GAME_CONTRACT;
+	const privateKey = cliOptions.privateKey || process.env.PRIVATE_KEY;
+	const storagePath = cliOptions.storagePath || process.env.STORAGE_PATH || './data';
+
+	// Validate required options
+	if (!rpcUrl) {
+		throw new Error('--rpc-url option or RPC_URL environment variable is required');
+	}
+	if (!gameContractAddress) {
+		throw new Error('--game-contract option or GAME_CONTRACT environment variable is required');
+	}
+	if (privateKey && !privateKey.startsWith('0x')) {
+		throw new Error('PRIVATE_KEY must start with 0x');
+	}
+
+	const chain = await getChain(rpcUrl);
+	const clients = getClients({
+		chain,
+		privateKey: privateKey as `0x${string}` | undefined,
+	}) as ClientsWithOptionalWallet;
+
+	const gameContract: GameContract = {
+		address: gameContractAddress as `0x${string}`,
+		abi: Abi_IOuterSpace,
+	};
+
+	const {spaceInfo, contractConfig} = await createSpaceInfo(clients, gameContract);
+	const storage = new JsonFleetStorage(storagePath);
+
+	return {
+		fleetManager: new FleetManager(clients, gameContract, spaceInfo, contractConfig, storage),
+		planetManager: new PlanetManager(clients, gameContract, spaceInfo, contractConfig, storage),
+	};
+};
+
+// Register all tool commands dynamically with the CLI config
+registerAllToolCommands(program, tools, {envFactory});
 
 const args = process.argv.slice(2);
 const registeredCommands = program.commands.map((cmd) => cmd.name());

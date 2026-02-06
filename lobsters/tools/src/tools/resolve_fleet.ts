@@ -1,12 +1,15 @@
 import {z} from 'zod';
 import {createTool} from '../tool-handling/types.js';
+import type {ConquestEnv} from '../types.js';
 
-export const resolve_fleet = createTool({
+const schema = z.object({
+	fleetId: z.string().describe('Fleet ID to resolve'),
+});
+
+export const resolve_fleet = createTool<typeof schema, ConquestEnv>({
 	description:
 		'Resolve a previously sent fleet. This must be called after the fleet arrival time + resolve window to reveal the destination and secret.',
-	schema: z.object({
-		fleetId: z.string().describe('Fleet ID to resolve'),
-	}),
+	schema,
 	execute: async (env, {fleetId}) => {
 		try {
 			const result = await env.fleetManager.resolve(fleetId);

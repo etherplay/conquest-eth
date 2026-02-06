@@ -9,7 +9,7 @@ import {createSpaceInfo} from './contracts/space-info.js';
 import {JsonFleetStorage} from './storage/json-storage.js';
 import {FleetManager} from './fleet/manager.js';
 import {PlanetManager} from './planet/manager.js';
-import type {ClientsWithOptionalWallet, ContractConfig, GameContract} from './types.js';
+import type {ClientsWithOptionalWallet, ConquestEnv, ContractConfig, GameContract} from './types.js';
 import {SpaceInfo} from 'conquest-eth-v0-contracts';
 
 // Import refactored tools
@@ -88,7 +88,7 @@ export function createServer(
 	let planetManager: PlanetManager | null = null;
 
 	// Helper to ensure managers are initialized
-	const ensureManagersInitialized = async () => {
+	const ensureManagersInitialized = async (): Promise<ConquestEnv> => {
 		const {spaceInfo: si, contractConfig: cc} = await initSpaceInfo();
 
 		// Initialize fleetManager even without walletClient for read-only operations
@@ -111,11 +111,12 @@ export function createServer(
 		return {fleetManager, planetManager};
 	};
 
-	// Auto-register all tools
+	// Auto-register all tools using the generic registerTool
 	for (const [name, tool] of Object.entries(tools)) {
 		// Skip the file that's not a tool
 		if (name === 'default') continue;
 
+		// Use the generic registerTool with lazy initialization
 		server.registerTool(
 			name,
 			{
@@ -124,17 +125,16 @@ export function createServer(
 			},
 			async (args: unknown) => {
 				try {
-					const {fleetManager, planetManager} = await ensureManagersInitialized();
+					const env = await ensureManagersInitialized();
 
-					const env = {
+					const toolEnv = {
 						sendStatus: async (_message: string) => {
 							// TODO: Implement progress notifications when sessionId is available
 						},
-						fleetManager,
-						planetManager,
+						...env,
 					};
 
-					const result = await tool.execute(env, args as any);
+					const result = await tool.execute(toolEnv, args as any);
 
 					// Convert ToolResult to CallToolResult
 					if (result.success === false) {

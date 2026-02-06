@@ -1,24 +1,18 @@
 import {Command} from 'commander';
 import {z} from 'zod';
 import type {Tool, ToolEnvironment, ToolSchema} from './types.js';
-import {getClients} from 'tools-ethereum/helpers';
-import {getChain} from 'tools-ethereum/helpers';
-import {createSpaceInfo} from '../contracts/space-info.js';
-import {JsonFleetStorage} from '../storage/json-storage.js';
-import {FleetManager} from '../fleet/manager.js';
-import {PlanetManager} from '../planet/manager.js';
-import type {ClientsWithOptionalWallet, GameContract, StorageConfig} from '../types.js';
-import {SpaceInfo} from 'conquest-eth-v0-contracts';
-import {Abi_IOuterSpace} from 'conquest-eth-v0-contracts/abis/IOuterSpace.js';
 
 /**
- * CLI configuration parameters
+ * CLI configuration for generic tool execution
+ * @template TEnv - Environment type passed to tools
  */
-export interface CliConfig {
-	chain: any;
-	privateKey?: `0x${string}`;
-	gameContract: `0x${string}`;
-	storageConfig: StorageConfig;
+export interface CliConfig<TEnv extends Record<string, any>> {
+	/**
+	 * Factory function that creates environment from parsed CLI options
+	 * @param cliOptions - Parsed CLI options as Record<string, any>
+	 * @returns Environment properties (can be async)
+	 */
+	envFactory: (cliOptions: Record<string, any>) => Promise<TEnv> | TEnv;
 }
 
 /**
@@ -204,41 +198,19 @@ function extractSchemaFields(
 
 /**
  * Create a CLI tool environment for executing tools
+ * @template TEnv - Environment type passed to tools
  */
-async function createCliToolEnvironment(config: CliConfig): Promise<ToolEnvironment> {
-	const {gameContract: gameContractAddress, chain, storageConfig} = config;
-
-	// Get clients
-	const clients = getClients({chain, privateKey: config.privateKey}) as ClientsWithOptionalWallet;
-
-	// Initialize game contract
-	const gameContract: GameContract = {
-		address: gameContractAddress,
-		abi: Abi_IOuterSpace,
-	};
-
-	// Initialize SpaceInfo
-	const {spaceInfo, contractConfig} = await createSpaceInfo(clients, gameContract);
-
-	// Initialize storage
-	const storage = new JsonFleetStorage(storageConfig.dataDir || './data');
-
-	// Initialize managers
-	const fleetManager = new FleetManager(clients, gameContract, spaceInfo, contractConfig, storage);
-	const planetManager = new PlanetManager(
-		clients,
-		gameContract,
-		spaceInfo,
-		contractConfig,
-		storage,
-	);
+async function createCliToolEnvironment<TEnv extends Record<string, any>>(
+	cliConfig: CliConfig<TEnv>,
+	cliOptions: Record<string, any>,
+): Promise<ToolEnvironment<TEnv>> {
+	const env = await cliConfig.envFactory(cliOptions);
 
 	return {
-		fleetManager,
-		planetManager,
 		sendStatus: async (message: string) => {
 			console.log(`[Status] ${message}`);
 		},
+		...env,
 	};
 }
 
@@ -294,11 +266,13 @@ function formatToolResult(result: {
 
 /**
  * Generate a single tool command from tool definition
+ * @template TEnv - Environment type passed to tools
  */
-export function generateToolCommand(
+export function generateToolCommand<TEnv extends Record<string, any>>(
 	program: Command,
 	toolName: string,
-	tool: Tool<z.ZodObject<any>>,
+	tool: Tool<z.ZodObject<any>, TEnv>,
+	cliConfig: CliConfig<TEnv>,
 ): void {
 	// Extract fields from schema (handles both ZodObject and ZodUnion)
 	const schemaFields = extractSchemaFields(tool.schema);
@@ -321,48 +295,10 @@ export function generateToolCommand(
 		}
 	}
 
-	// Add --rpc-url option (can override global)
-	cmd.option('--rpc-url <url>', 'RPC URL for the Ethereum network (overrides global)');
-	// Add --game-contract option (can override global)
-	cmd.option('--game-contract <address>', 'contract address (overrides global)');
-	// Add --storage option (can override global)
-	cmd.option('--storage <type>', 'storage type (overrides global)');
-	// Add --storage-path option (can override global)
-	cmd.option('--storage-path <type>', 'storage type (overrides global)');
-
 	cmd.action(async (options: Record<string, any>) => {
 		try {
 			const globalOptions = program.opts();
-
-			// Get global options
-			const rpcUrl = options.rpcUrl || globalOptions.rpcUrl || process.env.RPC_URL;
-			const gameContract =
-				options.gameContract || globalOptions.gameContract || process.env.GAME_CONTRACT;
-
-			const storageType =
-				options.storage || globalOptions.storage || process.env.STORAGE_TYPE || 'json';
-			const storagePath =
-				options.storagePath || globalOptions.storagePath || process.env.STORAGE_PATH || './data';
-
-			// Validate required options
-			if (!rpcUrl) {
-				console.error('Error: --rpc-url option or RPC_URL environment variable is required');
-				process.exit(1);
-			}
-			if (!gameContract) {
-				console.error(
-					'Error: --game-contract option or GAME_CONTRACT environment variable is required',
-				);
-				process.exit(1);
-			}
-
-			const privateKey = process.env.PRIVATE_KEY;
-
-			// Validate PRIVATE_KEY format if provided
-			if (privateKey && !privateKey.startsWith('0x')) {
-				console.error('Error: PRIVATE_KEY must start with 0x');
-				process.exit(1);
-			}
+			const allOptions = {...globalOptions, ...options};
 
 			// Parse and validate parameters against schema
 			const params: Record<string, any> = {};
@@ -380,19 +316,8 @@ export function generateToolCommand(
 			// Validate against schema
 			const validatedParams = await parseAndValidateParams(tool.schema, params);
 
-			// Get chain
-			const chain = await getChain(rpcUrl);
-
 			// Create environment and execute
-			const env = await createCliToolEnvironment({
-				chain,
-				privateKey: privateKey as `0x${string}`,
-				gameContract: gameContract as `0x${string}`,
-				storageConfig: {
-					type: storageType as 'json' | 'sqlite',
-					dataDir: storagePath,
-				},
-			});
+			const env = await createCliToolEnvironment(cliConfig, allOptions);
 
 			const result = await tool.execute(env, validatedParams);
 			formatToolResult(result);
@@ -412,13 +337,18 @@ export function generateToolCommand(
 
 /**
  * Register all tool commands from a tools object
+ * @template TEnv - Environment type passed to tools
  */
-export function registerAllToolCommands(program: Command, tools: Record<string, Tool>): void {
+export function registerAllToolCommands<TEnv extends Record<string, any>>(
+	program: Command,
+	tools: Record<string, Tool<any, TEnv>>,
+	cliConfig: CliConfig<TEnv>,
+): void {
 	for (const [toolName, tool] of Object.entries(tools)) {
 		// Skip the file that's not a tool
 		if (toolName === 'default') continue;
 
 		// Keep snake_case for CLI command names (1:1 mapping with tool names)
-		generateToolCommand(program, toolName, tool);
+		generateToolCommand(program, toolName, tool, cliConfig);
 	}
 }

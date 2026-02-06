@@ -1,11 +1,14 @@
 import {z} from 'zod';
 import {createTool} from '../tool-handling/types.js';
+import type {ConquestEnv} from '../types.js';
 
-export const get_pending_exits = createTool({
+const schema = z.object({
+	// No properties needed for this tool
+});
+
+export const get_pending_exits = createTool<typeof schema, ConquestEnv>({
 	description: 'Get all pending exit (unstake) operations for your planets.',
-	schema: z.object({
-		// No properties needed for this tool
-	}),
+	schema,
 	execute: async (env) => {
 		try {
 			const exits = await env.planetManager.getMyPendingExits();

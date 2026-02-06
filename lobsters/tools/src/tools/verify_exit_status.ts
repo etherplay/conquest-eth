@@ -1,13 +1,16 @@
 import {z} from 'zod';
 import {createTool} from '../tool-handling/types.js';
+import type {ConquestEnv} from '../types.js';
 
-export const verify_exit_status = createTool({
+const schema = z.object({
+	x: z.number().describe('X coordinate of the planet'),
+	y: z.number().describe('Y coordinate of the planet'),
+});
+
+export const verify_exit_status = createTool<typeof schema, ConquestEnv>({
 	description:
 		"Check and update the status of a planet's exit operation. Verifies if the exit has completed or been interrupted.",
-	schema: z.object({
-		x: z.number().describe('X coordinate of the planet'),
-		y: z.number().describe('Y coordinate of the planet'),
-	}),
+	schema,
 	execute: async (env, {x, y}) => {
 		try {
 			const planetId = env.planetManager.getPlanetIdByCoordinates(x, y);

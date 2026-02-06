@@ -1,6 +1,17 @@
 import type {Address, PublicClient, WalletClient} from 'viem';
 import type {PlanetInfo} from 'conquest-eth-v0-contracts';
 import type {Abi_IOuterSpace} from 'conquest-eth-v0-contracts/abis/IOuterSpace.js';
+import type {FleetManager} from './fleet/manager.js';
+import type {PlanetManager} from './planet/manager.js';
+
+/**
+ * Environment type for Conquest tools
+ * Contains the managers needed for tool execution
+ */
+export interface ConquestEnv {
+	fleetManager: FleetManager;
+	planetManager: PlanetManager;
+}
 
 export interface StorageConfig {
 	type: 'json' | 'sqlite';

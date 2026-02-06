@@ -1,26 +1,29 @@
 import {z} from 'zod';
 import {createTool} from '../tool-handling/types.js';
 import {zeroAddress} from 'viem';
+import type {ConquestEnv} from '../types.js';
 
-export const send_fleet = createTool({
+const schema = z.object({
+	from: z.object({x: z.number(), y: z.number()}).describe('Source planet coordinates {x, y}'),
+	to: z.object({x: z.number(), y: z.number()}).describe('Destination planet coordinates {x, y}'),
+	quantity: z.number().describe('Number of spaceships to send'),
+	arrivalTimeWanted: z
+		.number()
+		.optional()
+		.describe(
+			'Desired arrival time (timestamp in seconds). If not specified, will be calculated based on distance.',
+		),
+	gift: z
+		.boolean()
+		.optional()
+		.describe('Whether the fleet is a gift (sent without requiring arrival)'),
+	specific: z.string().optional().describe('Additional specific data for the fleet'),
+});
+
+export const send_fleet = createTool<typeof schema, ConquestEnv>({
 	description:
 		'Send a fleet from one planet to another in the Conquest game. The fleet will travel through space and can be resolved after arrival.',
-	schema: z.object({
-		from: z.object({x: z.number(), y: z.number()}).describe('Source planet coordinates {x, y}'),
-		to: z.object({x: z.number(), y: z.number()}).describe('Destination planet coordinates {x, y}'),
-		quantity: z.number().describe('Number of spaceships to send'),
-		arrivalTimeWanted: z
-			.number()
-			.optional()
-			.describe(
-				'Desired arrival time (timestamp in seconds). If not specified, will be calculated based on distance.',
-			),
-		gift: z
-			.boolean()
-			.optional()
-			.describe('Whether the fleet is a gift (sent without requiring arrival)'),
-		specific: z.string().optional().describe('Additional specific data for the fleet'),
-	}),
+	schema,
 	execute: async (env, {from, to, quantity, arrivalTimeWanted, gift, specific}) => {
 		try {
 			// Convert coordinates to planet IDs

@@ -1,31 +1,34 @@
 import {z} from 'zod';
 import {createTool} from '../tool-handling/types.js';
+import type {ConquestEnv} from '../types.js';
 
-export const acquire_planets = createTool({
+const schema = z.object({
+	coordinates: z
+		.array(
+			z.object({
+				x: z.number().describe('X coordinate of the planet'),
+				y: z.number().describe('Y coordinate of the planet'),
+			}),
+		)
+		.describe('Array of planet coordinates to acquire'),
+	amountToMint: z
+		.number()
+		.optional()
+		.describe(
+			'Amount of native token to spend to acquire the planets. If not provided, will be calculated automatically based on planet stats.',
+		),
+	tokenAmount: z
+		.number()
+		.optional()
+		.describe(
+			'Amount of staking token to spend to acquire the planets. If not provided, will be calculated automatically based on planet stats.',
+		),
+});
+
+export const acquire_planets = createTool<typeof schema, ConquestEnv>({
 	description:
 		'Acquire (stake) multiple planets in the Conquest game. This allows you to take ownership of unclaimed planets.',
-	schema: z.object({
-		coordinates: z
-			.array(
-				z.object({
-					x: z.number().describe('X coordinate of the planet'),
-					y: z.number().describe('Y coordinate of the planet'),
-				}),
-			)
-			.describe('Array of planet coordinates to acquire'),
-		amountToMint: z
-			.number()
-			.optional()
-			.describe(
-				'Amount of native token to spend to acquire the planets. If not provided, will be calculated automatically based on planet stats.',
-			),
-		tokenAmount: z
-			.number()
-			.optional()
-			.describe(
-				'Amount of staking token to spend to acquire the planets. If not provided, will be calculated automatically based on planet stats.',
-			),
-	}),
+	schema,
 	execute: async (env, {coordinates, amountToMint, tokenAmount}) => {
 		try {
 			// Convert x,y coordinates to planet IDs
