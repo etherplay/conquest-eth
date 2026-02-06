@@ -24,14 +24,14 @@ export function calculateEstimatedArrivalTime(params: {
 }
 
 /**
- * Calculate when the resolve window opens
- * A fleet can be resolved after it arrives and the resolve window has passed
+ * Calculate when the resolve window closes
+ * A fleet can be resolved from arrival time until the resolve window closes
  *
  * @param estimatedArrivalTime - When the fleet is estimated to arrive
  * @param resolveWindow - The resolve window duration in seconds from contract config
- * @returns The timestamp when the fleet can be resolved
+ * @returns The timestamp when the fleet can no longer be resolved
  */
-export function calculateResolveWindowOpen(
+export function calculateResolveWindowEnd(
 	estimatedArrivalTime: number,
 	resolveWindow: bigint,
 ): number {
@@ -40,6 +40,7 @@ export function calculateResolveWindowOpen(
 
 /**
  * Check if a fleet can be resolved now
+ * A fleet can be resolved after arrival but before the resolve window closes
  *
  * @param estimatedArrivalTime - When the fleet was estimated to arrive
  * @param resolveWindow - The resolve window duration in seconds
@@ -47,8 +48,8 @@ export function calculateResolveWindowOpen(
  */
 export function canResolveNow(estimatedArrivalTime: number, resolveWindow: bigint): boolean {
 	const currentTime = getCurrentTimestamp();
-	const resolveWindowOpen = calculateResolveWindowOpen(estimatedArrivalTime, resolveWindow);
-	return currentTime >= resolveWindowOpen;
+	const resolveWindowEnd = calculateResolveWindowEnd(estimatedArrivalTime, resolveWindow);
+	return currentTime >= estimatedArrivalTime && currentTime < resolveWindowEnd;
 }
 
 /**
