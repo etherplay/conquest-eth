@@ -1,18 +1,1 @@
-{
-  "mcpServers": {
-    "mcp-conquest-eth-v0": {
-      "command": "pnpm",
-      "args": ["run", "--filter", "./lobsters/mcp", "start"],
-      "alwaysAllow": [
-        "get-contract-logs",
-        "wait-for-transaction-confirmation",
-        "get-transaction-logs",
-        "get-latest-block",
-        "get_pending_exits",
-        "get_my_planets",
-        "get_planets_around",
-        "get_pending_fleets"
-      ]
-    }
-  }
-}
+{"mcpServers":{"mcp-conquest-eth-v0":{"command":"pnpm","args":["run","--filter","./lobsters/mcp","start"],"alwaysAllow":["get-contract-logs","wait-for-transaction-confirmation","get-transaction-logs","get-latest-block","get_pending_exits","get_my_planets","get_planets_around","get_pending_fleets"],"disabled":true}}}

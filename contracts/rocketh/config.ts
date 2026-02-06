@@ -10,26 +10,20 @@ import type {
 // this one provide a protocol supporting private key as account
 import {privateKey} from '@rocketh/signer';
 
-const l1_deployments: string[] = [];
-const l1_deployments_dev: string[] = [];
-const l2_deployments: string[] = [
-	// 'deploy_l2/00_block_upgrades',
-	'deploy_l2/01_play_tokens',
-	'deploy_l2/02_alliance_registry',
-	'deploy_l2/03_outerspace',
+const deployments: string[] = [
+	// 'deploy/00_block_upgrades',
+	'deploy/01_play_tokens',
+	'deploy/02_alliance_registry',
+	'deploy/03_outerspace',
 ];
-const l2_deployments_dev: string[] = [
-	// 'deploy_l2/00_block_upgrades',
-	'deploy_l2/04_setup',
-	'deploy_l2/20_basic_alliances',
-	'deploy_l2/30_plugins',
+const deployments_dev: string[] = [
+	// 'deploy/00_block_upgrades',
+	'deploy/04_setup',
+	'deploy/20_basic_alliances',
+	'deploy/30_plugins',
 ];
 
-const deploymentsFolder = l1_deployments.concat(
-	l1_deployments_dev,
-	l2_deployments,
-	l2_deployments_dev,
-);
+const deploymentsFolder = deployments.concat(deployments_dev);
 // console.log({hardhatNetworkDeploymentFolders});
 
 // we define our config and export it as "config"

@@ -64,7 +64,7 @@
     "fs-extra": "^10.0.1",
     "hardhat": "^3.1.5",
     "hardhat-contract-sizer": "^2.5.0",
-    "hardhat-deploy": "^2.0.0-next.74",
+    "hardhat-deploy": "^2.0.0-next.75",
     "ldenv": "^0.3.16",
     "prettier": "^3.8.0",
     "prettier-plugin-solidity": "^2.2.1",
