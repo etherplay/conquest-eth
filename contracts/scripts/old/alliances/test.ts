@@ -1,7 +1,7 @@
 import {HardhatRuntimeEnvironment} from 'hardhat/types';
 import hre from 'hardhat';
 
-import deployRegistry from '../../deploy_l2/02_alliance_registry/01_deploy_alliance_registry';
+import deployRegistry from '../../deploy/02_alliance_registry/01_deploy_alliance_registry';
 
 const args = process.argv.slice(2);
 
