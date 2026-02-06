@@ -343,7 +343,7 @@ function bigIntReplacer(_key: string, value: any): any {
 /**
  * Format tool result for CLI output
  */
-function formatToolResult(result: {
+function formatToolCLIResult(result: {
 	success: boolean;
 	result?: any;
 	error?: string;
@@ -352,10 +352,7 @@ function formatToolResult(result: {
 	if (result.success) {
 		console.log(JSON.stringify(result.result, bigIntReplacer, 2));
 	} else {
-		console.error('Error:', result.error);
-		if (result.stack) {
-			console.error('Stack:', result.stack);
-		}
+		console.error(JSON.stringify({error: result.error, stack: result.stack}, bigIntReplacer, 2));
 		process.exit(1);
 	}
 }
@@ -413,7 +410,7 @@ export function generateToolCommand<TEnv extends Record<string, any>>(
 			const env = await createToolEnvironmentFromFactory(envFactory);
 
 			const result = await tool.execute(env, validatedParams);
-			formatToolResult(result);
+			formatToolCLIResult(result);
 		} catch (error) {
 			if (error instanceof Error) {
 				console.error('Error:', error.message);
