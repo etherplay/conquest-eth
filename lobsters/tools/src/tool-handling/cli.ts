@@ -1,6 +1,7 @@
 import {Command} from 'commander';
 import {z} from 'zod';
-import type {Tool, ToolEnvironment, ToolSchema} from './types.js';
+import type {Tool, ToolSchema} from './types.js';
+import {createToolEnvironmentFromFactory} from './index.js';
 
 /**
  * Factory that create the Environment
@@ -190,23 +191,6 @@ function extractSchemaFields(
 }
 
 /**
- * Create a CLI tool environment for executing tools
- * @template TEnv - Environment type passed to tools
- */
-async function createCliToolEnvironment<TEnv extends Record<string, any>>(
-	envFactory: EnvFactory<TEnv>,
-): Promise<ToolEnvironment<TEnv>> {
-	const env = await envFactory();
-
-	return {
-		sendStatus: async (message: string) => {
-			console.log(`[Status] ${message}`);
-		},
-		...env,
-	};
-}
-
-/**
  * Parse and validate parameters against Zod schema
  */
 async function parseAndValidateParams(
@@ -306,7 +290,7 @@ export function generateToolCommand<TEnv extends Record<string, any>>(
 			const validatedParams = await parseAndValidateParams(tool.schema, params);
 
 			// Create environment and execute
-			const env = await createCliToolEnvironment(envFactory);
+			const env = await createToolEnvironmentFromFactory(envFactory);
 
 			const result = await tool.execute(env, validatedParams);
 			formatToolResult(result);

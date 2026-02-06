@@ -1,6 +1,5 @@
-import type {Tool, ToolEnvironment} from './types.js';
-import {convertToCallToolResult} from './types.js';
-import type {McpServer} from '@modelcontextprotocol/sdk/server/mcp.js';
+import {EnvFactory} from './cli.js';
+import type {ToolEnvironment} from './types.js';
 
 // Helper function to handle BigInt serialization in JSON.stringify
 export function stringifyWithBigInt(obj: any, space?: number): string {
@@ -29,31 +28,18 @@ export function createToolEnvironment<TEnv extends Record<string, any>>(
 }
 
 /**
- * Register tool with MCP server
- * @template TEnv - Environment properties type
+ * Create a CLI tool environment for executing tools
+ * @template TEnv - Environment type passed to tools
  */
-export function registerTool<TEnv extends Record<string, any>>({
-	server,
-	name,
-	tool,
-	env,
-}: {
-	server: McpServer;
-	name: string;
-	tool: Tool<any, TEnv>;
-	env: TEnv;
-}): void {
-	server.registerTool(
-		name,
-		{
-			description: tool.description,
-			inputSchema: tool.schema as any,
-		},
-		async (params: unknown) => {
-			const toolEnv = createToolEnvironment(env);
+export async function createToolEnvironmentFromFactory<TEnv extends Record<string, any>>(
+	envFactory: EnvFactory<TEnv>,
+): Promise<ToolEnvironment<TEnv>> {
+	const env = await envFactory();
 
-			const result = await tool.execute(toolEnv, params as any);
-			return convertToCallToolResult(result);
+	return {
+		sendStatus: async (message: string) => {
+			console.log(`[Status] ${message}`);
 		},
-	);
+		...env,
+	};
 }

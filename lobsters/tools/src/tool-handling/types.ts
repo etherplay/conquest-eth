@@ -84,36 +84,3 @@ export type RegisterToolParams<
 	/** Tool definition */
 	tool: Tool<S, TEnv>;
 };
-
-/**
- * Convert ToolResult to CallToolResult format
- */
-export function convertToCallToolResult(result: ToolResult): CallToolResult {
-	if (result.success === false) {
-		return {
-			content: [
-				{
-					type: 'text',
-					text: JSON.stringify({
-						error: result.error,
-						...(result.stack ? {stack: result.stack} : {}),
-					}),
-				},
-			],
-			isError: true,
-		};
-	}
-
-	return {
-		content: [
-			{
-				type: 'text',
-				text: JSON.stringify(
-					result.result,
-					(_key, value) => (typeof value === 'bigint' ? value.toString() : value),
-					2,
-				),
-			},
-		],
-	};
-}

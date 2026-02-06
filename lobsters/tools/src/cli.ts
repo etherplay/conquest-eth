@@ -4,7 +4,7 @@ import {Command} from 'commander';
 import pkg from '../package.json' with {type: 'json'};
 import {loadEnv} from 'ldenv';
 import * as tools from './tools/index.js';
-import {type EnvFactory, registerAllToolCommands} from './tool-handling/cli-tool-generator.js';
+import {type EnvFactory, registerAllToolCommands} from './tool-handling/cli.js';
 import type {ConquestEnv} from './types.js';
 import {createServer} from './mcp.js';
 import {createConquestEnv} from './index.js';
