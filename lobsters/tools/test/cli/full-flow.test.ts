@@ -13,6 +13,11 @@ import {setupTestEnvironment, teardownTestEnvironment} from '../setup.js';
 import {invokeCliCommand} from '../cli-utils.js';
 import {RPC_URL, getGameContract} from '../setup.js';
 import {parseCliOutput} from './helpers.js';
+import {promises as fs} from 'node:fs';
+import path from 'node:path';
+
+// Test-specific storage path to avoid conflicts between test runs
+const TEST_STORAGE_PATH = './data/test-full-flow';
 
 // Anvil test accounts (deterministic from mnemonic)
 const ANVIL_ACCOUNTS = {
@@ -67,6 +72,25 @@ async function advanceTime(rpcUrl: string, seconds: number): Promise<void> {
 			id: 3,
 		}),
 	});
+
+	// Verify the new block has the expected timestamp
+	const newBlock = await fetch(rpcUrl, {
+		method: 'POST',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({
+			jsonrpc: '2.0',
+			method: 'eth_getBlockByNumber',
+			params: ['latest', false],
+			id: 4,
+		}),
+	}).then((res) => res.json());
+
+	const actualTimestamp = parseInt(newBlock.result.timestamp, 16);
+	if (actualTimestamp < newTimestamp) {
+		console.warn(
+			`Warning: Block timestamp ${actualTimestamp} is less than expected ${newTimestamp}`,
+		);
+	}
 }
 
 /**
@@ -94,7 +118,7 @@ async function findValidPlanets(
 	rpcUrl: string,
 	gameContract: string,
 ): Promise<Array<{x: number; y: number; planetId: string}>> {
-	const result = await invokeCliCommand([
+	const result = await invokeWithStorage([
 		'--rpc-url',
 		rpcUrl,
 		'--game-contract',
@@ -130,11 +154,36 @@ async function findValidPlanets(
 		}));
 }
 
+/**
+ * Helper to clear test storage directory
+ */
+async function clearTestStorage(): Promise<void> {
+	try {
+		await fs.rm(TEST_STORAGE_PATH, {recursive: true, force: true});
+	} catch {
+		// Ignore if directory doesn't exist
+	}
+	await fs.mkdir(TEST_STORAGE_PATH, {recursive: true});
+}
+
+/**
+ * Helper to invoke CLI with test storage path
+ */
+async function invokeWithStorage(
+	args: string[],
+	options?: {env?: Record<string, string>},
+): ReturnType<typeof invokeCliCommand> {
+	return invokeCliCommand(['--storage-path', TEST_STORAGE_PATH, ...args], options);
+}
+
 describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 	let validPlanets: Array<{x: number; y: number; planetId: string}> = [];
 
 	beforeAll(async () => {
 		await setupTestEnvironment();
+
+		// Clear test storage to ensure clean state
+		await clearTestStorage();
 
 		// Find valid unowned planets for testing
 		try {
@@ -156,7 +205,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 
 			const planet = validPlanets[0];
 			// coordinates expects an array of objects with x and y, passed as JSON
-			const result = await invokeCliCommand(
+			const result = await invokeWithStorage(
 				[
 					'--rpc-url',
 					RPC_URL,
@@ -187,7 +236,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 
 			const planet = validPlanets[1];
 			// coordinates expects an array of objects with x and y, passed as JSON
-			const result = await invokeCliCommand(
+			const result = await invokeWithStorage(
 				[
 					'--rpc-url',
 					RPC_URL,
@@ -212,7 +261,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 		});
 
 		it('should show Player 1 owns their acquired planet', async () => {
-			const result = await invokeCliCommand(
+			const result = await invokeWithStorage(
 				[
 					'--rpc-url',
 					RPC_URL,
@@ -249,7 +298,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 			const fromPlanet = validPlanets[0];
 			const toPlanet = validPlanets[1];
 
-			const result = await invokeCliCommand(
+			const result = await invokeWithStorage(
 				[
 					'--rpc-url',
 					RPC_URL,
@@ -283,7 +332,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 		});
 
 		it('should show the pending fleet in get_pending_fleets', async () => {
-			const result = await invokeCliCommand(
+			const result = await invokeWithStorage(
 				['--rpc-url', RPC_URL, '--game-contract', getGameContract(), 'get_pending_fleets'],
 				{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
 			);
@@ -309,7 +358,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 	describe('Time Manipulation and Fleet Resolution', () => {
 		it('should advance time and resolve fleet', {timeout: 60000}, async () => {
 			// First get pending fleets
-			const pendingResult = await invokeCliCommand(
+			const pendingResult = await invokeWithStorage(
 				['--rpc-url', RPC_URL, '--game-contract', getGameContract(), 'get_pending_fleets'],
 				{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
 			);
@@ -333,15 +382,26 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 			const fleet = unresolvedFleets[0];
 			const currentTimestamp = await getCurrentTimestamp(RPC_URL);
 
-			// Advance time past the estimated arrival time + 100 seconds buffer
-			const timeToAdvance = Math.max(fleet.estimatedArrivalTime - currentTimestamp + 100, 0);
+			// Advance time past the estimated arrival time + larger buffer
+			// Note: resolveWindow is the deadline AFTER which it's too late, not extra wait time
+			// We add extra buffer because the contract's arrival time is based on the tx block timestamp,
+			// which may be slightly later than when we computed estimatedArrivalTime
+			const timeToAdvance = fleet.estimatedArrivalTime - currentTimestamp + 500;
 
-			// Always advance time (even if 0, the call is idempotent)
-			console.log(`Advancing time by ${timeToAdvance} seconds`);
+			// Always advance time
+			console.log(
+				`Advancing time by ${timeToAdvance} seconds (arrival: ${fleet.estimatedArrivalTime}, current: ${currentTimestamp})`,
+			);
 			await advanceTime(RPC_URL, timeToAdvance);
 
+			// Verify the new blockchain time
+			const newTimestamp = await getCurrentTimestamp(RPC_URL);
+			console.log(
+				`After advance: blockchain time is ${newTimestamp}, arrival was ${fleet.estimatedArrivalTime}, diff: ${newTimestamp - fleet.estimatedArrivalTime}`,
+			);
+
 			// Now resolve the fleet
-			const resolveResult = await invokeCliCommand(
+			const resolveResult = await invokeWithStorage(
 				[
 					'--rpc-url',
 					RPC_URL,
@@ -353,6 +413,12 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 				],
 				{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
 			);
+
+			// Debug output
+			if (resolveResult.exitCode !== 0) {
+				console.log('resolve_fleet stdout:', resolveResult.stdout);
+				console.log('resolve_fleet stderr:', resolveResult.stderr);
+			}
 
 			expect(resolveResult.exitCode).toBe(0);
 
@@ -374,7 +440,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 			const targetPlanet = validPlanets[1];
 
 			// Check the planet's current state
-			const result = await invokeCliCommand([
+			const result = await invokeWithStorage([
 				'--rpc-url',
 				RPC_URL,
 				'--game-contract',
@@ -436,7 +502,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 
 				// Step 2: Player 1 acquires planet A
 				console.log('Step 2: Player 1 acquiring planet A...');
-				const acquireAResult = await invokeCliCommand(
+				const acquireAResult = await invokeWithStorage(
 					[
 						'--rpc-url',
 						RPC_URL,
@@ -458,7 +524,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 
 				// Step 3: Player 2 acquires planet B
 				console.log('Step 3: Player 2 acquiring planet B...');
-				const acquireBResult = await invokeCliCommand(
+				const acquireBResult = await invokeWithStorage(
 					[
 						'--rpc-url',
 						RPC_URL,
@@ -480,7 +546,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 
 				// Step 4: Player 1 sends fleet from A to B
 				console.log('Step 4: Player 1 sending fleet from A to B...');
-				const sendFleetResult = await invokeCliCommand(
+				const sendFleetResult = await invokeWithStorage(
 					[
 						'--rpc-url',
 						RPC_URL,
@@ -512,7 +578,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 				console.log('Step 5: Advancing time for fleet arrival...');
 
 				// Get the pending fleet to know exact arrival time
-				const pendingResult = await invokeCliCommand(
+				const pendingResult = await invokeWithStorage(
 					['--rpc-url', RPC_URL, '--game-contract', getGameContract(), 'get_pending_fleets'],
 					{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
 				);
@@ -531,20 +597,26 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 				expect(fleet).toBeDefined();
 
 				const currentTime = await getCurrentTimestamp(RPC_URL);
-				// Need to wait for arrival time + resolve window
-				// Typical resolve window is 7200 seconds (2 hours)
-				const resolveWindowBuffer = 7200 + 300; // Extra buffer
-				const timeToAdvance = Math.max(
-					fleet!.estimatedArrivalTime - currentTime + resolveWindowBuffer,
-					resolveWindowBuffer,
-				);
+				// Need to wait for fleet to arrive, but NOT past the resolve window
+				// The resolve window is the deadline AFTER which it's too late to resolve
+				// We add extra buffer because the contract's arrival time is based on the tx block timestamp,
+				// which may be slightly later than when we computed estimatedArrivalTime
+				const timeToAdvance = Math.max(fleet!.estimatedArrivalTime - currentTime + 500, 500);
 
-				console.log(`Advancing time by ${timeToAdvance} seconds (${timeToAdvance / 3600} hours)`);
+				console.log(
+					`Advancing time by ${timeToAdvance} seconds (arrival: ${fleet!.estimatedArrivalTime}, current: ${currentTime})`,
+				);
 				await advanceTime(RPC_URL, timeToAdvance);
+
+				// Verify the new blockchain time
+				const newTimestamp = await getCurrentTimestamp(RPC_URL);
+				console.log(
+					`After advance: blockchain time is ${newTimestamp}, arrival was ${fleet!.estimatedArrivalTime}, diff: ${newTimestamp - fleet!.estimatedArrivalTime}`,
+				);
 
 				// Step 6: Resolve the fleet
 				console.log('Step 6: Resolving fleet...');
-				const resolveResult = await invokeCliCommand(
+				const resolveResult = await invokeWithStorage(
 					[
 						'--rpc-url',
 						RPC_URL,
@@ -556,6 +628,12 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 					],
 					{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
 				);
+
+				// Debug output
+				if (resolveResult.exitCode !== 0) {
+					console.log('resolve_fleet stdout:', resolveResult.stdout);
+					console.log('resolve_fleet stderr:', resolveResult.stderr);
+				}
 
 				expect(resolveResult.exitCode).toBe(0);
 
@@ -572,7 +650,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 
 				// Verify final state of planet B
 				console.log('Verifying final state of planet B...');
-				const finalStateResult = await invokeCliCommand([
+				const finalStateResult = await invokeWithStorage([
 					'--rpc-url',
 					RPC_URL,
 					'--game-contract',
@@ -621,7 +699,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 			const unownedPlanet = validPlanets[validPlanets.length - 1]; // Use last planet
 			const targetPlanet = validPlanets[0];
 
-			const result = await invokeCliCommand(
+			const result = await invokeWithStorage(
 				[
 					'--rpc-url',
 					RPC_URL,
@@ -651,7 +729,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 			const toPlanet = validPlanets[1];
 
 			// Try to send an unreasonably large number of spaceships
-			const result = await invokeCliCommand(
+			const result = await invokeWithStorage(
 				[
 					'--rpc-url',
 					RPC_URL,
@@ -676,7 +754,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 		it('should fail to resolve non-existent fleet', async () => {
 			const fakeFleetId = '0x' + '0'.repeat(64);
 
-			const result = await invokeCliCommand(
+			const result = await invokeWithStorage(
 				[
 					'--rpc-url',
 					RPC_URL,

@@ -20,10 +20,12 @@ export async function createSpaceInfo(
 	};
 
 	// Create SpaceInfo instance with config
+	// Note: The contract's getConfig() returns timePerDistance already divided by 4 (see OuterSpaceFacetBase constructor).
+	// SpaceInfo also divides by 4 internally, so we need to multiply by 4 here to compensate.
 	const spaceInfo = new SpaceInfo({
 		genesis: config.genesis as `0x${string}`,
 		resolveWindow: Number(config.resolveWindow),
-		timePerDistance: Number(config.timePerDistance),
+		timePerDistance: Number(config.timePerDistance) * 4,
 		exitDuration: Number(config.exitDuration),
 		acquireNumSpaceships: Number(config.acquireNumSpaceships),
 		productionSpeedUp: Number(config.productionSpeedUp),

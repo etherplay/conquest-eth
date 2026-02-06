@@ -3,7 +3,6 @@ import type {SpaceInfo} from 'conquest-eth-v0-contracts';
 import type {FleetStorage} from '../storage/interface.js';
 import type {Clients, ContractConfig, GameContract, PendingFleet} from '../types.js';
 import {computeFleetId, computeToHash, generateSecret} from '../util/hashing.js';
-import {calculateEstimatedArrivalTime, getCurrentTimestamp} from '../util/time.js';
 
 /**
  * Send a fleet to a destination planet
@@ -56,12 +55,14 @@ export async function sendFleet(
 	// Generate secret if not provided
 	const secret = options?.secret || generateSecret();
 
-	// Calculate estimated arrival time using contract config
-	const estimatedArrivalTime = calculateEstimatedArrivalTime({
-		startTime: BigInt(getCurrentTimestamp()),
-		distance: BigInt(distance),
-		timePerDistance: contractConfig.timePerDistance,
-	});
+	// Get current blockchain timestamp (not local time) for accurate arrival calculation
+	const block = await clients.publicClient.getBlock();
+	const blockTimestamp = Number(block.timestamp);
+
+	// Calculate estimated arrival time using SpaceInfo which accounts for planet speed
+	// The travel time formula is: distance * (timePerDistance * 10000) / speed
+	const travelTime = spaceInfo.timeToArrive(fromPlanet, toPlanet);
+	const estimatedArrivalTime = blockTimestamp + travelTime;
 
 	const parameters = {
 		gift: options?.gift ?? false,
@@ -94,7 +95,7 @@ export async function sendFleet(
 		arrivalTimeWanted: parameters.arrivalTimeWanted,
 		fleetSender,
 		operator,
-		committedAt: getCurrentTimestamp(),
+		committedAt: blockTimestamp,
 		estimatedArrivalTime,
 		resolved: false,
 	};
