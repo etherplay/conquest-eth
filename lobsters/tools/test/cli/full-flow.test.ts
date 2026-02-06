@@ -100,10 +100,8 @@ async function findValidPlanets(
 		'--game-contract',
 		gameContract,
 		'get_planets_around',
-		'--centerX',
-		'0',
-		'--centerY',
-		'0',
+		'--center',
+		'0,0',
 		'--radius',
 		'10',
 	]);
@@ -419,7 +417,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 			}
 
 			const targetPlanet = validPlanets[1];
-
+	
 			// Check the planet's current state
 			const result = await invokeCliCommand([
 				'--rpc-url',
@@ -427,10 +425,8 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 				'--game-contract',
 				getGameContract(),
 				'get_planets_around',
-				'--centerX',
-				targetPlanet.x.toString(),
-				'--centerY',
-				targetPlanet.y.toString(),
+				'--center',
+				`${targetPlanet.x},${targetPlanet.y}`,
 				'--radius',
 				'1',
 			]);
@@ -644,10 +640,8 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 					'--game-contract',
 					getGameContract(),
 					'get_planets_around',
-					'--centerX',
-					planetB.x.toString(),
-					'--centerY',
-					planetB.y.toString(),
+					'--center',
+					`${planetB.x},${planetB.y}`,
 					'--radius',
 					'1',
 				]);

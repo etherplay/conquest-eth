@@ -269,10 +269,8 @@ describe('CLI - Error Handling', () => {
 				'--game-contract',
 				getGameContract(),
 				'get_planets_around',
-				'--centerX',
-				'not-a-number',
-				'--centerY',
-				'0',
+				'--center',
+				'not-a-number,0',
 				'--radius',
 				'10',
 			]);

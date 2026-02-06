@@ -163,10 +163,8 @@ describe('CLI - Planet Lifecycle', () => {
 					'--game-contract',
 					getGameContract(),
 					'get_planets_around',
-					'--centerX',
-					'0',
-					'--centerY',
-					'0',
+					'--center',
+					'0,0',
 					'--radius',
 					'10',
 				]);
