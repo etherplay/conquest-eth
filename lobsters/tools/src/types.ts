@@ -5,12 +5,27 @@ import type {FleetManager} from './fleet/manager.js';
 import type {PlanetManager} from './planet/manager.js';
 
 /**
+ * Configuration options for creating the ConquestEnv
+ */
+export interface EnvFactoryOptions {
+	/** RPC URL for the Ethereum network */
+	rpcUrl: string;
+	/** Contract address of the game */
+	gameContract: `0x${string}`;
+	/** Optional private key for sending transactions */
+	privateKey?: `0x${string}`;
+	/** Path to storage directory (default: './data') */
+	storagePath?: string;
+}
+
+/**
  * Environment type for Conquest tools
  * Contains the managers needed for tool execution
  */
 export interface ConquestEnv {
 	fleetManager: FleetManager;
 	planetManager: PlanetManager;
+	options: EnvFactoryOptions;
 }
 
 export interface StorageConfig {

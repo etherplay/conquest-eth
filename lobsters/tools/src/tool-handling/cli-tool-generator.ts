@@ -3,17 +3,10 @@ import {z} from 'zod';
 import type {Tool, ToolEnvironment, ToolSchema} from './types.js';
 
 /**
- * CLI configuration for generic tool execution
+ * Factory that create the Environment
  * @template TEnv - Environment type passed to tools
  */
-export interface CliConfig<TEnv extends Record<string, any>> {
-	/**
-	 * Factory function that creates environment from parsed CLI options
-	 * @param cliOptions - Parsed CLI options as Record<string, any>
-	 * @returns Environment properties (can be async)
-	 */
-	envFactory: (cliOptions: Record<string, any>) => Promise<TEnv> | TEnv;
-}
+export type EnvFactory<TEnv extends Record<string, any>> = () => Promise<TEnv> | TEnv;
 
 /**
  * Convert Zod schema field to commander.js option definition
@@ -201,10 +194,9 @@ function extractSchemaFields(
  * @template TEnv - Environment type passed to tools
  */
 async function createCliToolEnvironment<TEnv extends Record<string, any>>(
-	cliConfig: CliConfig<TEnv>,
-	cliOptions: Record<string, any>,
+	envFactory: EnvFactory<TEnv>,
 ): Promise<ToolEnvironment<TEnv>> {
-	const env = await cliConfig.envFactory(cliOptions);
+	const env = await envFactory();
 
 	return {
 		sendStatus: async (message: string) => {
@@ -272,7 +264,7 @@ export function generateToolCommand<TEnv extends Record<string, any>>(
 	program: Command,
 	toolName: string,
 	tool: Tool<z.ZodObject<any>, TEnv>,
-	cliConfig: CliConfig<TEnv>,
+	envFactory: EnvFactory<TEnv>,
 ): void {
 	// Extract fields from schema (handles both ZodObject and ZodUnion)
 	const schemaFields = extractSchemaFields(tool.schema);
@@ -297,9 +289,6 @@ export function generateToolCommand<TEnv extends Record<string, any>>(
 
 	cmd.action(async (options: Record<string, any>) => {
 		try {
-			const globalOptions = program.opts();
-			const allOptions = {...globalOptions, ...options};
-
 			// Parse and validate parameters against schema
 			const params: Record<string, any> = {};
 
@@ -317,7 +306,7 @@ export function generateToolCommand<TEnv extends Record<string, any>>(
 			const validatedParams = await parseAndValidateParams(tool.schema, params);
 
 			// Create environment and execute
-			const env = await createCliToolEnvironment(cliConfig, allOptions);
+			const env = await createCliToolEnvironment(envFactory);
 
 			const result = await tool.execute(env, validatedParams);
 			formatToolResult(result);
@@ -342,13 +331,13 @@ export function generateToolCommand<TEnv extends Record<string, any>>(
 export function registerAllToolCommands<TEnv extends Record<string, any>>(
 	program: Command,
 	tools: Record<string, Tool<any, TEnv>>,
-	cliConfig: CliConfig<TEnv>,
+	envFactory: EnvFactory<TEnv>,
 ): void {
 	for (const [toolName, tool] of Object.entries(tools)) {
 		// Skip the file that's not a tool
 		if (toolName === 'default') continue;
 
 		// Keep snake_case for CLI command names (1:1 mapping with tool names)
-		generateToolCommand(program, toolName, tool, cliConfig);
+		generateToolCommand(program, toolName, tool, envFactory);
 	}
 }
