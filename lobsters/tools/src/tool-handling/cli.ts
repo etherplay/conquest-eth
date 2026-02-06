@@ -106,6 +106,40 @@ function parseCoordinateString(
 }
 
 /**
+ * Split a string by comma, respecting escaped commas (using backslash).
+ * Escaped commas (\,) are preserved as literal commas in the result.
+ * @param value - The string to split
+ * @returns An array of trimmed strings
+ */
+function splitByCommaWithEscaping(value: string): string[] {
+	const items: string[] = [];
+	let current = '';
+	let i = 0;
+
+	while (i < value.length) {
+		// Check for escaped comma
+		if (value[i] === '\\' && i + 1 < value.length && value[i + 1] === ',') {
+			// Add literal comma to current item
+			current += ',';
+			i += 2; // Skip both backslash and comma
+		} else if (value[i] === ',') {
+			// Unescaped comma - end of current item
+			items.push(current.trim());
+			current = '';
+			i++;
+		} else {
+			current += value[i];
+			i++;
+		}
+	}
+
+	// Don't forget the last item
+	items.push(current.trim());
+
+	return items;
+}
+
+/**
  * Parse option value based on Zod type
  */
 function parseOptionValue(field: z.ZodTypeAny, value: any): any {
@@ -135,7 +169,8 @@ function parseOptionValue(field: z.ZodTypeAny, value: any): any {
 			}
 			// Check if array element type is number
 			const elementType = field.element;
-			const items = value.split(',').map((v) => v.trim());
+			// Use escape-aware splitting for comma-separated values
+			const items = splitByCommaWithEscaping(value);
 			if (elementType instanceof z.ZodNumber) {
 				return items.map((v) => Number(v));
 			}
