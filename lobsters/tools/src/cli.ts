@@ -16,6 +16,9 @@ const program = new Command();
 // Get the binary name from package.json
 const binName = Object.keys(pkg.bin || {})[0];
 
+// ----------------------------------------------------------------------------
+// GLOBAL OPTIONS
+// ----------------------------------------------------------------------------
 program
 	.name(binName)
 	.description(pkg.description || 'Conquest.eth CLI - MCP server and direct tool execution')
@@ -74,7 +77,11 @@ function gatherGlobalOptions(program: Command) {
 
 	return {rpcUrl, gameContract, privateKey, storage, storagePath};
 }
+// ----------------------------------------------------------------------------
 
+// ----------------------------------------------------------------------------
+// FACTORY THAT GENERATE THE Conquest Environment Used By Tools
+// ----------------------------------------------------------------------------
 /**
  * Factory function to create the ConquestEnv from CLI options
  */
@@ -88,8 +95,11 @@ const envFactory: EnvFactory<ConquestEnv> = async () => {
 		storagePath,
 	});
 };
+// ----------------------------------------------------------------------------
 
+// ----------------------------------------------------------------------------
 // MCP subcommand - starts the MCP server
+// ----------------------------------------------------------------------------
 program
 	.command('mcp')
 	.description('Start the MCP server')
@@ -107,10 +117,16 @@ program
 		const server = await createServer(env, {ethereum});
 		await server.connect(transport);
 	});
+// ----------------------------------------------------------------------------
 
+// ----------------------------------------------------------------------------
 // Register all tool commands dynamically with the CLI config
 registerAllToolCommands(program, tools, envFactory);
+// ----------------------------------------------------------------------------
 
+// ----------------------------------------------------------------------------
+// HANDLE unknown command
+// ----------------------------------------------------------------------------
 const args = process.argv.slice(2);
 const registeredCommands = program.commands.map((cmd) => cmd.name());
 
@@ -122,5 +138,6 @@ if (args.length > 0 && !isKnown) {
 	program.outputHelp();
 	process.exit(1);
 }
+// ----------------------------------------------------------------------------
 
 program.parse(process.argv);

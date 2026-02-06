@@ -14,11 +14,9 @@ export function stringifyWithBigInt(obj: any, space?: number): string {
 /**
  * Create tool environment with sendStatus
  * @template TEnv - Environment properties type
- * @param server - MCP server instance
  * @param env - Environment properties to spread into the tool environment
  */
 export function createToolEnvironment<TEnv extends Record<string, any>>(
-	server: McpServer,
 	env: TEnv,
 ): ToolEnvironment<TEnv> {
 	return {
@@ -52,7 +50,7 @@ export function registerTool<TEnv extends Record<string, any>>({
 			inputSchema: tool.schema as any,
 		},
 		async (params: unknown) => {
-			const toolEnv = createToolEnvironment(server, env);
+			const toolEnv = createToolEnvironment(env);
 
 			const result = await tool.execute(toolEnv, params as any);
 			return convertToCallToolResult(result);
