@@ -6,7 +6,7 @@ import pkg from '../package.json' with {type: 'json'};
 import {getChain} from 'tools-ethereum/helpers';
 import {loadEnv} from 'ldenv';
 import * as tools from './tools/index.js';
-import {registerAllToolCommands} from './cli-tool-generator.js';
+import {registerAllToolCommands} from './tool-handling/cli-tool-generator.js';
 
 loadEnv();
 

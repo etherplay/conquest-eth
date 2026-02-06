@@ -8,7 +8,7 @@ Comprehensive CLI tests have been created for the tools-conquest package followi
 
 1. **`test/cli/helpers.ts`** - Shared test utilities for common operations
 2. **`test/cli/readonly.test.ts`** - Read-only operations tests
-3. **`test/cli/write-operations.test.ts`** - Write operations tests  
+3. **`test/cli/write-operations.test.ts`** - Write operations tests
 4. **`test/cli/fleet-lifecycle.test.ts`** - Fleet lifecycle tests
 5. **`test/cli/planet-lifecycle.test.ts`** - Planet lifecycle tests
 6. **`test/cli/error-handling.test.ts`** - Error handling and validation tests
@@ -17,6 +17,7 @@ Comprehensive CLI tests have been created for the tools-conquest package followi
 ## Test Results
 
 As of the last run:
+
 - **42 tests passed** ✅
 - **89 tests failed** ❌
 
@@ -25,11 +26,13 @@ As of the last run:
 The following tests are passing successfully:
 
 #### Read-Only Operations
+
 - `get_my_planets` with various radius values
 - `get_pending_fleets` (initial state)
 - `get_pending_exits` (initial state)
 
 #### CLI Options
+
 - Help and version flags
 - Basic global options (--rpc-url, --game-contract)
 - Option precedence tests
@@ -37,6 +40,7 @@ The following tests are passing successfully:
 ### Failing Tests
 
 Most failures are due to:
+
 1. **Array parameter handling**: The current CLI tool generator doesn't properly handle arrays of objects (e.g., `coordinates: Array<{x, y}>`). The CLI expects individual parameters but the tool generator doesn't generate them correctly.
 
 2. **Missing private key**: Some tests require a private key for write operations, which isn't available in the test environment.
@@ -50,18 +54,20 @@ Most failures are due to:
 The tools-conquest CLI tool generator currently flattens nested objects but doesn't properly handle arrays of objects. For example:
 
 **Tool schema:**
+
 ```typescript
 schema: z.object({
-  coordinates: z.array(
-    z.object({
-      x: z.number(),
-      y: z.number(),
-    })
-  )
-})
+	coordinates: z.array(
+		z.object({
+			x: z.number(),
+			y: z.number(),
+		}),
+	),
+});
 ```
 
 **Expected CLI usage (not currently working):**
+
 ```bash
 cli acquire_planets \
   --coordinates-x 0 --coordinates-y 0 \
@@ -78,19 +84,20 @@ Write operation tests require a private key. Tests are designed to skip graceful
 
 ### 1. Update CLI Tool Generator
 
-To fix array parameter handling, update [`lobsters/tools/src/cli-tool-generator.ts`](lobsters/tools/src/cli-tool-generator.ts) to:
+To fix array parameter handling, update [`lobsters/tools/src/tool-handling/cli-tool-generator.ts`](lobsters/tools/src/tool-handling/cli-tool-generator.ts) to:
 
 1. Detect array of object schemas
 2. Generate CLI options that accept JSON arrays or repeated flags
 3. Parse array values correctly from CLI arguments
 
 Example approach:
+
 ```typescript
 if (field instanceof z.ZodArray) {
-  // Generate option that accepts JSON array
-  cmd.option(`${fieldName} <json>`, description);
-  // Or repeated flags
-  cmd.option(`${fieldName} <value>`, description, {multiple: true});
+	// Generate option that accepts JSON array
+	cmd.option(`${fieldName} <json>`, description);
+	// Or repeated flags
+	cmd.option(`${fieldName} <value>`, description, {multiple: true});
 }
 ```
 
@@ -107,18 +114,21 @@ Enhance the CLI to provide clearer error messages when array parameters are malf
 The test infrastructure is solid and ready to use:
 
 ### Test Setup
+
 - ✅ Prool integration for local Ethereum testing
 - ✅ Contract deployment via rocketh
 - ✅ Test context management
 - ✅ Shared test helpers
 
 ### CLI Testing
+
 - ✅ Subprocess execution for true process isolation
 - ✅ Environment variable isolation
 - ✅ Stdout/stderr capture
 - ✅ Exit code validation
 
 ### Test Patterns
+
 - ✅ Read-only operations testing
 - ✅ Error handling and validation
 - ✅ CLI options and flags
@@ -134,17 +144,20 @@ The test infrastructure is solid and ready to use:
 ## Test Commands
 
 Run all CLI tests:
+
 ```bash
 cd lobsters/tools
 pnpm test test/cli/
 ```
 
 Run specific test file:
+
 ```bash
 pnpm test test/cli/simple.test.ts
 ```
 
 Run with verbose output:
+
 ```bash
 pnpm test test/cli/ --reporter=verbose
 ```
@@ -152,6 +165,7 @@ pnpm test test/cli/ --reporter=verbose
 ## Files Modified/Created
 
 ### Created
+
 - [`lobsters/tools/test/cli/helpers.ts`](lobsters/tools/test/cli/helpers.ts)
 - [`lobsters/tools/test/cli/readonly.test.ts`](lobsters/tools/test/cli/readonly.test.ts)
 - [`lobsters/tools/test/cli/write-operations.test.ts`](lobsters/tools/test/cli/write-operations.test.ts)
@@ -163,6 +177,7 @@ pnpm test test/cli/ --reporter=verbose
 - [`lobsters/tools/CLI_TESTS_SUMMARY.md`](lobsters/tools/CLI_TESTS_SUMMARY.md)
 
 ### Modified
+
 - [`lobsters/tools/test/setup.ts`](lobsters/tools/test/setup.ts) - Added `getGameContract()` and `RPC_URL` exports
 
 ## Conclusion

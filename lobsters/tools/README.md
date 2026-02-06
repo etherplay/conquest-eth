@@ -215,35 +215,6 @@ pnpm format
 pnpm start
 ```
 
-## Project Structure
-
-```
-lobsters/mcp/src/
-├── cli.ts                    # CLI entry point (dual-mode)
-├── cli-tool-generator.ts     # Dynamic CLI command generation
-├── index.ts                  # MCP server setup
-├── types.ts                  # Type definitions
-├── helpers/
-│   └── index.ts              # Helper functions
-├── tools/
-│   ├── index.ts              # Tool exports
-│   ├── acquire_planets.ts    # Tool implementations
-│   ├── send_fleet.ts
-│   ├── resolve_fleet.ts
-│   └── ...
-├── fleet/
-│   ├── manager.ts            # Fleet operations manager
-│   ├── send.ts
-│   └── resolve.ts
-├── planet/
-│   ├── manager.ts            # Planet operations manager
-│   ├── acquire.ts
-│   └── exit.ts
-└── storage/
-    ├── interface.ts          # Storage interface
-    └── json-storage.ts       # JSON storage implementation
-```
-
 ## License
 
 MIT
