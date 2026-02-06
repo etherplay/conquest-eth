@@ -4,18 +4,61 @@ import {Implementation} from '@modelcontextprotocol/sdk/types.js';
 import {Chain} from 'viem';
 import {ServerOptions} from '@modelcontextprotocol/sdk/server';
 import {createServer as createMCPEthereumServer} from 'tools-ethereum';
-import {getClients} from 'tools-ethereum/helpers';
+import {getClients, getChain} from 'tools-ethereum/helpers';
 import {createSpaceInfo} from './contracts/space-info.js';
 import {JsonFleetStorage} from './storage/json-storage.js';
 import {FleetManager} from './fleet/manager.js';
 import {PlanetManager} from './planet/manager.js';
-import type {ClientsWithOptionalWallet, ConquestEnv, ContractConfig, GameContract} from './types.js';
-import {SpaceInfo} from 'conquest-eth-v0-contracts';
+import type {ClientsWithOptionalWallet, ConquestEnv, GameContract} from './types.js';
 
 // Import refactored tools
 import * as tools from './tools/index.js';
-import {registerTool, stringifyWithBigInt} from './tool-handling/index.js';
+import {stringifyWithBigInt} from './tool-handling/index.js';
 import {Abi_IOuterSpace} from 'conquest-eth-v0-contracts/abis/IOuterSpace.js';
+
+/**
+ * Configuration options for creating the ConquestEnv
+ */
+export interface EnvFactoryOptions {
+	/** RPC URL for the Ethereum network */
+	rpcUrl: string;
+	/** Contract address of the game */
+	gameContract: `0x${string}`;
+	/** Optional private key for sending transactions */
+	privateKey?: `0x${string}`;
+	/** Path to storage directory (default: './data') */
+	storagePath?: string;
+}
+
+/**
+ * Factory function to create the ConquestEnv
+ * This is shared between CLI and MCP server
+ *
+ * @param options - Configuration options for creating the environment
+ * @returns ConquestEnv with fleetManager and planetManager
+ */
+export async function createConquestEnv(options: EnvFactoryOptions): Promise<ConquestEnv> {
+	const {rpcUrl, gameContract: gameContractAddress, privateKey, storagePath = './data'} = options;
+
+	const chain = await getChain(rpcUrl);
+	const clients = getClients({
+		chain,
+		privateKey,
+	}) as ClientsWithOptionalWallet;
+
+	const gameContract: GameContract = {
+		address: gameContractAddress,
+		abi: Abi_IOuterSpace,
+	};
+
+	const {spaceInfo, contractConfig} = await createSpaceInfo(clients, gameContract);
+	const storage = new JsonFleetStorage(storagePath);
+
+	return {
+		fleetManager: new FleetManager(clients, gameContract, spaceInfo, contractConfig, storage),
+		planetManager: new PlanetManager(clients, gameContract, spaceInfo, contractConfig, storage),
+	};
+}
 
 /**
  * Create and configure an MCP server for Conquest.eth game interactions
@@ -45,12 +88,6 @@ export function createServer(
 	},
 ) {
 	const {gameContract: gameContractAddress, ...mcpEthereumParams} = params;
-	const clients = getClients(params, options) as ClientsWithOptionalWallet;
-
-	const gameContract: GameContract = {
-		address: gameContractAddress,
-		abi: Abi_IOuterSpace,
-	};
 
 	const name = `mcp-conquest-eth-v0`;
 	const server = options?.ethereum
@@ -66,49 +103,21 @@ export function createServer(
 				options?.serverOptions || {capabilities: {logging: {}}},
 			);
 
-	// Initialize SpaceInfo and contractConfig
-	let spaceInfo: SpaceInfo | null = null;
-	let contractConfig: ContractConfig | null = null;
+	// Lazy initialization of ConquestEnv using the shared factory
+	let conquestEnv: ConquestEnv | null = null;
 
-	const initSpaceInfo = async () => {
-		if (!spaceInfo || !contractConfig) {
-			const result = await createSpaceInfo(clients, gameContract);
-			spaceInfo = result.spaceInfo;
-			contractConfig = result.contractConfig;
+	// Helper to ensure environment is initialized
+	const ensureEnvInitialized = async (): Promise<ConquestEnv> => {
+		if (!conquestEnv) {
+			const rpcUrl = options?.rpcURL || params.chain.rpcUrls.default.http[0];
+			conquestEnv = await createConquestEnv({
+				rpcUrl,
+				gameContract: gameContractAddress,
+				privateKey: params.privateKey,
+				storagePath: options?.storageConfig?.dataDir || './data',
+			});
 		}
-		return {spaceInfo, contractConfig};
-	};
-
-	// Initialize storage
-	const storageConfig = options?.storageConfig || {type: 'json', dataDir: './data'};
-	const storage = new JsonFleetStorage(storageConfig.dataDir || './data');
-
-	// Initialize managers (will be initialized after spaceInfo is ready)
-	let fleetManager: FleetManager | null = null;
-	let planetManager: PlanetManager | null = null;
-
-	// Helper to ensure managers are initialized
-	const ensureManagersInitialized = async (): Promise<ConquestEnv> => {
-		const {spaceInfo: si, contractConfig: cc} = await initSpaceInfo();
-
-		// Initialize fleetManager even without walletClient for read-only operations
-		if (!fleetManager && si && cc) {
-			fleetManager = new FleetManager(clients, gameContract, si, cc, storage);
-		}
-
-		// Initialize planetManager even without walletClient for read-only operations
-		if (!planetManager && si && cc) {
-			planetManager = new PlanetManager(clients, gameContract, si, cc, storage);
-		}
-
-		if (!fleetManager) {
-			throw new Error('Fleet manager not initialized');
-		}
-		if (!planetManager) {
-			throw new Error('Planet manager not initialized');
-		}
-
-		return {fleetManager, planetManager};
+		return conquestEnv;
 	};
 
 	// Auto-register all tools using the generic registerTool
@@ -125,7 +134,7 @@ export function createServer(
 			},
 			async (args: unknown) => {
 				try {
-					const env = await ensureManagersInitialized();
+					const env = await ensureEnvInitialized();
 
 					const toolEnv = {
 						sendStatus: async (_message: string) => {

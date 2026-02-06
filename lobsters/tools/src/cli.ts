@@ -1,19 +1,13 @@
 #!/usr/bin/env node
 import {StdioServerTransport} from '@modelcontextprotocol/sdk/server/stdio.js';
-import {createServer} from './index.js';
+import {createServer, createConquestEnv} from './index.js';
 import {Command} from 'commander';
 import pkg from '../package.json' with {type: 'json'};
 import {getChain} from 'tools-ethereum/helpers';
 import {loadEnv} from 'ldenv';
 import * as tools from './tools/index.js';
 import {registerAllToolCommands, type CliConfig} from './tool-handling/cli-tool-generator.js';
-import {getClients} from 'tools-ethereum/helpers';
-import {createSpaceInfo} from './contracts/space-info.js';
-import {JsonFleetStorage} from './storage/json-storage.js';
-import {FleetManager} from './fleet/manager.js';
-import {PlanetManager} from './planet/manager.js';
-import type {ClientsWithOptionalWallet, ConquestEnv, GameContract} from './types.js';
-import {Abi_IOuterSpace} from 'conquest-eth-v0-contracts/abis/IOuterSpace.js';
+import type {ConquestEnv} from './types.js';
 
 loadEnv();
 
@@ -112,6 +106,7 @@ program
 
 /**
  * Factory function to create the ConquestEnv from CLI options
+ * Uses the shared createConquestEnv factory from index.ts
  */
 const envFactory: CliConfig<ConquestEnv>['envFactory'] = async (cliOptions) => {
 	const rpcUrl = cliOptions.rpcUrl || process.env.RPC_URL;
@@ -130,24 +125,12 @@ const envFactory: CliConfig<ConquestEnv>['envFactory'] = async (cliOptions) => {
 		throw new Error('PRIVATE_KEY must start with 0x');
 	}
 
-	const chain = await getChain(rpcUrl);
-	const clients = getClients({
-		chain,
+	return createConquestEnv({
+		rpcUrl,
+		gameContract: gameContractAddress as `0x${string}`,
 		privateKey: privateKey as `0x${string}` | undefined,
-	}) as ClientsWithOptionalWallet;
-
-	const gameContract: GameContract = {
-		address: gameContractAddress as `0x${string}`,
-		abi: Abi_IOuterSpace,
-	};
-
-	const {spaceInfo, contractConfig} = await createSpaceInfo(clients, gameContract);
-	const storage = new JsonFleetStorage(storagePath);
-
-	return {
-		fleetManager: new FleetManager(clients, gameContract, spaceInfo, contractConfig, storage),
-		planetManager: new PlanetManager(clients, gameContract, spaceInfo, contractConfig, storage),
-	};
+		storagePath,
+	});
 };
 
 // Register all tool commands dynamically with the CLI config

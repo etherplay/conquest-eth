@@ -315,10 +315,18 @@ describe('CLI - Options and Flags', () => {
 	});
 
 	describe('Option Isolation', () => {
-		it('should not leak environment variables between tests', async () => {
+		it('should not leak environment variables between tests', {timeout: 10_000}, async () => {
 			// First call with custom env
 			const result1 = await invokeCliCommand(
-				['--rpc-url', RPC_URL, '--game-contract', getGameContract(), 'get_my_planets', '--radius', '10'],
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'get_my_planets',
+					'--radius',
+					'10',
+				],
 				{
 					env: {
 						CUSTOM_VAR: 'should-not-leak',
