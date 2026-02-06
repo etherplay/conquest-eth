@@ -93,3 +93,17 @@ export function getTestContext(): TestContext {
 	}
 	return testContext;
 }
+
+/**
+ * Get the game contract address from deployed environment
+ */
+export function getGameContract(): string {
+	if (!testContext) {
+		throw new Error('Test context not initialized. Call setupTestEnvironment() first.');
+	}
+	const OuterSpace = testContext.env.get('OuterSpace');
+	return OuterSpace.address.toLowerCase();
+}
+
+// Re-export RPC_URL for convenience
+export {RPC_URL};
