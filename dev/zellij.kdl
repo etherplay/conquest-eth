@@ -28,25 +28,25 @@ layout {
 		}
 	}
 	pane name="helper-services"  split_direction="vertical" {
-		pane name="FUZD"  command="bash"  {
-			args "-c" "pnpm fuzd:dev; cd helper-services/fuzd; ${SHELL-bash}"
+		pane name="FUZD"  command="pnpm"  {
+			args "fuzd:dev"
 		}
-		pane name="SYNC"  command="bash"  {
-			args "-c" "pnpm sync:dev; cd helper-services/secp256k1-db; ${SHELL-bash}"
+		pane name="SYNC"  command="pnpm"  {
+			args "sync:dev"
 		}
-		pane name="MISSIV"  command="bash"  {
-			args "-c" "pnpm missiv:dev; cd helper-services/missiv; ${SHELL-bash}"
+		pane name="MISSIV"  command="pnpm"  {
+			args "missiv:dev"
 		}
 	}
 	pane name="externals"  split_direction="vertical" {
-		pane name="EXTERNAL"  command="bash"  {
-			args "-c" "pnpm externals"
+		pane name="EXTERNAL"  command="pnpm"  {
+			args "externals"
 		}
-		pane name="SUBGRAPH DEPLOY"  command="bash"  {
-			args "-c" "pnpm subgraph:deploy:local:watch; cd subgraph; ${SHELL-bash}"
+		pane name="SUBGRAPH DEPLOY"  command="pnpm"  {
+			args "subgraph:deploy:local:watch"
 		}
-		pane name="SUBGRAPH SCHEMA"  command="bash"  {
-			args "-c" "pnpm subgraph:schema:watch; cd subgraph; ${SHELL-bash}"
+		pane name="SUBGRAPH SCHEMA"  command="pnpm"  {
+			args "subgraph:schema:watch"
 		}
 	}
 

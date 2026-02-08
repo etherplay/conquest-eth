@@ -16,12 +16,12 @@ npx -y @conquest-eth/tools get_my_planets --radius 25
 
 # Option 2: Install globally
 npm install -g @conquest-eth/tools # or use pnpm/volta/...
-conquest get_my_planets --radius 25
+conquest --rpc-url http://localhost:8545 and --game-contract 0x322813fd9a801c5507c9de605d63cea4f2ce6c44 get_my_planets --radius 25
 ```
 
 ### Configuration
 
-You can either provide the env via your shell:
+Instead of passing the config via cli, you can either provide the env via your shell:
 
 ```bash
 # Set RPC endpoint and game contract (required for all commands)
@@ -43,17 +43,17 @@ All commands output JSON. Parse with `jq` or process programmatically.
 
 ## Commands Overview
 
-| Command | Purpose |
-|---------|---------|
-| `get_my_planets` | List your owned planets within a radius |
-| `get_planets_around` | Find planets near specific coordinates |
-| `acquire_planets` | Stake tokens to claim unclaimed planets |
-| `send_fleet` | Send spaceships to attack or reinforce |
-| `resolve_fleet` | Reveal fleet destination and trigger combat |
-| `exit_planets` | Start exit process to retrieve staked tokens |
-| `get_pending_exits` | View planets currently in exit process |
-| `get_pending_fleets` | View fleets still traveling |
-| `verify_exit_status` | Check if exit is complete and withdrawable |
+| Command              | Purpose                                      |
+| -------------------- | -------------------------------------------- |
+| `get_my_planets`     | List your owned planets within a radius      |
+| `get_planets_around` | Find planets near specific coordinates       |
+| `acquire_planets`    | Stake tokens to claim unclaimed planets      |
+| `send_fleet`         | Send spaceships to attack or reinforce       |
+| `resolve_fleet`      | Reveal fleet destination and trigger combat  |
+| `exit_planets`       | Start exit process to retrieve staked tokens |
+| `get_pending_exits`  | View planets currently in exit process       |
+| `get_pending_fleets` | View fleets still traveling                  |
+| `verify_exit_status` | Check if exit is complete and withdrawable   |
 
 ---
 
@@ -67,16 +67,18 @@ conquest get_my_planets --radius 25
 ```
 
 **Parameters:**
+
 - `--radius` (number, max 50): Search radius around origin (0,0). Use 25 as default.
 
 ### Find Planets Around a Location
 
 ```bash
-conquest get_planets_around --center 10,20 --radius 25
+conquest --rpc-url http://localhost:8545 and --game-contract 0x322813fd9a801c5507c9de605d63cea4f2ce6c44 get_planets_around --center 10,20 --radius 25
 # Returns planets with distances, owners, and stats
 ```
 
 **Parameters:**
+
 - `--center <x,y>` (coordinates): Center point in x,y format
 - `--radius` (number, max 50): Search radius around the center
 
@@ -97,11 +99,13 @@ conquest acquire_planets --coordinates '[{"x":10,"y":20}]' --amount-to-mint 1000
 ```
 
 **Parameters:**
+
 - `--coordinates` (JSON array): Array of coordinate objects, e.g., `[{"x":10,"y":20}]`
 - `--amount-to-mint` (optional): Amount of native token to spend
 - `--token-amount` (optional): Amount of staking token to spend
 
 **Notes:**
+
 - Tokens deposited are not spent - they remain on the planet until you exit
 - Exiting takes time (~3 days), during which your stake is vulnerable
 - Fighting natives: 10,000 attack power against 100,000 spaceship fleet
@@ -115,9 +119,11 @@ conquest exit_planets --coordinates '[{"x":10,"y":20},{"x":15,"y":25}]'
 ```
 
 **Parameters:**
+
 - `--coordinates` (JSON array): Array of coordinate objects to exit
 
 **Notes:**
+
 - Exit takes ~3 days
 - During exit, stake is vulnerable to attacks
 - Call `verify_exit_status` after exit duration to complete withdrawal
@@ -142,6 +148,7 @@ conquest send_fleet --from 10,20 --to 15,25 --quantity 100 --gift
 ```
 
 **Parameters:**
+
 - `--from <x,y>` (coordinates): Source planet
 - `--to <x,y>` (coordinates): Destination planet
 - `--quantity` (number): Number of spaceships to send
@@ -152,6 +159,7 @@ conquest send_fleet --from 10,20 --to 15,25 --quantity 100 --gift
 **Returns:** Fleet ID, source/destination, quantity, arrival time, and secret.
 
 **Notes:**
+
 - Two-step process: send then resolve
 - While traveling, only you know the destination
 - Gifts to non-allies: 20% burn tax (80% arrive)
@@ -166,9 +174,11 @@ conquest resolve_fleet --fleet-id "your-fleet-id"
 ```
 
 **Parameters:**
+
 - `--fleet-id` (string): Fleet ID to resolve
 
 **Notes:**
+
 - Must call after arrival time + resolve window
 - Resolve within ~12 hours or fleet is lost
 - Combat occurs immediately upon resolution
@@ -205,6 +215,7 @@ conquest verify_exit_status --x 10 --y 20
 ### Planet Statistics
 
 Each planet has immutable stats:
+
 - **Capacity**: Max spaceships before production stops
 - **Natives**: Local population to fight when claiming
 - **Stake**: Token deposit for spaceship production
@@ -292,11 +303,11 @@ conquest get_planets_around --center 0,0 --radius 30 | jq '.planets[] | select(.
 
 ## Environment Variables
 
-| Variable | Description |
-|----------|-------------|
-| `RPC_URL` | RPC endpoint (default: Gnosis Chain) |
-| `GAME_CONTRACT` | Conquest.eth game contract address |
-| `PRIVATE_KEY` | Private key for write operations (0x-prefixed) |
+| Variable        | Description                                    |
+| --------------- | ---------------------------------------------- |
+| `RPC_URL`       | RPC endpoint (default: Gnosis Chain)           |
+| `GAME_CONTRACT` | Conquest.eth game contract address             |
+| `PRIVATE_KEY`   | Private key for write operations (0x-prefixed) |
 
 ---
 
@@ -305,7 +316,7 @@ conquest get_planets_around --center 0,0 --radius 30 | jq '.planets[] | select(.
 All commands return JSON. Errors include an `error` field:
 
 ```json
-{ "error": "Transaction not found", "stack": "..." }
+{"error": "Transaction not found", "stack": "..."}
 ```
 
 Exit codes: `0` = success, `1` = error.
