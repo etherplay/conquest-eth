@@ -2,10 +2,10 @@
     "name": "fuzd-service",
     "devDependencies": {
         "fuzd-nodejs": "^0.10.0",
-        "ldenv": "^0.3.10",
+        "ldenv": "^0.3.16",
         "node-cron": "^3.0.3",
         "set-defaults": "^0.0.2",
-        "wait-on": "^7.2.0"
+        "wait-on": "^9.0.3"
     },
     "scripts": {
         "prepare": "set-defaults .",
