@@ -226,6 +226,23 @@ function parseOptionValue(field: z.ZodTypeAny, value: any): any {
 	// Handle array types - parse comma-separated values or JSON arrays
 	if (field instanceof z.ZodArray) {
 		if (typeof value === 'string') {
+			// Try to parse as JSON array first
+			const trimmedValue = value.trim();
+			if (trimmedValue.startsWith('[') && trimmedValue.endsWith(']')) {
+				try {
+					const parsed = JSON.parse(trimmedValue);
+					if (Array.isArray(parsed)) {
+						// Check if array element type is number and convert if needed
+						const elementType = field.element;
+						if (elementType instanceof z.ZodNumber) {
+							return parsed.map((v) => Number(v));
+						}
+						return parsed;
+					}
+				} catch {
+					// If JSON parsing fails, fall through to comma-separated parsing
+				}
+			}
 			// Check if array element type is number
 			const elementType = field.element;
 			// Use escape-aware splitting for comma-separated values
