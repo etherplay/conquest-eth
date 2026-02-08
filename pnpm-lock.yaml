@@ -311,8 +311,8 @@ importers:
         specifier: ^0.1.1
         version: 0.1.1(@types/node@25.2.0)
       tools-ethereum:
-        specifier: ^0.0.4
-        version: 0.0.4(@types/node@25.2.0)(bufferutil@4.0.8)(hono@4.6.14)(typescript@5.7.2)(utf-8-validate@5.0.8)
+        specifier: ^0.0.6
+        version: 0.0.6(@types/node@25.2.0)(bufferutil@4.0.8)(hono@4.6.14)(typescript@5.7.2)(utf-8-validate@5.0.8)
       viem:
         specifier: ^2.45.1
         version: 2.45.1(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
@@ -9640,8 +9640,8 @@ packages:
     resolution: {integrity: sha512-6udB24Q737UD/SDsKAHI9FCRP7Bqc9D/MQUV02ORQg5iskjtLJlZJNdN4kKtcdtwCeWIwIHDGaUsTsCCAa8sFQ==}
     engines: {node: '>=10'}
 
-  tools-ethereum@0.0.4:
-    resolution: {integrity: sha512-Ggihtd60FovM0/fJiv0qRIsPP3i70MhzyLL0tty3pXZ1LwJxac8FHzSbkgyF03YY/ujISGk2mkOvdUFhopSqDg==}
+  tools-ethereum@0.0.6:
+    resolution: {integrity: sha512-mF0e3M9qpelWGWJLCyb9864Em0hDpgaYBpsbh5LU63I+Sv/Yx/E4YhPlg3z8KJAqKkbzYiwU5NOs0XP4u6VhAg==}
     hasBin: true
 
   tough-cookie@2.5.0:
@@ -21560,11 +21560,12 @@ snapshots:
       '@tokenizer/token': 0.3.0
       ieee754: 1.2.1
 
-  tools-ethereum@0.0.4(@types/node@25.2.0)(bufferutil@4.0.8)(hono@4.6.14)(typescript@5.7.2)(utf-8-validate@5.0.8):
+  tools-ethereum@0.0.6(@types/node@25.2.0)(bufferutil@4.0.8)(hono@4.6.14)(typescript@5.7.2)(utf-8-validate@5.0.8):
     dependencies:
       '@modelcontextprotocol/sdk': 1.25.3(hono@4.6.14)(zod@4.3.6)
       commander: 14.0.3
       eip-1193: 0.6.5
+      ldenv: 0.3.16
       remote-procedure-call: 0.1.1(@types/node@25.2.0)
       viem: 2.45.1(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
       zod: 4.3.6
