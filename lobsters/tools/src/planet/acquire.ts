@@ -8,7 +8,7 @@ import {Clients, GameContract} from '../types.js';
  * @param planetIds - Array of planet location IDs to acquire
  * @param amountToMint - Amount of play tokens to mint
  * @param tokenAmount - Amount of staking token to spend
- * @param numTokensPerNativeToken - How many play tokens (at 18 decimals) you get per 1 native token (defaults to 1e18 meaning 1:1)
+ * @param numTokensPerNativeToken - How many play tokens (at 18 decimals) you get per 1 native token (fetched from PlayToken contract)
  * @returns Transaction hash and list of planets acquired
  */
 export async function acquirePlanets(
@@ -17,7 +17,7 @@ export async function acquirePlanets(
 	planetIds: bigint[],
 	amountToMint: bigint,
 	tokenAmount: bigint,
-	numTokensPerNativeToken: bigint = 1000000000000000000n, // Default: 1:1 ratio (1e18)
+	numTokensPerNativeToken: bigint,
 ): Promise<{hash: `0x${string}`; planetsAcquired: bigint[]}> {
 	const sender = clients.walletClient.account!.address;
 

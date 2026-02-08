@@ -1,6 +1,17 @@
 import {SpaceInfo} from 'conquest-eth-v0-contracts';
 import type {ClientsWithOptionalWallet, ContractConfig, GameContract} from '../types.js';
 
+// Minimal ABI for reading numTokensPerNativeTokenAt18Decimals from PlayToken
+const PlayTokenAbi = [
+	{
+		name: 'numTokensPerNativeTokenAt18Decimals',
+		type: 'function',
+		stateMutability: 'view',
+		inputs: [],
+		outputs: [{type: 'uint256'}],
+	},
+] as const;
+
 export async function createSpaceInfo(
 	clients: ClientsWithOptionalWallet,
 	gameContract: GameContract,
@@ -11,12 +22,22 @@ export async function createSpaceInfo(
 		functionName: 'getConfig',
 	});
 
+	// Extract stakingToken address and fetch numTokensPerNativeToken from PlayToken contract
+	const stakingToken = config.stakingToken as `0x${string}`;
+	const numTokensPerNativeToken = await clients.publicClient.readContract({
+		address: stakingToken,
+		abi: PlayTokenAbi,
+		functionName: 'numTokensPerNativeTokenAt18Decimals',
+	});
+
 	const contractConfig: ContractConfig = {
 		genesis: BigInt(config.genesis),
 		resolveWindow: BigInt(config.resolveWindow),
 		timePerDistance: BigInt(config.timePerDistance),
 		exitDuration: BigInt(config.exitDuration),
 		acquireNumSpaceships: Number(config.acquireNumSpaceships),
+		stakingToken,
+		numTokensPerNativeToken: BigInt(numTokensPerNativeToken),
 	};
 
 	// Create SpaceInfo instance with config

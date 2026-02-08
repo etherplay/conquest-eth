@@ -54,7 +54,9 @@ export interface ContractConfig {
 	timePerDistance: bigint;
 	exitDuration: bigint;
 	acquireNumSpaceships: number;
-	[key: string]: bigint | number;
+	stakingToken: `0x${string}`;
+	numTokensPerNativeToken: bigint;
+	[key: string]: bigint | number | `0x${string}`;
 }
 
 export interface ExternalPlanet {

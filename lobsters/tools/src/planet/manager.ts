@@ -52,6 +52,7 @@ export class PlanetManager {
 			planetIds,
 			amountToMint,
 			tokenAmount,
+			this.contractConfig.numTokensPerNativeToken,
 		);
 	}
 
@@ -70,6 +71,7 @@ export class PlanetManager {
 			planetIds,
 			costs.amountToMint,
 			costs.tokenAmount,
+			this.contractConfig.numTokensPerNativeToken,
 		);
 		return {...result, costs};
 	}
