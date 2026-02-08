@@ -40,22 +40,13 @@ describe('CLI - Write Operations', () => {
 				'--private-key',
 				testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
 				'acquire_planets',
-				'--coordinates-x',
-				'999999',
-				'--coordinates-y',
-				'999999',
+				'--coordinates',
+				'999999,999999',
 			]);
 
-			// Note: This test may fail because CLI doesn't properly handle array parameters
-			// Once CLI tool generator is fixed, this should work correctly
-			if (result.exitCode === 0) {
-				const data = JSON.parse(result.stdout);
-				// If it succeeded, verify the transaction hash exists
-				expect(data.transactionHash).toBeDefined();
-			} else {
-				// If it failed due to CLI limitations, that's expected
-				expect(result.stderr || result.stdout).toBeTruthy();
-			}
+			// Should fail because planet doesn't exist at these coordinates
+			expect(result.exitCode).not.toBe(0);
+			expect(result.stderr || result.stdout).toBeTruthy();
 		});
 
 		it('should return error when private key is missing', async () => {
@@ -67,10 +58,8 @@ describe('CLI - Write Operations', () => {
 				'--private-key',
 				'0xinvalid',
 				'acquire_planets',
-				'--coordinates-x',
-				'0',
-				'--coordinates-y',
-				'0',
+				'--coordinates',
+				'0,0',
 			]);
 
 			expect(result.exitCode).not.toBe(0);
@@ -101,19 +90,13 @@ describe('CLI - Write Operations', () => {
 				'--private-key',
 				testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
 				'exit_planets',
-				'--coordinates-x',
-				'999999',
-				'--coordinates-y',
-				'999999',
+				'--coordinates',
+				'999999,999999',
 			]);
 
-			// Note: CLI doesn't properly handle array parameters yet
-			if (result.exitCode === 0) {
-				const data = JSON.parse(result.stdout);
-				expect(data.transactionHash).toBeDefined();
-			} else {
-				expect(result.stderr || result.stdout).toBeTruthy();
-			}
+			// Should fail because planet doesn't exist at these coordinates
+			expect(result.exitCode).not.toBe(0);
+			expect(result.stderr || result.stdout).toBeTruthy();
 		});
 
 		it('should return error when private key is missing', async () => {
@@ -125,10 +108,8 @@ describe('CLI - Write Operations', () => {
 				'--private-key',
 				'0xinvalid',
 				'exit_planets',
-				'--coordinates-x',
-				'0',
-				'--coordinates-y',
-				'0',
+				'--coordinates',
+				'0,0',
 			]);
 
 			expect(result.exitCode).not.toBe(0);

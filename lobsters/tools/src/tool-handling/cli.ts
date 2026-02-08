@@ -10,6 +10,20 @@ import {createToolEnvironmentFromFactory} from './index.js';
 export type EnvFactory<TEnv extends Record<string, any>> = () => Promise<TEnv> | TEnv;
 
 /**
+ * Unwrap Zod wrappers (Optional, Default) to get the inner type
+ * (Defined early as it's used by other functions)
+ */
+function unwrapZodType(field: z.ZodTypeAny): z.ZodTypeAny {
+	if (field instanceof z.ZodOptional) {
+		return unwrapZodType(field.unwrap() as z.ZodTypeAny);
+	}
+	if (field instanceof z.ZodDefault) {
+		return unwrapZodType(field._def.innerType as z.ZodTypeAny);
+	}
+	return field;
+}
+
+/**
  * Check if a Zod object schema represents a coordinate type (has only x, y and optionally z number fields)
  */
 function isCoordinateSchema(field: z.ZodTypeAny): {type: '2d' | '3d'} | null {
@@ -47,6 +61,20 @@ function isCoordinateSchema(field: z.ZodTypeAny): {type: '2d' | '3d'} | null {
 }
 
 /**
+ * Check if a Zod schema represents an array of coordinate objects
+ * Returns the coordinate type if it's a coordinate array, null otherwise
+ */
+function isCoordinateArraySchema(field: z.ZodTypeAny): {type: '2d' | '3d'} | null {
+	if (!(field instanceof z.ZodArray)) {
+		return null;
+	}
+
+	// Check if the array element is a coordinate object
+	const elementType = unwrapZodType(field.element as z.ZodTypeAny);
+	return isCoordinateSchema(elementType);
+}
+
+/**
  * Convert Zod schema field to commander.js option definition
  */
 function zodFieldToOption(name: string, field: z.ZodTypeAny): string {
@@ -54,7 +82,15 @@ function zodFieldToOption(name: string, field: z.ZodTypeAny): string {
 	if (field instanceof z.ZodBoolean) {
 		return `--${name}`;
 	}
-	// Handle coordinate objects - use <x,y> or <x,y,z> format
+	// Handle coordinate array - use variadic format
+	const coordArrayInfo = isCoordinateArraySchema(field);
+	if (coordArrayInfo) {
+		if (coordArrayInfo.type === '3d') {
+			return `--${name} <x,y,z...>`;
+		}
+		return `--${name} <x,y...>`;
+	}
+	// Handle single coordinate objects - use <x,y> or <x,y,z> format
 	const coordInfo = isCoordinateSchema(field);
 	if (coordInfo) {
 		if (coordInfo.type === '3d') {
@@ -143,7 +179,38 @@ function splitByCommaWithEscaping(value: string): string[] {
  * Parse option value based on Zod type
  */
 function parseOptionValue(field: z.ZodTypeAny, value: any): any {
-	// Handle coordinate objects - parse "x,y" or "x,y,z" format
+	// Handle coordinate array - parse array of "x,y" or "x,y,z" strings from variadic option
+	const coordArrayInfo = isCoordinateArraySchema(field);
+	if (coordArrayInfo) {
+		// Commander.js gives us an array of strings for variadic options
+		if (Array.isArray(value)) {
+			return value.map((coordStr) => {
+				if (typeof coordStr === 'string') {
+					const parsed = parseCoordinateString(coordStr, coordArrayInfo.type);
+					if (parsed) {
+						return parsed;
+					}
+					throw new Error(
+						`Invalid coordinate format for value "${coordStr}". Expected format: ${coordArrayInfo.type === '3d' ? 'x,y,z' : 'x,y'}`,
+					);
+				}
+				// Already an object (shouldn't happen but handle it)
+				return coordStr;
+			});
+		}
+		// Single string value - wrap in array (edge case, shouldn't happen with variadic)
+		if (typeof value === 'string') {
+			const parsed = parseCoordinateString(value, coordArrayInfo.type);
+			if (parsed) {
+				return [parsed];
+			}
+			throw new Error(
+				`Invalid coordinate format for value "${value}". Expected format: ${coordArrayInfo.type === '3d' ? 'x,y,z' : 'x,y'}`,
+			);
+		}
+	}
+
+	// Handle single coordinate objects - parse "x,y" or "x,y,z" format
 	const coordInfo = isCoordinateSchema(field);
 	if (coordInfo && typeof value === 'string') {
 		const parsed = parseCoordinateString(value, coordInfo.type);
@@ -159,14 +226,6 @@ function parseOptionValue(field: z.ZodTypeAny, value: any): any {
 	// Handle array types - parse comma-separated values or JSON arrays
 	if (field instanceof z.ZodArray) {
 		if (typeof value === 'string') {
-			// Check if it's a JSON array
-			if (value.trim().startsWith('[')) {
-				try {
-					return JSON.parse(value);
-				} catch {
-					// Fall through to comma-separated parsing
-				}
-			}
 			// Check if array element type is number
 			const elementType = field.element;
 			// Use escape-aware splitting for comma-separated values
@@ -222,19 +281,6 @@ function getFieldDescription(field: z.ZodTypeAny): string {
  */
 function isOptionalField(field: z.ZodTypeAny): boolean {
 	return field instanceof z.ZodOptional || field.isOptional?.();
-}
-
-/**
- * Unwrap Zod wrappers (Optional, Default) to get the inner type
- */
-function unwrapZodType(field: z.ZodTypeAny): z.ZodTypeAny {
-	if (field instanceof z.ZodOptional) {
-		return unwrapZodType(field.unwrap() as z.ZodTypeAny);
-	}
-	if (field instanceof z.ZodDefault) {
-		return unwrapZodType(field._def.innerType as z.ZodTypeAny);
-	}
-	return field;
 }
 
 /**

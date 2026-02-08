@@ -107,10 +107,8 @@ describe('CLI - Planet Lifecycle', () => {
 					'--private-key',
 					testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
 					'acquire_planets',
-					'--coordinates-x',
-					'0',
-					'--coordinates-y',
-					'0',
+					'--coordinates',
+					'0,0',
 				]);
 
 				// Verify exit status (may or may not succeed)

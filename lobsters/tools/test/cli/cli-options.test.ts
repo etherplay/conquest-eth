@@ -211,7 +211,7 @@ describe('CLI - Options and Flags', () => {
 					getGameContract(),
 					'acquire_planets',
 					'--coordinates',
-					'[{"x": 0, "y": 0}]',
+					'0,0',
 				],
 				{
 					env: {

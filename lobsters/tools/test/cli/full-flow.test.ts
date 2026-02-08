@@ -110,7 +110,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 			expect(validPlanets.length).toBeGreaterThanOrEqual(1);
 
 			const planet = validPlanets[0];
-			// coordinates expects an array of objects with x and y, passed as JSON
+			// coordinates uses variadic format: x,y x,y ...
 			const result = await invokeWithStorage(
 				[
 					'--rpc-url',
@@ -119,7 +119,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 					getGameContract(),
 					'acquire_planets',
 					'--coordinates',
-					JSON.stringify([{x: planet.x, y: planet.y}]),
+					`${planet.x},${planet.y}`,
 				],
 				{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
 			);
@@ -141,7 +141,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 			expect(validPlanets.length).toBeGreaterThanOrEqual(2);
 
 			const planet = validPlanets[1];
-			// coordinates expects an array of objects with x and y, passed as JSON
+			// coordinates uses variadic format: x,y x,y ...
 			const result = await invokeWithStorage(
 				[
 					'--rpc-url',
@@ -150,7 +150,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 					getGameContract(),
 					'acquire_planets',
 					'--coordinates',
-					JSON.stringify([{x: planet.x, y: planet.y}]),
+					`${planet.x},${planet.y}`,
 				],
 				{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_2.privateKey}},
 			);
@@ -416,7 +416,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 						getGameContract(),
 						'acquire_planets',
 						'--coordinates',
-						JSON.stringify([{x: planetA.x, y: planetA.y}]),
+						`${planetA.x},${planetA.y}`,
 					],
 					{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
 				);
@@ -438,7 +438,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 						getGameContract(),
 						'acquire_planets',
 						'--coordinates',
-						JSON.stringify([{x: planetB.x, y: planetB.y}]),
+						`${planetB.x},${planetB.y}`,
 					],
 					{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_2.privateKey}},
 				);

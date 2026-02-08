@@ -197,7 +197,7 @@ describe('CLI - Error Handling', () => {
 					getGameContract(),
 					'acquire_planets',
 					'--coordinates',
-					'[{"x": 0, "y": 0}]',
+					'0,0',
 				],
 				{
 					env: {
@@ -219,10 +219,8 @@ describe('CLI - Error Handling', () => {
 				'--private-key',
 				'0x123',
 				'acquire_planets',
-				'--coordinates-x',
-				'0',
-				'--coordinates-y',
-				'0',
+				'--coordinates',
+				'0,0',
 			]);
 
 			expect(result.exitCode).not.toBe(0);
@@ -237,10 +235,8 @@ describe('CLI - Error Handling', () => {
 				'--private-key',
 				'0xgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg',
 				'acquire_planets',
-				'--coordinates-x',
-				'0',
-				'--coordinates-y',
-				'0',
+				'--coordinates',
+				'0,0',
 			]);
 
 			expect(result.exitCode).not.toBe(0);
@@ -331,10 +327,8 @@ describe('CLI - Error Handling', () => {
 				'--private-key',
 				testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
 				'acquire_planets',
-				'--coordinates-x',
-				'999999999',
-				'--coordinates-y',
-				'999999999',
+				'--coordinates',
+				'999999999,999999999',
 			]);
 
 			expect(result.exitCode).not.toBe(0);
@@ -349,10 +343,8 @@ describe('CLI - Error Handling', () => {
 				'--private-key',
 				testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
 				'acquire_planets',
-				'--coordinates-x',
-				'-999999999',
-				'--coordinates-y',
-				'-999999999',
+				'--coordinates',
+				'-999999999,-999999999',
 			]);
 
 			expect(result.exitCode).not.toBe(0);
