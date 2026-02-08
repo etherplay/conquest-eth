@@ -26,6 +26,10 @@ const chainNames = {
   100: 'gnosis',
   7001: 'zetachain-athens',
   11155111: 'sepolia',
+  42220: 'celo',
+  11142220: 'celo-sepolia',
+  143: 'monad',
+  10143: 'monad-testnet',
 };
 // TODO use chain.network
 
