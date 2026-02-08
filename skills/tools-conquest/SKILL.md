@@ -86,13 +86,12 @@ conquest get_my_planets --radius 25
 Find planets near specific coordinates:
 
 ```bash
-conquest get_planets_around --center-x 10 --center-y 20 --radius 25
+conquest get_planets_around --center 10,20 --radius 25
 ```
 
 **Parameters:**
 
-- `--center-x` (number): X coordinate of center point
-- `--center-y` (number): Y coordinate of center point
+- `--center <x,y>` (coordinates): Center point coordinates in x,y format
 - `--radius` (number, max 50): Radius to search around the center point
 
 **Returns:** JSON with array of planets including distances, owners, and stats.
@@ -102,16 +101,16 @@ conquest get_planets_around --center-x 10 --center-y 20 --radius 25
 Stake tokens to claim ownership of unclaimed planets:
 
 ```bash
-# Using coordinates
-conquest acquire_planets --coordinates 10,20 15,25 20,30
+# Using JSON array format for coordinates
+conquest acquire_planets --coordinates '[{"x":10,"y":20},{"x":15,"y":25},{"x":20,"y":30}]'
 
 # With custom amounts
-conquest acquire_planets --coordinates 10,20 15,25 --amount-to-mint 1000000 --token-amount 500
+conquest acquire_planets --coordinates '[{"x":10,"y":20},{"x":15,"y":25}]' --amount-to-mint 1000000 --token-amount 500
 ```
 
 **Parameters:**
 
-- `--coordinates` (array): Planet coordinates to acquire (space-separated pairs of x,y)
+- `--coordinates` (JSON array): Array of planet coordinate objects to acquire, e.g., `[{"x":10,"y":20},{"x":15,"y":25}]`
 - `--amount-to-mint` (number, optional): Amount of native token to spend. Auto-calculated if not provided.
 - `--token-amount` (number, optional): Amount of staking token to spend. Auto-calculated if not provided.
 
@@ -149,8 +148,8 @@ conquest send_fleet \
 
 **Parameters:**
 
-- `--from` (x,y coordinates): Source planet coordinates
-- `--to` (x,y coordinates): Destination planet coordinates
+- `--from <x,y>` (coordinates): Source planet coordinates in x,y format
+- `--to <x,y>` (coordinates): Destination planet coordinates in x,y format
 - `--quantity` (number): Number of spaceships to send
 - `--arrivalTimeWanted` (number, optional): Desired arrival time (timestamp in seconds). Auto-calculated based on distance if not provided.
 - `--gift` (flag, optional): Whether the fleet is a gift (sent without requiring arrival).
@@ -193,12 +192,13 @@ conquest resolve_fleet --fleet-id "your-fleet-id"
 Start the exit process to retrieve staked tokens:
 
 ```bash
-conquest exit_planets --coordinates 10,20 15,25 20,30
+# Using JSON array format for coordinates
+conquest exit_planets --coordinates '[{"x":10,"y":20},{"x":15,"y":25},{"x":20,"y":30}]'
 ```
 
 **Parameters:**
 
-- `--coordinates` (array): Planet coordinates to exit (space-separated pairs of x,y)
+- `--coordinates` (JSON array): Array of planet coordinate objects to exit, e.g., `[{"x":10,"y":20},{"x":15,"y":25}]`
 
 **Returns:** JSON with transaction hash and list of exits initiated.
 
@@ -310,7 +310,7 @@ If `attackDamage >= numDefense`: Attack succeeds, all defending spaceships destr
 conquest get_my_planets --radius 50
 
 # 2. Find targets near one of your planets
-conquest get_planets_around --center-x 10 --center-y 20 --radius 15
+conquest get_planets_around --center 10,20 --radius 15
 
 # 3. Send a fleet to attack
 conquest send_fleet --from 10,20 --to 12,22 --quantity 100
@@ -326,17 +326,17 @@ conquest get_my_planets --radius 50
 
 ```bash
 # Find unclaimed planets
-conquest get_planets_around --center-x 0 --center-y 0 --radius 30
+conquest get_planets_around --center 0,0 --radius 30
 
-# Acquire multiple planets using coordinates
-conquest acquire_planets --coordinates 10,20 15,25 20,30 25,35 30,40
+# Acquire multiple planets using JSON array format
+conquest acquire_planets --coordinates '[{"x":10,"y":20},{"x":15,"y":25},{"x":20,"y":30},{"x":25,"y":35},{"x":30,"y":40}]'
 ```
 
 ### Example 3: Exit Planets
 
 ```bash
 # Start exit process for multiple planets
-conquest exit_planets --coordinates 10,20 15,25 20,30
+conquest exit_planets --coordinates '[{"x":10,"y":20},{"x":15,"y":25},{"x":20,"y":30}]'
 
 # Check pending exits
 conquest get_pending_exits
@@ -353,7 +353,7 @@ conquest get_my_planets --radius 25
 conquest get_pending_fleets
 
 # Find targets near your strongest planet
-conquest get_planets_around --center-x 50 --center-y 50 --radius 20
+conquest get_planets_around --center 50,50 --radius 20
 
 # Send attack fleet
 conquest send_fleet --from 50,50 --to 55,55 --quantity 1000
@@ -380,7 +380,7 @@ conquest get_my_planets --radius 50 | jq '.planets | length'
 conquest get_pending_fleets | jq '.fleets[].fleetId'
 
 # Find unowned planets
-conquest get_planets_around --center-x 0 --center-y 0 --radius 30 | jq '.planets[] | select(.owner == "0x0000000000000000000000000000000000000000")'
+conquest get_planets_around --center 0,0 --radius 30 | jq '.planets[] | select(.owner == "0x0000000000000000000000000000000000000000")'
 ```
 
 ## Common Issues
@@ -400,10 +400,10 @@ If you don't set a private key, you can still use read-only commands but write o
 ```bash
 # These will work:
 conquest get_my_planets --radius 10
-conquest get_planets_around --center-x 0 --center-y 0 --radius 20
+conquest get_planets_around --center 0,0 --radius 20
 
 # These will fail without a private key:
-conquest acquire_planets --coordinates 10,20 15,25
+conquest acquire_planets --coordinates '[{"x":10,"y":20},{"x":15,"y":25}]'
 conquest send_fleet --from 10,20 --to 15,25 --quantity 100
 ```
 
@@ -424,3 +424,4 @@ curl -X POST https://rpc.gnosischain.com -H "Content-Type: application/json" -d 
 - Keep track of your pending fleets to ensure you resolve them on time
 - Monitor your pending exits to know when withdrawals are available
 - All commands return JSON output for easy parsing and integration with other tools
+- For `acquire_planets` and `exit_planets`, use JSON array format for the `--coordinates` parameter: `[{"x":10,"y":20},{"x":15,"y":25}]`
