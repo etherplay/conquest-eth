@@ -1,16 +1,16 @@
-type Alliance @entity {
+type Alliance @entity(immutable: true) {
   id: ID!
   frontendURI: String
   members: [AllianceOwnerPair!] @derivedFrom(field: "alliance")
 }
 
-type AllianceOwnerPair @entity {
+type AllianceOwnerPair @entity(immutable: true) {
   id: ID! # <alliance.id>_<owner.id>`
   owner: Owner!
   alliance: Alliance!
 }
 
-type Owner @entity {
+type Owner @entity(immutable: true) {
   id: ID!
   planets: [Planet!] @derivedFrom(field: "owner")
   fleets: [Fleet!] @derivedFrom(field: "owner")
@@ -46,21 +46,21 @@ type Owner @entity {
   yakuzaSubscription: YakuzaSubscription
 }
 
-type Reward @entity {
+type Reward @entity(immutable: true) {
   id: ID!
   owner: Owner!
   planet: Planet!
   withdrawn: Boolean! # TODO
 }
 
-type Chain @entity {
+type Chain @entity(immutable: true) {
   id: ID! # Chain
   v: String!
   blockHash: String!
   blockNumber: BigInt!
 }
 
-type Space @entity {
+type Space @entity(immutable: true) {
   id: ID! # Space
   address: Bytes
   minX: BigInt!
@@ -107,7 +107,7 @@ type Space @entity {
   # tokenToWithdraw: BigInt!
 }
 
-type Planet @entity {
+type Planet @entity(immutable: true) {
   id: ID!
   owner: Owner
   numSpaceships: BigInt!
@@ -139,7 +139,7 @@ type Planet @entity {
   # ----------------------
 }
 
-type Fleet @entity {
+type Fleet @entity(immutable: true) {
   id: ID!
   owner: Owner!
   sender: Owner!
@@ -166,7 +166,7 @@ type Fleet @entity {
   yakuzaOnBehalf: Owner
 }
 
-type Transaction @entity {
+type Transaction @entity(immutable: true) {
   id: ID!
 }
 
@@ -195,7 +195,7 @@ interface FleetEvent {
   fleet: Fleet!
 }
 
-type PlanetStakeEvent implements OwnerEvent & PlanetEvent @entity {
+type PlanetStakeEvent implements OwnerEvent & PlanetEvent @entity(immutable: true) {
   id: ID! # <blockNumber>_logID
   blockNumber: Int!
   timestamp: BigInt!
@@ -207,7 +207,7 @@ type PlanetStakeEvent implements OwnerEvent & PlanetEvent @entity {
   overflow: BigInt!
   stake: BigInt!
 }
-type PlanetExitEvent implements OwnerEvent & PlanetEvent @entity {
+type PlanetExitEvent implements OwnerEvent & PlanetEvent @entity(immutable: true) {
   id: ID! # <blockNumber>_logID
   blockNumber: Int!
   timestamp: BigInt!
@@ -225,7 +225,7 @@ type PlanetExitEvent implements OwnerEvent & PlanetEvent @entity {
   success: Boolean! # success if complete
 }
 
-type FleetArrivedEvent implements OwnerEvent & PlanetEvent & FleetEvent @entity {
+type FleetArrivedEvent implements OwnerEvent & PlanetEvent & FleetEvent @entity(immutable: true) {
   id: ID! # <blockNumber>_logID
   blockNumber: Int!
   timestamp: BigInt!
@@ -264,7 +264,7 @@ type FleetArrivedEvent implements OwnerEvent & PlanetEvent & FleetEvent @entity 
 }
 
 # TODO: implements OwnerEvent & PlanetEvent & FleetEvent
-type FleetRevealedEvent @entity {
+type FleetRevealedEvent @entity(immutable: true) {
   id: ID! # fleetID
   eventID: ID! # <blockNumber>_logID
   blockNumber: Int!
@@ -281,7 +281,7 @@ type FleetRevealedEvent @entity {
   operator: Owner!
 }
 
-type PlanetTransferEvent implements OwnerEvent & PlanetEvent @entity {
+type PlanetTransferEvent implements OwnerEvent & PlanetEvent @entity(immutable: true) {
   id: ID! # <blockNumber>_logID
   blockNumber: Int!
   timestamp: BigInt!
@@ -296,7 +296,7 @@ type PlanetTransferEvent implements OwnerEvent & PlanetEvent @entity {
   # extra data
   newOwner: Owner!
 }
-type FleetSentEvent implements OwnerEvent & PlanetEvent & FleetEvent @entity {
+type FleetSentEvent implements OwnerEvent & PlanetEvent & FleetEvent @entity(immutable: true) {
   id: ID! # <blockNumber>_logID
   blockNumber: Int!
   timestamp: BigInt!
@@ -312,7 +312,7 @@ type FleetSentEvent implements OwnerEvent & PlanetEvent & FleetEvent @entity {
   newOverflow: BigInt!
 }
 
-type StakeToWithdrawEvent implements OwnerEvent @entity {
+type StakeToWithdrawEvent implements OwnerEvent @entity(immutable: true) {
   id: ID! # <blockNumber>_logID
   blockNumber: Int!
   timestamp: BigInt!
@@ -321,7 +321,7 @@ type StakeToWithdrawEvent implements OwnerEvent @entity {
   newStake: BigInt!
 }
 
-type TravelingUpkeepRefundEvent implements OwnerEvent & PlanetEvent & FleetEvent @entity {
+type TravelingUpkeepRefundEvent implements OwnerEvent & PlanetEvent & FleetEvent @entity(immutable: true) {
   id: ID! # <blockNumber>_logID
   blockNumber: Int!
   timestamp: BigInt!
@@ -336,7 +336,7 @@ type TravelingUpkeepRefundEvent implements OwnerEvent & PlanetEvent & FleetEvent
 }
 
 # ExitComplete(address indexed owner, uint256 indexed location, uint256 stake);
-type ExitCompleteEvent implements OwnerEvent & PlanetEvent @entity {
+type ExitCompleteEvent implements OwnerEvent & PlanetEvent @entity(immutable: true) {
   id: ID! # <blockNumber>_logID
   blockNumber: Int!
   timestamp: BigInt!
@@ -347,7 +347,7 @@ type ExitCompleteEvent implements OwnerEvent & PlanetEvent @entity {
 }
 
 # (uint256 indexed location, uint256 rewardId);
-type RewardSetupEvent implements PlanetEvent @entity {
+type RewardSetupEvent implements PlanetEvent @entity(immutable: true) {
   id: ID! # <blockNumber>_logID
   blockNumber: Int!
   timestamp: BigInt!
@@ -358,7 +358,7 @@ type RewardSetupEvent implements PlanetEvent @entity {
 }
 
 # (address indexed owner, uint256 indexed location, uint256 indexed rewardId);
-type RewardToWithdrawEvent implements OwnerEvent & PlanetEvent @entity {
+type RewardToWithdrawEvent implements OwnerEvent & PlanetEvent @entity(immutable: true) {
   id: ID! # <blockNumber>_logID
   blockNumber: Int!
   timestamp: BigInt!
@@ -368,7 +368,7 @@ type RewardToWithdrawEvent implements OwnerEvent & PlanetEvent @entity {
   rewardId: BigInt!
 }
 
-type Points @entity {
+type Points @entity(immutable: true) {
   id: ID!
   lastUpdateTime: BigInt!
   totalRewardPerPointAtLastUpdate: BigInt!
@@ -383,7 +383,7 @@ type Points @entity {
 # Basic SPaceships Marketplace
 #######################################################################################
 
-type SpaceshipSale @entity {
+type SpaceshipSale @entity(immutable: true) {
   id: ID!
   seller: Bytes!
   pricePerUnit: BigInt!
@@ -398,14 +398,14 @@ type SpaceshipSale @entity {
 # Yakuza
 #######################################################################################
 
-type YakuzaClaim @entity {
+type YakuzaClaim @entity(immutable: true) {
   id: ID! # fleetId
   owner: Owner!
   attackedPlanet: Planet!
   amountLeft: BigInt!
 }
 
-type YakuzaSubscription @entity {
+type YakuzaSubscription @entity(immutable: true) {
   id: ID!
   owner: Owner!
   startTime: BigInt!
@@ -413,7 +413,7 @@ type YakuzaSubscription @entity {
   totalContribution: BigInt!
 }
 
-type YakuzaPlanet @entity {
+type YakuzaPlanet @entity(immutable: true) {
   id: ID!
   owner: Owner
   planet: Planet!

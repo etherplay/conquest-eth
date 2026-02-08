@@ -15,6 +15,7 @@
     "deploy:build": "ldenv -m localhost pnpm generate @@MODE ~~ pnpm codegen ~~ pnpm run deploy @@MODE ~~ @@",
     "deploy": "git diff --exit-code && ldenv graph deploy --version-label `git rev-parse --short HEAD` --deploy-key=@@SUBGRAPH_DEPLOY_KEY --ipfs @@IPFS_URL --node @@GRAPH_DEPLOY_ENDPOINT @@SUBGRAPH_NAME @@",
     "deploy:graph:default": "git diff --exit-code && ldenv graph deploy --version-label `git rev-parse --short HEAD` @@SUBGRAPH_NAME @@",
+    "deploy:build:default": "ldenv -m localhost pnpm generate @@MODE ~~ pnpm codegen ~~ pnpm run deploy:graph:default @@MODE ~~ @@",
     "test": "graph test"
   },
   "dependencies": {
