@@ -273,4 +273,295 @@ describe('JS SpaceInfo <-> Solidity equivalence', function () {
 			);
 		});
 	});
+
+	describe('Multiple Fleets Outcome', function () {
+		it('outcomeMultipleFleets returns empty result for empty fleets array', function () {
+			const pointer1 = spaceInfo.findNextPlanet();
+			const toPlanet = pointer1.data;
+
+			const toPlanetState = {
+				owner: undefined,
+				ownerYakuzaSubscriptionEndTime: 0,
+				lastUpdatedSaved: 0,
+				startExitTime: 0,
+				numSpaceships: 0,
+				flagTime: 0,
+				travelingUpkeep: 0,
+				overflow: 0,
+				active: false,
+				exiting: false,
+				exitTimeLeft: 0,
+				natives: true,
+				capturing: false,
+				inReach: true,
+				rewardGiver: '',
+				metadata: {},
+			};
+
+			const result = spaceInfo.outcomeMultipleFleets(
+				[],
+				toPlanet,
+				toPlanetState,
+				undefined,
+				undefined,
+			);
+
+			assert.strictEqual(result.fleets.length, 0, 'Should have no fleet outcomes');
+			assert.strictEqual(result.arrivalTime, 0, 'Arrival time should be 0 for empty fleets');
+		});
+
+		it('outcomeMultipleFleets with single fleet matches single outcome', function () {
+			const pointer1 = spaceInfo.findNextPlanet();
+			const fromPlanet = pointer1.data;
+
+			const pointer2 = spaceInfo.findNextPlanet(pointer1);
+			const toPlanet = pointer2.data;
+
+			const toPlanetState = {
+				owner: undefined,
+				ownerYakuzaSubscriptionEndTime: 0,
+				lastUpdatedSaved: 0,
+				startExitTime: 0,
+				numSpaceships: 0,
+				flagTime: 0,
+				travelingUpkeep: 0,
+				overflow: 0,
+				active: false,
+				exiting: false,
+				exitTimeLeft: 0,
+				natives: true,
+				capturing: false,
+				inReach: true,
+				rewardGiver: '',
+				metadata: {},
+			};
+
+			const fleetAmount = 50000;
+			const duration = spaceInfo.timeToArrive(fromPlanet, toPlanet);
+
+			// Single fleet using outcomeMultipleFleets
+			const multiResult = spaceInfo.outcomeMultipleFleets(
+				[{fromPlanet, fleetAmount}],
+				toPlanet,
+				toPlanetState,
+				undefined,
+				undefined,
+			);
+
+			// Single fleet using regular outcome
+			const singleResult = spaceInfo.outcome(
+				fromPlanet,
+				toPlanet,
+				toPlanetState,
+				fleetAmount,
+				duration,
+			);
+
+			assert.strictEqual(multiResult.fleets.length, 1, 'Should have one fleet outcome');
+			assert.strictEqual(
+				multiResult.fleets[0].outcome.min.captured,
+				singleResult.min.captured,
+				'Min captured should match single outcome',
+			);
+			assert.strictEqual(
+				multiResult.fleets[0].outcome.max.captured,
+				singleResult.max.captured,
+				'Max captured should match single outcome',
+			);
+		});
+
+		it('outcomeMultipleFleets calculates arrival time from max travel time', function () {
+			const pointer1 = spaceInfo.findNextPlanet();
+			const fromPlanet1 = pointer1.data;
+
+			const pointer2 = spaceInfo.findNextPlanet(pointer1);
+			const fromPlanet2 = pointer2.data;
+
+			const pointer3 = spaceInfo.findNextPlanet(pointer2);
+			const toPlanet = pointer3.data;
+
+			const toPlanetState = {
+				owner: undefined,
+				ownerYakuzaSubscriptionEndTime: 0,
+				lastUpdatedSaved: 0,
+				startExitTime: 0,
+				numSpaceships: 0,
+				flagTime: 0,
+				travelingUpkeep: 0,
+				overflow: 0,
+				active: false,
+				exiting: false,
+				exitTimeLeft: 0,
+				natives: true,
+				capturing: false,
+				inReach: true,
+				rewardGiver: '',
+				metadata: {},
+			};
+
+			const travelTime1 = spaceInfo.timeToArrive(fromPlanet1, toPlanet);
+			const travelTime2 = spaceInfo.timeToArrive(fromPlanet2, toPlanet);
+			const expectedArrivalTime = Math.max(travelTime1, travelTime2);
+
+			const result = spaceInfo.outcomeMultipleFleets(
+				[
+					{fromPlanet: fromPlanet1, fleetAmount: 1000},
+					{fromPlanet: fromPlanet2, fleetAmount: 500},
+				],
+				toPlanet,
+				toPlanetState,
+				undefined,
+				undefined,
+			);
+
+			assert.strictEqual(
+				result.arrivalTime,
+				expectedArrivalTime,
+				'Arrival time should be max of all travel times',
+			);
+		});
+
+		it('outcomeMultipleFleets respects custom arrival time', function () {
+			const pointer1 = spaceInfo.findNextPlanet();
+			const fromPlanet = pointer1.data;
+
+			const pointer2 = spaceInfo.findNextPlanet(pointer1);
+			const toPlanet = pointer2.data;
+
+			const toPlanetState = {
+				owner: undefined,
+				ownerYakuzaSubscriptionEndTime: 0,
+				lastUpdatedSaved: 0,
+				startExitTime: 0,
+				numSpaceships: 0,
+				flagTime: 0,
+				travelingUpkeep: 0,
+				overflow: 0,
+				active: false,
+				exiting: false,
+				exitTimeLeft: 0,
+				natives: true,
+				capturing: false,
+				inReach: true,
+				rewardGiver: '',
+				metadata: {},
+			};
+
+			const customArrivalTime = 7200; // 2 hours
+
+			const result = spaceInfo.outcomeMultipleFleets(
+				[{fromPlanet, fleetAmount: 1000}],
+				toPlanet,
+				toPlanetState,
+				customArrivalTime,
+				undefined,
+			);
+
+			assert.strictEqual(
+				result.arrivalTime,
+				customArrivalTime,
+				'Should use custom arrival time',
+			);
+		});
+
+		it('outcomeMultipleFleets processes multiple fleets sequentially', function () {
+			const pointer1 = spaceInfo.findNextPlanet();
+			const fromPlanet1 = pointer1.data;
+
+			const pointer2 = spaceInfo.findNextPlanet(pointer1);
+			const fromPlanet2 = pointer2.data;
+
+			const pointer3 = spaceInfo.findNextPlanet(pointer2);
+			const toPlanet = pointer3.data;
+
+			const toPlanetState = {
+				owner: undefined,
+				ownerYakuzaSubscriptionEndTime: 0,
+				lastUpdatedSaved: 0,
+				startExitTime: 0,
+				numSpaceships: 0,
+				flagTime: 0,
+				travelingUpkeep: 0,
+				overflow: 0,
+				active: false,
+				exiting: false,
+				exitTimeLeft: 0,
+				natives: true,
+				capturing: false,
+				inReach: true,
+				rewardGiver: '',
+				metadata: {},
+			};
+
+			// Send enough ships to capture in two waves
+			const result = spaceInfo.outcomeMultipleFleets(
+				[
+					{fromPlanet: fromPlanet1, fleetAmount: 100000},
+					{fromPlanet: fromPlanet2, fleetAmount: 50000},
+				],
+				toPlanet,
+				toPlanetState,
+				undefined,
+				undefined,
+			);
+
+			assert.strictEqual(result.fleets.length, 2, 'Should have two fleet outcomes');
+			assert.ok(result.finalOutcome, 'Should have final outcome');
+			assert.ok(typeof result.finalOutcome.min.captured === 'boolean', 'Final outcome should have captured status');
+			assert.ok(typeof result.finalOutcome.min.numSpaceshipsLeft === 'number', 'Final outcome should have numSpaceshipsLeft');
+		});
+
+		it('outcomeMultipleFleets handles large number of fleets', function () {
+			const fleets: Array<{fromPlanet: any; fleetAmount: number}> = [];
+			let pointer = spaceInfo.findNextPlanet();
+
+			// Collect 5 source planets
+			for (let i = 0; i < 5; i++) {
+				fleets.push({fromPlanet: pointer.data, fleetAmount: 10000 + i * 1000});
+				pointer = spaceInfo.findNextPlanet(pointer);
+			}
+
+			// Use the next planet as target
+			const toPlanet = pointer.data;
+
+			const toPlanetState = {
+				owner: undefined,
+				ownerYakuzaSubscriptionEndTime: 0,
+				lastUpdatedSaved: 0,
+				startExitTime: 0,
+				numSpaceships: 0,
+				flagTime: 0,
+				travelingUpkeep: 0,
+				overflow: 0,
+				active: false,
+				exiting: false,
+				exitTimeLeft: 0,
+				natives: true,
+				capturing: false,
+				inReach: true,
+				rewardGiver: '',
+				metadata: {},
+			};
+
+			const result = spaceInfo.outcomeMultipleFleets(
+				fleets,
+				toPlanet,
+				toPlanetState,
+				undefined,
+				undefined,
+			);
+
+			assert.strictEqual(result.fleets.length, 5, 'Should have 5 fleet outcomes');
+
+			// Each fleet outcome should have proper structure
+			for (let i = 0; i < result.fleets.length; i++) {
+				const fleet = result.fleets[i];
+				assert.ok(fleet.fromPlanet, `Fleet ${i} should have fromPlanet`);
+				assert.ok(typeof fleet.fleetAmount === 'number', `Fleet ${i} should have fleetAmount`);
+				assert.ok(fleet.outcome, `Fleet ${i} should have outcome`);
+				assert.ok(fleet.outcome.min, `Fleet ${i} should have min outcome`);
+				assert.ok(fleet.outcome.max, `Fleet ${i} should have max outcome`);
+			}
+		});
+	});
 });

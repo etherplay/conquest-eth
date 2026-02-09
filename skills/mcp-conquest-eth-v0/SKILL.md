@@ -137,6 +137,58 @@ mcporter call mcp-conquest-eth-v0.exit_planets '{"coordinates": [{"x": 10, "y": 
 - Once complete, you can withdraw your tokens
 - You must call `verify_exit_status` after the exit duration to complete the withdrawal
 
+### Simulate Attack
+
+Simulate a fleet attack to predict the outcome before committing:
+
+```bash
+mcporter call mcp-conquest-eth-v0.simulate '{"from": {"x": 10, "y": 20}, "to": {"x": 15, "y": 25}, "quantity": 500}'
+```
+
+**Parameters:**
+- `from` (object): Source planet coordinates `{x, y}`
+- `to` (object): Target planet coordinates `{x, y}`
+- `quantity` (number): Number of spaceships to send
+
+**Returns:** Min/max outcomes including:
+- Whether capture would be successful
+- Number of spaceships left after combat
+- Time until attack fails (resolve window)
+- Combat losses for both attacker and defender
+
+**Notes:**
+- Use the "min" outcome to check worst-case scenario
+- Simulation accounts for target's current spaceship count and stats
+- Does not modify any blockchain state
+
+### Simulate Multiple Fleet Attack
+
+Simulate multiple fleets from different planets attacking the same target:
+
+```bash
+mcporter call mcp-conquest-eth-v0.simulate_multiple '{"fleets": [{"from": {"x": 10, "y": 20}, "quantity": 500}, {"from": {"x": 12, "y": 18}, "quantity": 300}], "to": {"x": 15, "y": 25}}'
+```
+
+**Parameters:**
+- `fleets` (array): Array of fleet objects, each with:
+  - `from` (object): Source coordinates `{x, y}`
+  - `quantity` (number): Number of spaceships
+- `to` (object): Target planet coordinates `{x, y}`
+- `arrivalTime` (number, optional): Specific arrival timestamp. If not provided, uses the maximum travel time from all fleets.
+
+**Returns:**
+- Individual outcome for each fleet (processed sequentially)
+- Final combined outcome with:
+  - Whether planet was captured
+  - Final spaceship count
+  - Final owner
+- Target planet initial state
+
+**Notes:**
+- Fleets are processed in order, with planet state updated after each combat
+- Useful for coordinating multi-planet attacks
+- Helps determine minimum fleet sizes needed for capture
+
 ### Check Pending Exits
 
 View all planets currently in the exit process:
@@ -177,8 +229,10 @@ Use Conquest.eth MCP when you need to:
 
 - Observe the universe: Check planets around locations, explore the map
 - Check on your planets: View your owned planets, their spaceship counts, and stats
+- Simulate attacks: Predict combat outcomes before committing to an attack
 - Send fleets to attack: Find targets and send attack fleets to enemy planets
 - Send reinforcements: Support allies by sending friendly fleets
+- Coordinate multi-planet attacks: Simulate combined attacks from multiple planets
 - Expand your territory: Acquire unclaimed planets in available zones
 - Exit planets: Retrieve your staked tokens when done with a planet
 
@@ -222,15 +276,18 @@ If `attackDamage >= numDefense`: Attack succeeds, all defending spaceships destr
 1. **Explore**: Use `get_my_planets` and `get_planets_around` to understand your position
 2. **Expand**: Use `acquire_planets` to claim new territory
 3. **Build**: Wait for planets to produce spaceships up to capacity
-4. **Attack**: Use `send_fleet` to attack enemies or reinforce allies
-5. **Resolve**: Use `resolve_fleet` after fleets arrive to trigger combat
-6. **Defend**: Monitor your planets and send reinforcements if needed
-7. **Exit**: Use `exit_planets` when you want to retrieve your stake
+4. **Plan**: Use `simulate` or `simulate_multiple` to predict attack outcomes before committing
+5. **Attack**: Use `send_fleet` to attack enemies or reinforce allies
+6. **Resolve**: Use `resolve_fleet` after fleets arrive to trigger combat
+7. **Defend**: Monitor your planets and send reinforcements if needed
+8. **Exit**: Use `exit_planets` when you want to retrieve your stake
 
 ## Notes
 
 - Always use small radius (25 is a good number) for better performance
 - Fleet operations are two-step: send then resolve
+- **Always simulate before attacking**: Use `simulate` to check if your attack will succeed. The "min" outcome represents the worst-case scenario.
+- **Coordinate multi-planet attacks**: Use `simulate_multiple` when attacking with fleets from multiple planets
 - Planets at over capacity can send fleets without losing production
 - Keep track of your pending fleets to ensure you resolve them on time
 - Monitor your pending exits to know when withdrawals are available

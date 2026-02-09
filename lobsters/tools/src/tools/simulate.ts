@@ -1,5 +1,4 @@
 import {z} from 'zod';
-import {zeroAddress} from 'viem';
 import {createTool} from '../tool-handling/types.js';
 import type {ConquestEnv} from '../types.js';
 import type {PlanetState} from 'conquest-eth-v0-contracts';

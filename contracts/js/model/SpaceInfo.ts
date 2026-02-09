@@ -62,6 +62,31 @@ export type Outcome = {
 	};
 };
 
+export type FleetInput = {
+	fromPlanet: PlanetInfo;
+	fleetAmount: number;
+	senderPlayer?: Player;
+	fromPlayer?: Player;
+	gift?: boolean;
+	specific?: string;
+	extra?: {defense: number; attackPowerOverride: number};
+};
+
+export type FleetOutcome = {
+	fromPlanet: PlanetInfo;
+	fleetAmount: number;
+	outcome: Outcome;
+};
+
+export type MultipleFleetOutcome = {
+	fleets: FleetOutcome[];
+	finalOutcome: {
+		min: {captured: boolean; numSpaceshipsLeft: number; owner?: string};
+		max: {captured: boolean; numSpaceshipsLeft: number; owner?: string};
+	};
+	arrivalTime: number;
+};
+
 export class SpaceInfo {
 	private readonly genesis: `0x${string}`;
 	private readonly cache: Map<string, PlanetInfo | null> = new Map();
@@ -897,6 +922,166 @@ export class SpaceInfo {
 				defenderLoss: Number(resultMin.defenderLoss),
 				attackerLoss: Number(resultMin.attackerLoss),
 			},
+		};
+	}
+
+	/**
+		* Simulate multiple fleets attacking the same target planet.
+		* Each fleet is processed sequentially, with the planet state updated after each combat.
+		*
+		* @param fleets - Array of fleet inputs, each with source planet and fleet amount
+		* @param toPlanet - Target planet info
+		* @param toPlanetState - Current state of target planet
+		* @param arrivalTime - Time when fleets arrive (optional, if not provided uses max travel time)
+		* @param toPlayer - Player info for target planet owner (optional)
+		* @returns Combined outcome showing each fleet's contribution and final result
+		*/
+	outcomeMultipleFleets(
+		fleets: FleetInput[],
+		toPlanet: PlanetInfo,
+		toPlanetState: PlanetState,
+		arrivalTime: number | undefined,
+		toPlayer?: Player,
+	): MultipleFleetOutcome {
+		if (fleets.length === 0) {
+			return {
+				fleets: [],
+				finalOutcome: {
+					min: {
+						captured: false,
+						numSpaceshipsLeft: toPlanetState.natives ? toPlanet.stats.natives : toPlanetState.numSpaceships,
+						owner: toPlanetState.owner,
+					},
+					max: {
+						captured: false,
+						numSpaceshipsLeft: toPlanetState.natives ? toPlanet.stats.natives : toPlanetState.numSpaceships,
+						owner: toPlanetState.owner,
+					},
+				},
+				arrivalTime: 0,
+			};
+		}
+
+		// Calculate travel times for all fleets and determine arrival time
+		const travelTimes = fleets.map(fleet => this.timeToArrive(fleet.fromPlanet, toPlanet));
+		const maxTravelTime = Math.max(...travelTimes);
+		const effectiveArrivalTime = arrivalTime ?? maxTravelTime;
+
+		// Track fleet outcomes
+		const fleetOutcomes: FleetOutcome[] = [];
+
+		// Track min/max planet states - we simulate both paths
+		let currentMinState = this.computeFuturePlanetState(
+			toPlanet,
+			toPlanetState,
+			Math.max(0, effectiveArrivalTime),
+		);
+		let currentMaxState = this.computeFuturePlanetState(
+			toPlanet,
+			toPlanetState,
+			Math.max(0, effectiveArrivalTime + this.resolveWindow),
+		);
+
+		// Track current owner (may change if planet is captured)
+		let currentMinOwner = toPlanetState.owner;
+		let currentMaxOwner = toPlanetState.owner;
+
+		// Process each fleet sequentially
+		for (const fleet of fleets) {
+			// Get individual outcome (using duration 0 since we already computed state at arrival)
+			const outcome = this.outcome(
+				fleet.fromPlanet,
+				toPlanet,
+				currentMinState,
+				fleet.fleetAmount,
+				0, // already at arrival time
+				fleet.senderPlayer,
+				fleet.fromPlayer,
+				toPlayer,
+				fleet.gift,
+				fleet.specific,
+				fleet.extra,
+			);
+
+			fleetOutcomes.push({
+				fromPlanet: fleet.fromPlanet,
+				fleetAmount: fleet.fleetAmount,
+				outcome,
+			});
+
+			// Update min state based on outcome
+			if (outcome.min.captured) {
+				// Planet was captured - attacker now owns it
+				currentMinState = {
+					...currentMinState,
+					numSpaceships: outcome.min.numSpaceshipsLeft,
+					natives: false,
+					active: true,
+					owner: fleet.fromPlayer?.address ?? fleet.senderPlayer?.address,
+				};
+				currentMinOwner = fleet.fromPlayer?.address ?? fleet.senderPlayer?.address;
+				// Future fleets from the same player would be gifts, from different players would be attacks
+			} else {
+				// Attack failed or was a gift
+				if (outcome.gift) {
+					currentMinState = {
+						...currentMinState,
+						numSpaceships: outcome.min.numSpaceshipsLeft,
+					};
+				} else {
+					// Attack failed - defender keeps planet with reduced spaceships
+					currentMinState = {
+						...currentMinState,
+						numSpaceships: outcome.min.numSpaceshipsLeft,
+					};
+				}
+			}
+
+			// Update max state similarly (for max case scenario)
+			if (outcome.max.captured) {
+				currentMaxState = {
+					...currentMaxState,
+					numSpaceships: outcome.max.numSpaceshipsLeft,
+					natives: false,
+					active: true,
+					owner: fleet.fromPlayer?.address ?? fleet.senderPlayer?.address,
+				};
+				currentMaxOwner = fleet.fromPlayer?.address ?? fleet.senderPlayer?.address;
+			} else {
+				if (outcome.gift) {
+					currentMaxState = {
+						...currentMaxState,
+						numSpaceships: outcome.max.numSpaceshipsLeft,
+					};
+				} else {
+					currentMaxState = {
+						...currentMaxState,
+						numSpaceships: outcome.max.numSpaceshipsLeft,
+					};
+				}
+			}
+		}
+
+		// Determine final captured status - captured if owner changed from original
+		const originalOwner = toPlanetState.owner?.toLowerCase();
+		const minCaptured = currentMinOwner?.toLowerCase() !== originalOwner;
+		const maxCaptured = currentMaxOwner?.toLowerCase() !== originalOwner;
+
+		return {
+			fleets: fleetOutcomes,
+			finalOutcome: {
+				min: {
+					captured: minCaptured,
+					numSpaceshipsLeft: currentMinState.numSpaceships,
+					owner: currentMinOwner,
+				},
+				max: {
+					captured: maxCaptured,
+					numSpaceshipsLeft: currentMaxState.numSpaceships,
+					owner: currentMaxOwner,
+				},
+			},
+			arrivalTime: effectiveArrivalTime,
 		};
 	}
 

@@ -75,30 +75,38 @@ function isCoordinateArraySchema(field: z.ZodTypeAny): {type: '2d' | '3d'} | nul
 }
 
 /**
+ * Convert camelCase to kebab-case for CLI option names
+ */
+function camelToKebabCase(str: string): string {
+	return str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+}
+
+/**
  * Convert Zod schema field to commander.js option definition
  */
 function zodFieldToOption(name: string, field: z.ZodTypeAny): string {
+	const kebabName = camelToKebabCase(name);
 	// Handle boolean flags - no value required
 	if (field instanceof z.ZodBoolean) {
-		return `--${name}`;
+		return `--${kebabName}`;
 	}
 	// Handle coordinate array - use single comma-separated string format
 	const coordArrayInfo = isCoordinateArraySchema(field);
 	if (coordArrayInfo) {
 		// Single string value containing all coordinates as comma-separated values
 		// e.g., "2,5,-3,4" for 2D or "2,5,1,-3,4,2" for 3D
-		return `--${name} <coords>`;
+		return `--${kebabName} <coords>`;
 	}
 	// Handle single coordinate objects - use <x,y> or <x,y,z> format
 	const coordInfo = isCoordinateSchema(field);
 	if (coordInfo) {
 		if (coordInfo.type === '3d') {
-			return `--${name} <x,y,z>`;
+			return `--${kebabName} <x,y,z>`;
 		}
-		return `--${name} <x,y>`;
+		return `--${kebabName} <x,y>`;
 	}
 	// All other types use <value> to accept explicit values
-	return `--${name} <value>`;
+	return `--${kebabName} <value>`;
 }
 
 /**

@@ -12,11 +12,11 @@ Use `conquest` to interact with Conquest.eth, a persistent blockchain strategy g
 
 ```bash
 # Option 1: Use npx (no install required)
-npx -y @conquest-eth/tools get_my_planets --radius 25
+npx -y @conquest-eth/tools get_planets_arround --center 0,0 --radius 25
 
 # Option 2: Install globally
 npm install -g @conquest-eth/tools # or use pnpm/volta/...
-conquest --rpc-url http://localhost:8545 and --game-contract 0x322813fd9a801c5507c9de605d63cea4f2ce6c44 get_my_planets --radius 25
+conquest --rpc-url http://localhost:8545 and --game-contract 0x322813fd9a801c5507c9de605d63cea4f2ce6c44 get_planets_arround --center 0,0 --radius 25
 ```
 
 ### Configuration
@@ -32,7 +32,7 @@ export GAME_CONTRACT=0x322813fd9a801c5507c9de605d63cea4f2ce6c44
 export PRIVATE_KEY=0x...
 
 # Query example
-conquest get_my_planets --radius 25
+conquest get_planets_arround --center 0,0 --radius 25
 ```
 
 Or by using .env / .env.local file that the CLI reads automatically.
@@ -43,17 +43,19 @@ All commands output JSON. Parse with `jq` or process programmatically.
 
 ## Commands Overview
 
-| Command              | Purpose                                      |
-| -------------------- | -------------------------------------------- |
-| `get_my_planets`     | List your owned planets within a radius      |
-| `get_planets_around` | Find planets near specific coordinates       |
-| `acquire_planets`    | Stake tokens to claim unclaimed planets      |
-| `send_fleet`         | Send spaceships to attack or reinforce       |
-| `resolve_fleet`      | Reveal fleet destination and trigger combat  |
-| `exit_planets`       | Start exit process to retrieve staked tokens |
-| `get_pending_exits`  | View planets currently in exit process       |
-| `get_pending_fleets` | View fleets still traveling                  |
-| `verify_exit_status` | Check if exit is complete and withdrawable   |
+| Command              | Purpose                                        |
+| -------------------- | ---------------------------------------------- |
+| `get_planets_around` | Find planets near specific coordinates         |
+| `acquire_planets`    | Stake tokens to claim unclaimed planets        |
+| `send_fleet`         | Send spaceships to attack or reinforce         |
+| `resolve_fleet`      | Reveal fleet destination and trigger combat    |
+| `exit_planets`       | Start exit process to retrieve staked tokens   |
+| `get_pending_exits`  | View planets currently in exit process         |
+| `get_pending_fleets` | View fleets still traveling                    |
+| `verify_exit_status` | Check if exit is complete and withdrawable     |
+| `simulate`           | Simulate a single fleet attack outcome         |
+| `simulate_multiple`  | Simulate multiple fleets attacking same target |
+| `withdraw`           | Withdraw tokens from completed exits           |
 
 ---
 
@@ -62,7 +64,7 @@ All commands output JSON. Parse with `jq` or process programmatically.
 ### Get Your Planets
 
 ```bash
-conquest get_my_planets --radius 25
+conquest get_planets_arround --center 0,0 --radius 25 --only me
 # Output: { "planets": [{ "planetId": "123", "location": {"x": 10, "y": 20}, "numSpaceships": 5000, ... }] }
 ```
 
@@ -194,6 +196,76 @@ conquest resolve_fleet --fleet-id "your-fleet-id"
 
 ---
 
+## Combat Simulation
+
+Simulate fleet attacks to predict outcomes before committing.
+
+### Simulate Single Fleet Attack
+
+```bash
+# Simulate an attack from (10,20) to (15,25) with 500 spaceships
+conquest simulate --from '{"x":10,"y":20}' --to '{"x":15,"y":25}' --quantity 500
+
+# Using CLI shorthand for coordinates
+conquest simulate --from 10,20 --to 15,25 --quantity 500
+```
+
+**Parameters:**
+
+- `--from <coords>` (object): Source planet coordinates `{"x": number, "y": number}` or shorthand `x,y`
+- `--to <coords>` (object): Target planet coordinates `{"x": number, "y": number}` or shorthand `x,y`
+- `--quantity` (number): Number of spaceships to send
+
+**Returns:** Min/max outcomes including:
+
+- Whether capture would be successful
+- Number of spaceships left after combat
+- Time until attack fails (resolve window)
+- Combat losses for attacker and defender
+- Tax info for non-allied gifts
+
+### Simulate Multiple Fleets Attack
+
+Simulate multiple fleets from different planets attacking the same target simultaneously:
+
+```bash
+# Simulate two fleets attacking the same target
+conquest simulate_multiple \
+  --fleets '[{"from":{"x":10,"y":20},"quantity":500},{"from":{"x":12,"y":18},"quantity":300}]' \
+  --to '{"x":15,"y":25}'
+
+# With custom arrival time
+conquest simulate_multiple \
+  --fleets '[{"from":{"x":10,"y":20},"quantity":500},{"from":{"x":12,"y":18},"quantity":300}]' \
+  --to 15,25 \
+  --arrival-time 1735123456
+```
+
+**Parameters:**
+
+- `--fleets` (array): JSON array of fleet objects, each with:
+  - `from`: Source coordinates `{"x": number, "y": number}`
+  - `quantity`: Number of spaceships
+- `--to <coords>` (object): Target planet coordinates `{"x": number, "y": number}` or shorthand `x,y`
+- `--arrival-time` (optional): Specific arrival timestamp. If not provided, uses the maximum travel time from all fleets.
+
+**Returns:**
+
+- Individual outcome for each fleet (processed sequentially)
+- Final combined outcome with:
+  - Whether planet was captured
+  - Final spaceship count
+  - Final owner
+- Target planet initial state
+
+**Notes:**
+
+- Fleets are processed in order, with planet state updated after each combat
+- Useful for coordinating multi-planet attacks
+- Helps determine minimum fleet sizes needed for capture
+
+---
+
 ## Monitoring Status
 
 ### Check Pending Fleets
@@ -254,7 +326,7 @@ attackDamage = (attackFactor * attack) / defense / 1000000
 
 ```bash
 # Find your planets
-conquest get_my_planets --radius 50
+conquest get_planets_around --center 0,0 --radius 50 --only me
 
 # Find unclaimed planets nearby
 conquest get_planets_around --center 10,20 --radius 15 | jq '.planets[] | select(.owner == "0x0000000000000000000000000000000000000000")'
@@ -263,13 +335,40 @@ conquest get_planets_around --center 10,20 --radius 15 | jq '.planets[] | select
 conquest acquire_planets --coordinates "12,22 18,28"
 ```
 
+### Simulate Before Attack
+
+```bash
+# First simulate to check if attack will succeed
+conquest simulate --from 50,50 --to 55,55 --quantity 1000
+
+# Check if min outcome shows capture (worst case scenario)
+# If yes, proceed with sending the fleet
+conquest send_fleet --from 50,50 --to 55,55 --quantity 1000
+```
+
+### Coordinate Multi-Planet Attack
+
+```bash
+# Simulate combined attack from multiple planets
+conquest simulate_multiple \
+  --fleets '[{"from":{"x":50,"y":50},"quantity":500},{"from":{"x":48,"y":52},"quantity":300}]' \
+  --to 55,55
+
+# If successful, send all fleets (coordinate timing)
+conquest send_fleet --from 50,50 --to 55,55 --quantity 500
+conquest send_fleet --from 48,52 --to 55,55 --quantity 300
+```
+
 ### Attack and Capture
 
 ```bash
 # Find targets near your strong planet
 conquest get_planets_around --center 50,50 --radius 20
 
-# Send attack fleet
+# Simulate the attack first
+conquest simulate --from 50,50 --to 55,55 --quantity 1000
+
+# If simulation shows capture, send attack fleet
 conquest send_fleet --from 50,50 --to 55,55 --quantity 1000
 
 # Monitor fleet
@@ -298,10 +397,10 @@ conquest verify_exit_status --x 10 --y 20
 
 ```bash
 # Filter planets with lots of spaceships
-conquest get_my_planets --radius 25 | jq '.planets[] | select(.numSpaceships > 1000)'
+conquest get_planets_arround --center 0,0 --radius 25 | jq '.planets[] | select(.numSpaceships > 1000)'
 
 # Count total planets
-conquest get_my_planets --radius 50 | jq '.planets | length'
+conquest get_planets_arround --center 0,0 --radius 50 | jq '.planets | length'
 
 # Get fleet IDs only
 conquest get_pending_fleets | jq '.fleets[].fleetId'
@@ -350,10 +449,10 @@ Without private key, only read commands work:
 
 ```bash
 # Works without PRIVATE_KEY:
-conquest get_my_planets --radius 10
 conquest get_planets_around --center 0,0 --radius 20
 
 # Requires PRIVATE_KEY:
+conquest get_planets_arround --center 0,0 --only me
 conquest acquire_planets --coordinates "10,20"
 conquest send_fleet --from 10,20 --to 15,25 --quantity 100
 ```
@@ -373,6 +472,8 @@ curl -X POST https://rpc.gnosischain.com -H "Content-Type: application/json" -d 
 - Resolve fleets within ~12 hours of arrival
 - Monitor pending exits to know when withdrawals are ready
 - Planets over capacity can send fleets without losing production
+- **Always simulate before attacking**: Use `simulate` to check if your attack will succeed before committing. The "min" outcome represents the worst-case scenario.
+- **Coordinate multi-planet attacks**: Use `simulate_multiple` to plan combined attacks from multiple planets targeting the same enemy.
 - **Coordinate formats**: Multiple coordinate tuples can be separated by space or comma:
   - `"2,5 -3,4"` (space-separated tuples)
   - `"2,5,-3,4"` (all commas)
