@@ -37,6 +37,9 @@ layout {
 		pane name="MISSIV"  command="pnpm"  {
 			args "missiv:dev"
 		}
+		pane name="CLAIM"  command="pnpm"  {
+			args "--filter" "./helper-services/selfclaw-claims" "dev"
+		}
 	}
 	pane name="externals"  split_direction="vertical" {
 		pane name="EXTERNAL"  command="pnpm"  {

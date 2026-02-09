@@ -1,0 +1,30 @@
+{
+  "name": "selfclaw-claims-server-cf-worker",
+  "version": "0.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "dependencies": {
+    "hono": "^4.7.5",
+    "named-logs": "^0.3.2",
+    "named-logs-context": "^0.1.1",
+    "remote-sql-d1": "^0.0.6",
+    "viem": "^2.23.0",
+    "workers-logger": "0.2.1"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250319.0",
+    "remote-sql": "^0.0.6",
+    "vitest": "^3.0.5",
+    "wrangler": "^4.2.0"
+  },
+  "scripts": {
+    "dev": "echo 'waiting for contracts.json...'; wait-on ../../web/src/lib/contracts.json && node generate-env.cjs ../../web/src/lib/contracts.json && wrangler dev --port 34004",
+    "deploy": "wrangler deploy",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "migrate": "wrangler d1 execute selfclaw-db --file=./migrations/0001_create_claims.sql",
+    "migrate:local": "wrangler d1 execute selfclaw-db --local --file=./migrations/0001_create_claims.sql"
+  }
+}

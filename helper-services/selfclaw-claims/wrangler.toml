@@ -1,0 +1,26 @@
+name = "selfclaw-test-server"
+main = "src/worker.ts"
+compatibility_date = "2023-08-14"
+
+compatibility_flags = [ "nodejs_compat" ] # for node:async_hooks
+
+[observability.logs]
+enabled = true
+
+[[d1_databases]]
+binding = "DB" # i.e. available in your Worker on env.DB
+database_name = "selfclaw-db"
+database_id = ""
+
+# Token Distribution Configuration
+# Note: PRIVATE_KEY should be set as a secret using:
+#   wrangler secret put PRIVATE_KEY
+#
+# [vars]
+# TOKEN_ADDRESS = ""                 # ERC20 token contract address
+# TOKEN_AMOUNT = "1000000000000000000"  # Amount in wei (1 token with 18 decimals)
+# RPC_URL = "https://forno.celo.org"    # Celo mainnet RPC
+# CHAIN_ID = "42220"                    # Celo mainnet chain ID
+# TIMESTAMP_TOLERANCE_MS = "5000"       # Optional: signature timestamp tolerance
+# SELFCLAW_API_URL = "https://selfclaw.ai"  # Optional: SelfClaw API URL
+
