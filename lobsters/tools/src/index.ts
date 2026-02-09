@@ -39,6 +39,8 @@ export async function createConquestEnv(options: EnvFactoryOptions): Promise<Con
 	return {
 		fleetManager: new FleetManager(clients, gameContract, spaceInfo, contractConfig, storage),
 		planetManager: new PlanetManager(clients, gameContract, spaceInfo, contractConfig, storage),
+		spaceInfo,
+		contractConfig,
 		options,
 	};
 }
