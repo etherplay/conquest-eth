@@ -91,16 +91,20 @@ conquest --rpc-url http://localhost:8545 and --game-contract 0x322813fd9a801c550
 Stake tokens to claim ownership of unclaimed planets:
 
 ```bash
-# Acquire multiple planets using JSON array format
-conquest acquire_planets --coordinates '[{"x":10,"y":20},{"x":15,"y":25},{"x":20,"y":30}]'
+# Acquire a single planet using comma-separated coordinates
+conquest acquire_planets --coordinates "10,20"
+
+# Acquire multiple planets using comma-separated coordinates
+# Format: x1,y1,x2,y2,x3,y3,... (pairs of x,y values)
+conquest acquire_planets --coordinates "10,20 15,25 20,30"
 
 # With custom amounts
-conquest acquire_planets --coordinates '[{"x":10,"y":20}]' --amount-to-mint 1000000 --token-amount 500
+conquest acquire_planets --coordinates "10,20" --amount-to-mint 1000000 --token-amount 500
 ```
 
 **Parameters:**
 
-- `--coordinates` (JSON array): Array of coordinate objects, e.g., `[{"x":10,"y":20}]`
+- `--coordinates` (string): Comma-separated coordinates. Single planet: `"x,y"`. Multiple planets: `"x1,y1 x2,y2 x3,y3 ..."`
 - `--amount-to-mint` (optional): Amount of native token to spend
 - `--token-amount` (optional): Amount of staking token to spend
 
@@ -115,12 +119,17 @@ conquest acquire_planets --coordinates '[{"x":10,"y":20}]' --amount-to-mint 1000
 Start exit process to retrieve staked tokens:
 
 ```bash
-conquest exit_planets --coordinates '[{"x":10,"y":20},{"x":15,"y":25}]'
+# Exit a single planet
+conquest exit_planets --coordinates "10,20"
+
+# Exit multiple planets
+# Format: x1,y1 x2,y2 x3,y3 ... (pairs of x,y values)
+conquest exit_planets --coordinates "10,20 15,25"
 ```
 
 **Parameters:**
 
-- `--coordinates` (JSON array): Array of coordinate objects to exit
+- `--coordinates` (string): Comma-separated coordinates. Single planet: `"x,y"`. Multiple planets: `"x1,y1 x2,y2 x3,y3 ..."`
 
 **Notes:**
 
@@ -149,8 +158,8 @@ conquest send_fleet --from 10,20 --to 15,25 --quantity 100 --gift
 
 **Parameters:**
 
-- `--from <x,y>` (coordinates): Source planet
-- `--to <x,y>` (coordinates): Destination planet
+- `--from <coords>` (string): Source planet coordinates in `x,y` format
+- `--to <coords>` (string): Destination planet coordinates in `x,y` format
 - `--quantity` (number): Number of spaceships to send
 - `--arrivalTimeWanted` (optional): Desired arrival timestamp
 - `--gift` (optional): Send as gift without combat
@@ -208,6 +217,8 @@ conquest verify_exit_status --x 10 --y 20
 # Returns: exit completion status
 ```
 
+**Note:** The `verify_exit_status` command uses separate `--x` and `--y` parameters rather than a combined coordinates string.
+
 ---
 
 ## Gameplay Fundamentals
@@ -249,7 +260,7 @@ conquest get_my_planets --radius 50
 conquest get_planets_around --center 10,20 --radius 15 | jq '.planets[] | select(.owner == "0x0000000000000000000000000000000000000000")'
 
 # Acquire new territory
-conquest acquire_planets --coordinates '[{"x":12,"y":22},{"x":18,"y":28}]'
+conquest acquire_planets --coordinates "12,22 18,28"
 ```
 
 ### Attack and Capture
@@ -272,7 +283,7 @@ conquest resolve_fleet --fleet-id "your-fleet-id"
 
 ```bash
 # Start exit
-conquest exit_planets --coordinates '[{"x":10,"y":20}]'
+conquest exit_planets --coordinates 10,20
 
 # Check progress
 conquest get_pending_exits
@@ -343,7 +354,7 @@ conquest get_my_planets --radius 10
 conquest get_planets_around --center 0,0 --radius 20
 
 # Requires PRIVATE_KEY:
-conquest acquire_planets --coordinates '[{"x":10,"y":20}]'
+conquest acquire_planets --coordinates "10,20"
 conquest send_fleet --from 10,20 --to 15,25 --quantity 100
 ```
 
@@ -362,3 +373,8 @@ curl -X POST https://rpc.gnosischain.com -H "Content-Type: application/json" -d 
 - Resolve fleets within ~12 hours of arrival
 - Monitor pending exits to know when withdrawals are ready
 - Planets over capacity can send fleets without losing production
+- **Coordinate formats**: Multiple coordinate tuples can be separated by space or comma:
+  - `"2,5 -3,4"` (space-separated tuples)
+  - `"2,5,-3,4"` (all commas)
+  - `"2,5, -3,4"` (mixed - comma followed by space)
+- **Negative coordinates**: Use quotes to ensure negative numbers are parsed correctly: `"-10,20 -5,15"`

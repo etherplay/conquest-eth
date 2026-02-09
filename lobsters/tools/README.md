@@ -12,8 +12,7 @@ A dual-mode CLI tool for interacting with the Conquest.eth blockchain game. It c
 ## Installation
 
 ```bash
-pnpm install
-pnpm build
+npm i -g @conquest-eth/tools
 ```
 
 ## Usage
@@ -23,18 +22,17 @@ pnpm build
 Show help and available commands:
 
 ```bash
-node dist/cli.js --help
+ecli --help
 ```
 
 #### Global Options
 
-| Option                      | Environment Variable | Description                      | Default                  |
-| --------------------------- | -------------------- | -------------------------------- | ------------------------ |
-| `--rpc-url <url>`           | `RPC_URL`            | RPC URL for the Ethereum network | (required)               |
-| `--game-contract <address>` | `GAME_CONTRACT`      | Game contract address            | (required)               |
-| `--storage <type>`          | `STORAGE_TYPE`       | Storage backend: json or sqlite  | json                     |
-| `--storage-path <path>`     | `STORAGE_PATH`       | Storage directory path           | ./data                   |
-| `--private-key <key>`       | `PRIVATE_KEY`        | Private key for transactions     | (required for write ops) |
+| Option                      | Environment Variable | Description                      | Default    |
+| --------------------------- | -------------------- | -------------------------------- | ---------- |
+| `--rpc-url <url>`           | `RPC_URL`            | RPC URL for the Ethereum network | (required) |
+| `--game-contract <address>` | `GAME_CONTRACT`      | Game contract address            | (required) |
+| `--storage <type>`          | `STORAGE_TYPE`       | Storage backend: json or sqlite  | json       |
+| `--storage-path <path>`     | `STORAGE_PATH`       | Storage directory path           | ./data     |
 
 #### MCP Server Options
 
@@ -55,7 +53,7 @@ export PRIVATE_KEY=0x...
 Then run commands without repeating options:
 
 ```bash
-node dist/cli.js get_my_planets --radius 10
+ecli get_my_planets --radius 10
 ```
 
 #### Available Commands
@@ -76,22 +74,22 @@ node dist/cli.js get_my_planets --radius 10
 
 ```bash
 # Get your planets
-node dist/cli.js get_my_planets --radius 10
+ecli get_my_planets --radius 10
 
 # Find planets near a location
-node dist/cli.js get_planets_around --center-x 0 --center-y 0 --radius 20
+ecli get_planets_around --center-x 0 --center-y 0 --radius 20
 
 # Acquire planets
-node dist/cli.js acquire_planets --planet-ids 1,2,3,4,5
+ecli acquire_planets --planet-ids 1,2,3,4,5
 
 # Send a fleet (coordinates use x,y format)
-node dist/cli.js send_fleet --from 10,20 --to 15,25 --quantity 100
+ecli send_fleet --from 10,20 --to 15,25 --quantity 100
 
 # Resolve a fleet
-node dist/cli.js resolve_fleet --fleet-id "your-fleet-id"
+ecli resolve_fleet --fleet-id "your-fleet-id"
 
 # Exit planets
-node dist/cli.js exit_planets --planet-ids 1,2,3
+ecli exit_planets --planet-ids 1,2,3
 ```
 
 See [`EXAMPLES.md`](./EXAMPLES.md) for more detailed usage examples.
@@ -101,19 +99,19 @@ See [`EXAMPLES.md`](./EXAMPLES.md) for more detailed usage examples.
 Start the MCP server for AI assistant integration:
 
 ```bash
-node dist/cli.js mcp --rpc-url https://rpc.gnosischain.com --game-contract 0x322813fd9a801c5507c9de605d63cea4f2ce6c44
+ecli mcp --rpc-url https://rpc.gnosischain.com --game-contract 0x322813fd9a801c5507c9de605d63cea4f2ce6c44
 ```
 
 Or use the MCP Inspector for testing:
 
 ```bash
-pnpm mcp:inspector node dist/cli.js --game-contract 0xD833d4dBBb0C19aF1EEf76540d66E2076a5e9D72 --rpc-url https://rpc.gnosis.gateway.fm
+pnpm mcp:inspector ecli --game-contract 0xD833d4dBBb0C19aF1EEf76540d66E2076a5e9D72 --rpc-url https://rpc.gnosis.gateway.fm
 ```
 
 For Conquest 2025-1 edition, use:
 
 ```bash
-pnpm mcp:inspector node dist/cli.js --game-contract 0xD833d4dBBb0C19aF1EEf76540d66E2076a5e9D72 --rpc-url https://rpc.gnosis.gateway.fm
+pnpm mcp:inspector ecli --game-contract 0xD833d4dBBb0C19aF1EEf76540d66E2076a5e9D72 --rpc-url https://rpc.gnosis.gateway.fm
 ```
 
 ## Architecture

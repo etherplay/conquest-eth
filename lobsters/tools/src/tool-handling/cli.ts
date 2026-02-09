@@ -82,13 +82,12 @@ function zodFieldToOption(name: string, field: z.ZodTypeAny): string {
 	if (field instanceof z.ZodBoolean) {
 		return `--${name}`;
 	}
-	// Handle coordinate array - use variadic format
+	// Handle coordinate array - use single comma-separated string format
 	const coordArrayInfo = isCoordinateArraySchema(field);
 	if (coordArrayInfo) {
-		if (coordArrayInfo.type === '3d') {
-			return `--${name} <x,y,z...>`;
-		}
-		return `--${name} <x,y...>`;
+		// Single string value containing all coordinates as comma-separated values
+		// e.g., "2,5,-3,4" for 2D or "2,5,1,-3,4,2" for 3D
+		return `--${name} <coords>`;
 	}
 	// Handle single coordinate objects - use <x,y> or <x,y,z> format
 	const coordInfo = isCoordinateSchema(field);
@@ -142,6 +141,61 @@ function parseCoordinateString(
 }
 
 /**
+ * Parse coordinate array string into an array of coordinate objects.
+ * Supports multiple formats:
+ * - All commas: "2,5,-3,4" or "2,5,1,-3,4,2"
+ * - Space-separated tuples: "2,5 -3,4" or "2,5,1 -3,4,2"
+ * - Mixed with comma and space: "2,5, -3,4" or "2,5,-3,4, 1,2"
+ */
+function parseCoordinateArrayString(
+	value: string,
+	type: '2d' | '3d',
+): {x: number; y: number; z?: number}[] {
+	const coordinatesPerPoint = type === '3d' ? 3 : 2;
+	const result: {x: number; y: number; z?: number}[] = [];
+
+	// First, try to split by space to get potential tuples
+	// This handles formats like "2,5 -3,4" or "2,5, -3,4"
+	const spaceParts = value.trim().split(/\s+/);
+
+	// Collect all numeric values
+	const allValues: number[] = [];
+
+	for (const part of spaceParts) {
+		// Each part could be a single tuple like "2,5" or "-3,4" or just a number
+		// Split by comma and collect all values
+		const commaParts = part.split(',').map((v) => v.trim()).filter((v) => v !== '');
+		for (const commaPart of commaParts) {
+			const num = Number(commaPart);
+			if (isNaN(num)) {
+				throw new Error(`Invalid coordinate value: "${commaPart}" is not a number`);
+			}
+			allValues.push(num);
+		}
+	}
+
+	if (allValues.length % coordinatesPerPoint !== 0) {
+		throw new Error(
+			`Invalid coordinate count: expected multiple of ${coordinatesPerPoint} values, got ${allValues.length}`,
+		);
+	}
+
+	for (let i = 0; i < allValues.length; i += coordinatesPerPoint) {
+		const x = allValues[i];
+		const y = allValues[i + 1];
+
+		if (type === '3d') {
+			const z = allValues[i + 2];
+			result.push({x, y, z});
+		} else {
+			result.push({x, y});
+		}
+	}
+
+	return result;
+}
+
+/**
  * Split a string by comma, respecting escaped commas (using backslash).
  * Escaped commas (\,) are preserved as literal commas in the result.
  * @param value - The string to split
@@ -179,35 +233,22 @@ function splitByCommaWithEscaping(value: string): string[] {
  * Parse option value based on Zod type
  */
 function parseOptionValue(field: z.ZodTypeAny, value: any): any {
-	// Handle coordinate array - parse array of "x,y" or "x,y,z" strings from variadic option
+	// Handle coordinate array - parse a single comma-separated string into array of coordinates
 	const coordArrayInfo = isCoordinateArraySchema(field);
 	if (coordArrayInfo) {
-		// Commander.js gives us an array of strings for variadic options
-		if (Array.isArray(value)) {
-			return value.map((coordStr) => {
-				if (typeof coordStr === 'string') {
-					const parsed = parseCoordinateString(coordStr, coordArrayInfo.type);
-					if (parsed) {
-						return parsed;
-					}
-					throw new Error(
-						`Invalid coordinate format for value "${coordStr}". Expected format: ${coordArrayInfo.type === '3d' ? 'x,y,z' : 'x,y'}`,
-					);
-				}
-				// Already an object (shouldn't happen but handle it)
-				return coordStr;
-			});
-		}
-		// Single string value - wrap in array (edge case, shouldn't happen with variadic)
+		// Commander.js gives us a single string value
 		if (typeof value === 'string') {
-			const parsed = parseCoordinateString(value, coordArrayInfo.type);
-			if (parsed) {
-				return [parsed];
-			}
-			throw new Error(
-				`Invalid coordinate format for value "${value}". Expected format: ${coordArrayInfo.type === '3d' ? 'x,y,z' : 'x,y'}`,
-			);
+			return parseCoordinateArrayString(value, coordArrayInfo.type);
 		}
+		// Handle array case (if somehow passed as array)
+		if (Array.isArray(value)) {
+			// Join array elements and parse as comma-separated
+			const joined = value.join(',');
+			return parseCoordinateArrayString(joined, coordArrayInfo.type);
+		}
+		throw new Error(
+			`Invalid coordinate format. Expected comma-separated string: e.g., "2,5,-3,4" for 2D or "2,5,1,-3,4,2" for 3D`,
+		);
 	}
 
 	// Handle single coordinate objects - parse "x,y" or "x,y,z" format
