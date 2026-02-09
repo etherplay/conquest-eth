@@ -11,3 +11,4 @@ export {get_pending_fleets} from './get_pending_fleets.js';
 export {get_native_token_balance} from './get_native_token_balance.js';
 export {get_play_token_balance} from './get_play_token_balance.js';
 export {withdraw} from './withdraw.js';
+export {simulate} from './simulate.js';
