@@ -172,7 +172,10 @@ function parseCoordinateArrayString(
 	for (const part of spaceParts) {
 		// Each part could be a single tuple like "2,5" or "-3,4" or just a number
 		// Split by comma and collect all values
-		const commaParts = part.split(',').map((v) => v.trim()).filter((v) => v !== '');
+		const commaParts = part
+			.split(',')
+			.map((v) => v.trim())
+			.filter((v) => v !== '');
 		for (const commaPart of commaParts) {
 			const num = Number(commaPart);
 			if (isNaN(num)) {
