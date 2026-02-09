@@ -1,7 +1,7 @@
 import {wallet} from '$lib/blockchain/wallet';
 import {BaseStoreWithData} from '$lib/utils/stores/base';
 import {BigNumber} from '@ethersproject/bignumber';
-import {initialContractsInfos as contractsInfos} from '$lib/blockchain/contracts';
+import {initialContractsInfos as contractsInfos, isExternalToken} from '$lib/blockchain/contracts';
 import {spaceInfo} from '$lib/space/spaceInfo';
 import {getGasPrice} from './gasPrice';
 
@@ -26,6 +26,15 @@ class MintFlowStore extends BaseStoreWithData<MintFlow, Data> {
   }
 
   async mint(numTokenUnit: number): Promise<void> {
+    // Guard: minting is not available when using external tokens
+    if (isExternalToken()) {
+      this.setPartial({
+        step: 'IDLE',
+        error: {message: 'Minting is not available when using external tokens'},
+      });
+      return;
+    }
+
     this.setPartial({step: 'WAITING_CONFIRMATION', cancelingConfirmation: false});
     this.setData({numTokenUnit: numTokenUnit});
   }

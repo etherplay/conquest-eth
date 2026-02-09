@@ -9,7 +9,7 @@ import {privateWallet} from '$lib/account/privateWallet';
 import type {PlanetInfo} from 'conquest-eth-common';
 import {myTokens} from '$lib/space/token';
 import {get} from 'svelte/store';
-import {initialContractsInfos} from '$lib/blockchain/contracts';
+import {initialContractsInfos, isExternalToken} from '$lib/blockchain/contracts';
 import {getGasPrice} from './gasPrice';
 import selection from '$lib/map/selection';
 import {conversations} from '$lib/missiv';
@@ -447,6 +447,89 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
               });
             } else {
               console.error(`Error on transferAndCall:`, e);
+              this.backToWhereYouWere({
+                error: e,
+              });
+            }
+          } else {
+            throw e;
+          }
+          return;
+        }
+      }
+    } else if (isExternalToken()) {
+      // External token mode: cannot mint, must use acquireMultipleViaTransferFrom
+      // User must already have enough tokens in their wallet
+      const outerspaceContract = wallet?.contracts.OuterSpace;
+
+      const myBalance = get(myTokens).playTokenBalance;
+      if (myBalance.lt(tokenAmount)) {
+        this.backToWhereYouWere({
+          error: new Error(
+            `Insufficient token balance. Need ${formatEther(tokenAmount)} but have ${formatEther(myBalance)}`
+          ),
+        });
+        return;
+      }
+
+      // Check allowance for external tokens
+      const allowance = await wallet!.contracts.PlayToken.allowance(
+        wallet.address,
+        wallet!.contracts.OuterSpace.address
+      );
+      if (allowance.lt(tokenAmount)) {
+        this.setPartial({step: 'REQUIRE_ALLOWANCE'});
+        return;
+      }
+
+      let gasEstimation: BigNumber;
+      try {
+        gasEstimation = await outerspaceContract.estimateGas.acquireMultipleViaTransferFrom(locationIds, tokenAmount);
+      } catch (e) {
+        console.error(e);
+        this.backToWhereYouWere({
+          error: e,
+        });
+        return;
+      }
+      const gasLimit = gasEstimation.add(100000);
+
+      const valueNeeded = gasLimit.mul(maxFeePerGas);
+
+      if (currentNativeBalance.lt(valueNeeded)) {
+        this.setPartial({
+          step: 'NOT_ENOUGH_NATIVE_TOKEN',
+        });
+        return;
+      }
+
+      this.setPartial({step: 'WAITING_TX'});
+
+      try {
+        tx = await outerspaceContract.acquireMultipleViaTransferFrom(locationIds, tokenAmount, {
+          gasLimit,
+          maxFeePerGas,
+          maxPriorityFeePerGas,
+        });
+      } catch (e) {
+        if (e.transactionHash) {
+          tx = {hash: e.transactionHash};
+          try {
+            const tResponse = await wallet.provider.getTransaction(e.transactionHash);
+            tx = tResponse;
+          } catch (e) {
+            console.log(`could not fetch tx, to get the nonce`);
+          }
+        }
+        if (!tx || !tx.hash) {
+          if (this.$store.step === 'WAITING_TX') {
+            if (e.message && e.message.indexOf('User denied') >= 0) {
+              this.setPartial({
+                step: 'IDLE',
+                error: undefined,
+              });
+            } else {
+              console.error(`Error on acquireMultipleViaTransferFrom:`, e);
               this.backToWhereYouWere({
                 error: e,
               });

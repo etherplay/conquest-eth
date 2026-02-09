@@ -57,6 +57,7 @@ export const config = {
 	chains: {
 		31337: {
 			tags: ['auto-mine', 'external-token'],
+			// tags: ['auto-mine'],
 		},
 	},
 	scripts: deploymentsFolder,

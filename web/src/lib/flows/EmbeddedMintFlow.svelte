@@ -5,9 +5,12 @@
   import PlayCoin from '$lib/components/utils/PlayCoin.svelte';
   import {formatError} from '$lib/utils';
   import mintFlow from '$lib/flows/mint';
-  import {initialContractsInfos as contractsInfos} from '$lib/blockchain/contracts';
+  import {initialContractsInfos as contractsInfos, isExternalToken} from '$lib/blockchain/contracts';
   import {formatEther} from '@ethersproject/units';
   import {nativeTokenSymbol, roundTo1Decimal} from '$lib/config';
+
+  // Check if we're using an external token (no minting available)
+  const externalToken = isExternalToken();
 
   let tokenAmountToMint = $mintFlow.data?.numTokenUnit;
   $: if ($mintFlow.data?.numTokenUnit && !tokenAmountToMint) {
@@ -15,7 +18,18 @@
   }
 </script>
 
-{#if $mintFlow.error}
+{#if externalToken}
+  <!-- External token mode: minting is not available -->
+  <Modal on:close={() => mintFlow.cancel()}>
+    <div class="text-center">
+      <h2 class="text-red-500">Minting Not Available</h2>
+      <p class="text-gray-300 mt-2 text-sm">
+        This deployment uses an external token that cannot be minted. Please acquire tokens <!-- TODO link -->
+      </p>
+      <Button class="mt-5" label="Close" on:click={() => mintFlow.cancel()}>Close</Button>
+    </div>
+  </Modal>
+{:else if $mintFlow.error}
   <Modal on:close={() => mintFlow.acknownledgeError()}>
     <div class="text-center">
       <h2>An error happenned For Planet Staking</h2>

@@ -15,11 +15,14 @@
   import mintFlow from '$lib/flows/mint';
   import EmbeddedMintFlow from './EmbeddedMintFlow.svelte';
   import {nativeTokenSymbol} from '$lib/config';
-  import {initialContractsInfos} from '$lib/blockchain/contracts';
+  import {initialContractsInfos, isExternalToken} from '$lib/blockchain/contracts';
   import MultiplePlanetClaimPanel from '$lib/components/planets/MultiplePlanetClaimPanel.svelte';
   import Help from '$lib/components/utils/Help.svelte';
   import {spaceQuery} from '$lib/space/spaceQuery';
   import {formatEther} from '@ethersproject/units';
+
+  // Check if we're using an external token (no minting available)
+  const externalToken = isExternalToken();
 
   $: coords = $claimFlow.data?.coords;
   $: planetInfo = coords ? spaceInfo.getPlanetInfo(coords[0].x, coords[0].y) : undefined;
@@ -231,6 +234,24 @@
             >
           </label>
         {/if}
+      </div>
+    {:else if externalToken && $myTokens.playTokenBalance.lt(cost.mul('100000000000000'))}
+      <!-- External token mode: users cannot mint tokens, show insufficient balance message -->
+      <div class="text-center">
+        <h2 class="text-red-500">Insufficient Token Balance</h2>
+        <p class="text-gray-300 mt-2 text-sm">
+          You need <span class="text-yellow-500">{stake} <PlayCoin class="inline w-4" /></span> to stake on planet
+          <span class="text-green-500">"{stats.name}"</span>.
+        </p>
+        <p class="text-gray-300 mt-2 text-sm">
+          Your current balance: <span class="text-yellow-500"
+            >{formatEther($myTokens.playTokenBalance)} <PlayCoin class="inline w-4" /></span
+          >
+        </p>
+        <p class="text-blue-400 mt-4 text-sm">
+          Please acquire more tokens. <!-- TODO link -->
+        </p>
+        <Button class="mt-5" label="Close" on:click={() => claimFlow.cancel()}>Close</Button>
       </div>
     {:else if $myTokens.playTokenBalance.eq(0) && $myTokens.freePlayTokenBalance.eq(0)}
       <!-- You do not have any
