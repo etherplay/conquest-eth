@@ -30,7 +30,9 @@ describe('CLI - Error Handling', () => {
 			const result = await invokeCliCommand([
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'10',
 			]);
@@ -43,7 +45,9 @@ describe('CLI - Error Handling', () => {
 			const result = await invokeCliCommand([
 				'--rpc-url',
 				RPC_URL,
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'10',
 			]);
@@ -58,20 +62,22 @@ describe('CLI - Error Handling', () => {
 				RPC_URL,
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
 			]);
 
 			expect(result.exitCode).not.toBe(0);
-			// Should complain about missing radius parameter
+			// Should complain about missing center and radius parameters
 		});
 
-		it('should error when radius parameter is missing for get_my_planets', async () => {
+		it('should error when radius parameter is missing for get_planets_around', async () => {
 			const result = await invokeCliCommand([
 				'--rpc-url',
 				RPC_URL,
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 			]);
 
 			expect(result.exitCode).not.toBe(0);
@@ -85,7 +91,9 @@ describe('CLI - Error Handling', () => {
 				RPC_URL,
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'51',
 			]);
@@ -99,7 +107,9 @@ describe('CLI - Error Handling', () => {
 				RPC_URL,
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'-1',
 			]);
@@ -113,7 +123,9 @@ describe('CLI - Error Handling', () => {
 				RPC_URL,
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'0',
 			]);
@@ -127,7 +139,9 @@ describe('CLI - Error Handling', () => {
 				RPC_URL,
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'50',
 			]);
@@ -141,7 +155,9 @@ describe('CLI - Error Handling', () => {
 				RPC_URL,
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'1',
 			]);
@@ -157,7 +173,9 @@ describe('CLI - Error Handling', () => {
 				'invalid-url-not-http',
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'10',
 			]);
@@ -171,7 +189,9 @@ describe('CLI - Error Handling', () => {
 				'http://localhost:9999',
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'10',
 			]);
@@ -185,7 +205,9 @@ describe('CLI - Error Handling', () => {
 				RPC_URL,
 				'--game-contract',
 				'0xinvalid',
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'10',
 			]);
@@ -267,7 +289,9 @@ describe('CLI - Error Handling', () => {
 				RPC_URL,
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'not-a-number',
 			]);
@@ -421,7 +445,9 @@ describe('CLI - Error Handling', () => {
 					RPC_URL,
 					'--game-contract',
 					getGameContract(),
-					'get_my_planets',
+					'get_planets_around',
+					'--center',
+					'0,0',
 					'--radius',
 					'10',
 				]),

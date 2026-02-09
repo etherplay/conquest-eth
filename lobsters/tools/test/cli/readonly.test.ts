@@ -12,16 +12,20 @@ describe('CLI - Read-Only Operations', () => {
 		await teardownTestEnvironment();
 	});
 
-	describe('get_my_planets', () => {
+	describe('get_planets_around with --only me filter (replaces get_my_planets)', () => {
 		it('should return empty array when no planets owned', async () => {
 			const {stdout, exitCode} = await invokeCliCommand([
 				'--rpc-url',
 				RPC_URL,
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'10',
+				'--only',
+				'me',
 			]);
 
 			expect(exitCode).toBe(0);
@@ -36,9 +40,13 @@ describe('CLI - Read-Only Operations', () => {
 				RPC_URL,
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'50',
+				'--only',
+				'me',
 			]);
 
 			expect(exitCode).toBe(0);
@@ -52,9 +60,13 @@ describe('CLI - Read-Only Operations', () => {
 				RPC_URL,
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'10',
+				'--only',
+				'me',
 			]);
 
 			expect(exitCode).toBe(0);
@@ -81,9 +93,13 @@ describe('CLI - Read-Only Operations', () => {
 				RPC_URL,
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'1',
+				'--only',
+				'me',
 			]);
 
 			expect(exitCode).toBe(0);
@@ -97,9 +113,13 @@ describe('CLI - Read-Only Operations', () => {
 				RPC_URL,
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'50',
+				'--only',
+				'me',
 			]);
 
 			expect(exitCode).toBe(0);
@@ -414,15 +434,19 @@ describe('CLI - Read-Only Operations', () => {
 		it(
 			'should be able to call multiple read operations in sequence',
 			async () => {
-				// Get my planets
+				// Get my planets (using get_planets_around with --only me)
 				const myPlanetsResult = await invokeCliCommand([
 					'--rpc-url',
 					RPC_URL,
 					'--game-contract',
 					getGameContract(),
-					'get_my_planets',
+					'get_planets_around',
+					'--center',
+					'0,0',
 					'--radius',
 					'10',
+					'--only',
+					'me',
 				]);
 				expect(myPlanetsResult.exitCode).toBe(0);
 

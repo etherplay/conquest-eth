@@ -12,7 +12,7 @@ describe('CLI - Contract Tools', () => {
 		await teardownTestEnvironment();
 	});
 
-	describe('get_my_planets', () => {
+	describe('get_planets_around', () => {
 		it('should call the contract to get the planets', async () => {
 			const {env} = getTestContext();
 			const OuterSpace = env.get('OuterSpace');
@@ -21,7 +21,9 @@ describe('CLI - Contract Tools', () => {
 				RPC_URL,
 				'--game-contract',
 				OuterSpace.address.toLowerCase(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'10',
 			]);

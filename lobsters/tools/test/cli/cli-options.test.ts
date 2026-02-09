@@ -19,7 +19,9 @@ describe('CLI - Options and Flags', () => {
 				RPC_URL,
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'10',
 			]);
@@ -35,7 +37,9 @@ describe('CLI - Options and Flags', () => {
 				RPC_URL,
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'10',
 			]);
@@ -51,7 +55,9 @@ describe('CLI - Options and Flags', () => {
 				getGameContract(),
 				'--storage',
 				'json',
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'10',
 			]);
@@ -67,7 +73,9 @@ describe('CLI - Options and Flags', () => {
 				getGameContract(),
 				'--storage-path',
 				'./test-data',
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'10',
 			]);
@@ -84,7 +92,9 @@ describe('CLI - Options and Flags', () => {
 					RPC_URL,
 					'--game-contract',
 					getGameContract(),
-					'get_my_planets',
+					'get_planets_around',
+					'--center',
+					'0,0',
 					'--radius',
 					'10',
 				],
@@ -104,7 +114,7 @@ describe('CLI - Options and Flags', () => {
 	describe('Environment Variable Fallback', () => {
 		it('should use RPC_URL environment variable when --rpc-url not provided', async () => {
 			const result = await invokeCliCommand(
-				['--game-contract', getGameContract(), 'get_my_planets', '--radius', '10'],
+				['--game-contract', getGameContract(), 'get_planets_around', '--center', '0,0', '--radius', '10'],
 				{
 					env: {
 						RPC_URL,
@@ -117,7 +127,7 @@ describe('CLI - Options and Flags', () => {
 
 		it('should use GAME_CONTRACT environment variable when --game-contract not provided', async () => {
 			const result = await invokeCliCommand(
-				['--rpc-url', RPC_URL, 'get_my_planets', '--radius', '10'],
+				['--rpc-url', RPC_URL, 'get_planets_around', '--center', '0,0', '--radius', '10'],
 				{
 					env: {
 						GAME_CONTRACT: getGameContract(),
@@ -135,7 +145,9 @@ describe('CLI - Options and Flags', () => {
 					RPC_URL,
 					'--game-contract',
 					getGameContract(),
-					'get_my_planets',
+					'get_planets_around',
+					'--center',
+					'0,0',
 					'--radius',
 					'10',
 				],
@@ -156,7 +168,9 @@ describe('CLI - Options and Flags', () => {
 					RPC_URL,
 					'--game-contract',
 					getGameContract(),
-					'get_my_planets',
+					'get_planets_around',
+					'--center',
+					'0,0',
 					'--radius',
 					'10',
 				],
@@ -178,7 +192,9 @@ describe('CLI - Options and Flags', () => {
 				'not-a-valid-url',
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'10',
 			]);
@@ -192,7 +208,9 @@ describe('CLI - Options and Flags', () => {
 				RPC_URL,
 				'--game-contract',
 				'not-a-valid-address',
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'10',
 			]);
@@ -231,7 +249,9 @@ describe('CLI - Options and Flags', () => {
 				RPC_URL,
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'10',
 			]);
@@ -245,7 +265,9 @@ describe('CLI - Options and Flags', () => {
 				RPC_URL,
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'10',
 			]);
@@ -265,7 +287,9 @@ describe('CLI - Options and Flags', () => {
 				'json',
 				'--storage-path',
 				'./test-combined',
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'10',
 			]);
@@ -306,10 +330,10 @@ describe('CLI - Options and Flags', () => {
 		});
 
 		it('should show help for specific command', async () => {
-			const result = await invokeCliCommand(['get_my_planets', '--help']);
+			const result = await invokeCliCommand(['get_planets_around', '--help']);
 
 			expect(result.exitCode).toBe(0);
-			expect(result.stdout).toContain('get_my_planets');
+			expect(result.stdout).toContain('get_planets_around');
 		});
 	});
 
@@ -322,7 +346,9 @@ describe('CLI - Options and Flags', () => {
 					RPC_URL,
 					'--game-contract',
 					getGameContract(),
-					'get_my_planets',
+					'get_planets_around',
+					'--center',
+					'0,0',
 					'--radius',
 					'10',
 				],
@@ -341,7 +367,9 @@ describe('CLI - Options and Flags', () => {
 				RPC_URL,
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'10',
 			]);

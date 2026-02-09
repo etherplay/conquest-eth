@@ -150,13 +150,15 @@ describe('CLI - Planet Lifecycle', () => {
 				timeout: 15000,
 			},
 			async () => {
-				// Initial state: get my planets
+				// Initial state: get planets around center
 				const initialPlanets = await invokeCliCommand([
 					'--rpc-url',
 					RPC_URL,
 					'--game-contract',
 					getGameContract(),
-					'get_my_planets',
+					'get_planets_around',
+					'--center',
+					'0,0',
 					'--radius',
 					'10',
 				]);
@@ -164,7 +166,7 @@ describe('CLI - Planet Lifecycle', () => {
 
 				const initialData = JSON.parse(initialPlanets.stdout);
 
-				// Get planets around center
+				// Get planets around center again
 				const aroundResult = await invokeCliCommand([
 					'--rpc-url',
 					RPC_URL,
@@ -184,13 +186,15 @@ describe('CLI - Planet Lifecycle', () => {
 		);
 
 		it('should maintain consistency across read operations', async () => {
-			// Get my planets multiple times
+			// Get planets around center multiple times
 			const result1 = await invokeCliCommand([
 				'--rpc-url',
 				RPC_URL,
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'10',
 			]);
@@ -199,7 +203,9 @@ describe('CLI - Planet Lifecycle', () => {
 				RPC_URL,
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'10',
 			]);
@@ -208,7 +214,9 @@ describe('CLI - Planet Lifecycle', () => {
 				RPC_URL,
 				'--game-contract',
 				getGameContract(),
-				'get_my_planets',
+				'get_planets_around',
+				'--center',
+				'0,0',
 				'--radius',
 				'10',
 			]);
