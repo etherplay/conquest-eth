@@ -166,64 +166,75 @@ describe("Integration Tests", () => {
       dbData = new Map();
       dbData.set("token_claims", []);
 
-      // Create mock database
+      // Create mock database using the RemoteSQL interface (prepare/bind/all pattern)
       mockDb = {
-        execute: vi.fn().mockImplementation(async ({ sql, args }) => {
-          const claims = dbData.get("token_claims") as unknown[];
-
-          if (sql.includes("SELECT 1 FROM token_claims WHERE human_id")) {
-            const humanId = (args as string[])[0].toLowerCase();
-            const found = claims.find(
-              (c: unknown) => (c as { human_id: string }).human_id === humanId,
-            );
-            return { rows: found ? [{ "1": 1 }] : [] };
-          }
-
-          if (sql.includes("SELECT 1 FROM token_claims WHERE wallet_address")) {
-            const wallet = (args as string[])[0].toLowerCase();
-            const found = claims.find(
-              (c: unknown) => (c as { wallet_address: string }).wallet_address === wallet,
-            );
-            return { rows: found ? [{ "1": 1 }] : [] };
-          }
-
-          if (sql.includes("SELECT wallet_address, tx_hash, claimed_at")) {
-            const humanId = (args as string[])[0].toLowerCase();
-            const found = claims.find(
-              (c: unknown) => (c as { human_id: string }).human_id === humanId,
-            );
-            if (found) {
-              const claim = found as { wallet_address: string; tx_hash: string; claimed_at: number };
+        prepare: vi.fn().mockImplementation((sql: string) => {
+          let boundArgs: unknown[] = [];
+          return {
+            bind: vi.fn().mockImplementation((...args: unknown[]) => {
+              boundArgs = args;
               return {
-                rows: [
-                  {
-                    wallet_address: claim.wallet_address,
-                    tx_hash: claim.tx_hash,
-                    claimed_at: claim.claimed_at,
-                  },
-                ],
+                all: vi.fn().mockImplementation(async () => {
+                  const claims = dbData.get("token_claims") as unknown[];
+
+                  if (sql.includes("SELECT 1 FROM token_claims WHERE human_id")) {
+                    const humanId = (boundArgs[0] as string).toLowerCase();
+                    const found = claims.find(
+                      (c: unknown) => (c as { human_id: string }).human_id === humanId,
+                    );
+                    return { results: found ? [{ "1": 1 }] : [] };
+                  }
+
+                  if (sql.includes("SELECT 1 FROM token_claims WHERE wallet_address")) {
+                    const wallet = (boundArgs[0] as string).toLowerCase();
+                    const found = claims.find(
+                      (c: unknown) => (c as { wallet_address: string }).wallet_address === wallet,
+                    );
+                    return { results: found ? [{ "1": 1 }] : [] };
+                  }
+
+                  if (sql.includes("SELECT wallet_address, tx_hash, claimed_at")) {
+                    const humanId = (boundArgs[0] as string).toLowerCase();
+                    const found = claims.find(
+                      (c: unknown) => (c as { human_id: string }).human_id === humanId,
+                    );
+                    if (found) {
+                      const claim = found as { wallet_address: string; tx_hash: string; claimed_at: number };
+                      return {
+                        results: [
+                          {
+                            wallet_address: claim.wallet_address,
+                            tx_hash: claim.tx_hash,
+                            claimed_at: claim.claimed_at,
+                          },
+                        ],
+                      };
+                    }
+                    return { results: [] };
+                  }
+
+                  if (sql.includes("INSERT INTO token_claims")) {
+                    const [humanId, walletAddress, publicKey, txHash, amount, tokenAddress, claimedAt] =
+                      boundArgs as string[];
+                    claims.push({
+                      human_id: humanId,
+                      wallet_address: walletAddress,
+                      public_key: publicKey,
+                      tx_hash: txHash,
+                      amount,
+                      token_address: tokenAddress,
+                      claimed_at: claimedAt,
+                    });
+                    return { results: [] };
+                  }
+
+                  return { results: [] };
+                }),
               };
-            }
-            return { rows: [] };
-          }
-
-          if (sql.includes("INSERT INTO token_claims")) {
-            const [humanId, walletAddress, publicKey, txHash, amount, tokenAddress, claimedAt] =
-              args as string[];
-            claims.push({
-              human_id: humanId,
-              wallet_address: walletAddress,
-              public_key: publicKey,
-              tx_hash: txHash,
-              amount,
-              token_address: tokenAddress,
-              claimed_at: claimedAt,
-            });
-            return { rows: [] };
-          }
-
-          return { rows: [] };
+            }),
+          };
         }),
+        batch: vi.fn(),
       } as unknown as RemoteSQL;
 
       // Reset mocks

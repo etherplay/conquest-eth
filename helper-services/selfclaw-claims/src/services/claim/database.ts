@@ -18,11 +18,11 @@ export async function hasHumanClaimed(
   db: RemoteSQL,
   humanId: string,
 ): Promise<boolean> {
-  const result = await db.execute({
-    sql: "SELECT 1 FROM token_claims WHERE human_id = ?",
-    args: [humanId.toLowerCase()],
-  });
-  return result.rows.length > 0;
+  const result = await db
+    .prepare("SELECT 1 FROM token_claims WHERE human_id = ?")
+    .bind(humanId.toLowerCase())
+    .all();
+  return result.results.length > 0;
 }
 
 /**
@@ -36,11 +36,11 @@ export async function hasWalletReceived(
   db: RemoteSQL,
   walletAddress: string,
 ): Promise<boolean> {
-  const result = await db.execute({
-    sql: "SELECT 1 FROM token_claims WHERE wallet_address = ?",
-    args: [walletAddress.toLowerCase()],
-  });
-  return result.rows.length > 0;
+  const result = await db
+    .prepare("SELECT 1 FROM token_claims WHERE wallet_address = ?")
+    .bind(walletAddress.toLowerCase())
+    .all();
+  return result.results.length > 0;
 }
 
 /**
@@ -53,11 +53,13 @@ export async function recordClaim(
   db: RemoteSQL,
   claim: ClaimRecord,
 ): Promise<void> {
-  await db.execute({
-    sql: `INSERT INTO token_claims 
+  await db
+    .prepare(
+      `INSERT INTO token_claims 
           (human_id, wallet_address, public_key, tx_hash, amount, token_address, claimed_at) 
           VALUES (?, ?, ?, ?, ?, ?, ?)`,
-    args: [
+    )
+    .bind(
       claim.humanId.toLowerCase(),
       claim.walletAddress.toLowerCase(),
       claim.publicKey,
@@ -65,8 +67,8 @@ export async function recordClaim(
       claim.amount,
       claim.tokenAddress.toLowerCase(),
       claim.claimedAt,
-    ],
-  });
+    )
+    .all();
 }
 
 /**
@@ -80,23 +82,25 @@ export async function getClaimStatus(
   db: RemoteSQL,
   humanId: string,
 ): Promise<StatusResponse> {
-  const result = await db.execute({
-    sql: "SELECT wallet_address, tx_hash, claimed_at FROM token_claims WHERE human_id = ?",
-    args: [humanId.toLowerCase()],
-  });
+  const result = await db
+    .prepare(
+      "SELECT wallet_address, tx_hash, claimed_at FROM token_claims WHERE human_id = ?",
+    )
+    .bind(humanId.toLowerCase())
+    .all<{
+      wallet_address: string;
+      tx_hash: string;
+      claimed_at: number;
+    }>();
 
-  if (result.rows.length === 0) {
+  if (result.results.length === 0) {
     return {
       humanId,
       claimed: false,
     };
   }
 
-  const row = result.rows[0] as {
-    wallet_address: string;
-    tx_hash: string;
-    claimed_at: number;
-  };
+  const row = result.results[0];
 
   return {
     humanId,
@@ -120,27 +124,29 @@ export async function getClaimByWallet(
   db: RemoteSQL,
   walletAddress: string,
 ): Promise<ClaimRecord | null> {
-  const result = await db.execute({
-    sql: `SELECT id, human_id, wallet_address, public_key, tx_hash, amount, token_address, claimed_at, created_at 
+  const result = await db
+    .prepare(
+      `SELECT id, human_id, wallet_address, public_key, tx_hash, amount, token_address, claimed_at, created_at 
           FROM token_claims WHERE wallet_address = ?`,
-    args: [walletAddress.toLowerCase()],
-  });
+    )
+    .bind(walletAddress.toLowerCase())
+    .all<{
+      id: number;
+      human_id: string;
+      wallet_address: string;
+      public_key: string;
+      tx_hash: string;
+      amount: string;
+      token_address: string;
+      claimed_at: number;
+      created_at: number;
+    }>();
 
-  if (result.rows.length === 0) {
+  if (result.results.length === 0) {
     return null;
   }
 
-  const row = result.rows[0] as {
-    id: number;
-    human_id: string;
-    wallet_address: string;
-    public_key: string;
-    tx_hash: string;
-    amount: string;
-    token_address: string;
-    claimed_at: number;
-    created_at: number;
-  };
+  const row = result.results[0];
 
   return {
     id: row.id,

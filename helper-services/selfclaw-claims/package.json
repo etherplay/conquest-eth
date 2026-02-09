@@ -16,15 +16,17 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20250319.0",
     "remote-sql": "^0.0.6",
+    "tsx": "^4.7.0",
     "vitest": "^3.0.5",
     "wrangler": "^4.2.0"
   },
   "scripts": {
-    "dev": "echo 'waiting for contracts.json...'; wait-on ../../web/src/lib/contracts.json && node generate-env.cjs ../../web/src/lib/contracts.json && wrangler dev --port 34004",
+    "dev": "echo 'waiting for contracts.json...'; wait-on ../../web/src/lib/contracts.json && node generate-env.cjs ../../web/src/lib/contracts.json && pnpm migrate:local && wrangler dev --port 34004",
     "deploy": "wrangler deploy",
     "test": "vitest run",
     "test:watch": "vitest",
     "migrate": "wrangler d1 execute selfclaw-db --file=./migrations/0001_create_claims.sql",
-    "migrate:local": "wrangler d1 execute selfclaw-db --local --file=./migrations/0001_create_claims.sql"
+    "migrate:local": "wrangler d1 execute selfclaw-db --local --file=./migrations/0001_create_claims.sql",
+    "claim": "npx tsx scripts/claim.ts"
   }
 }

@@ -34,9 +34,24 @@ function stringify(obj) {
 
 if (args[0]) {
   const contractInfos = JSON.parse(fs.readFileSync(args[0], 'utf-8'));
-  if (contractInfos.contracts.Time?.address) {
-    const parsedDevVars = parse(fs.readFileSync('.env.default', 'utf-8'));
-    parsedDevVars.TOKEN_ADDRESS = contractInfos.contracts.FreePlayToken.address;
-    fs.writeFileSync('.env', stringify(parsedDevVars));
+  const parsedDevVars = parse(fs.readFileSync('.env.default', 'utf-8'));
+  const parsedLocalDevVars = parse(fs.readFileSync('.env.default.local', 'utf-8'));
+  console.log('parsedLocalDevVars', parsedLocalDevVars);
+  console.log('parsedDevVars', parsedDevVars);
+
+  const env = {
+    ...parsedDevVars,
+    ...parsedLocalDevVars,
+  };
+
+  if (contractInfos.contracts.FreePlayToken?.address) {
+    env.TOKEN_ADDRESS = contractInfos.contracts.FreePlayToken.address;
   }
+
+  // Write to .env for scripts (like claim.ts)
+  fs.writeFileSync('.env', stringify(env));
+
+  // Write to .dev.vars for wrangler local development
+  // Wrangler uses .dev.vars for local secrets/env vars
+  fs.writeFileSync('.dev.vars', stringify(env));
 }
