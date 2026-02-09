@@ -10,6 +10,11 @@ export default deployScript(
 
 		const OuterSpace = env.get<Abi_IOuterSpace>('OuterSpace');
 		const PlayToken = env.get<Abi_PlayToken>('PlayToken');
+
+		if (!PlayToken.linkedData?.numTokensPerNativeTokenAt18Decimals) {
+			// we skip the deployment of Yakuza when external token for now as frontend require new handling
+			return;
+		}
 		const RewardsGenerator = env.get<Abi_RewardsGenerator>('RewardsGenerator');
 
 		const linkedData = OuterSpace.linkedData as any;

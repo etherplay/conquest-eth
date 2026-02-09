@@ -6,10 +6,36 @@ export default deployScript(
 		const {deployer, playerAccount3, playerAccount4} = env.namedAccounts;
 
 		const chainId = await env.viem.publicClient.getChainId();
-		const networkName = await env.name;
+		const networkName = env.name;
 		// TODO use network tags ?
 		const localTesting =
 			networkName === 'hardhat' || networkName === 'localhost'; // chainId === '1337' || chainId === '31337';
+
+		if (env.tags['external-token']) {
+			if (localTesting) {
+				await env.deployViaProxy(
+					'PlayToken',
+					{
+						account: deployer as `0x${string}`,
+						artifact: artifacts.ExternalToken,
+						args: [deployer, 1_000_000n * 1000000000000000000n],
+					},
+					{
+						proxyDisabled: false,
+						execute: 'postUpgrade',
+					},
+				);
+				return;
+			} else {
+				const PlayToken = env.get('PlayToken');
+				if (!PlayToken) {
+					throw new Error(
+						'PlayToken is expected to be pre-configured for this environmebt',
+					);
+				}
+				return;
+			}
+		}
 
 		let numTokensPerNativeTokenAt18Decimals = parseEther('1');
 

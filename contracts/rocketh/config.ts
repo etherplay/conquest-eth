@@ -32,6 +32,9 @@ export const config = {
 		deployer: {
 			default: 0,
 		},
+		tokenBeneficiary: {
+			default: 0,
+		},
 		playerAccount3: '0x283aFaad5c345680144f20F3910EA95e5F0bA932',
 		playerAccount4: '0x7fCe02BB66c0D9396fb9bC60a80d45462E60fdfF',
 		agentService: {
@@ -53,7 +56,7 @@ export const config = {
 	},
 	chains: {
 		31337: {
-			tags: ['auto-mine'],
+			tags: ['auto-mine', 'external-token'],
 		},
 	},
 	scripts: deploymentsFolder,

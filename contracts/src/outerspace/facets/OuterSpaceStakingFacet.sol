@@ -70,12 +70,44 @@ contract OuterSpaceStakingFacet is OuterSpaceFacetBase, IOuterSpaceStaking {
         _stakingToken.transferFrom(sender, address(this), amount);
     }
 
+    function acquireMultipleViaTransferFrom(
+        uint256[] memory locations,
+        uint256 amount
+    ) public {
+        address sender = _msgSender();
+        uint256 total = 0;
+        for (uint256 i = 0; i < locations.length; i++) {
+            uint256 stake = uint256(_stake(_planetData(locations[i]))) *
+                (DECIMALS_14);
+            _acquire(sender, stake, locations[i], false);
+            total += stake;
+        }
+        require(amount == total, "INVALID_AMOUNT");
+        _stakingToken.transferFrom(sender, address(this), amount);
+    }
+
     function acquireViaFreeTokenTransferFrom(
         uint256 location,
         uint256 amount
     ) public {
         address sender = _msgSender();
         _acquire(sender, amount, location, true);
+        _freeStakingToken.transferFrom(sender, address(this), amount);
+    }
+
+    function acquireMultipleViaFreeTokenTransferFrom(
+        uint256[] memory locations,
+        uint256 amount
+    ) public {
+        address sender = _msgSender();
+        uint256 total = 0;
+        for (uint256 i = 0; i < locations.length; i++) {
+            uint256 stake = uint256(_stake(_planetData(locations[i]))) *
+                (DECIMALS_14);
+            _acquire(sender, stake, locations[i], true);
+            total += stake;
+        }
+        require(amount == total, "INVALID_AMOUNT");
         _freeStakingToken.transferFrom(sender, address(this), amount);
     }
 
