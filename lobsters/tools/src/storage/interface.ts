@@ -98,6 +98,13 @@ export interface FleetStorage {
 	markExitInterrupted(planetId: bigint, interruptedAt: number, newOwner: Address): Promise<void>;
 
 	/**
+	 * Mark an exit as withdrawn (tokens claimed)
+	 * @param planetId - The planet location ID
+	 * @param withdrawnAt - The timestamp when the tokens were withdrawn
+	 */
+	markExitWithdrawn(planetId: bigint, withdrawnAt: number): Promise<void>;
+
+	/**
 	 * Clean up old completed exits from storage
 	 * @param olderThan - Unix timestamp; exits completed before this time will be removed
 	 */

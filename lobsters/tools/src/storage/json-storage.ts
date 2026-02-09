@@ -165,6 +165,16 @@ export class JsonFleetStorage implements FleetStorage {
 		}
 	}
 
+	async markExitWithdrawn(planetId: bigint, withdrawnAt: number): Promise<void> {
+		await this.ensureInitialized();
+		const exit = this.data.exits[planetId.toString()];
+		if (exit) {
+			exit.withdrawn = true;
+			exit.withdrawnAt = withdrawnAt;
+			await this.save();
+		}
+	}
+
 	async cleanupOldCompletedExits(olderThan: number): Promise<void> {
 		await this.ensureInitialized();
 		const now = Math.floor(Date.now() / 1000);

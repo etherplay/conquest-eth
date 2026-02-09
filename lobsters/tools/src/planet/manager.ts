@@ -122,7 +122,63 @@ export class PlanetManager {
 	 * @returns Transaction hash and list of planet IDs for which withdrawals were processed
 	 */
 	async withdraw(planetIds: bigint[]): Promise<{hash: `0x${string}`; planetsWithdrawn: bigint[]}> {
-		return withdrawFromPlanets(this.requireWalletClient(), this.gameContract, planetIds);
+		const result = await withdrawFromPlanets(this.requireWalletClient(), this.gameContract, planetIds);
+
+		// Mark the exits as withdrawn in storage
+		const currentTime = Math.floor(Date.now() / 1000);
+		for (const planetId of result.planetsWithdrawn) {
+			await this.storage.markExitWithdrawn(planetId, currentTime);
+		}
+
+		return result;
+	}
+
+	/**
+	 * Get exits that are ready to be withdrawn
+	 *
+	 * Returns all pending exits that:
+	 * - Have completed (exit time has passed)
+	 * - Were not interrupted
+	 * - Have not been withdrawn yet
+	 *
+	 * @returns Array of pending exits ready for withdrawal
+	 */
+	async getWithdrawableExits(): Promise<PendingExit[]> {
+		const sender = this.requireWalletClient().walletClient.account!.address;
+		const allExits = await this.storage.getPendingExitsByPlayer(sender);
+		const currentTime = Math.floor(Date.now() / 1000);
+
+		return allExits.filter((exit) => {
+			// Must be past exit complete time
+			const isPastExitTime = currentTime >= exit.exitCompleteTime;
+			// Must not be interrupted
+			const notInterrupted = !exit.interrupted;
+			// Must not already be withdrawn
+			const notWithdrawn = !exit.withdrawn;
+
+			return isPastExitTime && notInterrupted && notWithdrawn;
+		});
+	}
+
+	/**
+	 * Withdraw all tokens from planets that have completed their exit process
+	 *
+	 * This method automatically finds all pending exits that are:
+	 * - Past their completion time
+	 * - Not interrupted
+	 * - Not already withdrawn
+	 *
+	 * @returns Transaction hash and list of planet IDs for which withdrawals were processed, or null if no withdrawable exits found
+	 */
+	async withdrawAll(): Promise<{hash: `0x${string}`; planetsWithdrawn: bigint[]} | null> {
+		const withdrawableExits = await this.getWithdrawableExits();
+
+		if (withdrawableExits.length === 0) {
+			return null;
+		}
+
+		const planetIds = withdrawableExits.map((exit) => exit.planetId);
+		return this.withdraw(planetIds);
 	}
 
 	/**

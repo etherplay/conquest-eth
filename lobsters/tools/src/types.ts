@@ -93,6 +93,8 @@ export interface PendingExit {
 	completed: boolean; // Whether exit has completed
 	interrupted: boolean; // Whether exit was interrupted by attack
 	lastCheckedAt: number; // Last time status was verified against contract
+	withdrawn: boolean; // Whether tokens have been withdrawn
+	withdrawnAt?: number; // Timestamp when tokens were withdrawn
 }
 
 export interface PlanetWithDistance {

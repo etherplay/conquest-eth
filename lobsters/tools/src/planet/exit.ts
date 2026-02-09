@@ -49,6 +49,7 @@ export async function exitPlanets(
 				completed: false,
 				interrupted: false,
 				lastCheckedAt: currentTime,
+				withdrawn: false,
 			};
 
 			await storage.savePendingExit(exit);

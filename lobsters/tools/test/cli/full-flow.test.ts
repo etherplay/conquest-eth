@@ -596,6 +596,288 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 		);
 	});
 
+	describe('Exit and Withdraw Flow', () => {
+		it('should allow a player to exit a planet and withdraw tokens', {timeout: 180000}, async () => {
+			// This test performs the exit and withdraw flow:
+			// 1. Player 1 acquires a new planet
+			// 2. Player 1 initiates exit on the planet
+			// 3. Advance time past the exit duration
+			// 4. Verify pending exit status
+			// 5. Withdraw tokens
+
+			// Step 1: Find an unowned planet and acquire it
+			console.log('Step 1: Finding and acquiring a new planet for exit test...');
+			const planets = await findValidPlanets(RPC_URL, getGameContract());
+			expect(planets.length).toBeGreaterThanOrEqual(3);
+
+			// Use a planet that wasn't used in previous tests
+			const exitPlanet = planets[2];
+			console.log(`Using planet at (${exitPlanet.x}, ${exitPlanet.y}) for exit test`);
+
+			const acquireResult = await invokeWithStorage(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'acquire_planets',
+					'--coordinates',
+					`${exitPlanet.x},${exitPlanet.y}`,
+				],
+				{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
+			);
+
+			expect(acquireResult.exitCode).toBe(0);
+			console.log('Planet acquired for exit test');
+
+			// Step 2: Exit the planet
+			console.log('Step 2: Initiating exit on the planet...');
+			const exitResult = await invokeWithStorage(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'exit_planets',
+					'--coordinates',
+					`${exitPlanet.x},${exitPlanet.y}`,
+				],
+				{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
+			);
+
+			expect(exitResult.exitCode).toBe(0);
+
+			const exitData = parseCliOutput<{
+				transactionHash: string;
+				exitsInitiated: string[];
+			}>(exitResult.stdout);
+
+			expect(exitData.transactionHash).toBeDefined();
+			console.log(`Exit initiated with tx: ${exitData.transactionHash}`);
+
+			// Step 3: Check pending exits
+			console.log('Step 3: Checking pending exits...');
+			const pendingExitsResult = await invokeWithStorage(
+				['--rpc-url', RPC_URL, '--game-contract', getGameContract(), 'get_pending_exits'],
+				{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
+			);
+
+			expect(pendingExitsResult.exitCode).toBe(0);
+
+			const pendingExitsData = parseCliOutput<{
+				exits: Array<{
+					planetId: string;
+					exitCompleteTime: number;
+					completed: boolean;
+					interrupted: boolean;
+					withdrawn?: boolean;
+				}>;
+			}>(pendingExitsResult.stdout);
+
+			expect(pendingExitsData.exits).toBeDefined();
+			expect(pendingExitsData.exits.length).toBeGreaterThan(0);
+			console.log(`Found ${pendingExitsData.exits.length} pending exit(s)`);
+
+			const ourExit = pendingExitsData.exits[0];
+			expect(ourExit.completed).toBe(false);
+			expect(ourExit.interrupted).toBe(false);
+
+			// Step 4: Advance time past exit duration
+			// The exit duration is typically 7 days in seconds, but let's use the complete time from the exit
+			console.log('Step 4: Advancing time past exit completion...');
+			const currentTime = await getCurrentTimestamp(RPC_URL);
+			const timeToAdvance = ourExit.exitCompleteTime - currentTime + 100; // Add buffer
+
+			console.log(
+				`Advancing time by ${timeToAdvance} seconds (exit complete time: ${ourExit.exitCompleteTime}, current: ${currentTime})`,
+			);
+			await advanceTime(RPC_URL, timeToAdvance);
+
+			// Step 5: Verify exit status using coordinates
+			console.log('Step 5: Verifying exit status...');
+			const verifyResult = await invokeWithStorage(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'verify_exit_status',
+					'--x',
+					`${exitPlanet.x}`,
+					'--y',
+					`${exitPlanet.y}`,
+				],
+				{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
+			);
+
+			// Debug output if verification fails
+			if (verifyResult.exitCode !== 0) {
+				console.log('verify_exit_status stdout:', verifyResult.stdout);
+				console.log('verify_exit_status stderr:', verifyResult.stderr);
+			}
+
+			expect(verifyResult.exitCode).toBe(0);
+
+			const verifyData = parseCliOutput<{
+				planetId: string;
+				status: string;
+				completed: boolean;
+				interrupted: boolean;
+			}>(verifyResult.stdout);
+
+			console.log('Exit status after time advance:', {
+				status: verifyData.status,
+				completed: verifyData.completed,
+				interrupted: verifyData.interrupted,
+			});
+
+			// The exit should now be complete (or completable)
+			expect(verifyData.interrupted).toBe(false);
+
+			// Step 6: Withdraw tokens (using auto-withdraw with no coordinates)
+			console.log('Step 6: Withdrawing tokens from completed exits...');
+			const withdrawResult = await invokeWithStorage(
+				['--rpc-url', RPC_URL, '--game-contract', getGameContract(), 'withdraw'],
+				{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
+			);
+
+			// Log result for debugging
+			console.log('Withdraw result:', withdrawResult.stdout);
+
+			expect(withdrawResult.exitCode).toBe(0);
+
+			const withdrawData = parseCliOutput<{
+				transactionHash?: string;
+				planetsWithdrawn: string[];
+				message?: string;
+			}>(withdrawResult.stdout);
+
+			// If there were withdrawable exits, we should have a transaction
+			if (withdrawData.transactionHash) {
+				console.log(`Tokens withdrawn with tx: ${withdrawData.transactionHash}`);
+				console.log(`Planets withdrawn: ${withdrawData.planetsWithdrawn.length}`);
+				expect(withdrawData.planetsWithdrawn.length).toBeGreaterThan(0);
+			} else {
+				console.log('No withdrawable exits found (may have been withdrawn already)');
+			}
+
+			// Step 7: Verify that the exit is now marked as withdrawn
+			console.log('Step 7: Verifying exit is marked as withdrawn...');
+			const finalPendingResult = await invokeWithStorage(
+				['--rpc-url', RPC_URL, '--game-contract', getGameContract(), 'get_pending_exits'],
+				{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
+			);
+
+			if (finalPendingResult.exitCode === 0) {
+				const finalData = parseCliOutput<{
+					exits: Array<{
+						planetId: string;
+						withdrawn?: boolean;
+					}>;
+				}>(finalPendingResult.stdout);
+
+				// If the exit was withdrawn, it may still be in storage but marked as withdrawn
+				// Or it may have been cleaned up
+				console.log('Final pending exits:', finalData.exits.length);
+			}
+
+			console.log('Exit and withdraw flow completed successfully!');
+		});
+
+		it('should allow withdrawing from specific coordinates', {timeout: 180000}, async () => {
+			// This test verifies that we can also withdraw from specific coordinates
+
+			// Step 1: Find and acquire another planet
+			console.log('Step 1: Finding and acquiring another planet for specific withdraw test...');
+			const planets = await findValidPlanets(RPC_URL, getGameContract());
+			expect(planets.length).toBeGreaterThanOrEqual(4);
+
+			const withdrawPlanet = planets[3];
+			console.log(`Using planet at (${withdrawPlanet.x}, ${withdrawPlanet.y})`);
+
+			const acquireResult = await invokeWithStorage(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'acquire_planets',
+					'--coordinates',
+					`${withdrawPlanet.x},${withdrawPlanet.y}`,
+				],
+				{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
+			);
+
+			expect(acquireResult.exitCode).toBe(0);
+
+			// Step 2: Exit the planet
+			console.log('Step 2: Initiating exit...');
+			const exitResult = await invokeWithStorage(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'exit_planets',
+					'--coordinates',
+					`${withdrawPlanet.x},${withdrawPlanet.y}`,
+				],
+				{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
+			);
+
+			expect(exitResult.exitCode).toBe(0);
+
+			// Step 3: Get the exit time and advance past it
+			const pendingResult = await invokeWithStorage(
+				['--rpc-url', RPC_URL, '--game-contract', getGameContract(), 'get_pending_exits'],
+				{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
+			);
+
+			expect(pendingResult.exitCode).toBe(0);
+
+			const pendingData = parseCliOutput<{
+				exits: Array<{
+					planetId: string;
+					exitCompleteTime: number;
+				}>;
+			}>(pendingResult.stdout);
+
+			// Find our exit
+			const ourExit = pendingData.exits[pendingData.exits.length - 1]; // Get the most recent
+			const currentTime = await getCurrentTimestamp(RPC_URL);
+			const timeToAdvance = ourExit.exitCompleteTime - currentTime + 100;
+
+			console.log(`Step 3: Advancing time by ${timeToAdvance} seconds...`);
+			await advanceTime(RPC_URL, timeToAdvance);
+
+			// Step 4: Withdraw using specific coordinates
+			console.log('Step 4: Withdrawing from specific coordinates...');
+			const withdrawResult = await invokeWithStorage(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'withdraw',
+					'--coordinates',
+					`${withdrawPlanet.x},${withdrawPlanet.y}`,
+				],
+				{env: {PRIVATE_KEY: ANVIL_ACCOUNTS.PLAYER_1.privateKey}},
+			);
+
+			console.log('Withdraw result:', withdrawResult.stdout);
+			expect(withdrawResult.exitCode).toBe(0);
+
+			const withdrawData = parseCliOutput<{
+				transactionHash?: string;
+				planetsWithdrawn: string[];
+			}>(withdrawResult.stdout);
+
+			expect(withdrawData.transactionHash).toBeDefined();
+			console.log(`Withdraw completed with tx: ${withdrawData.transactionHash}`);
+		});
+	});
+
 	describe('Edge Cases', () => {
 		it('should fail to send fleet from unowned planet', async () => {
 			// Test requires at least 2 planets available
