@@ -4,6 +4,10 @@ import {invokeCliCommand} from '../cli-utils.js';
 import {RPC_URL, getGameContract} from '../setup.js';
 import {getTestPrivateKey} from './helpers.js';
 
+/**
+ * Tests for planet lifecycle operations (verify_exit_status, planet state tracking)
+ * Write operations require a private key which is passed via PRIVATE_KEY env var.
+ */
 describe('CLI - Planet Lifecycle', () => {
 	let testPrivateKey: string | undefined;
 
@@ -98,18 +102,24 @@ describe('CLI - Planet Lifecycle', () => {
 				timeout: 15000,
 			},
 			async () => {
-				// Acquire planet (may fail due to CLI limitations)
-				const acquireResult = await invokeCliCommand([
-					'--rpc-url',
-					RPC_URL,
-					'--game-contract',
-					getGameContract(),
-					'--private-key',
-					testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
-					'acquire_planets',
-					'--coordinates',
-					'0,0',
-				]);
+				// Acquire planet (may fail due to not owning the planet)
+				const acquireResult = await invokeCliCommand(
+					[
+						'--rpc-url',
+						RPC_URL,
+						'--game-contract',
+						getGameContract(),
+						'acquire_planets',
+						'--coordinates',
+						'0,0',
+					],
+					{
+						env: {
+							PRIVATE_KEY:
+								testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+						},
+					},
+				);
 
 				// Verify exit status (may or may not succeed)
 				const verifyResult = await invokeCliCommand([

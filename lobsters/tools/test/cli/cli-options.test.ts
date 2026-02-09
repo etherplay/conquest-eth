@@ -200,9 +200,8 @@ describe('CLI - Options and Flags', () => {
 			expect(result.exitCode).not.toBe(0);
 		});
 
-		it('should validate --private-key format (must start with 0x)', async () => {
-			// Note: --private-key is not a CLI argument, it's only read from PRIVATE_KEY env var
-			// This test verifies that an invalid env var format is rejected
+		it('should validate PRIVATE_KEY env var format (must start with 0x)', async () => {
+			// PRIVATE_KEY is read from environment variable, not CLI argument
 			const result = await invokeCliCommand(
 				[
 					'--rpc-url',

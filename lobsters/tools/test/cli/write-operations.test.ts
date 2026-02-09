@@ -2,8 +2,12 @@ import {describe, it, expect, beforeAll, afterAll} from 'vitest';
 import {setupTestEnvironment, teardownTestEnvironment} from '../setup.js';
 import {invokeCliCommand} from '../cli-utils.js';
 import {RPC_URL, getGameContract} from '../setup.js';
-import {getTestPrivateKey, assertCliSuccess, assertCliError} from './helpers.js';
+import {getTestPrivateKey, assertCliError} from './helpers.js';
 
+/**
+ * Tests for write operations (acquire_planets, exit_planets, etc.)
+ * These operations require a private key which is passed via PRIVATE_KEY env var.
+ */
 describe('CLI - Write Operations', () => {
 	let testPrivateKey: string | undefined;
 
@@ -18,101 +22,181 @@ describe('CLI - Write Operations', () => {
 
 	describe('acquire_planets', () => {
 		it('should fail when coordinates are missing', async () => {
-			const result = await invokeCliCommand([
-				'--rpc-url',
-				RPC_URL,
-				'--game-contract',
-				getGameContract(),
-				'--private-key',
-				testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
-				'acquire_planets',
-			]);
+			const result = await invokeCliCommand(
+				['--rpc-url', RPC_URL, '--game-contract', getGameContract(), 'acquire_planets'],
+				{
+					env: {
+						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+					},
+				},
+			);
 
 			expect(result.exitCode).not.toBe(0);
+			// Should complain about missing coordinates parameter
+			const output = result.stderr + result.stdout;
+			expect(output.toLowerCase()).toMatch(/coordinates|required/);
 		});
 
 		it('should fail to acquire planet at invalid coordinates', async () => {
-			const result = await invokeCliCommand([
-				'--rpc-url',
-				RPC_URL,
-				'--game-contract',
-				getGameContract(),
-				'--private-key',
-				testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
-				'acquire_planets',
-				'--coordinates',
-				'999999,999999',
-			]);
+			const result = await invokeCliCommand(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'acquire_planets',
+					'--coordinates',
+					'999999,999999',
+				],
+				{
+					env: {
+						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+					},
+				},
+			);
 
 			// Should fail because planet doesn't exist at these coordinates
 			expect(result.exitCode).not.toBe(0);
-			expect(result.stderr || result.stdout).toBeTruthy();
+			const output = result.stderr || result.stdout;
+			expect(output).toBeTruthy();
 		});
 
-		it('should return error when private key is missing', async () => {
-			const result = await invokeCliCommand([
-				'--rpc-url',
-				RPC_URL,
-				'--game-contract',
-				getGameContract(),
-				'--private-key',
-				'0xinvalid',
-				'acquire_planets',
-				'--coordinates',
-				'0,0',
-			]);
+		it('should return error when private key is invalid', async () => {
+			const result = await invokeCliCommand(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'acquire_planets',
+					'--coordinates',
+					'0,0',
+				],
+				{
+					env: {
+						PRIVATE_KEY: '0xinvalid',
+					},
+				},
+			);
 
 			expect(result.exitCode).not.toBe(0);
+		});
+
+		it('should support multiple coordinates with spaces', async () => {
+			const result = await invokeCliCommand(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'acquire_planets',
+					'--coordinates',
+					'0,0 1,1',
+				],
+				{
+					env: {
+						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+					},
+				},
+			);
+
+			// Should fail because planets don't exist, but parsing should succeed
+			expect(result.exitCode).not.toBe(0);
+			const output = result.stderr + result.stdout;
+			// Should not fail with coordinate parsing error
+			expect(output).not.toContain('Invalid coordinate');
+		});
+
+		it('should support negative coordinates', async () => {
+			const result = await invokeCliCommand(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'acquire_planets',
+					'--coordinates',
+					'-5,-10',
+				],
+				{
+					env: {
+						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+					},
+				},
+			);
+
+			// Should fail because planet doesn't exist, but parsing should succeed
+			expect(result.exitCode).not.toBe(0);
+			const output = result.stderr + result.stdout;
+			// Should not fail with coordinate parsing error
+			expect(output).not.toContain('Invalid coordinate');
 		});
 	});
 
 	describe('exit_planets', () => {
 		it('should fail when coordinates are missing', async () => {
-			const result = await invokeCliCommand([
-				'--rpc-url',
-				RPC_URL,
-				'--game-contract',
-				getGameContract(),
-				'--private-key',
-				testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
-				'exit_planets',
-			]);
+			const result = await invokeCliCommand(
+				['--rpc-url', RPC_URL, '--game-contract', getGameContract(), 'exit_planets'],
+				{
+					env: {
+						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+					},
+				},
+			);
 
 			expect(result.exitCode).not.toBe(0);
+			// Should complain about missing coordinates parameter
+			const output = result.stderr + result.stdout;
+			expect(output.toLowerCase()).toMatch(/coordinates|required/);
 		});
 
 		it('should fail to exit planet at invalid coordinates', async () => {
-			const result = await invokeCliCommand([
-				'--rpc-url',
-				RPC_URL,
-				'--game-contract',
-				getGameContract(),
-				'--private-key',
-				testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
-				'exit_planets',
-				'--coordinates',
-				'999999,999999',
-			]);
+			const result = await invokeCliCommand(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'exit_planets',
+					'--coordinates',
+					'999999,999999',
+				],
+				{
+					env: {
+						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+					},
+				},
+			);
 
 			// Should fail because planet doesn't exist at these coordinates
 			expect(result.exitCode).not.toBe(0);
-			expect(result.stderr || result.stdout).toBeTruthy();
+			const output = result.stderr || result.stdout;
+			expect(output).toBeTruthy();
 		});
 
-		it('should return error when private key is missing', async () => {
-			const result = await invokeCliCommand([
-				'--rpc-url',
-				RPC_URL,
-				'--game-contract',
-				getGameContract(),
-				'--private-key',
-				'0xinvalid',
-				'exit_planets',
-				'--coordinates',
-				'0,0',
-			]);
+		it('should support negative coordinates', async () => {
+			const result = await invokeCliCommand(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'exit_planets',
+					'--coordinates',
+					'-3,-4',
+				],
+				{
+					env: {
+						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+					},
+				},
+			);
 
+			// Should fail because planet doesn't exist, but parsing should succeed
 			expect(result.exitCode).not.toBe(0);
+			const output = result.stderr + result.stdout;
+			// Should not fail with coordinate parsing error
+			expect(output).not.toContain('Invalid coordinate');
 		});
 	});
 

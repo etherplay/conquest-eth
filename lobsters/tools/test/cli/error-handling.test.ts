@@ -4,6 +4,15 @@ import {invokeCliCommand} from '../cli-utils.js';
 import {RPC_URL, getGameContract} from '../setup.js';
 import {getTestPrivateKey} from './helpers.js';
 
+/**
+ * Tests for CLI error handling behavior.
+ * Validates that the CLI properly reports errors for:
+ * - Missing required parameters
+ * - Invalid parameter values
+ * - Invalid configuration
+ * - Private key errors
+ * - Invalid input formats
+ */
 describe('CLI - Error Handling', () => {
 	let testPrivateKey: string | undefined;
 
@@ -187,8 +196,6 @@ describe('CLI - Error Handling', () => {
 
 	describe('Private Key Errors', () => {
 		it('should error when private key is malformed (no 0x prefix)', async () => {
-			// Note: --private-key is not a CLI argument, it's only read from PRIVATE_KEY env var
-			// This test verifies that an invalid env var format is rejected
 			const result = await invokeCliCommand(
 				[
 					'--rpc-url',
@@ -211,33 +218,43 @@ describe('CLI - Error Handling', () => {
 		});
 
 		it('should error when private key is malformed (wrong length)', async () => {
-			const result = await invokeCliCommand([
-				'--rpc-url',
-				RPC_URL,
-				'--game-contract',
-				getGameContract(),
-				'--private-key',
-				'0x123',
-				'acquire_planets',
-				'--coordinates',
-				'0,0',
-			]);
+			const result = await invokeCliCommand(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'acquire_planets',
+					'--coordinates',
+					'0,0',
+				],
+				{
+					env: {
+						PRIVATE_KEY: '0x123',
+					},
+				},
+			);
 
 			expect(result.exitCode).not.toBe(0);
 		});
 
 		it('should error when private key is malformed (invalid hex)', async () => {
-			const result = await invokeCliCommand([
-				'--rpc-url',
-				RPC_URL,
-				'--game-contract',
-				getGameContract(),
-				'--private-key',
-				'0xgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg',
-				'acquire_planets',
-				'--coordinates',
-				'0,0',
-			]);
+			const result = await invokeCliCommand(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'acquire_planets',
+					'--coordinates',
+					'0,0',
+				],
+				{
+					env: {
+						PRIVATE_KEY: '0xgggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg',
+					},
+				},
+			);
 
 			expect(result.exitCode).not.toBe(0);
 		});
@@ -275,43 +292,53 @@ describe('CLI - Error Handling', () => {
 		});
 
 		it('should error when quantity is not a number', async () => {
-			const result = await invokeCliCommand([
-				'--rpc-url',
-				RPC_URL,
-				'--game-contract',
-				getGameContract(),
-				'--private-key',
-				testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
-				'send_fleet',
-				'--from',
-				'0,0',
-				'--to',
-				'1,0',
-				'--quantity',
-				'not-a-number',
-			]);
+			const result = await invokeCliCommand(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'send_fleet',
+					'--from',
+					'0,0',
+					'--to',
+					'1,0',
+					'--quantity',
+					'not-a-number',
+				],
+				{
+					env: {
+						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+					},
+				},
+			);
 
 			expect(result.exitCode).not.toBe(0);
 		});
 
 		it('should error when boolean flag is invalid', async () => {
-			const result = await invokeCliCommand([
-				'--rpc-url',
-				RPC_URL,
-				'--game-contract',
-				getGameContract(),
-				'--private-key',
-				testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
-				'send_fleet',
-				'--from',
-				'0,0',
-				'--to',
-				'1,0',
-				'--quantity',
-				'100',
-				'--gift',
-				'not-a-boolean',
-			]);
+			const result = await invokeCliCommand(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'send_fleet',
+					'--from',
+					'0,0',
+					'--to',
+					'1,0',
+					'--quantity',
+					'100',
+					'--gift',
+					'not-a-boolean',
+				],
+				{
+					env: {
+						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+					},
+				},
+			);
 
 			expect(result.exitCode).not.toBe(0);
 		});
@@ -319,33 +346,43 @@ describe('CLI - Error Handling', () => {
 
 	describe('Edge Cases', () => {
 		it('should handle very large coordinates', async () => {
-			const result = await invokeCliCommand([
-				'--rpc-url',
-				RPC_URL,
-				'--game-contract',
-				getGameContract(),
-				'--private-key',
-				testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
-				'acquire_planets',
-				'--coordinates',
-				'999999999,999999999',
-			]);
+			const result = await invokeCliCommand(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'acquire_planets',
+					'--coordinates',
+					'999999999,999999999',
+				],
+				{
+					env: {
+						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+					},
+				},
+			);
 
 			expect(result.exitCode).not.toBe(0);
 		});
 
 		it('should handle very negative coordinates', async () => {
-			const result = await invokeCliCommand([
-				'--rpc-url',
-				RPC_URL,
-				'--game-contract',
-				getGameContract(),
-				'--private-key',
-				testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
-				'acquire_planets',
-				'--coordinates',
-				'-999999999,-999999999',
-			]);
+			const result = await invokeCliCommand(
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'acquire_planets',
+					'--coordinates',
+					'-999999999,-999999999',
+				],
+				{
+					env: {
+						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+					},
+				},
+			);
 
 			expect(result.exitCode).not.toBe(0);
 		});
