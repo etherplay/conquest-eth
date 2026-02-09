@@ -3,6 +3,7 @@ import type {SpaceInfo} from 'conquest-eth-v0-contracts';
 import type {PlanetInfo, PlanetState} from 'conquest-eth-v0-contracts';
 import {acquirePlanets} from './acquire.js';
 import {exitPlanets} from './exit.js';
+import {withdrawFromPlanets} from './withdraw.js';
 import type {FleetStorage} from '../storage/interface.js';
 import type {
 	Clients,
@@ -112,6 +113,16 @@ export class PlanetManager {
 			this.contractConfig.exitDuration,
 			this.storage,
 		);
+	}
+
+	/**
+	 * Withdraw tokens from planets that have completed their exit process
+	 *
+	 * @param planetIds - Array of planet location IDs to withdraw from
+	 * @returns Transaction hash and list of planet IDs for which withdrawals were processed
+	 */
+	async withdraw(planetIds: bigint[]): Promise<{hash: `0x${string}`; planetsWithdrawn: bigint[]}> {
+		return withdrawFromPlanets(this.requireWalletClient(), this.gameContract, planetIds);
 	}
 
 	/**
