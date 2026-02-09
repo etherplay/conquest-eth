@@ -27,6 +27,7 @@ export interface ConquestEnv {
 	planetManager: PlanetManager;
 	spaceInfo: SpaceInfo;
 	contractConfig: ContractConfig;
+	clients: ClientsWithOptionalWallet;
 	options: EnvFactoryOptions;
 }
 

@@ -41,6 +41,7 @@ export async function createConquestEnv(options: EnvFactoryOptions): Promise<Con
 		planetManager: new PlanetManager(clients, gameContract, spaceInfo, contractConfig, storage),
 		spaceInfo,
 		contractConfig,
+		clients,
 		options,
 	};
 }
