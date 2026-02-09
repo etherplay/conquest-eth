@@ -1,4 +1,5 @@
 import {z} from 'zod';
+import {formatUnits} from 'viem';
 import {createTool} from '../tool-handling/types.js';
 import type {ConquestEnv} from '../types.js';
 
@@ -11,25 +12,13 @@ const schema = z.object({
 			}),
 		)
 		.describe('Array of planet coordinates to acquire'),
-	amountToMint: z
-		.number()
-		.optional()
-		.describe(
-			'Amount of native token to spend to acquire the planets. If not provided, will be calculated automatically based on planet stats.',
-		),
-	tokenAmount: z
-		.number()
-		.optional()
-		.describe(
-			'Amount of staking token to spend to acquire the planets. If not provided, will be calculated automatically based on planet stats.',
-		),
 });
 
 export const acquire_planets = createTool<typeof schema, ConquestEnv>({
 	description:
-		'Acquire (stake) multiple planets in the Conquest game. This allows you to take ownership of unclaimed planets.',
+		'Acquire (stake) multiple planets in the Conquest game. This allows you to take ownership of unclaimed planets. Automatically uses all available play token balance first, then mints the remainder with native tokens.',
 	schema,
-	execute: async (env, {coordinates, amountToMint, tokenAmount}) => {
+	execute: async (env, {coordinates}) => {
 		try {
 			// Convert x,y coordinates to planet IDs
 			const planetIdsBigInt: bigint[] = [];
@@ -41,46 +30,19 @@ export const acquire_planets = createTool<typeof schema, ConquestEnv>({
 				planetIdsBigInt.push(planetId);
 			}
 
-			let result: {
-				hash: `0x${string}`;
-				planetsAcquired: bigint[];
-				amountToMint: bigint;
-				tokenAmount: bigint;
-			};
-
-			// If BOTH amounts are provided, use them; otherwise use auto-calculation
-			if (amountToMint !== undefined && tokenAmount !== undefined) {
-				// Use provided amounts
-				// TODO decimal handling, for now BigInt()
-				const acquireResult = await env.planetManager.acquire(
-					planetIdsBigInt,
-					BigInt(amountToMint),
-					BigInt(tokenAmount),
-				);
-				result = {
-					hash: acquireResult.hash,
-					planetsAcquired: acquireResult.planetsAcquired,
-					amountToMint: BigInt(amountToMint),
-					tokenAmount: BigInt(tokenAmount),
-				};
-			} else {
-				// Use auto-calculation
-				const autoResult = await env.planetManager.acquireWithAutoCalc(planetIdsBigInt);
-				result = {
-					hash: autoResult.hash,
-					planetsAcquired: autoResult.planetsAcquired,
-					amountToMint: autoResult.costs.amountToMint,
-					tokenAmount: autoResult.costs.tokenAmount,
-				};
-			}
+			// Acquire planets using max play token balance first, then minting remainder
+			const result = await env.planetManager.acquireWithMaxPlayToken(planetIdsBigInt);
 
 			return {
 				success: true,
 				result: {
 					transactionHash: result.hash,
 					planetsAcquired: result.planetsAcquired,
-					amountToMint: result.amountToMint,
-					tokenAmount: result.tokenAmount,
+					costs: {
+						totalRequired: formatUnits(result.costs.totalRequired, 18),
+						playTokenUsed: formatUnits(result.costs.playTokenUsed, 18),
+						amountMinted: formatUnits(result.costs.amountMinted, 18),
+					},
 				},
 			};
 		} catch (error) {

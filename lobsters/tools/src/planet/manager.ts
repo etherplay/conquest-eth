@@ -14,6 +14,17 @@ import type {
 	PendingExit,
 } from '../types.js';
 
+// ERC20 balanceOf ABI for checking play token balance
+const erc20BalanceOfAbi = [
+	{
+		name: 'balanceOf',
+		type: 'function',
+		stateMutability: 'view',
+		inputs: [{name: 'account', type: 'address'}],
+		outputs: [{name: '', type: 'uint256'}],
+	},
+] as const;
+
 /**
  * PlanetManager manages planet-related operations in the Conquest game
  * including acquiring new planets and initiating exit processes
@@ -78,6 +89,32 @@ export class PlanetManager {
 	}
 
 	/**
+	 * Get the play token (staking token) balance for an address
+	 *
+	 * @param address - Address to check balance for. Defaults to current wallet address.
+	 * @returns The balance in raw units (18 decimals)
+	 */
+	async getPlayTokenBalance(address?: `0x${string}`): Promise<bigint> {
+		let targetAddress: `0x${string}`;
+
+		if (address) {
+			targetAddress = address;
+		} else {
+			const clients = this.requireWalletClient();
+			targetAddress = clients.walletClient.account!.address;
+		}
+
+		const balanceRaw = await this.clients.publicClient.readContract({
+			address: this.contractConfig.stakingToken,
+			abi: erc20BalanceOfAbi,
+			functionName: 'balanceOf',
+			args: [targetAddress],
+		});
+
+		return balanceRaw;
+	}
+
+	/**
 	 * Calculate acquisition costs for planets based on their stats
 	 *
 	 * @param planetIds - Array of planet location IDs
@@ -100,6 +137,59 @@ export class PlanetManager {
 
 		// When using native token, we set tokenAmount to 0
 		return {amountToMint, tokenAmount: 0n};
+	}
+
+	/**
+	 * Acquire (stake) multiple planets using maximum available play token balance first,
+	 * then minting the remainder with native tokens.
+	 *
+	 * This simplifies planet acquisition by automatically:
+	 * 1. Calculating required token amount based on planet stats
+	 * 2. Using ALL available play token balance first
+	 * 3. Minting any remaining amount needed using native tokens
+	 *
+	 * @param planetIds - Array of planet location IDs to acquire
+	 * @returns Transaction hash, planets acquired, and cost breakdown
+	 */
+	async acquireWithMaxPlayToken(planetIds: bigint[]): Promise<{
+		hash: `0x${string}`;
+		planetsAcquired: bigint[];
+		costs: {
+			totalRequired: bigint;
+			playTokenUsed: bigint;
+			amountMinted: bigint;
+		};
+	}> {
+		// Calculate total required token amount
+		const {amountToMint: totalRequired} = this.calculateAcquisitionCosts(planetIds);
+
+		// Get current play token balance
+		const playTokenBalance = await this.getPlayTokenBalance();
+
+		// Determine how much play token to use (all of it, up to what's needed)
+		const playTokenUsed = playTokenBalance > totalRequired ? totalRequired : playTokenBalance;
+
+		// Calculate remaining amount to mint with native tokens
+		const amountToMint = totalRequired > playTokenUsed ? totalRequired - playTokenUsed : 0n;
+
+		// Acquire the planets
+		const result = await acquirePlanets(
+			this.requireWalletClient(),
+			this.gameContract,
+			planetIds,
+			amountToMint,
+			playTokenUsed,
+			this.contractConfig.numTokensPerNativeToken,
+		);
+
+		return {
+			...result,
+			costs: {
+				totalRequired,
+				playTokenUsed,
+				amountMinted: amountToMint,
+			},
+		};
 	}
 
 	/**
