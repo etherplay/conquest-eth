@@ -132,10 +132,10 @@ query($first: Int! $lastId: ID! ) {
 export const highscoresData = new HighscoresStore();
 
 const FIXED_REWARD_RATE_thousands_millionth = BigNumber.from(
-  initialContractsInfos.contracts.RewardsGenerator.linkedData.fixedRewardRateThousandsMillionth
+  (initialContractsInfos.contracts.RewardsGenerator as any).linkedData?.fixedRewardRateThousandsMillionth || 0
 );
 const REWARD_RATE_millionth = BigNumber.from(
-  initialContractsInfos.contracts.RewardsGenerator.linkedData.rewardRateMillionth
+  (initialContractsInfos.contracts.RewardsGenerator as any).linkedData?.rewardRateMillionth || 0
 );
 const PRECISION: BigNumber = BigNumber.from('1000000000000000000000000');
 let DECIMALS_18_MILLIONTH: BigNumber = BigNumber.from('1000000000000');

@@ -65,10 +65,10 @@
   $: YakuzaContract = (initialContractsInfos as any).contracts.Yakuza;
 
   $: amountOfTime = amount
-    ? YakuzaContract && BigNumber.from(amount).mul(YakuzaContract.linkedData.numSecondsPerTokens).toNumber()
+    ? YakuzaContract && BigNumber.from(amount).mul(YakuzaContract?.linkedData?.numSecondsPerTokens).toNumber()
     : 0;
 
-  $: console.log({amount, amountOfTime, numSecondsPerTokens: YakuzaContract?.linkedData.numSecondsPerTokens || 0});
+  $: console.log({amount, amountOfTime, numSecondsPerTokens: YakuzaContract?.linkedData?.numSecondsPerTokens || 0});
 
   $: yakuzaPlayTokenBalance = $spaceQuery.data?.yakuza?.playTokenBalance
     ? formatEther($spaceQuery.data.yakuza.playTokenBalance)

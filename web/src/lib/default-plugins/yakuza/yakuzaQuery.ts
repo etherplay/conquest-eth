@@ -142,7 +142,7 @@ export class YakuzaQueryStore implements QueryStore<YakuzaState> {
 
   getLastClaimTime(): number {
     const timestamp = now();
-    return timestamp - (initialContractsInfos as any).contracts.Yakuza?.linkedData.maxClaimDelay || 0;
+    return timestamp - (initialContractsInfos as any).contracts.Yakuza?.linkedData?.maxClaimDelay || 0;
   }
 
   onTime(): void {
