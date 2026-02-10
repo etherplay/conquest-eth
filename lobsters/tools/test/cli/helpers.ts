@@ -35,7 +35,10 @@ export function parseCliOutput<T>(output: string): T {
 /**
  * Assert that a CLI command succeeded
  */
-export function assertCliSuccess(result: {exitCode: number; stdout: string; stderr: string}, message?: string): void {
+export function assertCliSuccess(
+	result: {exitCode: number; stdout: string; stderr: string},
+	message?: string,
+): void {
 	if (result.exitCode !== 0) {
 		throw new Error(
 			`CLI command failed${message ? `: ${message}` : ''}\nExit code: ${result.exitCode}\nStdout: ${result.stdout}\nStderr: ${result.stderr}`,
@@ -46,7 +49,10 @@ export function assertCliSuccess(result: {exitCode: number; stdout: string; stde
 /**
  * Assert that a CLI command failed with an error
  */
-export function assertCliError(result: {exitCode: number; stdout: string; stderr: string}, expectedError?: string): void {
+export function assertCliError(
+	result: {exitCode: number; stdout: string; stderr: string},
+	expectedError?: string,
+): void {
 	if (result.exitCode === 0) {
 		throw new Error(`CLI command succeeded but was expected to fail\nStdout: ${result.stdout}`);
 	}

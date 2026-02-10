@@ -96,7 +96,9 @@ export async function getCurrentTimestamp(rpcUrl: string): Promise<number> {
 /**
  * Helper to clear test storage directory
  */
-export async function clearTestStorage(storagePath: string = DEFAULT_TEST_STORAGE_PATH): Promise<void> {
+export async function clearTestStorage(
+	storagePath: string = DEFAULT_TEST_STORAGE_PATH,
+): Promise<void> {
 	try {
 		await fs.rm(storagePath, {recursive: true, force: true});
 	} catch {

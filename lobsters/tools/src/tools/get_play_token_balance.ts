@@ -7,7 +7,9 @@ const schema = z.object({
 	address: z
 		.string()
 		.optional()
-		.describe('Address to check balance for. Defaults to current wallet if private key is available.'),
+		.describe(
+			'Address to check balance for. Defaults to current wallet if private key is available.',
+		),
 });
 
 // ERC20 balanceOf ABI

@@ -23,10 +23,20 @@ describe('CLI - Fleet Lifecycle', () => {
 	describe('send_fleet', () => {
 		it('should fail when from/to coordinates are missing', async () => {
 			const result = await invokeCliCommand(
-				['--rpc-url', RPC_URL, '--game-contract', getGameContract(), 'send_fleet', '--quantity', '100'],
+				[
+					'--rpc-url',
+					RPC_URL,
+					'--game-contract',
+					getGameContract(),
+					'send_fleet',
+					'--quantity',
+					'100',
+				],
 				{
 					env: {
-						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+						PRIVATE_KEY:
+							testPrivateKey ||
+							'0x0000000000000000000000000000000000000000000000000000000000000001',
 					},
 				},
 			);
@@ -52,7 +62,9 @@ describe('CLI - Fleet Lifecycle', () => {
 				],
 				{
 					env: {
-						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+						PRIVATE_KEY:
+							testPrivateKey ||
+							'0x0000000000000000000000000000000000000000000000000000000000000001',
 					},
 				},
 			);
@@ -80,7 +92,9 @@ describe('CLI - Fleet Lifecycle', () => {
 				],
 				{
 					env: {
-						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+						PRIVATE_KEY:
+							testPrivateKey ||
+							'0x0000000000000000000000000000000000000000000000000000000000000001',
 					},
 				},
 			);
@@ -108,7 +122,9 @@ describe('CLI - Fleet Lifecycle', () => {
 				],
 				{
 					env: {
-						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+						PRIVATE_KEY:
+							testPrivateKey ||
+							'0x0000000000000000000000000000000000000000000000000000000000000001',
 					},
 				},
 			);
@@ -164,7 +180,9 @@ describe('CLI - Fleet Lifecycle', () => {
 				],
 				{
 					env: {
-						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+						PRIVATE_KEY:
+							testPrivateKey ||
+							'0x0000000000000000000000000000000000000000000000000000000000000001',
 					},
 				},
 			);
@@ -194,7 +212,9 @@ describe('CLI - Fleet Lifecycle', () => {
 				],
 				{
 					env: {
-						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+						PRIVATE_KEY:
+							testPrivateKey ||
+							'0x0000000000000000000000000000000000000000000000000000000000000001',
 					},
 				},
 			);
@@ -222,7 +242,9 @@ describe('CLI - Fleet Lifecycle', () => {
 				],
 				{
 					env: {
-						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+						PRIVATE_KEY:
+							testPrivateKey ||
+							'0x0000000000000000000000000000000000000000000000000000000000000001',
 					},
 				},
 			);
@@ -259,7 +281,9 @@ describe('CLI - Fleet Lifecycle', () => {
 				['--rpc-url', RPC_URL, '--game-contract', getGameContract(), 'resolve_fleet'],
 				{
 					env: {
-						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+						PRIVATE_KEY:
+							testPrivateKey ||
+							'0x0000000000000000000000000000000000000000000000000000000000000001',
 					},
 				},
 			);
@@ -283,7 +307,9 @@ describe('CLI - Fleet Lifecycle', () => {
 				],
 				{
 					env: {
-						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+						PRIVATE_KEY:
+							testPrivateKey ||
+							'0x0000000000000000000000000000000000000000000000000000000000000001',
 					},
 				},
 			);

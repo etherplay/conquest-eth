@@ -212,7 +212,11 @@ export class PlanetManager {
 	 * @returns Transaction hash and list of planet IDs for which withdrawals were processed
 	 */
 	async withdraw(planetIds: bigint[]): Promise<{hash: `0x${string}`; planetsWithdrawn: bigint[]}> {
-		const result = await withdrawFromPlanets(this.requireWalletClient(), this.gameContract, planetIds);
+		const result = await withdrawFromPlanets(
+			this.requireWalletClient(),
+			this.gameContract,
+			planetIds,
+		);
 
 		// Mark the exits as withdrawn in storage
 		const currentTime = Math.floor(Date.now() / 1000);

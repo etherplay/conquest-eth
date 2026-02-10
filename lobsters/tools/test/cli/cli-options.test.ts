@@ -114,7 +114,15 @@ describe('CLI - Options and Flags', () => {
 	describe('Environment Variable Fallback', () => {
 		it('should use RPC_URL environment variable when --rpc-url not provided', async () => {
 			const result = await invokeCliCommand(
-				['--game-contract', getGameContract(), 'get_planets_around', '--center', '0,0', '--radius', '10'],
+				[
+					'--game-contract',
+					getGameContract(),
+					'get_planets_around',
+					'--center',
+					'0,0',
+					'--radius',
+					'10',
+				],
 				{
 					env: {
 						RPC_URL,

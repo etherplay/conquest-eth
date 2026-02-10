@@ -61,10 +61,12 @@ export const withdraw = createTool<typeof schema, ConquestEnv>({
 			}
 
 			// Get coordinates for the withdrawable planets (for return value)
-			const withdrawableCoordinates = withdrawableExits.map((exit) => {
-				const planet = env.planetManager.getPlanetInfo(exit.planetId);
-				return planet ? {x: planet.location.x, y: planet.location.y} : null;
-			}).filter((c): c is {x: number; y: number} => c !== null);
+			const withdrawableCoordinates = withdrawableExits
+				.map((exit) => {
+					const planet = env.planetManager.getPlanetInfo(exit.planetId);
+					return planet ? {x: planet.location.x, y: planet.location.y} : null;
+				})
+				.filter((c): c is {x: number; y: number} => c !== null);
 
 			// Withdraw all
 			const result = await env.planetManager.withdrawAll();

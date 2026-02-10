@@ -26,7 +26,9 @@ describe('CLI - Write Operations', () => {
 				['--rpc-url', RPC_URL, '--game-contract', getGameContract(), 'acquire_planets'],
 				{
 					env: {
-						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+						PRIVATE_KEY:
+							testPrivateKey ||
+							'0x0000000000000000000000000000000000000000000000000000000000000001',
 					},
 				},
 			);
@@ -50,7 +52,9 @@ describe('CLI - Write Operations', () => {
 				],
 				{
 					env: {
-						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+						PRIVATE_KEY:
+							testPrivateKey ||
+							'0x0000000000000000000000000000000000000000000000000000000000000001',
 					},
 				},
 			);
@@ -95,7 +99,9 @@ describe('CLI - Write Operations', () => {
 				],
 				{
 					env: {
-						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+						PRIVATE_KEY:
+							testPrivateKey ||
+							'0x0000000000000000000000000000000000000000000000000000000000000001',
 					},
 				},
 			);
@@ -120,7 +126,9 @@ describe('CLI - Write Operations', () => {
 				],
 				{
 					env: {
-						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+						PRIVATE_KEY:
+							testPrivateKey ||
+							'0x0000000000000000000000000000000000000000000000000000000000000001',
 					},
 				},
 			);
@@ -139,7 +147,9 @@ describe('CLI - Write Operations', () => {
 				['--rpc-url', RPC_URL, '--game-contract', getGameContract(), 'exit_planets'],
 				{
 					env: {
-						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+						PRIVATE_KEY:
+							testPrivateKey ||
+							'0x0000000000000000000000000000000000000000000000000000000000000001',
 					},
 				},
 			);
@@ -163,7 +173,9 @@ describe('CLI - Write Operations', () => {
 				],
 				{
 					env: {
-						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+						PRIVATE_KEY:
+							testPrivateKey ||
+							'0x0000000000000000000000000000000000000000000000000000000000000001',
 					},
 				},
 			);
@@ -187,7 +199,9 @@ describe('CLI - Write Operations', () => {
 				],
 				{
 					env: {
-						PRIVATE_KEY: testPrivateKey || '0x0000000000000000000000000000000000000000000000000000000000000001',
+						PRIVATE_KEY:
+							testPrivateKey ||
+							'0x0000000000000000000000000000000000000000000000000000000000000001',
 					},
 				},
 			);

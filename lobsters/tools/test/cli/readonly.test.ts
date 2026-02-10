@@ -78,13 +78,15 @@ describe('CLI - Read-Only Operations', () => {
 
 			// If planets exist, validate their structure
 			// This uses forEach which processes all items when present, and does nothing when empty
-			result.planets.forEach((planet: {planetId?: string; location?: {x?: number; y?: number; id?: string}}) => {
-				expect(planet).toHaveProperty('planetId');
-				expect(planet).toHaveProperty('location');
-				expect(planet.location).toHaveProperty('x');
-				expect(planet.location).toHaveProperty('y');
-				expect(planet.location).toHaveProperty('id');
-			});
+			result.planets.forEach(
+				(planet: {planetId?: string; location?: {x?: number; y?: number; id?: string}}) => {
+					expect(planet).toHaveProperty('planetId');
+					expect(planet).toHaveProperty('location');
+					expect(planet.location).toHaveProperty('x');
+					expect(planet.location).toHaveProperty('y');
+					expect(planet.location).toHaveProperty('id');
+				},
+			);
 		});
 
 		it('should handle small radius (1)', async () => {
@@ -244,13 +246,15 @@ describe('CLI - Read-Only Operations', () => {
 			expect(Array.isArray(result.planets)).toBe(true);
 
 			// Validate structure on all planets (processes all when present, none when empty)
-			result.planets.forEach((planet: {planetId?: string; distance?: number; location?: {x?: number; y?: number}}) => {
-				expect(planet).toHaveProperty('planetId');
-				expect(planet).toHaveProperty('distance');
-				expect(planet).toHaveProperty('location');
-				expect(planet.location).toHaveProperty('x');
-				expect(planet.location).toHaveProperty('y');
-			});
+			result.planets.forEach(
+				(planet: {planetId?: string; distance?: number; location?: {x?: number; y?: number}}) => {
+					expect(planet).toHaveProperty('planetId');
+					expect(planet).toHaveProperty('distance');
+					expect(planet).toHaveProperty('location');
+					expect(planet.location).toHaveProperty('x');
+					expect(planet.location).toHaveProperty('y');
+				},
+			);
 		});
 
 		it('should handle small radius (1)', async () => {
@@ -431,71 +435,67 @@ describe('CLI - Read-Only Operations', () => {
 	});
 
 	describe('Integration - Multiple read operations', () => {
-		it(
-			'should be able to call multiple read operations in sequence',
-			async () => {
-				// Get my planets (using get_planets_around with --only me)
-				const myPlanetsResult = await invokeCliCommand([
-					'--rpc-url',
-					RPC_URL,
-					'--game-contract',
-					getGameContract(),
-					'get_planets_around',
-					'--center',
-					'0,0',
-					'--radius',
-					'10',
-					'--only',
-					'me',
-				]);
-				expect(myPlanetsResult.exitCode).toBe(0);
+		it('should be able to call multiple read operations in sequence', async () => {
+			// Get my planets (using get_planets_around with --only me)
+			const myPlanetsResult = await invokeCliCommand([
+				'--rpc-url',
+				RPC_URL,
+				'--game-contract',
+				getGameContract(),
+				'get_planets_around',
+				'--center',
+				'0,0',
+				'--radius',
+				'10',
+				'--only',
+				'me',
+			]);
+			expect(myPlanetsResult.exitCode).toBe(0);
 
-				// Get planets around center
-				const aroundResult = await invokeCliCommand([
-					'--rpc-url',
-					RPC_URL,
-					'--game-contract',
-					getGameContract(),
-					'get_planets_around',
-					'--center',
-					'0,0',
-					'--radius',
-					'10',
-				]);
-				expect(aroundResult.exitCode).toBe(0);
+			// Get planets around center
+			const aroundResult = await invokeCliCommand([
+				'--rpc-url',
+				RPC_URL,
+				'--game-contract',
+				getGameContract(),
+				'get_planets_around',
+				'--center',
+				'0,0',
+				'--radius',
+				'10',
+			]);
+			expect(aroundResult.exitCode).toBe(0);
 
-				// Get pending fleets
-				const fleetsResult = await invokeCliCommand([
-					'--rpc-url',
-					RPC_URL,
-					'--game-contract',
-					getGameContract(),
-					'get_pending_fleets',
-				]);
-				expect(fleetsResult.exitCode).toBe(0);
+			// Get pending fleets
+			const fleetsResult = await invokeCliCommand([
+				'--rpc-url',
+				RPC_URL,
+				'--game-contract',
+				getGameContract(),
+				'get_pending_fleets',
+			]);
+			expect(fleetsResult.exitCode).toBe(0);
 
-				// Get pending exits
-				const exitsResult = await invokeCliCommand([
-					'--rpc-url',
-					RPC_URL,
-					'--game-contract',
-					getGameContract(),
-					'get_pending_exits',
-				]);
-				expect(exitsResult.exitCode).toBe(0);
+			// Get pending exits
+			const exitsResult = await invokeCliCommand([
+				'--rpc-url',
+				RPC_URL,
+				'--game-contract',
+				getGameContract(),
+				'get_pending_exits',
+			]);
+			expect(exitsResult.exitCode).toBe(0);
 
-				// All should succeed
-				const myPlanets = JSON.parse(myPlanetsResult.stdout);
-				const around = JSON.parse(aroundResult.stdout);
-				const fleets = JSON.parse(fleetsResult.stdout);
-				const exits = JSON.parse(exitsResult.stdout);
+			// All should succeed
+			const myPlanets = JSON.parse(myPlanetsResult.stdout);
+			const around = JSON.parse(aroundResult.stdout);
+			const fleets = JSON.parse(fleetsResult.stdout);
+			const exits = JSON.parse(exitsResult.stdout);
 
-				expect(myPlanets.planets).toBeDefined();
-				expect(around.planets).toBeDefined();
-				expect(fleets.fleets).toBeDefined();
-				expect(exits.exits).toBeDefined();
-			},
-			20000,
-		);
+			expect(myPlanets.planets).toBeDefined();
+			expect(around.planets).toBeDefined();
+			expect(fleets.fleets).toBeDefined();
+			expect(exits.exits).toBeDefined();
+		}, 20000);
 	});
 });

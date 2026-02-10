@@ -10,12 +10,22 @@ const coordinatesSchema = z.object({
 
 // Schema for multiple fleets simulation
 const schema = z.object({
-	fleets: z.array(z.object({
-		from: coordinatesSchema.describe('Source planet coordinates {x, y}'),
-		quantity: z.number().positive().describe('Number of spaceships to send'),
-	})).min(1).describe('Array of fleets to send to the target'),
+	fleets: z
+		.array(
+			z.object({
+				from: coordinatesSchema.describe('Source planet coordinates {x, y}'),
+				quantity: z.number().positive().describe('Number of spaceships to send'),
+			}),
+		)
+		.min(1)
+		.describe('Array of fleets to send to the target'),
 	to: coordinatesSchema.describe('Target planet coordinates {x, y}'),
-	arrivalTime: z.number().optional().describe('Specific arrival time in seconds. If not provided, uses the maximum travel time from all fleets.'),
+	arrivalTime: z
+		.number()
+		.optional()
+		.describe(
+			'Specific arrival time in seconds. If not provided, uses the maximum travel time from all fleets.',
+		),
 });
 
 export const simulate_multiple = createTool<typeof schema, ConquestEnv>({
@@ -53,7 +63,14 @@ export const simulate_multiple = createTool<typeof schema, ConquestEnv>({
 
 			// Build fleet inputs with planet info
 			const fleetInputs: FleetInput[] = [];
-			const fleetDetails: Array<{from: {x: number; y: number}; quantity: number; travelTime: number; distance: number; attack: number; speed: number}> = [];
+			const fleetDetails: Array<{
+				from: {x: number; y: number};
+				quantity: number;
+				travelTime: number;
+				distance: number;
+				attack: number;
+				speed: number;
+			}> = [];
 
 			for (const fleet of fleets) {
 				// Get planet info for source

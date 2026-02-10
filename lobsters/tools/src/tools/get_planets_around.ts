@@ -32,7 +32,8 @@ export const get_planets_around = createTool<typeof schema, ConquestEnv>({
 					if (!walletClient?.account) {
 						return {
 							success: false,
-							error: 'Wallet client with account required to use "me" filter. Private key must be set.',
+							error:
+								'Wallet client with account required to use "me" filter. Private key must be set.',
 						};
 					}
 					filterAddress = walletClient.account.address.toLowerCase();
