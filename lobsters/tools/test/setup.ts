@@ -48,6 +48,7 @@ export async function setupTestEnvironment(): Promise<TestContext> {
 			accounts: {
 				deployer: 0,
 				claimKeyDistributor: 0,
+				tokenBeneficiary: 0,
 			},
 			environments: {
 				memory: {
