@@ -200,7 +200,7 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 					location: {x: number; y: number};
 				}>;
 			}>(result.stdout);
-	
+
 			expect(data.planets).toBeDefined();
 			// Player 1's planets (if any) should be in the list
 		});
@@ -381,13 +381,13 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 					location: {x: number; y: number};
 				}>;
 			}>(result.stdout);
-	
+
 			expect(data.planets).toBeDefined();
-	
+
 			const planet = data.planets.find(
 				(p) => p.location.x === targetPlanet.x && p.location.y === targetPlanet.y,
 			);
-	
+
 			// The target planet should exist
 			expect(planet).toBeDefined();
 			// Log state for debugging (non-conditional)
@@ -593,16 +593,16 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 						location: {x: number; y: number};
 					}>;
 				}>(finalStateResult.stdout);
-	
+
 				const finalPlanetB = finalStateData.planets.find(
 					(p) => p.location.x === planetB.x && p.location.y === planetB.y,
 				);
-	
+
 				expect(finalPlanetB).toBeDefined();
 				console.log('Final state of planet B:');
 				console.log('  Owner:', finalPlanetB?.state.owner);
 				console.log('  Spaceships:', finalPlanetB?.state.numSpaceships);
-	
+
 				// The attack should have affected the planet
 				// If successful, Player 1 may have captured it or reduced defenders
 				expect(finalPlanetB?.state.owner).toBeDefined();
