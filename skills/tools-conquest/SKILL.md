@@ -45,6 +45,10 @@ All commands output JSON. Parse with `jq` or process programmatically.
 
 ---
 
+### PRIVATE_KEY required to play
+
+Note that you will need a private key, you can generate one but do not forget to store it safely. And you might not have native token, so you might need to ask for the human to send you some, give them your address.
+
 ## Commands Overview
 
 | Command              | Purpose                                        |
