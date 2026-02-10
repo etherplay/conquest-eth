@@ -65,7 +65,11 @@ export async function resolveFleet(
 	});
 
 	// Send the transaction
-	const hash = await walletClient.writeContract(request);
+	// Explicitly pass the account to ensure local signing is used
+	const hash = await walletClient.writeContract({
+		...request.request,
+		account: walletClient.account!,
+	});
 
 	// Mark fleet as resolved in storage
 	const resolvedAt = getCurrentTimestamp();
@@ -149,7 +153,11 @@ export async function resolveFleetWithSpaceInfo(
 	});
 
 	// Send the transaction
-	const hash = await clients.walletClient.writeContract(simulation.request);
+	// Explicitly pass the account to ensure local signing is used
+	const hash = await clients.walletClient.writeContract({
+		...simulation.request,
+		account: clients.walletClient.account!,
+	});
 
 	// Mark fleet as resolved in storage
 	const resolvedAt = getCurrentTimestamp();

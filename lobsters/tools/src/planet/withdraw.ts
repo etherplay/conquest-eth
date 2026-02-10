@@ -27,7 +27,11 @@ export async function withdrawFromPlanets(
 	});
 
 	// Send the transaction
-	const hash = await clients.walletClient.writeContract(simulation.request);
+	// Explicitly pass the account to ensure local signing is used
+	const hash = await clients.walletClient.writeContract({
+		...simulation.request,
+		account: clients.walletClient.account!,
+	});
 
 	return {hash, planetsWithdrawn: planetIds};
 }
