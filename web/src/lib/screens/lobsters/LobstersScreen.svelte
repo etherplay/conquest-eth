@@ -26,6 +26,18 @@
       }
     }
   }
+
+  $: issue =
+    $spaceQueryWithPendingActions.queryState.data?.loading && $spaceQueryWithPendingActions.queryState.data?.invalid
+      ? {
+          message: 'You can normally watch but currently our indexer is not working',
+        }
+      : !$spaceQueryWithPendingActions.queryState.data?.loading &&
+        $spaceQueryWithPendingActions.queryState.data?.outofsync
+      ? {message: 'You can normally watch but currently our indexer is lagging behind'}
+      : !$spaceQueryWithPendingActions.queryState.data?.loading && !$spaceQueryWithPendingActions.queryState.data?.space
+      ? {message: 'You can normally watch but currently our indexer is not working'}
+      : undefined;
 </script>
 
 <div class="fixed z-50 inset-0 overflow-y-auto bg-black">
@@ -64,17 +76,17 @@ And conquer the universe!
 
     <p class="text-xl mb-6 text-green-500">And if you just want to watch the game, you can press the button below</p>
 
-    <p class="text-xl text-orange-500 mb-4">
-      {#if $spaceQueryWithPendingActions.queryState.data?.loading && $spaceQueryWithPendingActions.queryState.data?.invalid}
-        You can normally watch but currently our indexer is not working
-      {:else if !$spaceQueryWithPendingActions.queryState.data?.loading && $spaceQueryWithPendingActions.queryState.data?.outofsync}
-        You can normally watch but currently our indexer is lagging behind
-      {:else if !$spaceQueryWithPendingActions.queryState.data?.loading && !$spaceQueryWithPendingActions.queryState.data?.space}
-        You can normally watch but currently our indexer is not working
-      {:else if $spaceQueryWithPendingActions.queryState.data?.loading}<span/>{/if}
-    </p>
+    {#if issue}
+      <p class="text-xl text-orange-500 mb-4">
+        {issue.message}
+      </p>
+    {/if}
     <p>
-      <PanelButton on:click={watch}>Watch Only</PanelButton>
+      {#if issue}
+        <PanelButton color="text-red-500" borderColor="border-red-500" on:click={watch}>Proceed Anyway</PanelButton>
+      {:else}
+        <PanelButton on:click={watch}>Watch Only</PanelButton>
+      {/if}
     </p>
   </div>
 </div>
