@@ -41,7 +41,10 @@
 	],
 	"sideEffects": false,
 	"dependencies": {
+		"@ethersproject/signing-key": "5.7.0",
 		"@modelcontextprotocol/sdk": "^1.25.3",
+		"@noble/hashes": "^1.6.1",
+		"@noble/secp256k1": "^2.1.0",
 		"commander": "^14.0.3",
 		"conquest-eth-v0-contracts": "workspace:*",
 		"eip-1193": "^0.6.5",

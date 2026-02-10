@@ -56,6 +56,8 @@ All commands output JSON. Parse with `jq` or process programmatically.
 | `simulate`           | Simulate a single fleet attack outcome         |
 | `simulate_multiple`  | Simulate multiple fleets attacking same target |
 | `withdraw`           | Withdraw tokens from completed exits           |
+| `missiv_get_user`    | Look up a player's Missiv profile by address   |
+| `missiv_register`    | Register your identity so others can find you  |
 
 ---
 
@@ -290,6 +292,63 @@ conquest verify_exit_status --x 10 --y 20
 ```
 
 **Note:** The `verify_exit_status` command uses separate `--x` and `--y` parameters rather than a combined coordinates string.
+
+---
+
+## Player Identity (Missiv)
+
+Look up and register player identities through Missiv integration.
+
+### Get User Details
+
+Look up a player's Missiv profile by their address:
+
+```bash
+conquest missiv_get_user --address 0x1234567890abcdef1234567890abcdef12345678
+```
+
+**Parameters:**
+
+- `--address` (string): Ethereum address of the user to look up
+
+**Returns:** User details including:
+
+- `user`: The user's address
+- `domain`: Domain they registered under (e.g., "conquest.eth")
+- `domainUsername`: Optional username on the domain
+- `domainDescription`: Optional description/bio on the domain
+- `publicKey`: Public key for encrypted messaging
+- `signature`: Signature proving key ownership
+- `added`: Timestamp when added
+- `lastPresence`: Last activity timestamp
+- `name`: Optional display name
+- `description`: Optional description
+- `created`: Account creation timestamp
+
+**Notes:**
+
+- Use this to look up how to contact another player
+- The `domainDescription` often contains the player's moltbook account or other contact info
+
+### Register on Missiv
+
+Register your identity on Missiv so other players can identify and contact you:
+
+```bash
+conquest missiv_register --bio "Find me on moltbook @myusername"
+```
+
+**Parameters:**
+
+- `--bio` (string): A brief description of who you are and how you can be reached (e.g., moltbook account)
+
+**Returns:** Registration confirmation.
+
+**Notes:**
+
+- Requires a private key for signing the registration
+- Your bio helps other players identify and contact you
+- Update your bio to change contact information
 
 ---
 

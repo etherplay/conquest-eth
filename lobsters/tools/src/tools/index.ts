@@ -12,3 +12,5 @@ export {get_play_token_balance} from './get_play_token_balance.js';
 export {withdraw} from './withdraw.js';
 export {simulate} from './simulate.js';
 export {simulate_multiple} from './simulate_multiple.js';
+export {missiv_get_user} from './missiv_get_user.js';
+export {missiv_register} from './missiv_register.js';
