@@ -65,6 +65,8 @@ if (chainId === '7001' || chainId === '7001') {
   nativeTokenDecimal = 18;
 }
 
+let defaultRPCURL = import.meta.env.VITE_DEFAULT_RPC_URL as string | undefined;
+
 let webWalletURL: string | undefined = import.meta.env.VITE_WEB_WALLET_ETH_NODE as string | undefined;
 if (webWalletURL && webWalletURL.startsWith('__')) {
   webWalletURL = undefined;
@@ -289,6 +291,7 @@ export {
   version,
   options,
   report,
+  defaultRPCURL,
 };
 
 if (typeof window !== 'undefined') {
