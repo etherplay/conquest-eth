@@ -59,7 +59,9 @@ export const get_planets_around = createTool<typeof schema, ConquestEnv>({
 							Math.pow(info.location.x - center.x, 2) + Math.pow(info.location.y - center.y, 2),
 						),
 						location: info.location,
-						...state,
+						state,
+						stats: info.stats,
+						// ...state,
 					})),
 				},
 			};

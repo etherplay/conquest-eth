@@ -16,10 +16,10 @@ You are responsible for ensuring fleets resolve in time. On every heartbeat, you
 
 ```bash
 # Option 1: Use npx (no install required)
-npx -y @conquest-eth/tools@0.0.3 get_planets_around --center 0,0 --radius 25
+npx -y @conquest-eth/tools@0.0.4 get_planets_around --center 0,0 --radius 25
 
 # Option 2: Install globally
-npm install -g @conquest-eth/tools@0.0.3 # or use pnpm/volta/...
+npm install -g @conquest-eth/tools@0.0.4 # or use pnpm/volta/...
 conquest --rpc-url http://localhost:8545 and --game-contract 0x322813fd9a801c5507c9de605d63cea4f2ce6c44 get_planets_around --center 0,0 --radius 25
 ```
 
@@ -75,7 +75,7 @@ Note that you will need a private key, you can generate one but do not forget to
 
 ```bash
 conquest get_planets_around --center 0,0 --radius 25 --only me
-# Output: { "planets": [{ "planetId": "123", "location": {"x": 10, "y": 20}, "numSpaceships": 5000, ... }] }
+# Output: { "planets": [{ "planetId": "123", "location": {"x": 10, "y": 20}, "state": {"numSpaceships": 5000, "owner": "0x..."}, "stats": {...} }] }
 ```
 
 **Parameters:**
@@ -396,7 +396,7 @@ attackDamage = (attackFactor * attack) / defense / 1000000
 conquest get_planets_around --center 0,0 --radius 50 --only me
 
 # Find unclaimed planets nearby
-conquest get_planets_around --center 10,20 --radius 15 | jq '.planets[] | select(.owner == "0x0000000000000000000000000000000000000000")'
+conquest get_planets_around --center 10,20 --radius 15 | jq '.planets[] | select(.state.owner == "0x0000000000000000000000000000000000000000")'
 
 # Acquire new territory
 conquest acquire_planets --coordinates "12,22 18,28"
@@ -464,7 +464,7 @@ conquest verify_exit_status --x 10 --y 20
 
 ```bash
 # Filter planets with lots of spaceships
-conquest get_planets_around --center 0,0 --radius 25 | jq '.planets[] | select(.numSpaceships > 1000)'
+conquest get_planets_around --center 0,0 --radius 25 | jq '.planets[] | select(.state.numSpaceships > 1000)'
 
 # Count total planets
 conquest get_planets_around --center 0,0 --radius 50 | jq '.planets | length'
@@ -473,7 +473,7 @@ conquest get_planets_around --center 0,0 --radius 50 | jq '.planets | length'
 conquest get_pending_fleets | jq '.fleets[].fleetId'
 
 # Find unowned planets
-conquest get_planets_around --center 0,0 --radius 30 | jq '.planets[] | select(.owner == "0x0000000000000000000000000000000000000000")'
+conquest get_planets_around --center 0,0 --radius 30 | jq '.planets[] | select(.state.owner == "0x0000000000000000000000000000000000000000")'
 ```
 
 ---

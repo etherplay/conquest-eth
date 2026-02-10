@@ -69,14 +69,16 @@ async function findValidPlanets(
 		planets: Array<{
 			planetId: string;
 			location: {x: number; y: number};
-			owner?: string;
+			state: {
+				owner?: string;
+			};
 		}>;
 	}>(result.stdout);
 
 	const planets = data.planets || [];
 
 	return planets
-		.filter((p) => !p.owner) // Only unowned planets
+		.filter((p) => !p.state.owner) // Only unowned planets
 		.map((p) => ({
 			x: p.location.x,
 			y: p.location.y,
@@ -192,11 +194,13 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 			const data = parseCliOutput<{
 				planets: Array<{
 					planetId: string;
-					owner?: string;
+					state: {
+						owner?: string;
+					};
 					location: {x: number; y: number};
 				}>;
 			}>(result.stdout);
-
+	
 			expect(data.planets).toBeDefined();
 			// Player 1's planets (if any) should be in the list
 		});
@@ -370,24 +374,26 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 			const data = parseCliOutput<{
 				planets: Array<{
 					planetId: string;
-					owner?: string;
-					numSpaceships?: number;
+					state: {
+						owner?: string;
+						numSpaceships?: number;
+					};
 					location: {x: number; y: number};
 				}>;
 			}>(result.stdout);
-
+	
 			expect(data.planets).toBeDefined();
-
+	
 			const planet = data.planets.find(
 				(p) => p.location.x === targetPlanet.x && p.location.y === targetPlanet.y,
 			);
-
+	
 			// The target planet should exist
 			expect(planet).toBeDefined();
 			// Log state for debugging (non-conditional)
 			console.log('Target planet state after attack:');
-			console.log('  Owner:', planet?.owner || 'none');
-			console.log('  Spaceships:', planet?.numSpaceships);
+			console.log('  Owner:', planet?.state.owner || 'none');
+			console.log('  Spaceships:', planet?.state.numSpaceships);
 		});
 	});
 
@@ -580,24 +586,26 @@ describe('Full Flow - Planet Acquisition and Fleet Combat', () => {
 				const finalStateData = parseCliOutput<{
 					planets: Array<{
 						planetId: string;
-						owner?: string;
-						numSpaceships?: number;
+						state: {
+							owner?: string;
+							numSpaceships?: number;
+						};
 						location: {x: number; y: number};
 					}>;
 				}>(finalStateResult.stdout);
-
+	
 				const finalPlanetB = finalStateData.planets.find(
 					(p) => p.location.x === planetB.x && p.location.y === planetB.y,
 				);
-
+	
 				expect(finalPlanetB).toBeDefined();
 				console.log('Final state of planet B:');
-				console.log('  Owner:', finalPlanetB?.owner);
-				console.log('  Spaceships:', finalPlanetB?.numSpaceships);
-
+				console.log('  Owner:', finalPlanetB?.state.owner);
+				console.log('  Spaceships:', finalPlanetB?.state.numSpaceships);
+	
 				// The attack should have affected the planet
 				// If successful, Player 1 may have captured it or reduced defenders
-				expect(finalPlanetB?.owner).toBeDefined();
+				expect(finalPlanetB?.state.owner).toBeDefined();
 			},
 		);
 	});
