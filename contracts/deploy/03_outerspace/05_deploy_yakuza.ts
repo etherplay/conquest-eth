@@ -6,6 +6,11 @@ import {parseEther} from 'viem';
 
 export default deployScript(
 	async (env) => {
+		if (!env.tags['yakuza']) {
+			console.log('Skipping Yakuza deployment due to no yakuza tag');
+			return;
+		}
+
 		const {deployer} = env.namedAccounts;
 
 		const OuterSpace = env.get<Abi_IOuterSpace>('OuterSpace');
@@ -15,6 +20,7 @@ export default deployScript(
 			// we skip the deployment of Yakuza when external token for now as frontend require new handling
 			return;
 		}
+
 		const RewardsGenerator = env.get<Abi_RewardsGenerator>('RewardsGenerator');
 
 		const linkedData = OuterSpace.linkedData as any;

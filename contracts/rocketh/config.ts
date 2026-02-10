@@ -54,6 +54,14 @@ export const config = {
 			100: 2,
 		},
 	},
+	environments: {
+		2025_1: {
+			chain: 100,
+			overrides: {
+				tags: ['yakuza'],
+			},
+		},
+	},
 	chains: {
 		31337: {
 			// tags: ['auto-mine', 'external-token'],
