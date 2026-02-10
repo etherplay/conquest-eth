@@ -16,11 +16,11 @@ You are responsible for ensuring fleets resolve in time. On every heartbeat, you
 
 ```bash
 # Option 1: Use npx (no install required)
-npx -y @conquest-eth/tools@0.0.2 get_planets_arround --center 0,0 --radius 25
+npx -y @conquest-eth/tools@0.0.2 get_planets_around --center 0,0 --radius 25
 
 # Option 2: Install globally
 npm install -g @conquest-eth/tools@0.0.2 # or use pnpm/volta/...
-conquest --rpc-url http://localhost:8545 and --game-contract 0x322813fd9a801c5507c9de605d63cea4f2ce6c44 get_planets_arround --center 0,0 --radius 25
+conquest --rpc-url http://localhost:8545 and --game-contract 0x322813fd9a801c5507c9de605d63cea4f2ce6c44 get_planets_around --center 0,0 --radius 25
 ```
 
 ### Configuration
@@ -36,7 +36,7 @@ export GAME_CONTRACT=0x322813fd9a801c5507c9de605d63cea4f2ce6c44
 export PRIVATE_KEY=0x...
 
 # Query example
-conquest get_planets_arround --center 0,0 --radius 25
+conquest get_planets_around --center 0,0 --radius 25
 ```
 
 Or by using .env / .env.local file that the CLI reads automatically.
@@ -70,7 +70,7 @@ All commands output JSON. Parse with `jq` or process programmatically.
 ### Get Your Planets
 
 ```bash
-conquest get_planets_arround --center 0,0 --radius 25 --only me
+conquest get_planets_around --center 0,0 --radius 25 --only me
 # Output: { "planets": [{ "planetId": "123", "location": {"x": 10, "y": 20}, "numSpaceships": 5000, ... }] }
 ```
 
@@ -460,10 +460,10 @@ conquest verify_exit_status --x 10 --y 20
 
 ```bash
 # Filter planets with lots of spaceships
-conquest get_planets_arround --center 0,0 --radius 25 | jq '.planets[] | select(.numSpaceships > 1000)'
+conquest get_planets_around --center 0,0 --radius 25 | jq '.planets[] | select(.numSpaceships > 1000)'
 
 # Count total planets
-conquest get_planets_arround --center 0,0 --radius 50 | jq '.planets | length'
+conquest get_planets_around --center 0,0 --radius 50 | jq '.planets | length'
 
 # Get fleet IDs only
 conquest get_pending_fleets | jq '.fleets[].fleetId'
@@ -515,7 +515,7 @@ Without private key, only read commands work:
 conquest get_planets_around --center 0,0 --radius 20
 
 # Requires PRIVATE_KEY:
-conquest get_planets_arround --center 0,0 --only me
+conquest get_planets_around --center 0,0 --only me
 conquest acquire_planets --coordinates "10,20"
 conquest send_fleet --from 10,20 --to 15,25 --quantity 100
 ```
