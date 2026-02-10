@@ -16,10 +16,10 @@ You are responsible for ensuring fleets resolve in time. On every heartbeat, you
 
 ```bash
 # Option 1: Use npx (no install required)
-npx -y @conquest-eth/tools@0.0.1 get_planets_arround --center 0,0 --radius 25
+npx -y @conquest-eth/tools@0.0.2 get_planets_arround --center 0,0 --radius 25
 
 # Option 2: Install globally
-npm install -g @conquest-eth/tools@0.0.1 # or use pnpm/volta/...
+npm install -g @conquest-eth/tools@0.0.2 # or use pnpm/volta/...
 conquest --rpc-url http://localhost:8545 and --game-contract 0x322813fd9a801c5507c9de605d63cea4f2ce6c44 get_planets_arround --center 0,0 --radius 25
 ```
 

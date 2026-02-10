@@ -1,5 +1,6 @@
 {
   "name": "conquest-eth-subgraph",
+  "private": true,
   "scripts": {
     "generate": "ldenv wait-on ../web/src/lib/contracts.json ~~ node generate.cjs ../contracts/deployments/@@MODE ~~ @@",
     "codegen": "graph codegen",
