@@ -55,7 +55,7 @@
     "web:serve": "ldenv pnpm --filter ./web serve",
     "zellij:web": "zellij-launcher --layout dev/zellij-web.kdl a web_$npm_package_name || zellij --layout dev/zellij-web.kdl -s web_$npm_package_name",
     "---------------------- DEPLOY ----------------------": "",
-    "build": "ldenv --git -d localhost pnpm common:build ~~ pnpm contracts:build ~~ pnpm contracts:export @@MODE ../web/src/lib/contracts.json ~~ pnpm web:build ~~ @@",
+    "build": "ldenv --git -d localhost pnpm common:build ~~ pnpm contracts:build ~~ pnpm contracts:export @@MODE --json ../web/src/lib/contracts.json ~~ pnpm web:build @@MODE ~~ @@",
     "serve": "pnpm run --filter ./web serve",
     "----------------------- SUBGRAPH ----------------------": "subgraph",
     "subgraph:generate:codegen": "ldenv pnpm run --filter ./subgraph generate:codegen @@MODE @@",
