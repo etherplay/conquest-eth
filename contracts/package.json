@@ -1,6 +1,6 @@
 {
   "name": "conquest-eth-v0-contracts",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "conquest-eth v0 ethereum smart contracts",
   "type": "module",
   "exports": {

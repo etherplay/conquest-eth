@@ -1,5 +1,6 @@
 {
     "name": "fuzd-service",
+    "private": true,
     "devDependencies": {
         "fuzd-nodejs": "^0.10.0",
         "ldenv": "^0.3.16",

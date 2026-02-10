@@ -1,9 +1,7 @@
 {
   "name": "selfclaw-claims-server-cf-worker",
+  "private": true,
   "version": "0.0.0",
-  "publishConfig": {
-    "access": "public"
-  },
   "type": "module",
   "dependencies": {
     "hono": "^4.7.5",

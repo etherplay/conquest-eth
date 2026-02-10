@@ -1,5 +1,6 @@
 {
     "name": "missiv-service",
+    "private": true,
     "devDependencies": {
         "ldenv": "^0.3.16",
         "missiv-server-bun": "^0.1.4",

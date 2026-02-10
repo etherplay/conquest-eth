@@ -1,5 +1,6 @@
 {
     "name": "ethereum-node",
+    "private": true,
     "type": "commonjs",
     "devDependencies": {
         "hardhat": "^2.28.4",
