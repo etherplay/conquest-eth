@@ -12,7 +12,11 @@ export type TokenDistributionEnv = {
   TOKEN_ADDRESS: string;
   // Amount of tokens to distribute (in wei/smallest unit)
   TOKEN_AMOUNT: string;
-  // Blockchain RPC endpoint
+  // if set along with NATIVE_TOKEN_AMOUNT use it to send tokens along with native tokens
+  TOKEN_DISTRIBUTOR_ADDRESS?: string;
+  // if set, along with TOKEN_DISTRIBUTOR_ADDRESS use it to send tokens along with native tokens
+  NATIVE_TOKEN_AMOUNT?: string;
+  // Amount of tokens to distribute (in wei/smallest unit)
   RPC_URL: string;
   // Network chain ID
   CHAIN_ID: string;
@@ -22,6 +26,7 @@ export type TokenDistributionEnv = {
   SELFCLAW_API_URL?: string;
 };
 
-export type CloudflareWorkerEnv = Env & TokenDistributionEnv & {
-  DB: D1Database;
-};
+export type CloudflareWorkerEnv = Env &
+  TokenDistributionEnv & {
+    DB: D1Database;
+  };

@@ -1,29 +1,22 @@
-import { Hono } from "hono";
-import type { ContentfulStatusCode } from "hono/utils/http-status";
-import { CloudflareWorkerEnv } from "./env.js";
-import { ServerOptions } from "./types.js";
-import {
-  processClaim,
-  getStatus,
-  type ClaimRequest,
-  type ClaimServiceConfig,
-} from "./services/claim/index.js";
+import {Hono} from 'hono';
+import type {ContentfulStatusCode} from 'hono/utils/http-status';
+import {CloudflareWorkerEnv} from './env.js';
+import {ServerOptions} from './types.js';
+import {processClaim, getStatus, type ClaimRequest, type ClaimServiceConfig} from './services/claim/index.js';
 
 const DEFAULT_TIMESTAMP_TOLERANCE_MS = 5000;
-const DEFAULT_SELFCLAW_API_URL = "https://selfclaw.ai";
+const DEFAULT_SELFCLAW_API_URL = 'https://selfclaw.ai';
 
-export function createServer<CustomEnv extends CloudflareWorkerEnv>(
-  options: ServerOptions<CustomEnv>,
-) {
-  const app = new Hono<{ Bindings: CustomEnv }>();
+export function createServer<CustomEnv extends CloudflareWorkerEnv>(options: ServerOptions<CustomEnv>) {
+  const app = new Hono<{Bindings: CustomEnv}>();
 
   // Health check endpoint
-  app.get("/", (c) => {
-    return c.text("Token Distribution Service - OK");
+  app.get('/', (c) => {
+    return c.text('Token Distribution Service - OK');
   });
 
   // Claim tokens endpoint
-  app.post("/api/claim", async (c) => {
+  app.post('/api/claim', async (c) => {
     const env = options.getEnv(c);
     const db = options.services.getDB(env);
 
@@ -35,8 +28,8 @@ export function createServer<CustomEnv extends CloudflareWorkerEnv>(
       return c.json(
         {
           success: false,
-          error: "invalid_request",
-          message: "Invalid JSON body",
+          error: 'invalid_request',
+          message: 'Invalid JSON body',
         },
         400,
       );
@@ -47,6 +40,8 @@ export function createServer<CustomEnv extends CloudflareWorkerEnv>(
       privateKey: env.PRIVATE_KEY,
       tokenAddress: env.TOKEN_ADDRESS,
       tokenAmount: env.TOKEN_AMOUNT,
+      tokenDistributorAddress: env.TOKEN_DISTRIBUTOR_ADDRESS,
+      nativeTokenAmount: env.NATIVE_TOKEN_AMOUNT,
       rpcUrl: env.RPC_URL,
       chainId: parseInt(env.CHAIN_ID, 10),
       timestampToleranceMs: env.TIMESTAMP_TOLERANCE_MS
@@ -78,15 +73,15 @@ export function createServer<CustomEnv extends CloudflareWorkerEnv>(
   });
 
   // Status check endpoint
-  app.get("/api/status", async (c) => {
-    const humanId = c.req.query("humanId");
+  app.get('/api/status', async (c) => {
+    const humanId = c.req.query('humanId');
 
     if (!humanId) {
       return c.json(
         {
           success: false,
-          error: "invalid_request",
-          message: "humanId query parameter is required",
+          error: 'invalid_request',
+          message: 'humanId query parameter is required',
         },
         400,
       );

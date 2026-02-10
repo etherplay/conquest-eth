@@ -4,19 +4,17 @@
  * Handles sending ERC20 tokens using viem
  */
 
-import {
-  createWalletClient,
-  createPublicClient,
-  http,
-  parseAbi,
-  type Chain,
-} from "viem";
-import { privateKeyToAccount } from "viem/accounts";
+import {createWalletClient, createPublicClient, http, parseAbi, type Chain} from 'viem';
+import {privateKeyToAccount} from 'viem/accounts';
 
 // ERC20 transfer ABI
 const erc20Abi = parseAbi([
-  "function transfer(address to, uint256 amount) returns (bool)",
-  "function balanceOf(address account) view returns (uint256)",
+  'function transfer(address to, uint256 amount) returns (bool)',
+  'function balanceOf(address account) view returns (uint256)',
+]);
+
+const tokenDistributorAbi = parseAbi([
+  'function transferTokenAlongWithNativeToken(address token, address payable to, uint256 amount) payable',
 ]);
 
 /**
@@ -27,12 +25,12 @@ function createChainConfig(chainId: number, rpcUrl: string): Chain {
     id: chainId,
     name: `Chain ${chainId}`,
     nativeCurrency: {
-      name: "Native",
-      symbol: "ETH",
+      name: 'Native',
+      symbol: 'ETH',
       decimals: 18,
     },
     rpcUrls: {
-      default: { http: [rpcUrl] },
+      default: {http: [rpcUrl]},
     },
   };
 }
@@ -55,6 +53,10 @@ export async function transferTokens(
   amount: string,
   rpcUrl: string,
   chainId: number,
+  useTokenDistributor?: {
+    address: string;
+    nativeTokenAmount: string;
+  },
 ): Promise<string> {
   const account = privateKeyToAccount(privateKey as `0x${string}`);
   const chain = createChainConfig(chainId, rpcUrl);
@@ -65,12 +67,23 @@ export async function transferTokens(
     transport: http(rpcUrl),
   });
 
-  const hash = await walletClient.writeContract({
-    address: tokenAddress as `0x${string}`,
-    abi: erc20Abi,
-    functionName: "transfer",
-    args: [toAddress as `0x${string}`, BigInt(amount)],
-  });
+  let hash: `0x${string}`;
+  if (useTokenDistributor) {
+    hash = await walletClient.writeContract({
+      address: useTokenDistributor.address as `0x${string}`,
+      abi: tokenDistributorAbi,
+      functionName: 'transferTokenAlongWithNativeToken',
+      args: [tokenAddress as `0x${string}`, toAddress as `0x${string}`, BigInt(amount)],
+      value: BigInt(useTokenDistributor.nativeTokenAmount),
+    });
+  } else {
+    hash = await walletClient.writeContract({
+      address: tokenAddress as `0x${string}`,
+      abi: erc20Abi,
+      functionName: 'transfer',
+      args: [toAddress as `0x${string}`, BigInt(amount)],
+    });
+  }
 
   return hash;
 }
@@ -101,7 +114,7 @@ export async function getDistributorBalance(
   const balance = await publicClient.readContract({
     address: tokenAddress as `0x${string}`,
     abi: erc20Abi,
-    functionName: "balanceOf",
+    functionName: 'balanceOf',
     args: [account.address],
   });
 

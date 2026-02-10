@@ -1,45 +1,40 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import type { RemoteSQL } from "remote-sql";
-import {
-  processClaim,
-  getStatus,
-  type ClaimRequest,
-  type ClaimServiceConfig,
-} from "../src/services/claim/index.js";
+import {describe, it, expect, vi, beforeEach, afterEach} from 'vitest';
+import type {RemoteSQL} from 'remote-sql';
+import {processClaim, getStatus, type ClaimRequest, type ClaimServiceConfig} from '../src/services/claim/index.js';
 
 // Mock the external dependencies
-vi.mock("../src/services/claim/selfclaw.js", () => ({
+vi.mock('../src/services/claim/selfclaw.js', () => ({
   checkVerification: vi.fn(),
 }));
 
-vi.mock("../src/services/claim/token.js", () => ({
+vi.mock('../src/services/claim/token.js', () => ({
   transferTokens: vi.fn(),
   getDistributorBalance: vi.fn(),
 }));
 
-vi.mock("../src/services/claim/verification.js", async () => {
-  const actual = await vi.importActual<
-    typeof import("../src/services/claim/verification.js")
-  >("../src/services/claim/verification.js");
+vi.mock('../src/services/claim/verification.js', async () => {
+  const actual = await vi.importActual<typeof import('../src/services/claim/verification.js')>(
+    '../src/services/claim/verification.js',
+  );
   return {
     ...actual,
     verifySignature: vi.fn(),
   };
 });
 
-import { checkVerification } from "../src/services/claim/selfclaw.js";
-import { transferTokens } from "../src/services/claim/token.js";
-import { verifySignature } from "../src/services/claim/verification.js";
+import {checkVerification} from '../src/services/claim/selfclaw.js';
+import {transferTokens} from '../src/services/claim/token.js';
+import {verifySignature} from '../src/services/claim/verification.js';
 
-describe("Claim Service", () => {
+describe('Claim Service', () => {
   const mockConfig: ClaimServiceConfig = {
-    privateKey: "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef",
-    tokenAddress: "0xTokenAddress1234567890abcdef12345678",
-    tokenAmount: "1000000000000000000",
-    rpcUrl: "https://rpc.example.com",
+    privateKey: '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef',
+    tokenAddress: '0xTokenAddress1234567890abcdef12345678',
+    tokenAmount: '1000000000000000000',
+    rpcUrl: 'https://rpc.example.com',
     chainId: 42220,
     timestampToleranceMs: 5000,
-    selfClawApiUrl: "https://selfclaw.ai",
+    selfClawApiUrl: 'https://selfclaw.ai',
   };
 
   let mockDb: RemoteSQL;
@@ -47,11 +42,11 @@ describe("Claim Service", () => {
 
   beforeEach(() => {
     vi.useFakeTimers();
-    vi.setSystemTime(new Date("2024-02-09T12:00:00.000Z"));
+    vi.setSystemTime(new Date('2024-02-09T12:00:00.000Z'));
 
     // Reset mock data
     dbData = new Map();
-    dbData.set("token_claims", []);
+    dbData.set('token_claims', []);
 
     // Create mock database using the RemoteSQL interface (prepare/bind/all pattern)
     mockDb = {
@@ -62,31 +57,25 @@ describe("Claim Service", () => {
             boundArgs = args;
             return {
               all: vi.fn().mockImplementation(async () => {
-                const claims = dbData.get("token_claims") as unknown[];
+                const claims = dbData.get('token_claims') as unknown[];
 
-                if (sql.includes("SELECT 1 FROM token_claims WHERE human_id")) {
+                if (sql.includes('SELECT 1 FROM token_claims WHERE human_id')) {
                   const humanId = (boundArgs[0] as string).toLowerCase();
-                  const found = claims.find(
-                    (c: unknown) => (c as { human_id: string }).human_id === humanId,
-                  );
-                  return { results: found ? [{ "1": 1 }] : [] };
+                  const found = claims.find((c: unknown) => (c as {human_id: string}).human_id === humanId);
+                  return {results: found ? [{'1': 1}] : []};
                 }
 
-                if (sql.includes("SELECT 1 FROM token_claims WHERE wallet_address")) {
+                if (sql.includes('SELECT 1 FROM token_claims WHERE wallet_address')) {
                   const wallet = (boundArgs[0] as string).toLowerCase();
-                  const found = claims.find(
-                    (c: unknown) => (c as { wallet_address: string }).wallet_address === wallet,
-                  );
-                  return { results: found ? [{ "1": 1 }] : [] };
+                  const found = claims.find((c: unknown) => (c as {wallet_address: string}).wallet_address === wallet);
+                  return {results: found ? [{'1': 1}] : []};
                 }
 
-                if (sql.includes("SELECT wallet_address, tx_hash, claimed_at")) {
+                if (sql.includes('SELECT wallet_address, tx_hash, claimed_at')) {
                   const humanId = (boundArgs[0] as string).toLowerCase();
-                  const found = claims.find(
-                    (c: unknown) => (c as { human_id: string }).human_id === humanId,
-                  );
+                  const found = claims.find((c: unknown) => (c as {human_id: string}).human_id === humanId);
                   if (found) {
-                    const claim = found as { wallet_address: string; tx_hash: string; claimed_at: number };
+                    const claim = found as {wallet_address: string; tx_hash: string; claimed_at: number};
                     return {
                       results: [
                         {
@@ -97,10 +86,10 @@ describe("Claim Service", () => {
                       ],
                     };
                   }
-                  return { results: [] };
+                  return {results: []};
                 }
 
-                if (sql.includes("INSERT INTO token_claims")) {
+                if (sql.includes('INSERT INTO token_claims')) {
                   const [humanId, walletAddress, publicKey, txHash, amount, tokenAddress, claimedAt] =
                     boundArgs as string[];
                   claims.push({
@@ -112,10 +101,10 @@ describe("Claim Service", () => {
                     token_address: tokenAddress,
                     claimed_at: claimedAt,
                   });
-                  return { results: [] };
+                  return {results: []};
                 }
 
-                return { results: [] };
+                return {results: []};
               }),
             };
           }),
@@ -134,50 +123,46 @@ describe("Claim Service", () => {
     vi.useRealTimers();
   });
 
-  describe("processClaim", () => {
+  describe('processClaim', () => {
     // Create a function to generate valid request with current timestamp
     const createValidRequest = (): ClaimRequest => ({
-      publicKey: "MCowBQYDK2VwAyEAWzZL...",
-      signature: "a".repeat(128),
+      publicKey: 'MCowBQYDK2VwAyEAWzZL...',
+      signature: 'a'.repeat(128),
       timestamp: Date.now(),
-      walletAddress: "0x1234567890abcdef1234567890abcdef12345678",
+      walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
     });
 
-    it("should return error for missing required fields", async () => {
+    it('should return error for missing required fields', async () => {
       const request: Partial<ClaimRequest> = {
-        publicKey: "test",
+        publicKey: 'test',
       };
 
-      const result = await processClaim(
-        mockDb,
-        request as ClaimRequest,
-        mockConfig,
-      );
+      const result = await processClaim(mockDb, request as ClaimRequest, mockConfig);
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error).toBe("invalid_request");
-        expect(result.message).toBe("Missing required fields");
+        expect(result.error).toBe('invalid_request');
+        expect(result.message).toBe('Missing required fields');
       }
     });
 
-    it("should return error for invalid wallet address format", async () => {
+    it('should return error for invalid wallet address format', async () => {
       const validRequest = createValidRequest();
       const request: ClaimRequest = {
         ...validRequest,
-        walletAddress: "invalid-wallet",
+        walletAddress: 'invalid-wallet',
       };
 
       const result = await processClaim(mockDb, request, mockConfig);
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error).toBe("invalid_request");
-        expect(result.message).toBe("Invalid wallet address format");
+        expect(result.error).toBe('invalid_request');
+        expect(result.message).toBe('Invalid wallet address format');
       }
     });
 
-    it("should return error for expired timestamp", async () => {
+    it('should return error for expired timestamp', async () => {
       const validRequest = createValidRequest();
       const request: ClaimRequest = {
         ...validRequest,
@@ -188,11 +173,11 @@ describe("Claim Service", () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error).toBe("timestamp_expired");
+        expect(result.error).toBe('timestamp_expired');
       }
     });
 
-    it("should return error for invalid signature", async () => {
+    it('should return error for invalid signature', async () => {
       const validRequest = createValidRequest();
       vi.mocked(verifySignature).mockResolvedValue(false);
 
@@ -200,36 +185,36 @@ describe("Claim Service", () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error).toBe("invalid_signature");
+        expect(result.error).toBe('invalid_signature');
       }
     });
 
-    it("should return error for unverified agent", async () => {
+    it('should return error for unverified agent', async () => {
       const validRequest = createValidRequest();
       vi.mocked(verifySignature).mockResolvedValue(true);
-      vi.mocked(checkVerification).mockResolvedValue({ verified: false });
+      vi.mocked(checkVerification).mockResolvedValue({verified: false});
 
       const result = await processClaim(mockDb, validRequest, mockConfig);
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error).toBe("not_verified");
+        expect(result.error).toBe('not_verified');
       }
     });
 
-    it("should return error if human already claimed", async () => {
+    it('should return error if human already claimed', async () => {
       const validRequest = createValidRequest();
       vi.mocked(verifySignature).mockResolvedValue(true);
       vi.mocked(checkVerification).mockResolvedValue({
         verified: true,
-        humanId: "0xHumanId123",
+        humanId: '0xHumanId123',
       });
 
       // Add existing claim
-      (dbData.get("token_claims") as unknown[]).push({
-        human_id: "0xhumanid123",
-        wallet_address: "0xotheraddress",
-        tx_hash: "0xtxhash",
+      (dbData.get('token_claims') as unknown[]).push({
+        human_id: '0xhumanid123',
+        wallet_address: '0xotheraddress',
+        tx_hash: '0xtxhash',
         claimed_at: Date.now(),
       });
 
@@ -237,23 +222,23 @@ describe("Claim Service", () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error).toBe("human_already_claimed");
+        expect(result.error).toBe('human_already_claimed');
       }
     });
 
-    it("should return error if wallet already received", async () => {
+    it('should return error if wallet already received', async () => {
       const validRequest = createValidRequest();
       vi.mocked(verifySignature).mockResolvedValue(true);
       vi.mocked(checkVerification).mockResolvedValue({
         verified: true,
-        humanId: "0xNewHuman",
+        humanId: '0xNewHuman',
       });
 
       // Add existing claim for the wallet
-      (dbData.get("token_claims") as unknown[]).push({
-        human_id: "0xotherhumanid",
+      (dbData.get('token_claims') as unknown[]).push({
+        human_id: '0xotherhumanid',
         wallet_address: validRequest.walletAddress.toLowerCase(),
-        tx_hash: "0xtxhash",
+        tx_hash: '0xtxhash',
         claimed_at: Date.now(),
       });
 
@@ -261,34 +246,32 @@ describe("Claim Service", () => {
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error).toBe("wallet_already_received");
+        expect(result.error).toBe('wallet_already_received');
       }
     });
 
-    it("should return error if token transfer fails", async () => {
+    it('should return error if token transfer fails', async () => {
       const validRequest = createValidRequest();
       vi.mocked(verifySignature).mockResolvedValue(true);
       vi.mocked(checkVerification).mockResolvedValue({
         verified: true,
-        humanId: "0xNewHuman",
+        humanId: '0xNewHuman',
       });
-      vi.mocked(transferTokens).mockRejectedValue(
-        new Error("Insufficient balance"),
-      );
+      vi.mocked(transferTokens).mockRejectedValue(new Error('Insufficient balance'));
 
       const result = await processClaim(mockDb, validRequest, mockConfig);
 
       expect(result.success).toBe(false);
       if (!result.success) {
-        expect(result.error).toBe("transfer_failed");
-        expect(result.message).toContain("Insufficient balance");
+        expect(result.error).toBe('transfer_failed');
+        expect(result.message).toContain('Insufficient balance');
       }
     });
 
-    it("should successfully process a valid claim", async () => {
+    it('should successfully process a valid claim', async () => {
       const validRequest = createValidRequest();
-      const humanId = "0xValidHumanId";
-      const txHash = "0xSuccessfulTxHash123";
+      const humanId = '0xValidHumanId';
+      const txHash = '0xSuccessfulTxHash123';
 
       vi.mocked(verifySignature).mockResolvedValue(true);
       vi.mocked(checkVerification).mockResolvedValue({
@@ -316,13 +299,14 @@ describe("Claim Service", () => {
         mockConfig.tokenAmount,
         mockConfig.rpcUrl,
         mockConfig.chainId,
+        undefined,
       );
     });
 
-    it("should record claim in database after successful transfer", async () => {
+    it('should record claim in database after successful transfer', async () => {
       const validRequest = createValidRequest();
-      const humanId = "0xValidHumanId";
-      const txHash = "0xSuccessfulTxHash123";
+      const humanId = '0xValidHumanId';
+      const txHash = '0xSuccessfulTxHash123';
 
       vi.mocked(verifySignature).mockResolvedValue(true);
       vi.mocked(checkVerification).mockResolvedValue({
@@ -334,33 +318,31 @@ describe("Claim Service", () => {
       await processClaim(mockDb, validRequest, mockConfig);
 
       // Verify the claim was recorded
-      const claims = dbData.get("token_claims") as unknown[];
+      const claims = dbData.get('token_claims') as unknown[];
       expect(claims.length).toBe(1);
-      expect((claims[0] as { human_id: string }).human_id).toBe(humanId.toLowerCase());
-      expect((claims[0] as { wallet_address: string }).wallet_address).toBe(
-        validRequest.walletAddress.toLowerCase(),
-      );
+      expect((claims[0] as {human_id: string}).human_id).toBe(humanId.toLowerCase());
+      expect((claims[0] as {wallet_address: string}).wallet_address).toBe(validRequest.walletAddress.toLowerCase());
     });
   });
 
-  describe("getStatus", () => {
-    it("should return claimed: false for unknown humanId", async () => {
-      const result = await getStatus(mockDb, "0xUnknownHuman");
+  describe('getStatus', () => {
+    it('should return claimed: false for unknown humanId', async () => {
+      const result = await getStatus(mockDb, '0xUnknownHuman');
 
       expect(result.claimed).toBe(false);
       expect(result.claim).toBeUndefined();
     });
 
-    it("should return claim details for known humanId", async () => {
-      const humanId = "0xKnownHuman";
+    it('should return claim details for known humanId', async () => {
+      const humanId = '0xKnownHuman';
       const claim = {
         human_id: humanId.toLowerCase(),
-        wallet_address: "0xwallet",
-        tx_hash: "0xtxhash",
+        wallet_address: '0xwallet',
+        tx_hash: '0xtxhash',
         claimed_at: 1707480000000,
       };
 
-      (dbData.get("token_claims") as unknown[]).push(claim);
+      (dbData.get('token_claims') as unknown[]).push(claim);
 
       const result = await getStatus(mockDb, humanId);
 
