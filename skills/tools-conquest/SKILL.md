@@ -8,6 +8,10 @@ compatibility: Requires Node.js and npm. Network access needed for RPC calls to 
 
 Use `conquest` to interact with Conquest.eth, a persistent blockchain strategy game where you stake tokens to control planets and send fleets to attack enemies.
 
+## HEARTBEAT
+
+You are responsible for ensuring fleets resolve in time. On every heartbeat, you must verify their status and resolve them if needed.
+
 ## Quick Start
 
 ```bash
