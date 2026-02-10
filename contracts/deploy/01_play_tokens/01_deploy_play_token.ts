@@ -6,10 +6,10 @@ export default deployScript(
 		const {deployer, playerAccount3, playerAccount4} = env.namedAccounts;
 
 		const chainId = await env.viem.publicClient.getChainId();
-		const networkName = env.name;
+		const environmentName = env.name;
 		// TODO use network tags ?
 		const localTesting =
-			networkName === 'hardhat' || networkName === 'localhost'; // chainId === '1337' || chainId === '31337';
+			environmentName === 'hardhat' || environmentName === 'localhost'; // chainId === '1337' || chainId === '31337';
 
 		if (env.tags['external-token']) {
 			if (localTesting) {
@@ -39,16 +39,31 @@ export default deployScript(
 
 		let numTokensPerNativeTokenAt18Decimals = parseEther('1');
 
+		// TODO use config
 		if (
 			localTesting ||
-			networkName === 'sepolia' ||
-			networkName === 'sepolia_fast' ||
-			networkName === 'endurance_test'
+			environmentName === 'sepolia' ||
+			environmentName === 'sepolia_fast' ||
+			environmentName === 'endurance_test'
 		) {
 			numTokensPerNativeTokenAt18Decimals = parseEther('1000');
 		}
 
-		if (networkName === 'defcon') {
+		if (environmentName === 'defcon') {
+			numTokensPerNativeTokenAt18Decimals = parseEther('1');
+		}
+
+		if (environmentName === 'monad-testnet') {
+			numTokensPerNativeTokenAt18Decimals = parseEther('10');
+		}
+		if (environmentName === 'monad') {
+			numTokensPerNativeTokenAt18Decimals = parseEther('0.1');
+		}
+
+		if (environmentName === 'celo-sepolia') {
+			numTokensPerNativeTokenAt18Decimals = parseEther('100');
+		}
+		if (environmentName === 'celo') {
 			numTokensPerNativeTokenAt18Decimals = parseEther('1');
 		}
 
