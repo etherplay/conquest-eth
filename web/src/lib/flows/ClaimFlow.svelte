@@ -235,8 +235,8 @@
           </label>
         {/if}
       </div>
-    {:else if externalToken && $myTokens.playTokenBalance.lt(cost.mul('100000000000000'))}
-      <!-- External token mode: users cannot mint tokens, show insufficient balance message -->
+    {:else if externalToken && $myTokens.playTokenBalance.lt(cost.mul('100000000000000')) && $myTokens.freePlayTokenBalance.lt(cost.mul('100000000000000'))}
+      <!-- External token mode: users cannot mint tokens, and don't have enough FreePlayToken either -->
       <div class="text-center">
         <h2 class="text-red-500">Insufficient Token Balance</h2>
         <p class="text-gray-300 mt-2 text-sm">
@@ -247,6 +247,11 @@
           Your current balance: <span class="text-yellow-500"
             >{formatEther($myTokens.playTokenBalance)} <PlayCoin class="inline w-4" /></span
           >
+          {#if $myTokens.freePlayTokenBalance.gt(0)}
+            + <span class="text-green-500"
+              >{formatEther($myTokens.freePlayTokenBalance)} <PlayCoin class="inline w-4" free={true} /></span
+            >
+          {/if}
         </p>
         <p class="text-blue-400 mt-4 text-sm">
           Please acquire more tokens. <!-- TODO link -->

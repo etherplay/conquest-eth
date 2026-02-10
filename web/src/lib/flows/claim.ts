@@ -457,9 +457,74 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
           return;
         }
       }
+    } else if (!requireMint) {
+      // User has enough tokens (FreePlayToken or PlayToken) - use transferAndCall
+      // This works for BOTH external and mintable PlayToken deployments
+      // FreePlayToken is always a conquest game token that supports transferAndCall
+      let gasEstimation: BigNumber;
+      try {
+        gasEstimation = await paymentTokenContract.estimateGas.transferAndCall(
+          wallet.contracts?.OuterSpace.address,
+          tokenAmount,
+          callData
+        );
+      } catch (e) {
+        this.backToWhereYouWere({
+          error: e,
+        });
+        return;
+      }
+      // TODO gasEstimation for Acquire Planet
+      const gasLimit = gasEstimation.add(100000);
+
+      const valueNeeded = gasLimit.mul(maxFeePerGas);
+
+      if (currentNativeBalance.lt(valueNeeded)) {
+        this.setPartial({
+          step: 'NOT_ENOUGH_NATIVE_TOKEN',
+        });
+        return;
+      }
+
+      this.setPartial({step: 'WAITING_TX'});
+      try {
+        tx = await paymentTokenContract.transferAndCall(wallet.contracts?.OuterSpace.address, tokenAmount, callData, {
+          gasLimit,
+          maxFeePerGas,
+          maxPriorityFeePerGas,
+        });
+      } catch (e) {
+        if (e.transactionHash) {
+          tx = {hash: e.transactionHash};
+          try {
+            const tResponse = await wallet.provider.getTransaction(e.transactionHash);
+            tx = tResponse;
+          } catch (e) {
+            console.log(`could not fetch tx, to get the nonce`);
+          }
+        }
+        if (!tx || !tx.hash) {
+          if (this.$store.step === 'WAITING_TX') {
+            if (e.message && e.message.indexOf('User denied') >= 0) {
+              this.setPartial({
+                step: 'IDLE',
+                error: undefined,
+              });
+            } else {
+              console.error(`Error on transferAndCall:`, e);
+              this.backToWhereYouWere({
+                error: e,
+              });
+            }
+          } else {
+            throw e;
+          }
+          return;
+        }
+      }
     } else if (isExternalToken()) {
-      // External token mode: cannot mint, must use acquireMultipleViaTransferFrom
-      // User must already have enough tokens in their wallet
+      // External token mode: user needs to mint but can't (external token)
+      // Must use acquireMultipleViaTransferFrom with PlayToken if they have enough
       const outerspaceContract = wallet?.contracts.OuterSpace;
 
       const myBalance = get(myTokens).playTokenBalance;
@@ -530,68 +595,6 @@ class ClaimFlowStore extends BaseStoreWithData<ClaimFlow, Data> {
               });
             } else {
               console.error(`Error on acquireMultipleViaTransferFrom:`, e);
-              this.backToWhereYouWere({
-                error: e,
-              });
-            }
-          } else {
-            throw e;
-          }
-          return;
-        }
-      }
-    } else if (!requireMint) {
-      let gasEstimation: BigNumber;
-      try {
-        gasEstimation = await paymentTokenContract.estimateGas.transferAndCall(
-          wallet.contracts?.OuterSpace.address,
-          tokenAmount,
-          callData
-        );
-      } catch (e) {
-        this.backToWhereYouWere({
-          error: e,
-        });
-        return;
-      }
-      // TODO gasEstimation for Acquire Planet
-      const gasLimit = gasEstimation.add(100000);
-
-      const valueNeeded = gasLimit.mul(maxFeePerGas);
-
-      if (currentNativeBalance.lt(valueNeeded)) {
-        this.setPartial({
-          step: 'NOT_ENOUGH_NATIVE_TOKEN',
-        });
-        return;
-      }
-
-      this.setPartial({step: 'WAITING_TX'});
-      try {
-        tx = await paymentTokenContract.transferAndCall(wallet.contracts?.OuterSpace.address, tokenAmount, callData, {
-          gasLimit,
-          maxFeePerGas,
-          maxPriorityFeePerGas,
-        });
-      } catch (e) {
-        if (e.transactionHash) {
-          tx = {hash: e.transactionHash};
-          try {
-            const tResponse = await wallet.provider.getTransaction(e.transactionHash);
-            tx = tResponse;
-          } catch (e) {
-            console.log(`could not fetch tx, to get the nonce`);
-          }
-        }
-        if (!tx || !tx.hash) {
-          if (this.$store.step === 'WAITING_TX') {
-            if (e.message && e.message.indexOf('User denied') >= 0) {
-              this.setPartial({
-                step: 'IDLE',
-                error: undefined,
-              });
-            } else {
-              console.error(`Error on transferAndCall:`, e);
               this.backToWhereYouWere({
                 error: e,
               });
