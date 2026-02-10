@@ -7,7 +7,7 @@
   import ClaimTokenScreen from '$lib/screens/tokenClaim/ClaimTokenScreen.svelte';
 
   import {logo} from '$lib/screens/loading/logo';
-  import {params} from '$lib/config';
+  import {FOR_LOBSTERS, params} from '$lib/config';
 
   import {onMount} from 'svelte';
   import {browser} from '$app/env';
@@ -19,6 +19,8 @@
   import IFramePluginList from '$lib/plugins/IFramePluginList.svelte';
   import {startTime, time} from '$lib/time';
   import CountdownScreen from '$lib/screens/countdown/CountdownScreen.svelte';
+  import {lobsters} from '$lib/flows/lobsters';
+  import LobstersScreen from '$lib/screens/lobsters/LobstersScreen.svelte';
 
   onMount(() => {
     let x = parseInt($page.url.searchParams.get('x'));
@@ -70,7 +72,9 @@
 </script>
 
 <Storereader />
-
+{#if FOR_LOBSTERS && !$lobsters.acknowledged}
+  <LobstersScreen />
+{/if}
 {#if countdown && countdown.timeLeft > 0 && !params['force']}
   <CountdownScreen {countdown} />
 {:else}

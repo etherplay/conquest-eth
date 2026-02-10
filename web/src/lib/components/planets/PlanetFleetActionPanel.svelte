@@ -17,6 +17,7 @@
   import {matchConditions, pluginShowing, showPlanetButtons} from '$lib/plugins/currentPlugin';
   import {yakuzaQuery} from '$lib/default-plugins/yakuza/yakuzaQuery';
   import {initialContractsInfos} from '$lib/blockchain/contracts';
+  import {FOR_LOBSTERS} from '$lib/config';
 
   export let coords: {x: number; y: number};
   export let close: () => void;
@@ -452,8 +453,30 @@
       </PanelButton>
     {/if}
   {:else}
-    <PanelButton label="Connect your wallet" class="m-2" on:click={connect}>
-      <div class="w-20">Connect Wallet</div>
+    {#if $planetState.owner}
+      <PanelButton
+        label="Message"
+        color="text-blue-400"
+        borderColor="border-blue-400"
+        class="m-2"
+        on:click={messageOwner}
+      >
+        <div class="w-20">See Owner</div>
+      </PanelButton>
+    {/if}
+    <PanelButton
+      label="Departures"
+      color="text-gray-200"
+      borderColor="border-gray-200"
+      class="m-2"
+      on:click={showDepartures}
+    >
+      <div class="w-20">Traffic</div>
     </PanelButton>
+    {#if !FOR_LOBSTERS}
+      <PanelButton label="Connect your wallet" class="m-2" on:click={connect}>
+        <div class="w-20">Connect Wallet</div>
+      </PanelButton>
+    {/if}
   {/if}
 {:else}Loading...{/if}

@@ -9,8 +9,15 @@
   import PlayCoin from '$lib/components/utils/PlayCoin.svelte';
   import {url} from '$lib/utils/url';
   import {account} from '$lib/account/account';
-  import {nativeTokenSymbol, params, version} from '$lib/config';
+  import {FOR_LOBSTERS, nativeTokenSymbol, params, version} from '$lib/config';
   import {initialContractsInfos} from '$lib/blockchain/contracts';
+  import {lobsters} from '$lib/flows/lobsters';
+
+  function showLobstersInstructions() {
+    lobsters.set({
+      acknowledged: false,
+    });
+  }
 
   async function connect() {
     try {
@@ -196,6 +203,18 @@
       <p class="mt-2">version: {version}</p>
     </div>
   {/if}
+{:else if FOR_LOBSTERS}
+  <div class="absolute right-0 bg-gray-900 bg-opacity-80 z-10">
+    <PanelButton
+      borderColor="border-red-500"
+      textColor="text-red-500"
+      class="m-1"
+      label="Agent Instructions"
+      on:click={showLobstersInstructions}
+    >
+      Agent Instructions
+    </PanelButton>
+  </div>
 {:else}
   <div class="absolute right-0 bg-gray-900 bg-opacity-80 z-10">
     <PanelButton class="m-1" label="Connect" on:click={connect}>

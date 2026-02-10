@@ -44,7 +44,7 @@
   import {overlays} from '$lib/map/overlays';
   import {conversations} from '$lib/missiv';
   import Help from '$lib/components/utils/Help.svelte';
-  import {nativeTokenSymbol} from '$lib/config';
+  import {FOR_LOBSTERS, nativeTokenSymbol} from '$lib/config';
 
   // import {timeToText} from '$lib/utils';
   // import {spaceInfo} from '$lib/space/spaceInfo';
@@ -265,9 +265,13 @@
 {/if}
 <div class="flex right-0 bottom-0 md:top-0 absolute md:right-1/4 lists">
   <div class="md:flex ">
-    <PlanetsListPanel />
-    <FleetsList />
-    <EventsList />
+    {#if FOR_LOBSTERS}
+      <div />
+    {:else}
+      <PlanetsListPanel />
+      <FleetsList />
+      <EventsList />
+    {/if}
     <div class="flex-col">
       <div
         class="top-0 md:p-3 p-1  w-32 text-center relative bg-gray-900 bg-opacity-80 text-cyan-300 border-2 border-cyan-300 mt-4 text-sm"
@@ -275,22 +279,26 @@
         <p class="text-white text-xs"><input type="checkbox" bind:checked={$overlays.fleets} /> Fleet</p>
         <p class="text-white text-xs"><input type="checkbox" bind:checked={$overlays.alliances} /> alliances</p>
         <p class="text-white text-xs"><input type="checkbox" bind:checked={$overlays.sectors} /> sectors</p>
-        <p class="text-white text-xs">
-          <label for="planetOwners">Owners:</label>
-          <select
-            id="planetOwners"
-            style={`
+        {#if !FOR_LOBSTERS}
+          <p class="text-white text-xs">
+            <label for="planetOwners">Owners:</label>
+            <select
+              id="planetOwners"
+              style={`
               background: black;
               color: white;
           `}
-            bind:value={$overlays.planetOwners}
-          >
-            <option value="Everyone"> Everyone </option>
-            <option value="OnlyYou"> Your </option>
-            <option value="OnlyAllies"> Allies</option>
-            <!-- <option value="None">None</option> -->
-          </select>
-        </p>
+              bind:value={$overlays.planetOwners}
+            >
+              <option value="Everyone"> Everyone </option>
+
+              <option value="OnlyYou"> Your </option>
+
+              <option value="OnlyAllies"> Allies</option>
+              <!-- <option value="None">None</option> -->
+            </select>
+          </p>
+        {/if}
       </div>
     </div>
   </div>

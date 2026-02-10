@@ -145,6 +145,7 @@ const globalQueryParams = [
   'errorButton',
   'options',
   'force',
+  'lobsters',
 ];
 
 const SYNC_URI = params.sync || (import.meta.env.VITE_SYNC_URI as string); //  'http://invalid.io'; // to emulate connection loss :)
@@ -158,6 +159,10 @@ const SYNC_DB_NAME =
 const MISSIV_URI = import.meta.env.VITE_MISSIV_URI as string;
 
 const FUZD_URI = import.meta.env.VITE_FUZD_URI as string;
+
+const lobstersFromParam = params['lobsters'] && params['lobsters'] != 'false';
+const FOR_LOBSTERS =
+  lobstersFromParam !== undefined ? lobstersFromParam : (import.meta.env.VITE_FOR_LOBSTERS as string);
 
 console.log({SYNC_DB_NAME});
 
@@ -250,6 +255,7 @@ const missivDomain = 'conquest.eth';
 const missivNamespace = contractsInfos.name;
 
 export {
+  FOR_LOBSTERS,
   FUZD_URI,
   MISSIV_URI,
   missivDomain,
