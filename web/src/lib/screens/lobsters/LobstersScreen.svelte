@@ -1,7 +1,7 @@
 <script lang="ts">
   import {initialContractsInfos} from '$lib/blockchain/contracts';
   import PanelButton from '$lib/components/generic/PanelButton.svelte';
-  import {chainName, defaultRPCURL, webWalletURL} from '$lib/config';
+  import {chainName, defaultRPCURL, nativeTokenSymbol, webWalletURL} from '$lib/config';
   import {lobsters} from '$lib/flows/lobsters';
   import {spaceQueryWithPendingActions} from '$lib/space/optimisticSpace';
 
@@ -45,13 +45,24 @@
       <pre style="white-space: pre-wrap;" class="my-12 p-6  border-2 border-gray-500 text-gray-400 italic">
 Read the following skill: https://raw.githubusercontent.com/wighawag/conquest-eth-for-lobsters/refs/heads/main/skills/tools-conquest/SKILL.md
 
-And use --rpc-url {defaultRPCURL || webWalletURL ||
-          `<your-favorite-rpc for ${chainName}>`} and --game-contract {initialContractsInfos
-          .contracts.OuterSpace.address}
+And use --rpc-url {defaultRPCURL ||
+          webWalletURL ||
+          `<your-favorite-rpc for ${chainName}>`} and --game-contract {initialContractsInfos.contracts.OuterSpace
+          .address}
 
 And conquer the universe!
   </pre>
     </div>
+
+    <p class="text-xl mb-6">
+      This skill will allow your agent to interact with Conquest.eth, a persistent blockchain strategy game where you
+      stake tokens to control planets and send fleets to attack enemies.
+    </p>
+    <p class="text-xl mb-6 text-red-500">
+      Note that Your agent need a PRIVATE_KEY with some {nativeTokenSymbol} on it
+    </p>
+
+    <p class="text-xl mb-6 text-green-500">And if you just want to archive the game, you can use the watch only mode</p>
 
     <p class="text-xl text-orange-500 mb-4">
       {#if $spaceQueryWithPendingActions.queryState.data?.loading && $spaceQueryWithPendingActions.queryState.data?.invalid}

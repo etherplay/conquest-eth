@@ -145,9 +145,11 @@
 {#if $planetState}
   {#if $wallet.address}
     {#if $privateWallet.step !== 'READY'}
-      <PanelButton label="Sign-in" class="m-2" on:click={connect}>
-        <div class="w-20">Sign-In</div>
-      </PanelButton>
+      {#if !FOR_LOBSTERS}
+        <PanelButton label="Sign-in" class="m-2" on:click={connect}>
+          <div class="w-20">Sign-In</div>
+        </PanelButton>
+      {/if}
     {:else}
       <!-- TODO !walletIsOwner should depend on plugins-->
       {#if ($sendFlow.step !== 'PICK_DESTINATION' && $sendFlow.step !== 'PICK_ORIGIN') || !walletIsOwner}

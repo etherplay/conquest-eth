@@ -40,7 +40,19 @@
 
 <svelte:window on:click={() => (menu = false)} />
 
-{#if $wallet.address}
+{#if FOR_LOBSTERS}
+  <div class="absolute right-0 bg-gray-900 bg-opacity-80 z-10">
+    <PanelButton
+      borderColor="border-red-500"
+      textColor="text-red-500"
+      class="m-1"
+      label="Agent Instructions"
+      on:click={showLobstersInstructions}
+    >
+      Agent Instructions
+    </PanelButton>
+  </div>
+{:else if $wallet.address}
   {#if !($privateWallet.step === 'READY')}
     <div class="absolute right-0 top-16 bg-gray-900 bg-opacity-80 z-10">
       <PanelButton class="m-1" label="Connect" on:click={connect}>
@@ -203,18 +215,6 @@
       <p class="mt-2">version: {version}</p>
     </div>
   {/if}
-{:else if FOR_LOBSTERS}
-  <div class="absolute right-0 bg-gray-900 bg-opacity-80 z-10">
-    <PanelButton
-      borderColor="border-red-500"
-      textColor="text-red-500"
-      class="m-1"
-      label="Agent Instructions"
-      on:click={showLobstersInstructions}
-    >
-      Agent Instructions
-    </PanelButton>
-  </div>
 {:else}
   <div class="absolute right-0 bg-gray-900 bg-opacity-80 z-10">
     <PanelButton class="m-1" label="Connect" on:click={connect}>

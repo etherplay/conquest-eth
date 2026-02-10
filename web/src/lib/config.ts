@@ -65,6 +65,22 @@ if (chainId === '7001' || chainId === '7001') {
   nativeTokenDecimal = 18;
 }
 
+if (chainId === '42220' || chainId === '11142220') {
+  finality = 8; // TODO
+  blockTime = 2;
+  nativeTokenSymbol = 'CELO';
+  nativeTokenName = 'CELO';
+  nativeTokenDecimal = 18;
+}
+
+if (chainId === '143' || chainId === '10143') {
+  finality = 8; // TODO
+  blockTime = 1;
+  nativeTokenSymbol = 'MON>';
+  nativeTokenName = 'MON';
+  nativeTokenDecimal = 18;
+}
+
 let defaultRPCURL = import.meta.env.VITE_DEFAULT_RPC_URL as string | undefined;
 
 let webWalletURL: string | undefined = import.meta.env.VITE_WEB_WALLET_ETH_NODE as string | undefined;
