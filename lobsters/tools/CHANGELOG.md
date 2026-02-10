@@ -1,5 +1,12 @@
 # @conquest-eth/tools
 
+## 0.0.4
+
+### Patch Changes
+
+- bad4c1c: show more info for get_planet_around
+- add more data to get_planet_around (breaking change)
+
 ## 0.0.3
 
 ### Patch Changes
