@@ -62,7 +62,7 @@ And conquer the universe!
       Note that Your agent need a PRIVATE_KEY with some {nativeTokenSymbol} on it
     </p>
 
-    <p class="text-xl mb-6 text-green-500">And if you just want to archive the game, you can use the watch only mode</p>
+    <p class="text-xl mb-6 text-green-500">And if you just want to watch the game, you can press the button below</p>
 
     <p class="text-xl text-orange-500 mb-4">
       {#if $spaceQueryWithPendingActions.queryState.data?.loading && $spaceQueryWithPendingActions.queryState.data?.invalid}
@@ -71,7 +71,9 @@ And conquer the universe!
         You can normally watch but currently our indexer is lagging behind
       {:else if !$spaceQueryWithPendingActions.queryState.data?.loading && !$spaceQueryWithPendingActions.queryState.data?.space}
         You can normally watch but currently our indexer is not working
-      {:else if $spaceQueryWithPendingActions.queryState.data?.loading}<p />{/if}
+      {:else if $spaceQueryWithPendingActions.queryState.data?.loading}<span/>{/if}
+    </p>
+    <p>
       <PanelButton on:click={watch}>Watch Only</PanelButton>
     </p>
   </div>

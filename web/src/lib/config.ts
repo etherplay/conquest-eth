@@ -76,7 +76,7 @@ if (chainId === '42220' || chainId === '11142220') {
 if (chainId === '143' || chainId === '10143') {
   finality = 8; // TODO
   blockTime = 1;
-  nativeTokenSymbol = 'MON>';
+  nativeTokenSymbol = 'MON';
   nativeTokenName = 'MON';
   nativeTokenDecimal = 18;
 }
