@@ -1994,6 +1994,24 @@
         },
         {
           "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "acquireMultipleViaFreeTokenTransferFrom",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256[]",
+          "name": "locations",
+          "type": "uint256[]"
+        },
+        {
+          "internalType": "uint256",
           "name": "amountToMint",
           "type": "uint256"
         },
@@ -2006,6 +2024,24 @@
       "name": "acquireMultipleViaNativeTokenAndStakingToken",
       "outputs": [],
       "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256[]",
+          "name": "locations",
+          "type": "uint256[]"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "acquireMultipleViaTransferFrom",
+      "outputs": [],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -2677,9 +2713,11 @@
       ]
     },
     {
-      "facetAddress": "0x702B14a2Ad28B592fB5AfD9f7Fe4562d008c316b",
+      "facetAddress": "0x7172CD656A6B0b2B0dA68c39Ad99E981989e8f14",
       "functionSelectors": [
+        "0x0f05b7f6",
         "0x861399e7",
+        "0xb4c27385",
         "0x2f646f95",
         "0xf7e111e7",
         "0x7ba423fb",

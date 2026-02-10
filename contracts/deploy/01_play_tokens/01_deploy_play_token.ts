@@ -58,15 +58,15 @@ export default deployScript(
 			address: zeroAddress,
 		};
 
-		const PlayTokenBefore = await env.getOrNull('PlayToken');
-		if (PlayTokenBefore) {
-			const PlayTokenNativeBalamce = formatEther(
-				await env.viem.publicClient.getBalance({
-					address: PlayTokenBefore.address as `0x${string}`,
-				}),
-			);
-			// console.log({PlayTokenNativeBalamce});
-		}
+		// const PlayTokenBefore = await env.getOrNull('PlayToken');
+		// if (PlayTokenBefore) {
+		// 	const PlayTokenNativeBalamce = formatEther(
+		// 		await env.viem.publicClient.getBalance({
+		// 			address: PlayTokenBefore.address as `0x${string}`,
+		// 		}),
+		// 	);
+		// 	// console.log({PlayTokenNativeBalamce});
+		// }
 
 		const PlayToken = await env.deployViaProxy(
 			'PlayToken',

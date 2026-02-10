@@ -36,7 +36,7 @@
     "@rocketh/diamond": "^0.18.0",
     "@rocketh/export": "^0.18.2",
     "@rocketh/node": "^0.18.2",
-    "@rocketh/proxy": "^0.18.0",
+    "@rocketh/proxy": "^0.18.1",
     "@rocketh/read-execute": "^0.18.0",
     "@rocketh/signer": "^0.18.0",
     "@rocketh/viem": "^0.18.0",

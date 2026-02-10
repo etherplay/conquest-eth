@@ -1724,5 +1724,21 @@
       }
     ]
   },
-  "inputSourceName": "project/src/yakuza/Yakuza.sol"
+  "inputSourceName": "project/src/yakuza/Yakuza.sol",
+  "linkedData": {
+    "genesis": "0xcce77b122615b6093c0df0c7392bec6f537eb7a0595c337a573ee6d96d1107c8",
+    "acquireNumSpaceships": 100000,
+    "productionCapAsDuration": 259200,
+    "frontrunningDelay": 1800,
+    "timePerDistance": 7200,
+    "productionSpeedUp": 1,
+    "minAttackAmount": "20000",
+    "numSecondsPerTokens": "302400",
+    "spaceshipsToKeepPer10000": "1500",
+    "minAverageStakePerPlanet": "1000000000000000000",
+    "maxClaimDelay": "86400",
+    "minimumSubscriptionWhenNotStaking": "1000000000000000000",
+    "minimumSubscriptionWhenStaking": "1000000000000000000",
+    "maxTimeRange": "432000"
+  }
 }

@@ -893,5 +893,9 @@
       }
     ]
   },
-  "inputSourceName": "project/src/conquest_token/RewardsGenerator.sol"
+  "inputSourceName": "project/src/conquest_token/RewardsGenerator.sol",
+  "linkedData": {
+    "rewardRateMillionth": "0",
+    "fixedRewardRateThousandsMillionth": "0"
+  }
 }
