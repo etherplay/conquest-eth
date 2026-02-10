@@ -8,7 +8,8 @@
   },
   "pnpm": {
     "overrides": {
-      "ipfs-http-client@34.0.0>concat-stream": "github:mihirgupta0900/concat-stream#master"
+      "ipfs-http-client@34.0.0>concat-stream": "github:mihirgupta0900/concat-stream#master",
+      "ldenv": "link:../ldenv"
     },
     "patchedDependencies": {
       "reloaderoo": "patches/reloaderoo.patch"
@@ -55,7 +56,7 @@
     "web:serve": "ldenv pnpm --filter ./web serve",
     "zellij:web": "zellij-launcher --layout dev/zellij-web.kdl a web_$npm_package_name || zellij --layout dev/zellij-web.kdl -s web_$npm_package_name",
     "---------------------- DEPLOY ----------------------": "",
-    "build": "ldenv --git -d localhost ~~ pnpm common:build ~~ pnpm contracts:build ~~ contracts:export @@MODE ../web/src/lib/contracts.json ~~ pnpm web:build ~~ @@",
+    "build": "ldenv --git -d localhost pnpm common:build ~~ pnpm contracts:build ~~ pnpm contracts:export @@MODE ../web/src/lib/contracts.json ~~ pnpm web:build ~~ @@",
     "serve": "pnpm run --filter ./web serve",
     "----------------------- SUBGRAPH ----------------------": "subgraph",
     "subgraph:generate:codegen": "ldenv pnpm run --filter ./subgraph generate:codegen @@MODE @@",
