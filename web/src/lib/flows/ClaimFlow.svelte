@@ -117,7 +117,7 @@
       </div> -->
       <!-- https://www.mtpelerin.com/buy-crypto  -->
       <!-- TODO:ENDURANCE will neeed to adapt this -->
-      <div class="m-2">
+      <!-- <div class="m-2">
         <Button href="https://ramp.network/buy" target="_blank">Purchase {nativeTokenSymbol}</Button>
       </div>
       <div class="m-2">
@@ -131,7 +131,7 @@
 
       <div class="m-2">
         <Button href="https://docs.gnosischain.com/about/third-parties" target="_blank">More Options...</Button>
-      </div>
+      </div> -->
       <div>
         <Button class="mt-5" label="Allow" on:click={() => claimFlow.continueAfterOnRamp()}>Go Back</Button>
       </div>
