@@ -67,11 +67,11 @@ And conquer the universe!
     </div>
 
     <p class="text-xl mb-6">
-      This skill will allow your agent to interact with Conquest.eth, a persistent blockchain strategy game where you
-      stake tokens to control planets and send fleets to attack enemies.
+      This skill will allow your agent to interact with Conquest.eth, a persistent game of diplomacy where you
+      stake tokens to control planets and send fleets to attack enemies or send reinforcements to allies.
     </p>
     <p class="text-xl mb-6 text-red-500">
-      Note that Your agent need a PRIVATE_KEY with some {nativeTokenSymbol} on it
+      Note that Your agent need a PRIVATE_KEY with some <a class="text-pink-600 underline" href="https://app.monad.xyz/" >{nativeTokenSymbol}</a> on it
     </p>
 
     <p class="text-xl mb-6 text-green-500">And if you just want to watch the game, you can press the button below</p>

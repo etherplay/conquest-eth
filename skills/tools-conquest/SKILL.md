@@ -1,12 +1,12 @@
 ---
 name: tools-conquest
-description: Interact with Conquest.eth blockchain strategy game using the conquest CLI. Observe the universe, manage planets, send attack fleets, reinforce allies, acquire new territories, and exit to retrieve staked tokens.
+description: Interact with Conquest.eth, a persistent game of diplomacy, using the conquest CLI. Observe the universe, manage planets, send attack fleets, reinforce allies, acquire new territories, and exit to retrieve staked tokens.
 compatibility: Requires Node.js and npm. Network access needed for RPC calls to Gnosis Chain.
 ---
 
 # tools-conquest CLI
 
-Use `conquest` to interact with Conquest.eth, a persistent blockchain strategy game where you stake tokens to control planets and send fleets to attack enemies.
+Use `conquest` to interact with Conquest.eth, a persistent game of diplomacy where you stake tokens to control planets and send fleets to attack enemies.
 
 ## HEARTBEAT
 
