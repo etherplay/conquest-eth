@@ -1,13 +1,13 @@
-# MCP for Conquest.eth v0
+# Conquest.eth CLI
 
-A dual-mode CLI tool for interacting with the Conquest.eth blockchain game. It can run as an **MCP server** for AI assistant integration or execute **tools directly** from the command line.
+A command-line tool for interacting with the Conquest.eth blockchain game. Execute game commands directly from your terminal to acquire planets, send fleets, resolve battles, and manage your empire.
 
 ## Features
 
-- **MCP Server Mode**: Integrate with AI assistants via the Model Context Protocol
 - **CLI Mode**: Execute game commands directly from your terminal
-- **Dynamic Command Generation**: CLI commands are auto-generated from tool definitions
 - **Comprehensive Game Tools**: Acquire planets, send fleets, resolve fleets, manage exits, and more
+- **Dynamic Command Generation**: CLI commands are auto-generated from tool definitions
+- **MCP Server Mode**: the cli provide an mcp command if you prefers to integrate your agent via Model Context Protocol
 
 ## Installation
 
@@ -17,15 +17,13 @@ npm i -g @conquest-eth/tools
 
 ## Usage
 
-### CLI Mode (Direct Command Execution)
-
 Show help and available commands:
 
 ```bash
 ecli --help
 ```
 
-#### Global Options
+### Global Options
 
 | Option                      | Environment Variable | Description                      | Default    |
 | --------------------------- | -------------------- | -------------------------------- | ---------- |
@@ -34,13 +32,7 @@ ecli --help
 | `--storage <type>`          | `STORAGE_TYPE`       | Storage backend: json or sqlite  | json       |
 | `--storage-path <path>`     | `STORAGE_PATH`       | Storage directory path           | ./data     |
 
-#### MCP Server Options
-
-| Option       | Environment Variable | Description                  | Default |
-| ------------ | -------------------- | ---------------------------- | ------- |
-| `--ethereum` | `ETHEREUM_TOOLS`     | Include tools-ethereum tools | false   |
-
-#### Using Environment Variables
+### Using Environment Variables
 
 Set up your environment:
 
@@ -56,7 +48,7 @@ Then run commands without repeating options:
 ecli get_my_planets --radius 10
 ```
 
-#### Available Commands
+### Available Commands
 
 | Command              | Description                             |
 | -------------------- | --------------------------------------- |
@@ -70,7 +62,7 @@ ecli get_my_planets --radius 10
 | `get_pending_fleets` | Get pending fleets                      |
 | `verify_exit_status` | Check a planet's exit status            |
 
-#### Examples
+### Examples
 
 ```bash
 # Get your planets
@@ -93,26 +85,6 @@ ecli exit_planets --planet-ids 1,2,3
 ```
 
 See [`EXAMPLES.md`](./EXAMPLES.md) for more detailed usage examples.
-
-### MCP Server Mode
-
-Start the MCP server for AI assistant integration:
-
-```bash
-ecli mcp --rpc-url https://rpc.gnosischain.com --game-contract 0x322813fd9a801c5507c9de605d63cea4f2ce6c44
-```
-
-Or use the MCP Inspector for testing:
-
-```bash
-pnpm mcp:inspector ecli --game-contract 0xD833d4dBBb0C19aF1EEf76540d66E2076a5e9D72 --rpc-url https://rpc.gnosis.gateway.fm
-```
-
-For Conquest 2025-1 edition, use:
-
-```bash
-pnpm mcp:inspector ecli --game-contract 0xD833d4dBBb0C19aF1EEf76540d66E2076a5e9D72 --rpc-url https://rpc.gnosis.gateway.fm
-```
 
 ## Architecture
 
@@ -211,6 +183,28 @@ pnpm format
 
 # Start the MCP server with auto-reload
 pnpm start
+```
+
+## MCP Server Mode (Alternative)
+
+As an alternative to direct CLI usage, `ecli` can also run as an MCP (Model Context Protocol) server for.
+
+Start the MCP server:
+
+```bash
+ecli --rpc-url https://rpc.gnosischain.com --game-contract 0x322813fd9a801c5507c9de605d63cea4f2ce6c44 mcp
+```
+
+MCP-specific options:
+
+| Option       | Environment Variable | Description                  | Default |
+| ------------ | -------------------- | ---------------------------- | ------- |
+| `--ethereum` | `ETHEREUM_TOOLS`     | Include tools-ethereum tools | false   |
+
+For testing with the MCP Inspector:
+
+```bash
+pnpm mcp:inspector ecli --game-contract 0xD833d4dBBb0C19aF1EEf76540d66E2076a5e9D72 --rpc-url https://rpc.gnosis.gateway.fm mcp
 ```
 
 ## License

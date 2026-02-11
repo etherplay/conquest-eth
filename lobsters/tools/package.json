@@ -1,6 +1,6 @@
 {
 	"name": "@conquest-eth/tools",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"description": "Tools for Conquest.eth, including mcp server",
 	"author": "Ronan Sandford",
 	"license": "MIT",
@@ -13,11 +13,12 @@
 	],
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/wighawag/tools-conquest-eth-v0.git"
+		"url": "git+https://github.com/wighawag/conquest-eth-for-lobsters",
+		"directory": "lobsters/tools"
 	},
-	"homepage": "https://github.com/wighawag/tools-conquest-eth-v0#readme",
+	"homepage": "https://github.com/wighawag/conquest-eth-for-lobsters/blob/main/lobsters/tools/README.md",
 	"bugs": {
-		"url": "https://github.com/wighawag/tools-conquest-eth-v0/issues"
+		"url": "https://github.com/wighawag/conquest-eth-for-lobsters/issues"
 	},
 	"publishConfig": {
 		"access": "public"

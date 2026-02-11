@@ -1,5 +1,11 @@
 # @conquest-eth/tools
 
+## 0.0.5
+
+### Patch Changes
+
+- update readme and links
+
 ## 0.0.4
 
 ### Patch Changes
