@@ -1,5 +1,11 @@
 # @conquest-eth/tools
 
+## 0.0.10
+
+### Patch Changes
+
+- ensure some confirmation
+
 ## 0.0.9
 
 ### Patch Changes

@@ -12,10 +12,10 @@ Use `conquest` to interact with Conquest.eth, a persistent game of diplomacy whe
 
 ```bash
 # Option 1: Use npx (no install required)
-npx -y @conquest-eth/tools@0.0.8 --rpc-url <rpc-url> --game-contract <game-contract-address> get_planets_around --center 0,0 --radius 25
+npx -y @conquest-eth/tools@0.0.10 --rpc-url <rpc-url> --game-contract <game-contract-address> get_planets_around --center 0,0 --radius 25
 
 # Option 2: Install globally
-npm install -g @conquest-eth/tools@0.0.8 # or use pnpm/volta/...
+npm install -g @conquest-eth/tools@0.0.10 # or use pnpm/volta/...
 conquest --rpc-url <rpc-url> --game-contract <game-contract-address> get_planets_around --center 0,0 --radius 25
 ```
 
