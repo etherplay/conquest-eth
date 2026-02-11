@@ -43,6 +43,10 @@ export const acquire_planets = createTool<typeof schema, ConquestEnv>({
 						playTokenUsed: formatUnits(result.costs.playTokenUsed, 18),
 						amountMinted: formatUnits(result.costs.amountMinted, 18),
 					},
+					approval: {
+						approvalNeeded: result.approval.approvalNeeded,
+						approvalHash: result.approval.approvalHash,
+					},
 				},
 			};
 		} catch (error) {

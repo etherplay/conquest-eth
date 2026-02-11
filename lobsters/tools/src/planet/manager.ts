@@ -25,6 +25,37 @@ const erc20BalanceOfAbi = [
 	},
 ] as const;
 
+// ERC20 allowance ABI for checking approval
+const erc20AllowanceAbi = [
+	{
+		name: 'allowance',
+		type: 'function',
+		stateMutability: 'view',
+		inputs: [
+			{name: 'owner', type: 'address'},
+			{name: 'spender', type: 'address'},
+		],
+		outputs: [{name: '', type: 'uint256'}],
+	},
+] as const;
+
+// ERC20 approve ABI for approving tokens
+const erc20ApproveAbi = [
+	{
+		name: 'approve',
+		type: 'function',
+		stateMutability: 'nonpayable',
+		inputs: [
+			{name: 'spender', type: 'address'},
+			{name: 'amount', type: 'uint256'},
+		],
+		outputs: [{name: '', type: 'bool'}],
+	},
+] as const;
+
+// Max uint256 value for unlimited approval
+const MAX_UINT256 = 2n ** 256n - 1n;
+
 /**
  * PlanetManager manages planet-related operations in the Conquest game
  * including acquiring new planets and initiating exit processes
@@ -115,7 +146,81 @@ export class PlanetManager {
 	}
 
 	/**
-	 * Calculate acquisition costs for planets based on their stats
+		* Check current allowance for play token to the game contract
+		*
+		* @param address - Address to check allowance for. Defaults to current wallet address.
+		* @returns The current allowance amount
+		*/
+	async getPlayTokenAllowance(address?: `0x${string}`): Promise<bigint> {
+		let targetAddress: `0x${string}`;
+
+		if (address) {
+			targetAddress = address;
+		} else {
+			const clients = this.requireWalletClient();
+			targetAddress = clients.walletClient.account!.address;
+		}
+
+		const allowance = await this.clients.publicClient.readContract({
+			address: this.contractConfig.stakingToken,
+			abi: erc20AllowanceAbi,
+			functionName: 'allowance',
+			args: [targetAddress, this.gameContract.address],
+		});
+
+		return allowance;
+	}
+
+	/**
+		* Approve play tokens for the game contract.
+		* Approves the maximum uint256 value for unlimited spending.
+		*
+		* @returns Transaction hash of the approval transaction
+		*/
+	async approvePlayToken(): Promise<`0x${string}`> {
+		const clients = this.requireWalletClient();
+
+		const hash = await clients.walletClient.writeContract({
+			address: this.contractConfig.stakingToken,
+			abi: erc20ApproveAbi,
+			functionName: 'approve',
+			args: [this.gameContract.address, MAX_UINT256],
+			chain: clients.walletClient.chain,
+			account: clients.walletClient.account!,
+		});
+
+		// Wait for the transaction to be confirmed
+		await this.clients.publicClient.waitForTransactionReceipt({hash});
+
+		return hash;
+	}
+
+	/**
+		* Ensure sufficient allowance for play tokens to the game contract.
+		* If current allowance is less than the required amount, approves max uint256.
+		*
+		* @param requiredAmount - The amount of tokens that need to be approved
+		* @returns Object indicating if approval was needed and the approval tx hash if applicable
+		*/
+	async ensurePlayTokenAllowance(
+		requiredAmount: bigint,
+	): Promise<{approvalNeeded: boolean; approvalHash?: `0x${string}`}> {
+		if (requiredAmount === 0n) {
+			return {approvalNeeded: false};
+		}
+
+		const currentAllowance = await this.getPlayTokenAllowance();
+
+		if (currentAllowance >= requiredAmount) {
+			return {approvalNeeded: false};
+		}
+
+		const approvalHash = await this.approvePlayToken();
+		return {approvalNeeded: true, approvalHash};
+	}
+
+	/**
+		* Calculate acquisition costs for planets based on their stats
 	 *
 	 * @param planetIds - Array of planet location IDs
 	 * @returns Object with total amountToMint and tokenAmount
@@ -145,15 +250,16 @@ export class PlanetManager {
 	 *
 	 * This simplifies planet acquisition by automatically:
 	 * 1. Calculating required token amount based on planet stats
-	 * 2. Using ALL available play token balance first
-	 * 3. Minting any remaining amount needed using native tokens (if allowed)
+	 * 2. Checking and approving play token allowance if needed
+	 * 3. Using ALL available play token balance first
+	 * 4. Minting any remaining amount needed using native tokens (if allowed)
 	 *
 	 * If numTokensPerNativeToken is zero, minting via native token is disabled.
 	 * In that case, only play tokens can be used and an error is thrown if
 	 * there aren't enough play tokens to cover the acquisition cost.
 	 *
 	 * @param planetIds - Array of planet location IDs to acquire
-	 * @returns Transaction hash, planets acquired, and cost breakdown
+	 * @returns Transaction hash, planets acquired, cost breakdown, and approval info
 	 */
 	async acquireWithMaxPlayToken(planetIds: bigint[]): Promise<{
 		hash: `0x${string}`;
@@ -162,6 +268,10 @@ export class PlanetManager {
 			totalRequired: bigint;
 			playTokenUsed: bigint;
 			amountMinted: bigint;
+		};
+		approval: {
+			approvalNeeded: boolean;
+			approvalHash?: `0x${string}`;
 		};
 	}> {
 		// Calculate total required token amount
@@ -187,6 +297,9 @@ export class PlanetManager {
 			);
 		}
 
+		// Ensure sufficient allowance for play tokens before acquiring
+		const approval = await this.ensurePlayTokenAllowance(playTokenUsed);
+
 		// Acquire the planets
 		const result = await acquirePlanets(
 			this.requireWalletClient(),
@@ -204,6 +317,7 @@ export class PlanetManager {
 				playTokenUsed,
 				amountMinted: amountToMint,
 			},
+			approval,
 		};
 	}
 

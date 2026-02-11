@@ -1,5 +1,11 @@
 # @conquest-eth/tools
 
+## 0.0.9
+
+### Patch Changes
+
+- ensure token approval
+
 ## 0.0.8
 
 ### Patch Changes
