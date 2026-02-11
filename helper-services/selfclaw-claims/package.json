@@ -23,9 +23,9 @@
     "deploy": "wrangler deploy",
     "test": "vitest run",
     "test:watch": "vitest",
-    "migrate:remote": "wrangler d1 execute selfclaw-db --file=./migrations/0001_create_claims.sql",
+    "migrate:remote": "wrangler d1 execute selfclaw-db --remote --file=./migrations/0001_create_claims.sql",
     "migrate:local": "wrangler d1 execute selfclaw-db --local --file=./migrations/0001_create_claims.sql",
-    "clear-db:remote": "wrangler d1 execute selfclaw-db --file=./migrations/0002_clear_claims.sql",
+    "clear-db:remote": "wrangler d1 execute selfclaw-db --remote --file=./migrations/0002_clear_claims.sql",
     "clear-db:local": "wrangler d1 execute selfclaw-db --local --file=./migrations/0002_clear_claims.sql",
     "claim": "npx tsx scripts/claim.ts"
   }

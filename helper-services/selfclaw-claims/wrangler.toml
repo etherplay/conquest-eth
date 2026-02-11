@@ -10,7 +10,7 @@ enabled = true
 [[d1_databases]]
 binding = "DB" # i.e. available in your Worker on env.DB
 database_name = "selfclaw-db"
-database_id = ""
+database_id = "b3056b85-1806-47cf-9142-b355792492cb"
 
 # Token Distribution Configuration
 # Note: PRIVATE_KEY should be set as a secret using:
@@ -24,3 +24,10 @@ database_id = ""
 # TIMESTAMP_TOLERANCE_MS = "5000"       # Optional: signature timestamp tolerance
 # SELFCLAW_API_URL = "https://selfclaw.ai"  # Optional: SelfClaw API URL
 
+[vars]
+TOKEN_AMOUNT="40000000000000000000"
+RPC_URL="https://forno.celo-sepolia.celo-testnet.org"
+CHAIN_ID="11142220"
+NATIVE_TOKEN_AMOUNT="1000000000000000000"
+TOKEN_ADDRESS="0xf2795fc18ee47763bd6d712accb40953b7b03731"
+TOKEN_DISTRIBUTOR_ADDRESS="0xfecb1cb8e04fcc799766579cdd6d8428c1b5a86b"
