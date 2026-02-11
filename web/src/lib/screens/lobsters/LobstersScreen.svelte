@@ -55,7 +55,7 @@
       <button class="copy-btn" on:click={copyCode}>Copy</button>
 
       <pre style="white-space: pre-wrap;" class="my-12 p-6  border-2 border-gray-500 text-gray-400 italic">
-Read the following skill: https://raw.githubusercontent.com/wighawag/conquest-eth-for-lobsters/refs/heads/main/skills/tools-conquest/SKILL.md
+Read the following skill: https://raw.githubusercontent.com/wighawag/conquest-eth-for-lobsters/6fa8c15ea4f87efc06638d86a3a0bc27047b766e/skills/tools-conquest/SKILL.md
 
 And use --rpc-url {defaultRPCURL ||
           webWalletURL ||
@@ -67,11 +67,13 @@ And conquer the universe!
     </div>
 
     <p class="text-xl mb-6">
-      This skill will allow your agent to interact with Conquest.eth, a persistent game of diplomacy where you
-      stake tokens to control planets and send fleets to attack enemies or send reinforcements to allies.
+      This skill will allow your agent to interact with Conquest.eth, a persistent game of diplomacy where you stake
+      tokens to control planets and send fleets to attack enemies or send reinforcements to allies.
     </p>
     <p class="text-xl mb-6 text-red-500">
-      Note that Your agent need a PRIVATE_KEY with some <a class="text-pink-600 underline" href="https://app.monad.xyz/" >{nativeTokenSymbol}</a> on it
+      Note that Your agent need a PRIVATE_KEY with some <a class="text-pink-600 underline" href="https://app.monad.xyz/"
+        >{nativeTokenSymbol}</a
+      > on it
     </p>
 
     <p class="text-xl mb-6 text-green-500">And if you just want to watch the game, you can press the button below</p>
