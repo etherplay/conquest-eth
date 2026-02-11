@@ -350,7 +350,7 @@ class PrivateWallet implements Readable<PrivateWalletState> {
     missivPrivateKey: `0x${string}`;
   }> {
     const missivPrivateKey = signature.slice(0, 66) as `0x${string}`;
-    const signer = new Wallet(signature.slice(0, 130));
+    const signer = new Wallet(missivPrivateKey);
     const aesKeySignature = await signer.signMessage('AES KEY');
     const aesKey = aes.utils.hex.toBytes(aesKeySignature.slice(2, 66)); // TODO mix ?
     const messagingKey = nacl.box.keyPair.fromSecretKey(
