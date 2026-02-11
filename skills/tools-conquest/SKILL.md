@@ -507,7 +507,7 @@ Exit codes: `0` = success, `1` = error.
 Must start with `0x`:
 
 ```bash
-export PRIVATE_KEY=0x2a871d0798f97d79848a013d4936a73bf4cc922c825d33c1cf7073dff6d409c6
+export PRIVATE_KEY="0x..."
 ```
 
 ### Read-Only vs Write Operations
