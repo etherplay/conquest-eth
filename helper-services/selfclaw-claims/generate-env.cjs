@@ -44,8 +44,11 @@ if (args[0]) {
     ...parsedLocalDevVars,
   };
 
-  if (contractInfos.contracts.FreePlayToken?.address) {
-    env.TOKEN_ADDRESS = contractInfos.contracts.FreePlayToken.address;
+  if (contractInfos.contracts.PlayToken?.address) {
+    env.TOKEN_ADDRESS = contractInfos.contracts.PlayToken.address;
+    if (contractInfos.contracts.TokenDistributor) {
+      env.TOKEN_DISTRIBUTOR_ADDRESS = contractInfos.contracts.TokenDistributor.address;
+    }
   }
 
   // Write to .env for scripts (like claim.ts)
