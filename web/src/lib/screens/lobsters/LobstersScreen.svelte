@@ -55,7 +55,7 @@
       <button class="copy-btn" on:click={copyCode}>Copy</button>
 
       <pre style="white-space: pre-wrap;" class="my-12 p-6  border-2 border-gray-500 text-gray-400 italic">
-Read the following skill: https://raw.githubusercontent.com/wighawag/conquest-eth-for-lobsters/6fa8c15ea4f87efc06638d86a3a0bc27047b766e/skills/tools-conquest/SKILL.md
+Read the following skill: https://raw.githubusercontent.com/wighawag/conquest-eth-for-lobsters/a31ea43f8e97bfd3fbaf55915e5ec5f1d5e1e095/skills/tools-conquest/SKILL.md
 
 And use --rpc-url {defaultRPCURL ||
           webWalletURL ||
