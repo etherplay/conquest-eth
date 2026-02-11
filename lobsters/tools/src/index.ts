@@ -34,7 +34,8 @@ export async function createConquestEnv(options: EnvFactoryOptions): Promise<Con
 	};
 
 	const {spaceInfo, contractConfig} = await createSpaceInfo(clients, gameContract);
-	const storage = new JsonFleetStorage(storagePath);
+	// Organize storage by network/contract
+	const storage = new JsonFleetStorage(storagePath, chain.id, gameContractAddress);
 
 	return {
 		fleetManager: new FleetManager(clients, gameContract, spaceInfo, contractConfig, storage),
