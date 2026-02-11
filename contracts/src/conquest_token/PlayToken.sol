@@ -100,21 +100,31 @@ contract PlayToken is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     }
 
     function mint(address to, uint256 amount) external payable {
-        uint256 xdaiAmount = msg.value;
-        require(
-            (xdaiAmount * numTokensPerNativeTokenAt18Decimals) / DECIMALS_18 ==
-                amount,
-            "INVALID_AMOUNT"
-        );
+        if (numTokensPerNativeTokenAt18Decimals == 0) {
+            require(msg.sender == _redeemer(), "NOT_AUTHORIZED");
+            _mint(to, amount);
+        } else {
+            uint256 xdaiAmount = msg.value;
+            require(
+                (xdaiAmount * numTokensPerNativeTokenAt18Decimals) /
+                    DECIMALS_18 ==
+                    amount,
+                "INVALID_AMOUNT"
+            );
 
-        if (address(sdai) != address(0) && address(sdaiAdapter) != address(0)) {
-            sdaiAdapter.depositXDAI{value: xdaiAmount}(address(this));
+            if (
+                address(sdai) != address(0) &&
+                address(sdaiAdapter) != address(0)
+            ) {
+                sdaiAdapter.depositXDAI{value: xdaiAmount}(address(this));
+            }
+
+            _mint(to, amount);
         }
-
-        _mint(to, amount);
     }
 
     function burn(address payable to, uint256 amount) external {
+        require(numTokensPerNativeTokenAt18Decimals > 0, "NO_MINTING_ENABLED");
         _burnFrom(msg.sender, amount);
         uint256 xDaiAmount = (amount * DECIMALS_18) /
             numTokensPerNativeTokenAt18Decimals;
@@ -127,6 +137,7 @@ contract PlayToken is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     }
 
     function redeemInterest(address payable to) external returns (uint256) {
+        require(numTokensPerNativeTokenAt18Decimals > 0, "NO_MINTING_ENABLED");
         require(msg.sender == _redeemer(), "NOT_AUTHORIZED");
         if (address(sdai) != address(0) && address(sdaiAdapter) != address(0)) {
             uint256 expectedTotalAmount = (_totalSupply * DECIMALS_18) /
@@ -143,6 +154,7 @@ contract PlayToken is UsingERC20Base, WithPermitAndFixedDomain, Proxied {
     }
 
     function interestAvailableToRedeem() external view returns (uint256) {
+        require(numTokensPerNativeTokenAt18Decimals > 0, "NO_MINTING_ENABLED");
         if (address(sdai) != address(0) && address(sdaiAdapter) != address(0)) {
             uint256 expectedTotalAmount = (_totalSupply * DECIMALS_18) /
                 numTokensPerNativeTokenAt18Decimals;

@@ -21,8 +21,8 @@
     "deployments"
   ],
   "publishConfig": {
-		"access": "public"
-	},
+    "access": "public"
+  },
   "engines": {
     "node": ">= 22.0.0"
   },
@@ -35,14 +35,14 @@
     "@nomicfoundation/hardhat-node-test-runner": "^3.0.8",
     "@nomicfoundation/hardhat-viem": "^3.0.1",
     "@openzeppelin/contracts": "^4.3.2",
-    "@rocketh/deploy": "^0.18.0",
-    "@rocketh/diamond": "^0.18.0",
-    "@rocketh/export": "^0.18.2",
-    "@rocketh/node": "^0.18.2",
-    "@rocketh/proxy": "^0.18.2",
-    "@rocketh/read-execute": "^0.18.0",
-    "@rocketh/signer": "^0.18.0",
-    "@rocketh/viem": "^0.18.0",
+    "@rocketh/deploy": "^0.18.2",
+    "@rocketh/diamond": "^0.18.2",
+    "@rocketh/export": "^0.18.5",
+    "@rocketh/node": "^0.18.5",
+    "@rocketh/proxy": "^0.18.4",
+    "@rocketh/read-execute": "^0.18.2",
+    "@rocketh/signer": "^0.18.2",
+    "@rocketh/viem": "^0.18.2",
     "@types/chai": "^4.3.0",
     "@types/csv-parse": "^1.2.5",
     "@types/fs-extra": "^9.0.13",
@@ -73,7 +73,7 @@
     "prettier-plugin-solidity": "^2.2.1",
     "progress": "^2.0.3",
     "qrcode": "^1.5.0",
-    "rocketh": "^0.18.1",
+    "rocketh": "^0.18.4",
     "slippy": "^0.3.1",
     "tsx": "^4.21.0",
     "typescript": "^5.6.2",

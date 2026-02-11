@@ -68,8 +68,20 @@ export const config = {
 			tags: ['auto-mine'],
 		},
 	},
+
 	scripts: deploymentsFolder,
-	data: {},
+	data: {
+		numTokensPerNativeTokenAt18Decimals: {
+			default: parseEther('1'),
+			sepolia: parseEther('1000'),
+			'sepolia-fast': parseEther('1000'),
+			localhost: 0n, //parseEther('1000'),
+			'monad-testnet': parseEther('10'),
+			monad: parseEther('0.1'),
+			'celo-sepolia': 0n, // 100
+			celo: 0n, // 1
+		},
+	},
 	signerProtocols: {
 		privateKey,
 	},
@@ -88,6 +100,8 @@ import * as deployProxyExtension from '@rocketh/proxy';
 import * as viemExtension from '@rocketh/viem';
 // this one provide a function to deploy diamond contracts
 import * as diamondExtension from '@rocketh/diamond';
+import {sepolia} from 'viem/chains';
+import {parseEther} from 'viem';
 
 // and export them as a unified object
 const extensions = {

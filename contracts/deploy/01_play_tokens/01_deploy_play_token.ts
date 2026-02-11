@@ -1,3 +1,4 @@
+import {evmos} from 'viem/chains';
 import {deployScript, artifacts} from '../../rocketh/deploy.js';
 import {formatEther, parseEther, zeroAddress} from 'viem';
 
@@ -7,6 +8,7 @@ export default deployScript(
 
 		const chainId = await env.viem.publicClient.getChainId();
 		const environmentName = env.name;
+		console.log(`Deploying on ${environmentName} (${chainId})`);
 		// TODO use network tags ?
 		const localTesting =
 			environmentName === 'hardhat' || environmentName === 'localhost'; // chainId === '1337' || chainId === '31337';
@@ -37,35 +39,13 @@ export default deployScript(
 			}
 		}
 
-		let numTokensPerNativeTokenAt18Decimals = parseEther('1');
+		const {numTokensPerNativeTokenAt18Decimals} = env.data;
 
-		// TODO use config
-		if (
-			localTesting ||
-			environmentName === 'sepolia' ||
-			environmentName === 'sepolia_fast' ||
-			environmentName === 'endurance_test'
-		) {
-			numTokensPerNativeTokenAt18Decimals = parseEther('1000');
-		}
+		console.log(env.data);
 
-		if (environmentName === 'defcon') {
-			numTokensPerNativeTokenAt18Decimals = parseEther('1');
-		}
-
-		if (environmentName === 'monad-testnet') {
-			numTokensPerNativeTokenAt18Decimals = parseEther('10');
-		}
-		if (environmentName === 'monad') {
-			numTokensPerNativeTokenAt18Decimals = parseEther('0.1');
-		}
-
-		if (environmentName === 'celo-sepolia') {
-			numTokensPerNativeTokenAt18Decimals = parseEther('100');
-		}
-		if (environmentName === 'celo') {
-			numTokensPerNativeTokenAt18Decimals = parseEther('1');
-		}
+		console.log(
+			`using: numTokensPerNativeTokenAt18Decimals ${formatEther(numTokensPerNativeTokenAt18Decimals)}`,
+		);
 
 		let WXDAI = (await env.getOrNull('WXDAI')) || {address: zeroAddress};
 		let SDAI = (await env.getOrNull('SDAI')) || {address: zeroAddress};
