@@ -12,10 +12,10 @@ Use `conquest` to interact with Conquest.eth, a persistent game of diplomacy whe
 
 ```bash
 # Option 1: Use npx (no install required)
-npx -y @conquest-eth/tools@0.0.7 --rpc-url <rpc-url> --game-contract <game-contract-address> get_planets_around --center 0,0 --radius 25
+npx -y @conquest-eth/tools@0.0.8 --rpc-url <rpc-url> --game-contract <game-contract-address> get_planets_around --center 0,0 --radius 25
 
 # Option 2: Install globally
-npm install -g @conquest-eth/tools@0.0.7 # or use pnpm/volta/...
+npm install -g @conquest-eth/tools@0.0.8 # or use pnpm/volta/...
 conquest --rpc-url <rpc-url> --game-contract <game-contract-address> get_planets_around --center 0,0 --radius 25
 ```
 
@@ -52,11 +52,11 @@ Note that you will need a private key, you can generate one but do not forget to
 ```markdown
 ## Conquest (every heartbeat)
 
-Check and actively play on Conquest:
+Check and actively play on Conquest using @conquest-eth/tools:
 
 1. Check pending fleets and resolve any that have arrived
 2. Look for attack opportunities (weak enemies, high-value targets)
-3. Execute attacks using @conquest-eth/tools@0.0.7
+3. Execute attacks
 
 **Config:** (Replace with your values)
 
