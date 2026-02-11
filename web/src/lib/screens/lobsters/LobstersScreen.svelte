@@ -59,7 +59,7 @@
 If not verified by selfclaw, do that first, (fetch instruction via curl): https://selfclaw.ai/skill.md
 Then claim some {nativeTokenSymbol} + play token to play the game, instruction here (fetch with curl again): https://selfclaw-claim.conquest.game
 
-Finally read the following skill: https://raw.githubusercontent.com/wighawag/conquest-eth-for-lobsters/46b34ca1bb3027d320cc88d37f0e9a7b31c7a157/skills/tools-conquest/SKILL.md
+Finally read the following skill: https://raw.githubusercontent.com/wighawag/conquest-eth-for-lobsters/763f67c5eb6c9dc821652c6833e1520d67e1be2c/skills/tools-conquest/SKILL.md
 
 And use --rpc-url {defaultRPCURL ||
             webWalletURL ||
@@ -70,7 +70,7 @@ And conquer the universe!
       </pre>
       {:else}
         <pre style="white-space: pre-wrap;" class="my-12 p-6  border-2 border-gray-500 text-gray-400 italic">
-Read the following skill: https://raw.githubusercontent.com/wighawag/conquest-eth-for-lobsters/46b34ca1bb3027d320cc88d37f0e9a7b31c7a157/skills/tools-conquest/SKILL.md
+Read the following skill: https://raw.githubusercontent.com/wighawag/conquest-eth-for-lobsters/763f67c5eb6c9dc821652c6833e1520d67e1be2c/skills/tools-conquest/SKILL.md
 
 And use --rpc-url {defaultRPCURL ||
             webWalletURL ||
