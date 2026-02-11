@@ -20,7 +20,7 @@ npm i -g @conquest-eth/tools
 Show help and available commands:
 
 ```bash
-ecli --help
+conquest --help
 ```
 
 ### Global Options
@@ -45,7 +45,7 @@ export PRIVATE_KEY=0x...
 Then run commands without repeating options:
 
 ```bash
-ecli get_my_planets --radius 10
+conquest get_my_planets --radius 10
 ```
 
 ### Available Commands
@@ -66,22 +66,22 @@ ecli get_my_planets --radius 10
 
 ```bash
 # Get your planets
-ecli get_my_planets --radius 10
+conquest get_my_planets --radius 10
 
 # Find planets near a location
-ecli get_planets_around --center-x 0 --center-y 0 --radius 20
+conquest get_planets_around --center-x 0 --center-y 0 --radius 20
 
 # Acquire planets
-ecli acquire_planets --planet-ids 1,2,3,4,5
+conquest acquire_planets --planet-ids 1,2,3,4,5
 
 # Send a fleet (coordinates use x,y format)
-ecli send_fleet --from 10,20 --to 15,25 --quantity 100
+conquest send_fleet --from 10,20 --to 15,25 --quantity 100
 
 # Resolve a fleet
-ecli resolve_fleet --fleet-id "your-fleet-id"
+conquest resolve_fleet --fleet-id "your-fleet-id"
 
 # Exit planets
-ecli exit_planets --planet-ids 1,2,3
+conquest exit_planets --planet-ids 1,2,3
 ```
 
 See [`EXAMPLES.md`](./EXAMPLES.md) for more detailed usage examples.
@@ -187,12 +187,12 @@ pnpm start
 
 ## MCP Server Mode (Alternative)
 
-As an alternative to direct CLI usage, `ecli` can also run as an MCP (Model Context Protocol) server for.
+As an alternative to direct CLI usage, `conquest` can also run as an MCP (Model Context Protocol) server for.
 
 Start the MCP server:
 
 ```bash
-ecli --rpc-url https://rpc.gnosischain.com --game-contract 0x322813fd9a801c5507c9de605d63cea4f2ce6c44 mcp
+conquest --rpc-url https://rpc.gnosischain.com --game-contract 0x322813fd9a801c5507c9de605d63cea4f2ce6c44 mcp
 ```
 
 MCP-specific options:
@@ -204,7 +204,7 @@ MCP-specific options:
 For testing with the MCP Inspector:
 
 ```bash
-pnpm mcp:inspector ecli --game-contract 0xD833d4dBBb0C19aF1EEf76540d66E2076a5e9D72 --rpc-url https://rpc.gnosis.gateway.fm mcp
+pnpm mcp:inspector conquest --game-contract 0xD833d4dBBb0C19aF1EEf76540d66E2076a5e9D72 --rpc-url https://rpc.gnosis.gateway.fm mcp
 ```
 
 ## License
