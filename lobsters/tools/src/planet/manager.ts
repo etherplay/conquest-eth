@@ -190,7 +190,7 @@ export class PlanetManager {
 		});
 
 		// Wait for the transaction to be confirmed
-		await this.clients.publicClient.waitForTransactionReceipt({hash});
+		await this.clients.publicClient.waitForTransactionReceipt({hash, confirmations: 2});
 
 		return hash;
 	}
