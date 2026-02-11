@@ -15,7 +15,7 @@ export class JsonFleetStorage implements FleetStorage {
 	private data: StorageData;
 	private initialized = false;
 
-	constructor(dataDir: string = './data', chainId?: number, contractAddress?: string) {
+	constructor(dataDir: string = './data', chainId: number, contractAddress: string) {
 		// Organize data by network/contract in subdirectories
 		let basePath = dataDir;
 		if (chainId !== undefined) {
