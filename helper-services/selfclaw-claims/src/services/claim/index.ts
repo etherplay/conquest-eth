@@ -69,14 +69,14 @@ export async function processClaim(
 
   const humanId = verification.humanId;
 
-  // 5. Check if humanId already claimed
-  if (await hasHumanClaimed(db, humanId)) {
-    return createError('human_already_claimed', 'This human has already claimed tokens');
+  // 5. Check if humanId already claimed for this chain/token
+  if (await hasHumanClaimed(db, humanId, config.chainId.toString(), config.tokenAddress)) {
+    return createError('human_already_claimed', 'This human has already claimed tokens for this chain/token');
   }
 
-  // 6. Check if wallet already received
-  if (await hasWalletReceived(db, request.walletAddress)) {
-    return createError('wallet_already_received', 'This wallet has already received tokens');
+  // 6. Check if wallet already received for this chain/token
+  if (await hasWalletReceived(db, request.walletAddress, config.chainId.toString(), config.tokenAddress)) {
+    return createError('wallet_already_received', 'This wallet has already received tokens for this chain/token');
   }
 
   // 7. Transfer tokens
@@ -109,6 +109,7 @@ export async function processClaim(
     txHash,
     amount: config.tokenAmount,
     tokenAddress: config.tokenAddress,
+    chainId: config.chainId.toString(),
     claimedAt: Date.now(),
   });
 
@@ -124,14 +125,21 @@ export async function processClaim(
 }
 
 /**
- * Get claim status for a humanId
+ * Get claim status for a humanId, optionally scoped to a specific chain and token
  *
  * @param db - Database connection
  * @param humanId - The human ID to check
+ * @param chainId - Optional chain ID to scope the check
+ * @param tokenAddress - Optional token address to scope the check
  * @returns Status response
  */
-export async function getStatus(db: RemoteSQL, humanId: string): Promise<StatusResponse> {
-  return getClaimStatus(db, humanId);
+export async function getStatus(
+  db: RemoteSQL,
+  humanId: string,
+  chainId?: string,
+  tokenAddress?: string,
+): Promise<StatusResponse> {
+  return getClaimStatus(db, humanId, chainId, tokenAddress);
 }
 
 /**

@@ -75,6 +75,8 @@ export function createServer<CustomEnv extends CloudflareWorkerEnv>(options: Ser
   // Status check endpoint
   app.get('/api/status', async (c) => {
     const humanId = c.req.query('humanId');
+    const chainId = c.req.query('chainId');
+    const tokenAddress = c.req.query('tokenAddress');
 
     if (!humanId) {
       return c.json(
@@ -90,7 +92,7 @@ export function createServer<CustomEnv extends CloudflareWorkerEnv>(options: Ser
     const env = options.getEnv(c);
     const db = options.services.getDB(env);
 
-    const status = await getStatus(db, humanId);
+    const status = await getStatus(db, humanId, chainId, tokenAddress);
     return c.json(status, 200);
   });
 

@@ -73,6 +73,7 @@ export interface ClaimRecord {
   txHash: string;
   amount: string;
   tokenAddress: string;
+  chainId: string;
   claimedAt: number;
   createdAt?: number;
 }
