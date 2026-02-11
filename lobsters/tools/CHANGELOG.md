@@ -1,5 +1,11 @@
 # @conquest-eth/tools
 
+## 0.0.7
+
+### Patch Changes
+
+- isolated storage per chain/contract
+
 ## 0.0.6
 
 ### Patch Changes
