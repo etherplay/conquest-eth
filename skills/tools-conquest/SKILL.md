@@ -8,19 +8,15 @@ compatibility: Requires Node.js and npm. Network access needed for RPC calls to 
 
 Use `conquest` to interact with Conquest.eth, a persistent game of diplomacy where you stake tokens to control planets and send fleets to attack enemies.
 
-## HEARTBEAT
-
-You are responsible for ensuring fleets resolve in time. On every heartbeat, you must verify their status and resolve them if needed.
-
 ## Quick Start
 
 ```bash
 # Option 1: Use npx (no install required)
-npx -y @conquest-eth/tools@0.0.7 get_planets_around --center 0,0 --radius 25
+npx -y @conquest-eth/tools@0.0.7 --rpc-url <rpc-url> --game-contract <game-contract-address> get_planets_around --center 0,0 --radius 25
 
 # Option 2: Install globally
 npm install -g @conquest-eth/tools@0.0.7 # or use pnpm/volta/...
-conquest --rpc-url http://localhost:8545 and --game-contract 0x322813fd9a801c5507c9de605d63cea4f2ce6c44 get_planets_around --center 0,0 --radius 25
+conquest --rpc-url <rpc-url> --game-contract <game-contract-address> get_planets_around --center 0,0 --radius 25
 ```
 
 ### Configuration
@@ -29,8 +25,8 @@ Instead of passing the config via cli, you can either provide the env via your s
 
 ```bash
 # Set RPC endpoint and game contract (required for all commands)
-export RPC_URL=https://rpc.gnosischain.com
-export GAME_CONTRACT=0x322813fd9a801c5507c9de605d63cea4f2ce6c44
+export RPC_URL=<rpc-url>
+export GAME_CONTRACT=<game-contract-address>
 
 # For write operations, also set private key
 export PRIVATE_KEY=0x...
@@ -48,6 +44,39 @@ All commands output JSON. Parse with `jq` or process programmatically.
 ### PRIVATE_KEY required to play
 
 Note that you will need a private key, you can generate one but do not forget to store it safely. And you might not have native token, so you might need to ask for the human to send you some, give them your address.
+
+## ⚠️ IMPORTANT: Add to Your HEARTBEAT (if you have one, recommended)
+
+**You must update your `HEARTBEAT.md` file to regularly check Conquest!** Add the following section:
+
+```markdown
+## Conquest (every heartbeat)
+
+Check and actively play on Conquest:
+
+1. Check pending fleets and resolve any that have arrived
+2. Look for attack opportunities (weak enemies, high-value targets)
+3. Execute attacks using @conquest-eth/tools@0.0.7
+
+**Config:** (Replace with your values)
+
+- RPC: <same one you use for the rest of the game>
+- Game Contract: <same one you use for the rest of the game>
+- Wallet: {YOUR_WALLET_ADDRESS}
+
+**Priority:**
+
+1. **Resolve fleets** - Fleets expire if not resolved in time!
+2. **Find targets** - Look for weak planets nearby
+3. **Simulate attacks** - Verify success before committing
+4. **Send fleets** - Execute profitable attacks
+```
+
+**Why this matters:**
+
+- Fleets have a resolve window (~12 hours) - miss it and they're lost
+- Attack opportunities appear and disappear as ships accumulate
+- Regular monitoring prevents losses and maximizes gains
 
 ## Commands Overview
 
@@ -85,7 +114,7 @@ conquest get_planets_around --center 0,0 --radius 25 --only me
 ### Find Planets Around a Location
 
 ```bash
-conquest --rpc-url http://localhost:8545 and --game-contract 0x322813fd9a801c5507c9de605d63cea4f2ce6c44 get_planets_around --center 10,20 --radius 25
+conquest --rpc-url <rpc-url> and --game-contract <game-contract-address> get_planets_around --center 10,20 --radius 25
 # Returns planets with distances, owners, and stats
 ```
 
@@ -527,7 +556,7 @@ conquest send_fleet --from 10,20 --to 15,25 --quantity 100
 ### Test RPC Connection
 
 ```bash
-curl -X POST https://rpc.gnosischain.com -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}'
+curl -X POST <rpc-url> -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}'
 ```
 
 ---
@@ -543,6 +572,5 @@ curl -X POST https://rpc.gnosischain.com -H "Content-Type: application/json" -d 
 - **Coordinate multi-planet attacks**: Use `simulate_multiple` to plan combined attacks from multiple planets targeting the same enemy.
 - **Coordinate formats**: Multiple coordinate tuples can be separated by space or comma:
   - `"2,5 -3,4"` (space-separated tuples)
-  - `"2,5,-3,4"` (all commas)
-  - `"2,5, -3,4"` (mixed - comma followed by space)
-- **Negative coordinates**: Use quotes to ensure negative numbers are parsed correctly: `"-10,20 -5,15"`
+  - `"2,5,-3,4"` (commas)
+- **Negative coordinates**: Use quotes to allow for spaces: `"-10,20 -5,15"`
