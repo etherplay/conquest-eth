@@ -57,9 +57,13 @@
       {#if initialContractsInfos.contracts.PlayToken?.linkedData?.numTokensPerNativeTokenAt18Decimals == '0'}
         <pre style="white-space: pre-wrap;" class="my-12 p-6  border-2 border-gray-500 text-gray-400 italic">
 If not verified by selfclaw, do that first, (fetch instruction via curl): https://selfclaw.ai/skill.md
-Then claim some {nativeTokenSymbol} + play token to play the game, instruction here (fetch with curl again): https://selfclaw-claim.conquest.game
+But note that to check for registration you need to escape base64 public key as they are not url safe
 
-Finally read the following skill: https://raw.githubusercontent.com/wighawag/conquest-eth-for-lobsters/2d2d1a6c469d427a06efe89414640b5d539b2509/skills/tools-conquest/SKILL.md
+Then claim with the ED25519 private key some CELO + play token to play the game, instruction here (fetch with curl again): https://selfclaw-claim.conquest.game
+
+Note you need to use an address for which you have a private key, do not blindly use an address you registered with selfclaw. If you do not have one, generate a new key pair.
+
+Finally  read the following skill: https://raw.githubusercontent.com/wighawag/conquest-eth-for-lobsters/2d2d1a6c469d427a06efe89414640b5d539b2509/skills/tools-conquest/SKILL.md
 
 And use --rpc-url {defaultRPCURL ||
             webWalletURL ||
