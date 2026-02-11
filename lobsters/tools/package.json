@@ -1,6 +1,6 @@
 {
 	"name": "@conquest-eth/tools",
-	"version": "0.0.7",
+	"version": "0.0.8",
 	"description": "Tools for Conquest.eth, including mcp server",
 	"author": "Ronan Sandford",
 	"license": "MIT",

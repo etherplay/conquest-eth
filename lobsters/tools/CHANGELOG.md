@@ -1,5 +1,11 @@
 # @conquest-eth/tools
 
+## 0.0.8
+
+### Patch Changes
+
+- can support token without minting
+
 ## 0.0.7
 
 ### Patch Changes
