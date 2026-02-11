@@ -78,7 +78,7 @@ export const config = {
 			localhost: 0n, //parseEther('1000'),
 			'monad-testnet': parseEther('10'),
 			monad: parseEther('0.1'),
-			'celo-sepolia': 0n, // 100
+			'celo-sepolia-testnet': 0n, // 100
 			celo: 0n, // 1
 		},
 	},
