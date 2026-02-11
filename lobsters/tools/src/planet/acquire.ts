@@ -23,7 +23,17 @@ export async function acquirePlanets(
 
 	// Calculate how much native token is needed to mint `amountToMint` play tokens
 	// nativeTokenAmount = amountToMint * 1e18 / numTokensPerNativeToken
-	const nativeTokenAmount = (amountToMint * 1000000000000000000n) / numTokensPerNativeToken;
+	// If numTokensPerNativeToken is zero, minting via native token is disabled
+	let nativeTokenAmount = 0n;
+	if (amountToMint > 0n) {
+		if (numTokensPerNativeToken === 0n) {
+			throw new Error(
+				'Cannot mint play tokens via native token: numTokensPerNativeToken is zero. ' +
+					'Please ensure you have sufficient play token balance.',
+			);
+		}
+		nativeTokenAmount = (amountToMint * 1000000000000000000n) / numTokensPerNativeToken;
+	}
 
 	// Get the contract acquireMultipleViaNativeTokenAndStakingToken function signature
 	const simulation = await clients.publicClient.simulateContract({

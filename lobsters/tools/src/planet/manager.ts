@@ -146,7 +146,11 @@ export class PlanetManager {
 	 * This simplifies planet acquisition by automatically:
 	 * 1. Calculating required token amount based on planet stats
 	 * 2. Using ALL available play token balance first
-	 * 3. Minting any remaining amount needed using native tokens
+	 * 3. Minting any remaining amount needed using native tokens (if allowed)
+	 *
+	 * If numTokensPerNativeToken is zero, minting via native token is disabled.
+	 * In that case, only play tokens can be used and an error is thrown if
+	 * there aren't enough play tokens to cover the acquisition cost.
 	 *
 	 * @param planetIds - Array of planet location IDs to acquire
 	 * @returns Transaction hash, planets acquired, and cost breakdown
@@ -166,11 +170,22 @@ export class PlanetManager {
 		// Get current play token balance
 		const playTokenBalance = await this.getPlayTokenBalance();
 
+		// Check if minting via native token is allowed
+		const nativeMintingAllowed = this.contractConfig.numTokensPerNativeToken > 0n;
+
 		// Determine how much play token to use (all of it, up to what's needed)
 		const playTokenUsed = playTokenBalance > totalRequired ? totalRequired : playTokenBalance;
 
 		// Calculate remaining amount to mint with native tokens
 		const amountToMint = totalRequired > playTokenUsed ? totalRequired - playTokenUsed : 0n;
+
+		// If minting is not allowed and we need to mint, error out
+		if (!nativeMintingAllowed && amountToMint > 0n) {
+			throw new Error(
+				`Insufficient play token balance. Required: ${totalRequired}, Available: ${playTokenBalance}. ` +
+					`Minting via native token is disabled (numTokensPerNativeToken is zero).`,
+			);
+		}
 
 		// Acquire the planets
 		const result = await acquirePlanets(
