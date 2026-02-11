@@ -146,11 +146,11 @@ export class PlanetManager {
 	}
 
 	/**
-		* Check current allowance for play token to the game contract
-		*
-		* @param address - Address to check allowance for. Defaults to current wallet address.
-		* @returns The current allowance amount
-		*/
+	 * Check current allowance for play token to the game contract
+	 *
+	 * @param address - Address to check allowance for. Defaults to current wallet address.
+	 * @returns The current allowance amount
+	 */
 	async getPlayTokenAllowance(address?: `0x${string}`): Promise<bigint> {
 		let targetAddress: `0x${string}`;
 
@@ -172,11 +172,11 @@ export class PlanetManager {
 	}
 
 	/**
-		* Approve play tokens for the game contract.
-		* Approves the maximum uint256 value for unlimited spending.
-		*
-		* @returns Transaction hash of the approval transaction
-		*/
+	 * Approve play tokens for the game contract.
+	 * Approves the maximum uint256 value for unlimited spending.
+	 *
+	 * @returns Transaction hash of the approval transaction
+	 */
 	async approvePlayToken(): Promise<`0x${string}`> {
 		const clients = this.requireWalletClient();
 
@@ -196,12 +196,12 @@ export class PlanetManager {
 	}
 
 	/**
-		* Ensure sufficient allowance for play tokens to the game contract.
-		* If current allowance is less than the required amount, approves max uint256.
-		*
-		* @param requiredAmount - The amount of tokens that need to be approved
-		* @returns Object indicating if approval was needed and the approval tx hash if applicable
-		*/
+	 * Ensure sufficient allowance for play tokens to the game contract.
+	 * If current allowance is less than the required amount, approves max uint256.
+	 *
+	 * @param requiredAmount - The amount of tokens that need to be approved
+	 * @returns Object indicating if approval was needed and the approval tx hash if applicable
+	 */
 	async ensurePlayTokenAllowance(
 		requiredAmount: bigint,
 	): Promise<{approvalNeeded: boolean; approvalHash?: `0x${string}`}> {
@@ -220,7 +220,7 @@ export class PlanetManager {
 	}
 
 	/**
-		* Calculate acquisition costs for planets based on their stats
+	 * Calculate acquisition costs for planets based on their stats
 	 *
 	 * @param planetIds - Array of planet location IDs
 	 * @returns Object with total amountToMint and tokenAmount
