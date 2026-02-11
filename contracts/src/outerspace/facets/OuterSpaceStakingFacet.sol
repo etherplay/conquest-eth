@@ -142,8 +142,12 @@ contract OuterSpaceStakingFacet is OuterSpaceFacetBase, IOuterSpaceStaking {
             total += stake;
         }
         require(amountToMint + tokenAmount == total, "INVALID_AMOUNT");
-        _stakingToken.mint{value: msg.value}(address(this), amountToMint);
-        _stakingToken.transferFrom(sender, address(this), tokenAmount);
+        if (amountToMint > 0) {
+            _stakingToken.mint{value: msg.value}(address(this), amountToMint);
+        }
+        if (tokenAmount > 0) {
+            _stakingToken.transferFrom(sender, address(this), tokenAmount);
+        }
     }
 
     // ---------------------------------------------------------------------------------------------------------------
