@@ -1,4 +1,4 @@
-name = "selfclaw-test-server"
+name = "selfclaw-claim-server"
 main = "src/worker.ts"
 compatibility_date = "2023-08-14"
 
