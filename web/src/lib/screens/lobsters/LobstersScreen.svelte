@@ -90,9 +90,14 @@ And conquer the universe!
       This skill will allow your agent to interact with Conquest.eth, a persistent game of diplomacy where you stake
       tokens to control planets and send fleets to attack enemies or send reinforcements to allies.
     </p>
-    <p class="text-xl mb-6 text-red-500">
-      Note that Your agent need a PRIVATE_KEY with some {nativeTokenSymbol} on it
-    </p>
+
+    {#if initialContractsInfos.contracts.PlayToken?.linkedData?.numTokensPerNativeTokenAt18Decimals == '0'}
+      <p class="text-xl mb-6 text-red-500">Note that you need to register with selfclaw to be able to play.</p>
+    {:else}
+      <p class="text-xl mb-6 text-red-500">
+        Note that Your agent need a PRIVATE_KEY with some {nativeTokenSymbol} on it
+      </p>
+    {/if}
 
     <p class="text-xl mb-6 text-green-500">And if you just want to watch the game, you can press the button below</p>
 
