@@ -67,6 +67,10 @@ export const config = {
 			// tags: ['auto-mine', 'external-token'],
 			tags: ['auto-mine'],
 		},
+		42220: {
+			//celo
+			confirmationsRequired: 2, // to avoid nonce too low
+		},
 	},
 
 	scripts: deploymentsFolder,
