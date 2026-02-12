@@ -127,6 +127,9 @@ importers:
       '@rocketh/signer':
         specifier: ^0.18.3
         version: 0.18.3(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
+      '@rocketh/verifier':
+        specifier: ^0.18.7
+        version: 0.18.7(@rocketh/node@0.18.7(bufferutil@4.0.8)(rocketh@0.18.6(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
       '@rocketh/viem':
         specifier: ^0.18.3
         version: 0.18.3(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(viem@2.45.1(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(zod@4.3.6)
@@ -255,7 +258,7 @@ importers:
     devDependencies:
       fuzd-nodejs:
         specifier: ^0.10.0
-        version: 0.10.0(@libsql/core@0.14.0)(@types/node@25.2.0)(bufferutil@4.0.8)(hono@4.11.9)(typescript@5.7.2)(typia@7.5.0(@samchon/openapi@1.2.4)(typescript@5.7.2))(utf-8-validate@5.0.8)
+        version: 0.10.0(@libsql/core@0.14.0)(@types/node@25.2.0)(bufferutil@4.0.8)(hono@4.11.9)(typescript@5.7.2)(typia@7.5.0(@samchon/openapi@1.2.4)(typescript@5.7.2))(utf-8-validate@5.0.8)(zod@4.3.6)
       ldenv:
         specifier: ^0.3.16
         version: 0.3.16
@@ -3207,6 +3210,12 @@ packages:
   '@rocketh/signer@0.18.3':
     resolution: {integrity: sha512-DUE65oGtE4aa2SuFWsptRPArVZrsvWYmC+Y0qRIEsD//X6NhULEhGRLj+EoDwWd7UUea+Ael5xro3qW4PQFzZg==}
 
+  '@rocketh/verifier@0.18.7':
+    resolution: {integrity: sha512-9VoGMgPJ6UMSdMwyNWAAjF7sSqfXk5CoK5GxcZ/XtXtvzuzXcd4W9j7dJ7dEl1cJToFSLWGV6fUOHN6V3eKJQA==}
+    hasBin: true
+    peerDependencies:
+      '@rocketh/node': 0.18.7
+
   '@rocketh/viem@0.18.3':
     resolution: {integrity: sha512-wHkc7pWXIwewaEyx094Fzdr107uKwJK9bqIRDj0wtPUKmJZ/3zjFAI1wPcSJZpj552VK7spAx8lRjLVNKz+lWQ==}
     peerDependencies:
@@ -3665,6 +3674,9 @@ packages:
 
   '@types/qrcode@1.4.2':
     resolution: {integrity: sha512-7uNT9L4WQTNJejHTSTdaJhfBSCN73xtXaHFyBJ8TSwiLhe4PRuTue7Iph0s2nG9R/ifUaSnGhLUOZavlBEqDWQ==}
+
+  '@types/qs@6.14.0':
+    resolution: {integrity: sha512-eOunJqu0K1923aExK6y8p6fsihYEn/BYuQ4g0CxAAgFc4b/ZLN4CrsRZ55srTdqoiLzU2B2evC+apEIxprEzkQ==}
 
   '@types/responselike@1.0.0':
     resolution: {integrity: sha512-85Y2BjiufFzaMIlvJDvTTB8Fxl2xfLo4HgmHzVBz08w4wDePCTjYw66PdrolO0kzli3yam/YCgRufyo1DdQVTA==}
@@ -8120,6 +8132,9 @@ packages:
 
   neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
+
+  neoqs@6.13.0:
+    resolution: {integrity: sha512-IysBpjrEG9qiUb/IT6XrXSz2ASzBxLebp4s8/GBm7STYC315vMNqH0aWdRR+f7KvXK4aRlLcf5r2Z6dOTxQSrQ==}
 
   nice-try@1.0.5:
     resolution: {integrity: sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==}
@@ -13970,6 +13985,23 @@ snapshots:
       - utf-8-validate
       - zod
 
+  '@rocketh/verifier@0.18.7(@rocketh/node@0.18.7(bufferutil@4.0.8)(rocketh@0.18.6(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)':
+    dependencies:
+      '@rocketh/core': 0.18.3(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
+      '@rocketh/node': 0.18.7(bufferutil@4.0.8)(rocketh@0.18.6(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
+      '@types/fs-extra': 11.0.4
+      '@types/qs': 6.14.0
+      chalk: 5.6.2
+      commander: 14.0.3
+      fs-extra: 11.3.3
+      ldenv: 0.3.16
+      neoqs: 6.13.0
+    transitivePeerDependencies:
+      - bufferutil
+      - typescript
+      - utf-8-validate
+      - zod
+
   '@rocketh/viem@0.18.3(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(viem@2.45.1(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6))(zod@4.3.6)':
     dependencies:
       '@rocketh/core': 0.18.3(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
@@ -14441,6 +14473,8 @@ snapshots:
   '@types/qrcode@1.4.2':
     dependencies:
       '@types/node': 22.10.7
+
+  '@types/qs@6.14.0': {}
 
   '@types/responselike@1.0.0':
     dependencies:
@@ -16721,9 +16755,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  eip-1193-signer@0.1.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8):
+  eip-1193-signer@0.1.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6):
     dependencies:
-      viem: 2.45.1(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)
+      viem: 2.45.1(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
     transitivePeerDependencies:
       - bufferutil
       - typescript
@@ -17691,12 +17725,12 @@ snapshots:
       - utf-8-validate
       - zod
 
-  fuzd-chain-protocol@0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8):
+  fuzd-chain-protocol@0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6):
     dependencies:
       '@noble/hashes': 1.8.0
       '@scure/bip32': 1.6.0
       '@scure/starknet': 1.1.0
-      eip-1193-signer: 0.1.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)
+      eip-1193-signer: 0.1.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
       fuzd-common: 0.10.0
       named-logs: 0.3.2
       remote-account: 0.2.2
@@ -17788,9 +17822,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  fuzd-executor@0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8):
+  fuzd-executor@0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6):
     dependencies:
-      fuzd-chain-protocol: 0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)
+      fuzd-chain-protocol: 0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
       fuzd-common: 0.10.0
       named-logs: 0.3.2
       remote-account: 0.2.2
@@ -17815,12 +17849,12 @@ snapshots:
       - utf-8-validate
       - zod
 
-  fuzd-nodejs@0.10.0(@libsql/core@0.14.0)(@types/node@25.2.0)(bufferutil@4.0.8)(hono@4.11.9)(typescript@5.7.2)(typia@7.5.0(@samchon/openapi@1.2.4)(typescript@5.7.2))(utf-8-validate@5.0.8):
+  fuzd-nodejs@0.10.0(@libsql/core@0.14.0)(@types/node@25.2.0)(bufferutil@4.0.8)(hono@4.11.9)(typescript@5.7.2)(typia@7.5.0(@samchon/openapi@1.2.4)(typescript@5.7.2))(utf-8-validate@5.0.8)(zod@4.3.6):
     dependencies:
       '@hono/node-server': 1.13.7(hono@4.11.9)
       '@libsql/client': 0.14.0(bufferutil@4.0.8)(utf-8-validate@5.0.8)
       commander: 12.1.0
-      fuzd-server: 0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(typia@7.5.0(@samchon/openapi@1.2.4)(typescript@5.7.2))(utf-8-validate@5.0.8)
+      fuzd-server: 0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(typia@7.5.0(@samchon/openapi@1.2.4)(typescript@5.7.2))(utf-8-validate@5.0.8)(zod@4.3.6)
       ldenv: 0.3.16
       named-logs-context: 0.1.1
       remote-sql-libsql: 0.0.6(@libsql/core@0.14.0)
@@ -17874,9 +17908,9 @@ snapshots:
       - utf-8-validate
       - zod
 
-  fuzd-scheduler@0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8):
+  fuzd-scheduler@0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6):
     dependencies:
-      fuzd-chain-protocol: 0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)
+      fuzd-chain-protocol: 0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
       fuzd-common: 0.10.0
       named-logs: 0.3.2
     transitivePeerDependencies:
@@ -17900,7 +17934,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  fuzd-server@0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(typia@7.5.0(@samchon/openapi@1.2.4)(typescript@5.7.2))(utf-8-validate@5.0.8):
+  fuzd-server@0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(typia@7.5.0(@samchon/openapi@1.2.4)(typescript@5.7.2))(utf-8-validate@5.0.8)(zod@4.3.6):
     dependencies:
       '@hono/swagger-ui': 0.5.0(hono@4.11.9)
       '@hono/typia-validator': 0.0.5(hono@4.11.9)(typia@7.5.0(@samchon/openapi@1.2.4)(typescript@5.7.2))
@@ -17908,18 +17942,18 @@ snapshots:
       '@scure/bip39': 1.5.0
       eip-1193: 0.6.5
       eip-1193-jsonrpc-provider: 0.4.2
-      eip-1193-signer: 0.1.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)
-      fuzd-chain-protocol: 0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)
+      eip-1193-signer: 0.1.0(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
+      fuzd-chain-protocol: 0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
       fuzd-common: 0.10.0
-      fuzd-executor: 0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)
-      fuzd-scheduler: 0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)
-      fuzd-tlock-decrypter: 0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)
+      fuzd-executor: 0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
+      fuzd-scheduler: 0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
+      fuzd-tlock-decrypter: 0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
       hono: 4.11.9
       named-logs: 0.3.2
       remote-account: 0.2.2
       remote-sql: 0.0.6
       tlock-js: 0.9.0
-      viem: 2.45.1(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)
+      viem: 2.45.1(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
     transitivePeerDependencies:
       - '@edge-runtime/vm'
       - '@types/node'
@@ -17942,10 +17976,10 @@ snapshots:
       - utf-8-validate
       - zod
 
-  fuzd-tlock-decrypter@0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8):
+  fuzd-tlock-decrypter@0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6):
     dependencies:
       fuzd-common: 0.10.0
-      fuzd-scheduler: 0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)
+      fuzd-scheduler: 0.10.0(@types/node@25.2.0)(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8)(zod@4.3.6)
       named-logs: 0.3.2
       tlock-js: 0.9.0
     transitivePeerDependencies:
@@ -20220,6 +20254,8 @@ snapshots:
   negotiator@1.0.0: {}
 
   neo-async@2.6.2: {}
+
+  neoqs@6.13.0: {}
 
   nice-try@1.0.5: {}
 
@@ -22775,23 +22811,6 @@ snapshots:
       ws: 8.18.3(bufferutil@4.0.8)(utf-8-validate@5.0.8)
     optionalDependencies:
       typescript: 4.5.5
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-      - zod
-
-  viem@2.45.1(bufferutil@4.0.8)(typescript@5.7.2)(utf-8-validate@5.0.8):
-    dependencies:
-      '@noble/curves': 1.9.1
-      '@noble/hashes': 1.8.0
-      '@scure/bip32': 1.7.0
-      '@scure/bip39': 1.6.0
-      abitype: 1.2.3(typescript@5.7.2)(zod@4.3.6)
-      isows: 1.0.7(ws@8.18.3)
-      ox: 0.11.3(typescript@5.7.2)(zod@4.3.6)
-      ws: 8.18.3(bufferutil@4.0.8)(utf-8-validate@5.0.8)
-    optionalDependencies:
-      typescript: 5.7.2
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
