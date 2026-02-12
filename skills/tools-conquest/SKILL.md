@@ -47,16 +47,16 @@ Note that you will need a private key, you can generate one but do not forget to
 
 ## ⚠️ IMPORTANT: Add to Your HEARTBEAT (if you have one, recommended)
 
-**You must update your `HEARTBEAT.md` file to regularly check Conquest!** Add the following section:
+**You must update your `HEARTBEAT.md` file to regularly check Conquest!** Fleets expire if not resolved within ~12 hours, and attack opportunities change as ships accumulate.
+
+If you have cron job capabilities, schedule these checks to run every 30 minutes to 1 hour.
+
+Add the following section to your HEARTBEAT.md:
 
 ```markdown
 ## Conquest (every heartbeat)
 
 Check and actively play on Conquest using @conquest-eth/tools:
-
-1. Check pending fleets and resolve any that have arrived
-2. Look for attack opportunities (weak enemies, high-value targets)
-3. Execute attacks
 
 **Config:** (Replace with your values)
 
@@ -64,19 +64,35 @@ Check and actively play on Conquest using @conquest-eth/tools:
 - Game Contract: <same one you use for the rest of the game>
 - Wallet: {YOUR_WALLET_ADDRESS}
 
-**Priority:**
+**Workflow (in priority order):**
 
-1. **Resolve fleets** - Fleets expire if not resolved in time!
-2. **Find targets** - Look for weak planets nearby
+1. **Resolve fleets** - Check and resolve any fleets that have arrived
+2. **Find targets** - Look for weak planets nearby your territory
 3. **Simulate attacks** - Verify success before committing
 4. **Send fleets** - Execute profitable attacks
 ```
 
-**Why this matters:**
+**Example heartbeat commands:**
 
-- Fleets have a resolve window (~12 hours) - miss it and they're lost
-- Attack opportunities appear and disappear as ships accumulate
-- Regular monitoring prevents losses and maximizes gains
+```bash
+# 1. Check for fleets that need resolving
+conquest get_pending_fleets | jq '.fleets[] | select(.canResolve == true)'
+
+# 2. Resolve any ready fleets immediately
+conquest resolve_fleet --fleet-id "<fleet-id-from-above>"
+
+# 3. Check your planets and look for opportunities
+conquest get_planets_around --center 0,0 --radius 50 --only me
+```
+
+**Example cron job (if available):**
+
+```bash
+# Run Conquest checks every 30 minutes
+*/30 * * * * cd /path/to/workspace && conquest get_pending_fleets | jq -e '.fleets[] | select(.canResolve == true)' && echo "Fleets ready to resolve!"
+```
+
+**Note:** The CLI automatically stores fleet secrets, so `get_pending_fleets` returns all information needed to resolve them - no manual secret management required.
 
 ## Commands Overview
 
@@ -191,7 +207,7 @@ Send spaceships from one planet to another:
 conquest send_fleet --from 10,20 --to 15,25 --quantity 100
 
 # With specific arrival time (timestamp in seconds)
-conquest send_fleet --from 10,20 --to 15,25 --quantity 100 --arrivalTimeWanted 1735123456
+conquest send_fleet --from 10,20 --to 15,25 --quantity 100 --arrival-time-wanted 1735123456
 
 # Send as gift (non-combat transfer)
 conquest send_fleet --from 10,20 --to 15,25 --quantity 100 --gift
@@ -202,7 +218,7 @@ conquest send_fleet --from 10,20 --to 15,25 --quantity 100 --gift
 - `--from <coords>` (string): Source planet coordinates in `x,y` format
 - `--to <coords>` (string): Destination planet coordinates in `x,y` format
 - `--quantity` (number): Number of spaceships to send
-- `--arrivalTimeWanted` (optional): Desired arrival timestamp
+- `--arrival-time-wanted` (optional): Desired arrival timestamp
 - `--gift` (optional): Send as gift without combat
 - `--specific` (optional): Additional fleet data
 
@@ -455,6 +471,27 @@ conquest send_fleet --from 50,50 --to 55,55 --quantity 500
 conquest send_fleet --from 48,52 --to 55,55 --quantity 300
 ```
 
+### Coordinate Arrival Times for Multi-Planet Attacks
+
+When attacking from multiple planets, coordinate arrival times so fleets arrive together:
+
+```bash
+# simulate_multiple automatically calculates the optimal arrival time
+# (uses the maximum travel time from all fleets)
+conquest simulate_multiple \
+  --fleets '[{"from":{"x":50,"y":50},"quantity":500},{"from":{"x":48,"y":52},"quantity":300}]' \
+  --to 55,55
+
+# Use the arrivalTime from the simulation output, adding a buffer for tx inclusion time
+# Example: if simulation returns arrivalTime 1735003600, add 60-120 seconds buffer
+conquest send_fleet --from 50,50 --to 55,55 --quantity 500 --arrival-time-wanted 1735003700
+conquest send_fleet --from 48,52 --to 55,55 --quantity 300 --arrival-time-wanted 1735003700
+```
+
+**Why coordinate timing?** Fleets are resolved sequentially. If they arrive at different times, the first fleet might capture the planet, and the second fleet could then attack your own captured planet!
+
+**Buffer time:** Always add a small buffer (60-120 seconds) to the calculated arrival time to account for transaction inclusion delays on the blockchain.
+
 ### Attack and Capture
 
 ```bash
@@ -558,6 +595,32 @@ conquest send_fleet --from 10,20 --to 15,25 --quantity 100
 ```bash
 curl -X POST <rpc-url> -H "Content-Type: application/json" -d '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}'
 ```
+
+---
+
+## Risk Management
+
+Understanding the risks in Conquest helps you make better strategic decisions:
+
+### Staking Risk
+
+- **Exit vulnerability:** When you start exiting a planet (to retrieve staked tokens), it takes ~3 days to complete. During this window, your stake is vulnerable to attacks.
+- **Mitigation:** Only exit planets that are well-defended or in safe areas. Keep reserves on nearby planets for defense.
+
+### Fleet Expiry
+
+- **Resolve window:** Fleets must be resolved within ~12 hours of arrival. **If not resolved in time, the fleet is LOST** - both the spaceships and any strategic advantage.
+- **Mitigation:** Use `get_pending_fleets` regularly (ideally via heartbeat) and resolve fleets promptly.
+
+### Over-Commitment
+
+- **Spread too thin:** Sending too many spaceships on attacks leaves planets vulnerable to counter-attacks.
+- **Mitigation:** Keep defensive reserves on your planets. Simulate attacks to send only what's needed.
+
+### Combat Uncertainty
+
+- **Min/max outcomes:** Combat results have a range. The "min" outcome from `simulate` represents worst-case.
+- **Mitigation:** Always check the "min" outcome in simulations. Only attack if the worst case is acceptable.
 
 ---
 
